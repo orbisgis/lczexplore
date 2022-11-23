@@ -1,9 +1,10 @@
-#' Title This function is deprecated, the refactoring is embedded in othe functions
+#' This function is deprecated, the refactoring is embedded in othe functions
 #'
 #' @param lcz a column from an sf object, containing the lcz values
 #' @param orig a workflow from which to deduce the possible lcz encoding. For wudapt the land use lcz are coded 11 to 17, for geoclimate they are coded 101 to 107
 #'
 #' @return the function returns the original lcz column, recoded with the 101 to 107 levels
+#' @import magrittr
 #' @export
 #'
 #' @examples

@@ -1,10 +1,50 @@
-compareLCZ<-function(sf1,column1,wf1="bdtopo_2_2",sf2,column2,wf2="osm",
-                     repr="brut",saveG="",ref=1,location="Redon",...){
+#' Compares two LCZ classification on the same zone,
+#' produces a map for each classification, a map of their agreement and a representation of a confusion matric between them
+#'
+#' @param sf1 is the sf object that contains the first LCZ classification
+#' @param column1 is the column of sf1 that contains the LCZ classification for each geom of sf1
+#' @param wf1 is the workflow used to produce the first LCZ classification.
+#' When GeoClimate was used with BD_TOPO V2 data as input,
+#' use "bdtopo_2_2". When GeoClimate was used with Open Street Map data as input, use "osm".
+#' When the LCZ come from the wudapt Europe tiff, use "wudapt".
+#'
+#' @param sf2 is the sf object that contains the second LCZ classification
+#' @param column2 is the column of sf2 that contains the LCZ classification for each geom of sf2
+#' @param wf2 is the workflow used to produce the second LCZ classification.
+#' When GeoClimate was used with BD_TOPO V2 data as input,
+#' use "bdtopo_2_2". When GeoClimate was used with Open Street Map data as input, use "osm".
+#' When the LCZ come from the wudapt Europe tiff, use "wudapt".
+#' @param ref : If the coordinate reference system (CRS) of sf1 and sf2 differ, ref indicates which CRS to choose for both files (1 or 2)
+#' @param repr "brut" means that original values of LCZ are used,
+#'  "grouped" means the user has groupe some of the LCZ levels under a new label.
+#'  In the latter case, the ... arguments must contain the groups and a color vector.
+#' @param saveG : when an empty character string, "", the plots are not saved. Else, the saveG string is used to produce the name of the saved png file.
+#' @param location : the name of the study area, as chosen as the name of the directory on the GeoClimate team cloud.
+#' If the area you wish to analyse is not uploaded yet, please contact the GeoClimate Team.
+#' @param exwrite : when TRUE, the values of the LCZ on the intersected geoms are written down in a csv file
+#' @param ... allow to pass arguments if representation is grouped.
+#' The expected arguments are the name of each grouped label,
+#' the levels of LCZ they contain, and last a vector of the colors to use to plot them.
+#' @import sf  ggplot2  dplyr  cowplot  forcats  units  tidyr  RColorBrewer
+#' @return returns an object called matConfOut which contains
+#' matConfLong, a confusion matrix in a longer form, which can be written in a file by the compareLCZ function
+#' and is used by the geom_tile function of the ggplot2 package.
+#' matConfPlot is a ggplot2 object showing the confusion matrix. If plot=T, it is also directly plotted
+#' aires contains the sums of each LCZ area
+#' pourcAcc is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
+#'
+#' If saveG is not an empty string, graphics are saved under "saveG.png"
+#'
+#'
+#' @export
+#'
+#' @examples
+compareLCZ<-function(sf1,column1,wf1="bdtopo_2_2",sf2,column2,wf2="osm",ref=1,
+                     repr="brut",saveG="",exwrite=T,location="Redon",...){
 
-  # dependancies
-
-  paquets<-c("sf","ggplot2","dplyr","cowplot","forcats","units","tidyr","RColorBrewer")
-  lapply(paquets, require, character.only = TRUE)
+  # dependancies dealt with @import through roxygen
+  #paquets<-c("sf","ggplot2","dplyr","cowplot","forcats","units","tidyr","RColorBrewer")
+  #lapply(paquets, require, character.only = TRUE)
 
   if (!(wf1=="osm"||wf1=="bdtopo_2_2"||wf1=="wudapt")|| !(wf2=="osm"||wf2=="bdtopo_2_2"||wf2=="wudapt"))
     stop("Workflow parameters wf1 and wf2 muste be one of bdtopo_2_2, osm or wudapt")
@@ -58,10 +98,24 @@ compareLCZ<-function(sf1,column1,wf1="bdtopo_2_2",sf2,column2,wf2="osm",
  # Prepare the levels of the expected LCZ
 
   if(repr=="brut"){
-      CodeCoulLCZ<-read.csv("/home/gousseff/Documents/2_CodesSources/GeoClimate/GeoclimateDefaultCase/Manips_R/CodesCouleursLCZ.csv")  # A remplacer par un fichier embarqué dans le paquet
-      colorMap<-CodeCoulLCZ$Hexa.Color.code
-      valeurs=colorMap
-      etiquettes=CodeCoulLCZ$Type.definition
+      #CodeCoulLCZ<-read.csv("/home/gousseff/Documents/2_CodesSources/GeoClimate/GeoclimateDefaultCase/Manips_R/CodesCouleursLCZ.csv")  # A remplacer par un fichier embarqué dans le paquet
+      #colorMap<-CodeCoulLCZ$Hexa.Color.code
+      #valeurs<-colorMap
+
+      valeurs<-c("#8b0101","#cc0200","#fc0001","#be4c03","#ff6602","#ff9856",
+                  "#fbed08","#bcbcba","#ffcca7","#57555a","#006700","#05aa05",
+                  "#648423","#bbdb7a","#010101","#fdf6ae","#6d67fd")
+      #valeurs=colorMap
+      #etiquettes=CodeCoulLCZ$Type.definition
+      etiquettes<-c("LCZ 1: Compact high-rise","LCZ 2: Compact mid-rise","LCZ 3: Compact low-rise",
+                    "LCZ 4: Open high-rise","LCZ 5: Open mid-rise","LCZ 6: Open low-rise",
+                    "LCZ 7: Lightweight low-rise","LCZ 8: Large low-rise",
+                    "LCZ 9: Sparsely built","LCZ 10: Heavy industry",
+                    "LCZ A: Dense trees", "LCZ B: Scattered trees",
+                    "LCZ C: Bush,scrub","LCZ D: Low plants",
+                    "LCZ E: Bare rock or paved","LCZ F: Bare soil or sand","LCZ G: Water"
+                    )
+
       niveaux<-as.character(c(1:10,101:107))
       #names(niveaux)<-niveaux
       # Classification must be encoded as factors
@@ -205,12 +259,12 @@ compareLCZ<-function(sf1,column1,wf1="bdtopo_2_2",sf2,column2,wf2="osm",
         nom<-paste0(wf1,"_",wf2,".csv")
 
         print(nom)
-
+        if (exwrite==T){
         write.table(x=echIntExpo, file =nom, append = TRUE, quote = TRUE, sep = ";",
                     eol = "\n", na = "NA", dec = ".", row.names = TRUE,
                     col.names = FALSE, qmethod = c("escape", "double"),
                     fileEncoding = "")
-
+        }
 ###################################################
 # Confusion Matrix
 ###################################################
@@ -315,7 +369,7 @@ nbgeom2<-nrow(sf2)
        print(plot_grid(l1Plot,l2Plot,accordPlot,matConfPlot, align='hv'))
      }
 
-
+return(matConfOut)
 
 }
 

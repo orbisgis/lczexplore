@@ -1,6 +1,21 @@
+#' Imports the LCZ produced by the WUDAPT algorithm.
+#' For now, the function only allows import from the european tiff
+#' produced by WUDAPT. Users MSUT DOWNLOAD the WUDAPT tiff file
+#' at the following url : https://figshare.com/articles/dataset/European_LCZ_map/13322450
+#' A future version may include the world data once a strategy is defined to deal with CRS.
+#'
+#' @param dirPath is the path to the directory where the
+#' @param zone set to europe by default, may include world once a strategy is defined
+#' @param bBox bBox is the bounding box needed to crop the wudapt tiff file.
+#' It can be produced bu the importLCZgs function
+#' @return an sf file containing the geom and LCZ levels from the WUDAPT Europe tiff within the bBox bounding box
+#' @import sf dplyr terra forcats
+#' @export
+#'
+#' @examples
 importLCZwudapt<-function(dirPath,zone="europe",bBox){
-  paquets<-c("sf","dplyr","terra","forcats")
-  lapply(paquets, require, character.only = TRUE)
+  #paquets<-c("sf","dplyr","terra","forcats")
+  #lapply(paquets, require, character.only = TRUE)
   fileName<-paste0(dirPath,"EU_LCZ_map.tif")
   sfFile<-rast(fileName)
   bBox<-st_transform(bBox,st_crs(sfFile,proj=T))

@@ -1,6 +1,22 @@
+#' Produces a simple representation of the LCZ contained in an sf file.
+#'
+#' @param sf is the sf file which contains the LCZ column to be plotted.
+#' @param wf is the workflow used to produced the LCZ. "bdt" and "osm" indicate
+#' that LCZ were produced by GeoClimate using the BD_TOPO_V2 or the Open Street Map data as input, respectively.
+#' If the LCZ were produced by WUDAPT, use "wudapt".
+#' @param column is the column that contains the LCZ.
+#' @param repr : if "brut" then an optimal set of colors is used to produce the plotted map.
+#' If "grouped", colors will be randomly chosen according to the number of groups present in the column.
+#'
+#' @return no object is returned, but plots of the LCZ levels are produced
+#' @export
+#' @import sf ggplot2 dplyr cowplot forcats
+#' @examples
 showLCZ<-function(sf,wf,column,repr){
-  paquets<-c("sf","ggplot2","dplyr","cowplot","forcats")
-  lapply(paquets, require, character.only = TRUE)
+
+  #dependancies should be dealt with @import
+  # paquets<-c("sf","ggplot2","dplyr","cowplot","forcats")
+  # lapply(paquets, require, character.only = TRUE)
 
   try(class(sf)[1]=="sf", stop("Input data must be sf object"))
   sf<-sf %>% mutate(!!column:=factor(subset(sf,select=column,drop=T)))

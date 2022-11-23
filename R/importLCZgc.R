@@ -1,8 +1,21 @@
+#' Imports the rsu_lcz geojson file produced by GeoClimate.
+#'
+#' @param dirPath : the path where the rsu_lcz.geojson file is.
+#' @param output : if sfFile the rsu_lcz.geojson is imported as an sf file, if bBox, a bounding box of the area is returned
+#' @return : if output is set to sfFile, the function returns an sf objects containing all the colums
+#' of the rsu_lcz.geojson found in the dirPath directory.
+#' If output is bBox a bounding box (seef sf package) of the area contained in the rsu_lcz file in the dirPath directory is returned.
+#' This is useful to select geoms analysed in other sf objects.
+#' @import sf dplyr
+#' @export
+#'
+#' @examples
 importLCZgc<-function(dirPath,output="sfFile"){
   # output can be sfFile, bBox or Contour
 
-  paquets<-c("sf","dplyr")
-  lapply(paquets, require, character.only = TRUE)
+  # dependancies should be dealt with @import
+  #paquets<-c("sf","dplyr")
+  #lapply(paquets, require, character.only = TRUE)
 
   #
   #

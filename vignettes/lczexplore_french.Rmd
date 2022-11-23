@@ -1,0 +1,62 @@
+---
+title: "lczexplore_french"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{lczexplore_french}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(lczexplore)
+```
+
+# Le paquet lczexplore
+## origine et finalité
+Le paquet lczexplore a été développé dans le cadre du projet Pændora 2 financé par l'ADEME. 
+
+Il a pour objectif de faciliter la comparaison de classifications en zones climatiques locales produites par différents algorithmes sur une même zone. 
+
+## Installation 
+A vérifier une fois le package testé ! A COMPLÉTER PLUS TARD
+Dézipper le tar.gz fourni ou utiliser une install depuis le github lczexplore : à compléter
+l'appeler avec install.packages
+
+
+# étudier une ville déjà chargée par l'équipe GeoCliamate
+
+Choisir le répertoire de travail et les zones d'étude
+
+```
+outDir<-"/home/gousseff/Documents/2_CodesSources/R/lczexplore/packageManualTesting"
+setwd(outDir)
+locations<-c("Allaire","Redon","Paris")
+```
+
+Pour chacun des éléments de locations, on lance la comparaison entre OSM et BD_TOPO_2_2 avec la principale fonction de package, qui appelle les autres fonctions de manière transparente. Elle va d'abord chercher les données, les enregistre dans le répertoire outDir, les dézippe. Puis elle les importe dans R la geom et la colonne qui contient les LCZ. 
+
+Les géométries des deux fichiers sont ensuite intersectées et on compare sur chaque géomtrie intersectée si les deux classifications LCZ sont en accord ou non. 
+
+
+```
+for (i in locations){
+produceAnalysis(location=i,
+  outDir=outDir,
+  wf1="bdtopo_2_2",
+  wf2="osm",refYear1="2022",refYear2="2022",repr="brut",saveG=location)
+}
+```
+Les graphiques ont été créés dans le répertoire dont le chemin est outDir.
+
+Un fichier csv contenant, pour chaque géométrie intersectée, la LCZ qu'elle a dans le premier jeu de donnée, celle qu'elle a dans le second, l'accord ou non entre ces deux LCZ, la surface de la géométrie et la ville (location) à laquelle elle est rattachée. 
+
+
+
+
