@@ -46,8 +46,8 @@ compareLCZ<-function(sf1,column1,wf1="bdtopo_2_2",sf2,column2,wf2="osm",ref=1,
   #paquets<-c("sf","ggplot2","dplyr","cowplot","forcats","units","tidyr","RColorBrewer")
   #lapply(paquets, require, character.only = TRUE)
 
-  if (!(wf1=="osm"||wf1=="bdtopo_2_2"||wf1=="wudapt")|| !(wf2=="osm"||wf2=="bdtopo_2_2"||wf2=="wudapt"))
-    stop("Workflow parameters wf1 and wf2 muste be one of bdtopo_2_2, osm or wudapt")
+  # if (!(wf1=="osm"||wf1=="bdtopo_2_2"||wf1=="wudapt")|| !(wf2=="osm"||wf2=="bdtopo_2_2"||wf2=="wudapt"))
+  #   stop("Workflow parameters wf1 and wf2 muste be one of bdtopo_2_2, osm or wudapt")
 
 
   # store the column names in a way that can be injected in functions A SUPPRIMER ?
@@ -184,14 +184,6 @@ compareLCZ<-function(sf1,column1,wf1="bdtopo_2_2",sf2,column2,wf2="osm",ref=1,
 
 
   if(repr=="grouped"){
-    # niveaux<-c("urban"="urban","industry"="industry","vegetation"="vegetation",
-    #               "impervious"="impervious","perious"="pervious","water"="water")
-    #
-    #
-    # valeurs<-c("urban"="red","industry"="Grey","vegetation"="green",
-    #               "impervious"="black","pervious"="burlywood",
-    #               "water"="blue")
-
 
     # Generate colors to plot grouped values, according to the number of levels of grouped
       # generate palette
@@ -200,8 +192,6 @@ compareLCZ<-function(sf1,column1,wf1="bdtopo_2_2",sf2,column2,wf2="osm",ref=1,
     argums<-list(...)
     indSep<-names(argums)
     indCol<-grep(x=indSep,pattern="col")
-
-
 
       if (is.null(indCol)){
         niveaux<-names(argums) #no color passed in arguments, the name of the grouped lcz are the names of the arguments passed in ...
@@ -271,9 +261,9 @@ compareLCZ<-function(sf1,column1,wf1="bdtopo_2_2",sf2,column2,wf2="osm",ref=1,
 
 matConfOut<-matConfLCZ(sf1=sf1,column1=column1,sf2=sf2,column2=column2,repr=repr,niveaux=niveaux)
 
-matConfLong=matConfOut$matConf
-aires=matConfOut$aires
-pourcAcc=matConfOut$pourcAcc
+matConfLong<-matConfOut$matConf
+aires<-matConfOut$aires
+pourcAcc<-matConfOut$pourcAcc
 
 ################################################
 #  GRAPHICS
@@ -283,11 +273,12 @@ if (repr=='brut'){titrou<-"LCZ"} else {titrou<-"Grouped LCZs"}
 
 if (wf1=="bdtopo_2_2"){adtitre1<-" BDTOPO V2.2"} else
   if(wf1=="osm"){adtitre1<-" OSM "} else
-    if(wf1=="wudapt"){adtitre1<-" WUDAPT"}
+    if(wf1=="wudapt"){adtitre1<-" WUDAPT"}else{adtitre1<-wf1}
+
 
 if (wf2=="bdtopo_2_2"){adtitre2<-" BDTOPO V2.2"} else
   if(wf2=="osm"){adtitre2<-" OSM "} else
-    if(wf2=="wudapt"){adtitre2<-" WUDAPT"}
+    if(wf2=="wudapt"){adtitre2<-" WUDAPT"}else{adtitre2<-wf2}
 
 
 titre1<-paste(titrou,"from ", adtitre1)
@@ -328,7 +319,7 @@ nbgeom2<-nrow(sf2)
 # Plot the second classification
    l2Plot<-ggplot(boundary)+
     geom_sf(data=boundary, fill=NA,lty='blank')+
-     geom_sf(data=sf2,aes(fill=get(column2)),lwd=0)+
+    geom_sf(data=sf2,aes(fill=get(column2)),lwd=0)+
     scale_fill_manual(values=valeurs,labels=etiquettes2)+
     guides(fill=guide_legend(title=titrou))+
     ggtitle(titre2,subtitle=paste0("Number of RSU : ",nbgeom2))
@@ -348,13 +339,13 @@ nbgeom2<-nrow(sf2)
      scale_fill_gradient2(low = "lightgrey", mid="cyan", high = "blue",
                        midpoint = 50, limit = c(0,100), space = "Lab",
                        name="% area") +
-     geom_text(data=matConfLong[matConfLong$accord!=0,],aes(label=round(accord,digits=2)),
+     geom_text(data=matConfLong[matConfLong$accord!=0,],aes(label=round(accord,digits=0)),
                color="black") +coord_fixed()+
      theme(axis.text.x = element_text(angle =70, hjust = 1),
            panel.background = element_rect(fill="grey"))+
       geom_tile(datatemp,mapping=aes(x=a,y=18,fill=pourcAire,height=0.8))+
      geom_tile(datatemp,mapping=aes(x=18,y=a,fill=pourcAire,height=0.8))+
-     ggtitle(titre4)
+     ggtitle(titre4,subtitle="Percentage inferior to 0.5 are rounded to 0")
 
      # annotate("segment",x=0.6, xend=0.6, y=ypos-2, yend=ypos+2,color="lightskyblue1",
      #          arrow = arrow(type = "closed", length = unit(0.02, "npc")))

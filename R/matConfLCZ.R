@@ -24,7 +24,7 @@
 #' @export
 #'
 #' @examples
-matConfLCZ<-function(sf1,column1,sf2,column2,repr="brut",niveaux=as.character(c(1:10,101:107)),plot=FALSE,...){
+matConfLCZ<-function(sf1,column1,sf2,column2,repr="brut",niveaux=as.character(c(1:10,101:107)),plot=F,...){
   # coerce the crs of sf2 to the crs of sf1
   if(st_crs(sf1)!=st_crs(sf2)){sf2<-sf2 %>% st_transform(crs=st_crs(sf1))}
 
@@ -61,14 +61,14 @@ matConfLCZ<-function(sf1,column1,sf2,column2,repr="brut",niveaux=as.character(c(
     summarize(aire=sum(aire,na.rm=F))%>%
     drop_units %>%
     ungroup()
-  areaLCZ1$aire<-round(areaLCZ1$aire/sum(areaLCZ1$aire,na.rm=F)*100,digits = 0)
+  areaLCZ1$aire<-round(areaLCZ1$aire/sum(areaLCZ1$aire,na.rm=F)*100,digits = 2)
 
     # marginal for second LCZ
   areaLCZ2<-echInt %>% st_drop_geometry %>% group_by_at(.vars=column2) %>%
     summarize(aire=sum(aire,na.rm=F))%>%
     drop_units %>%
     ungroup()
-  areaLCZ2$aire<-round(areaLCZ2$aire/sum(areaLCZ2$aire,na.rm=F)*100,digits = 0)
+  areaLCZ2$aire<-round(areaLCZ2$aire/sum(areaLCZ2$aire,na.rm=F)*100,digits = 2)
 
   # Problem : some of the input files do not exhibit all possible LCZ values :
   # pasting the area to the labels would return an error
@@ -110,7 +110,7 @@ matConfLCZ<-function(sf1,column1,sf2,column2,repr="brut",niveaux=as.character(c(
   # for the first dataset and the j LCZ for the second dataset
   matConfLarge<-pivot_wider(data=matConf,names_from=column2,values_from=aire)
   readable<-matConfLarge[,-1]/rowSums(matConfLarge[,-1],na.rm=T)*100
-  matConfLarge<-cbind(matConfLarge[,1],round(x=readable,digits=0))
+  matConfLarge<-cbind(matConfLarge[,1],round(x=readable,digits=2))
 
   print("matConfLarge")
   print(head(matConfLarge))
@@ -176,7 +176,7 @@ matConfLCZ<-function(sf1,column1,sf2,column2,repr="brut",niveaux=as.character(c(
     scale_fill_gradient2(low = "lightgrey", mid="cyan", high = "blue",
                          midpoint = 50, limit = c(0,100), space = "Lab",
                          name="% area") +
-    geom_text(data=matConfLong[matConfLong$accord!=0,],aes(label=round(accord,digits=2)),
+    geom_text(data=matConfLong[matConfLong$accord!=0,],aes(label=round(accord,digits=0)),
               color="black") +coord_fixed()+
     theme(axis.text.x = element_text(angle =70, hjust = 1),
           panel.background = element_rect(fill="grey"))+

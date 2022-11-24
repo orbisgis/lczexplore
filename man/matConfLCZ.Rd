@@ -11,7 +11,7 @@ matConfLCZ(
   column2,
   repr = "brut",
   niveaux = as.character(c(1:10, 101:107)),
-  plot = FALSE,
+  plot = F,
   ...
 )
 }

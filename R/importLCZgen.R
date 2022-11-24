@@ -1,4 +1,4 @@
-#' Imports LCZ from a file
+#' Imports LCZ from a standard geographical file (tested : geojson, shp, more to come)
 #'
 #' @param dirPath is the path of the directory of the file
 #' @param file is the name of the file from which the LCZ are imported
