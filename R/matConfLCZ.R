@@ -112,8 +112,8 @@ matConfLCZ<-function(sf1,column1,sf2,column2,repr="brut",niveaux=as.character(c(
   readable<-matConfLarge[,-1]/rowSums(matConfLarge[,-1],na.rm=T)*100
   matConfLarge<-cbind(matConfLarge[,1],round(x=readable,digits=2))
 
-  print("matConfLarge")
-  print(head(matConfLarge))
+  # print("matConfLarge")
+  # print(head(matConfLarge))
 
 
   # Longer format to feet the geom_tile aes in ggplot2

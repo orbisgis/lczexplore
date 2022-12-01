@@ -2,14 +2,22 @@
 #' produces a map for each classification, a map of their agreement and a representation of a confusion matric between them
 #'
 #' @param sf1 is the sf object that contains the first LCZ classification
-#' @param column1 is the column of sf1 that contains the LCZ classification for each geom of sf1
+#' @param geomID1 is the name of the column storing the ID of the geoms in sf1
+#' @param column1 is the column of sf1 that contains the LCZ classification for each geom of sf1.
+#' By defautl it is set to an empty string and no ID is loaded.
+#' @param confid1 is a column that contains an indicator of confidence
+#' of the level of the LCZ in column 1, e.g. a uniqueness value, or a probability of belonging to the class...
+#' By defautl it is set to an empty string and no confidence indicator is loaded.
 #' @param wf1 is the workflow used to produce the first LCZ classification.
 #' When GeoClimate was used with BD_TOPO V2 data as input,
 #' use "bdtopo_2_2". When GeoClimate was used with Open Street Map data as input, use "osm".
 #' When the LCZ come from the wudapt Europe tiff, use "wudapt".
-#'
 #' @param sf2 is the sf object that contains the second LCZ classification
+#' @param geomID2 is the name of the column storing the ID of the geoms in sf2
 #' @param column2 is the column of sf2 that contains the LCZ classification for each geom of sf2
+#' @param confid2 is a column that contains an indicator of confidence
+#' of the level of the LCZ in column 2, e.g. a uniqueness value, or a probability of belonging to the class...
+#' By defautl it is set to an empty string and no confidence indicator is loaded.
 #' @param wf2 is the workflow used to produce the second LCZ classification.
 #' When GeoClimate was used with BD_TOPO V2 data as input,
 #' use "bdtopo_2_2". When GeoClimate was used with Open Street Map data as input, use "osm".
@@ -25,21 +33,18 @@
 #' @param ... allow to pass arguments if representation is grouped.
 #' The expected arguments are the name of each grouped label,
 #' the levels of LCZ they contain, and last a vector of the colors to use to plot them.
-#' @import sf  ggplot2  dplyr  cowplot  forcats  units  tidyr  RColorBrewer
+#' @import sf ggplot2 dplyr cowplot forcats units tidyr RColorBrewer
 #' @return returns an object called matConfOut which contains
 #' matConfLong, a confusion matrix in a longer form, which can be written in a file by the compareLCZ function
 #' and is used by the geom_tile function of the ggplot2 package.
 #' matConfPlot is a ggplot2 object showing the confusion matrix. If plot=T, it is also directly plotted
 #' aires contains the sums of each LCZ area
 #' pourcAcc is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
-#'
 #' If saveG is not an empty string, graphics are saved under "saveG.png"
-#'
-#'
 #' @export
-#'
 #' @examples
-compareLCZ<-function(sf1,column1,wf1="bdtopo_2_2",sf2,column2,wf2="osm",ref=1,
+compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
+                     sf2,column2,geomID2="",confid2="",wf2="osm",ref=1,
                      repr="brut",saveG="",exwrite=T,location="Redon",...){
 
   # dependancies dealt with @import through roxygen
@@ -93,8 +98,14 @@ compareLCZ<-function(sf1,column1,wf1="bdtopo_2_2",sf2,column2,wf2="osm",ref=1,
   try(st_crs(sf1)==st_crs(sf2),stop("Input sf objects must have the same SRID"))
 
 
- sf1<-select(sf1,column1) %>% drop_na(column1)
- sf2<-select(sf2,column2) %>% drop_na(column2)
+ nom1<-c(column1,geomID1,confid1)
+ nom1<-nom1[sapply(nom1,nchar)!=0]
+ nom2<-c(column2,geomID2,confid2)
+ nom2<-nom2[sapply(nom2,nchar)!=0]
+
+
+ sf1<-select(sf1,nom1) %>% drop_na(column1)
+ sf2<-select(sf2,nom2) %>% drop_na(column2)
  # Prepare the levels of the expected LCZ
 
   if(repr=="brut"){
@@ -333,6 +344,8 @@ nbgeom2<-nrow(sf2)
                                            pourcAcc, " % of the area "))
 
 # Plot how the LCZ each level of the first classification is split into levels of the second classification
+   coordRef=length(niveaux)+1
+
    matConfPlot<-ggplot(data = matConfLong, aes(x=get(column1), y=get(column2), fill =accord)) +
      geom_tile(color = "white",lwd=1.2,linetype=1)+
      labs(x=lab1,y=lab2)+
@@ -343,8 +356,8 @@ nbgeom2<-nrow(sf2)
                color="black") +coord_fixed()+
      theme(axis.text.x = element_text(angle =70, hjust = 1),
            panel.background = element_rect(fill="grey"))+
-      geom_tile(datatemp,mapping=aes(x=a,y=18,fill=pourcAire,height=0.8))+
-     geom_tile(datatemp,mapping=aes(x=18,y=a,fill=pourcAire,height=0.8))+
+      geom_tile(datatemp,mapping=aes(x=a,y=coordRef,fill=pourcAire,height=0.8))+
+     geom_tile(datatemp,mapping=aes(x=coordRef,y=a,fill=pourcAire,height=0.8))+
      ggtitle(titre4,subtitle="Percentage inferior to 0.5 are rounded to 0")
 
      # annotate("segment",x=0.6, xend=0.6, y=ypos-2, yend=ypos+2,color="lightskyblue1",

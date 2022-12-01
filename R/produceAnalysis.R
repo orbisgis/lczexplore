@@ -1,6 +1,8 @@
-#' Calls functions of the package to produce an analysis of two set of LCZ produced by GeoClimate.
+#' Calls functions of the package to produce an analysis of two set of LCZ
+#' produced exclusively by GeoClimate.
 #' Typically one will compare the LCZ produced by GeoClimate using the OSM data as input
-#' to the LCZ produced by GeoClimate using the french BD_TOPO as input
+#' to the LCZ produced by GeoClimate using the french BD_TOPO as input.
+#' Same analysis are reproducible using all the generic functions of the package.
 #'
 #' @param location defines the study area. The study area must have been coputed
 #' and loaded on the cloud of the team. If the fetch function returns an error,
@@ -20,7 +22,9 @@
 #' The expected arguments are the name of each grouped label,
 #' the levels of LCZ they contain, and last a vector of the colors to use to plot them.
 #' @import magrittr
-#' @return
+#' @return : the function doesn't return an object, as all the results
+#' are exported either in csv (both LCZ by geoms by town) either in png
+#' (maps of LCZ classifications and agreement, and confusion matrix).
 #' @export
 #'
 #' @examples
