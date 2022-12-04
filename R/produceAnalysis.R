@@ -7,7 +7,6 @@
 #' @param location defines the study area. The study area must have been coputed
 #' and loaded on the cloud of the team. If the fetch function returns an error,
 #' please contact the GeoClimate Team to make the data available
-#'
 #' @param outDir is the directory in which the output will be saved,
 #' namely the graphics and both LCZ for intersected geometries
 #' @param wf1 is the name of the workflow GeoClimate used to produce the first dataset It can be "osm" or "bdtopo_2_2"
@@ -49,14 +48,16 @@ if (wf1=="bdtopo_2_2"){
   fetchLCZ(location=location,outDir=outDir,wf=wf1)
   inDir<-paste0(outDir,"/",wf1,"/",location,"/")
   print("inDir");print(inDir)
-  df1<-importLCZgc(dirPath=inDir)
+  df1<-importLCZgen(dirPath=inDir,file="rsu_lcz.geojson",column="LCZ_PRIMARY",
+                    geomID="ID_RSU", confid="LCZ_UNIQUENESS_VALUE",output="sfFile")
   print("df1");print(df1)
   }
 
 if (wf1=="osm"){
   fetchLCZ(location=location,outDir=outDir,wf=wf1,refYear=refYear1)
   inDir<-paste0(outDir,"/",wf1,"/",refYear1,"/",location,"/")
-  df1<-importLCZgc(dirPath=inDir)
+  df1<-importLCZgen(dirPath=inDir,file="rsu_lcz.geojson",column="LCZ_PRIMARY",
+                    geomID="ID_RSU", confid="LCZ_UNIQUENESS_VALUE",output="sfFile")
 }
 
 if (wf1=="wudapt"){
@@ -73,14 +74,16 @@ if (wf1=="wudapt"){
   if (wf2=="bdtopo_2_2"){
     fetchLCZ(location=location,outDir=outDir,wf=wf2)
     inDir<-paste0(outDir,"/",wf2,"/",location,"/")
-    df2<-importLCZgc(dirPath=inDir)
+    df2<-importLCZgen(dirPath=inDir,file="rsu_lcz.geojson",column="LCZ_PRIMARY",
+                      geomID="ID_RSU", confid="LCZ_UNIQUENESS_VALUE",output="sfFile")
   }
 
   if (wf2=="osm"){
     fetchLCZ(location=location,outDir=outDir,
              wf=wf2,refYear = refYear2)
     inDir<-paste0(outDir,"/",wf2,"/",refYear2,"/",location,"/")
-    df2<-importLCZgc(dirPath=inDir)
+    df2<-importLCZgen(dirPath=inDir,file="rsu_lcz.geojson",column="LCZ_PRIMARY",
+                      geomID="ID_RSU", confid="LCZ_UNIQUENESS_VALUE",output="sfFile")
   }
 
   if (wf2=="wudapt"){
@@ -92,21 +95,27 @@ if (wf1=="wudapt"){
                          bBox=dfBDTcontour)
   }
 
-if(repr=='brut'){
+if(repr=="brut"){
+  print("boucle brut")
       #name of output Graph
           nameG<-paste0(location,"_",wf1,"_",wf2,"_",repr)
 
       # Compare LCZ
-      if((wf1=="osm"& wf2=="bdtopo2_2")|(wf2=="osm" & wf1=="bdtopo_2_2")){
+      condition<-((wf1=="osm" | wf1=="bdtopo_2_2") & (wf2=="bdtopo_2_2" | wf2=="osm"))
+      if((wf1=="osm" | wf1=="bdtopo_2_2") & (wf2=="bdtopo_2_2" | wf2=="osm")){
+        print("boucle compareLCZ")
+        return(
+          compareLCZ(sf1=df1, geomID1="ID_RSU", confid1="LCZ_UNIQUENESS_VALUE",
+                     column1="LCZ_PRIMARY", wf1=wf1,
+                     sf2=df2,
+                     column2="LCZ_PRIMARY", geomID2="ID_RSU", confid2="LCZ_UNIQUENESS_VALUE",wf2=wf2,
+                     ref=1,
+                     repr="brut",saveG="",exwrite=T,location=location)
+               )
 
-        compareLCZ(sf1=df1,
-                   column1="LCZ_PRIMARY",
-                   sf2=df2,
-                   column2="LCZ_PRIMARY",
-                   ref=1,saveG=nameG,repr=repr,wf1=wf1,wf2=wf2,location=location,...)
       }
 
-      if(wf1=="wudapt"&(wf2=="osm"|wf2=="bdtopo_v2")){
+      if(wf1=="wudapt"&& (wf2=="osm"|wf2=="bdtopo_v2")){
 
         compareLCZ(sf1=df1,
                    column1="EU_LCZ_map",
@@ -115,7 +124,7 @@ if(repr=='brut'){
                    saveG=nameG,repr=repr,wf1=wf1,wf2=wf2,location=location,...)
       }
 
-      if(wf2=="wudapt"&(wf1=="osm"|wf1=="bdtopo_v2")){
+      if(wf2=="wudapt"&& (wf1=="osm"|wf1=="bdtopo_v2")){
 
           compareLCZ(sf1=df1,
                      column1='LCZ_PRIMARY',
@@ -123,7 +132,7 @@ if(repr=='brut'){
                      column2="EU_LCZ_map",
                      saveG=nameG,repr=repr,wf1=wf1,wf2=wf2,location=location,...)
       }
-      }
+}
   if(repr=='grouped'){
 
     print("entrée dans la boucle grouped")

@@ -31,7 +31,7 @@ importLCZgen<-function(dirPath, file, output, column, geomID="", confid="",
   }
 
   if (column!=""){
-    if(drop==T){sfFile<-subset(sfFile,select=column)}
+    if(drop==T){sfFile<-subset(sfFile,select=colonnes)}
     sfFile <-
     sfFile%>% mutate(!!column:=fct_recode(factor(subset(sfFile,select=column,drop=T),levels=niveaux),!!!niveaux))
     return(sfFile)}

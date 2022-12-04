@@ -45,7 +45,7 @@
 #' @examples
 compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
                      sf2,column2,geomID2="",confid2="",wf2="osm",ref=1,
-                     repr="brut",saveG="",exwrite=T,location="Redon",...){
+                     repr="brut",saveG="",exwrite=TRUE,location="Redon",...){
 
   # dependancies dealt with @import through roxygen
   #paquets<-c("sf","ggplot2","dplyr","cowplot","forcats","units","tidyr","RColorBrewer")
@@ -84,6 +84,20 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
     column2<-paste0(column1,".1")
     sf2<-sf2 %>% mutate(!!column2:=subset(sf2,select=column1,drop=T))
     sf2<-sf2 %>% mutate(!!column1:=NULL)
+  }
+  # If geomID name is the same in both input sf files we rename column2
+
+  if(geomID1!="" && geomID1==geomID2){
+    geomID2<-paste0(geomID1,".1")
+    sf2<-sf2 %>% mutate(!!geomID2:=subset(sf2,select=geomID1,drop=T))
+    sf2<-sf2 %>% mutate(!!geomID1:=NULL)
+  }
+  # If confid name is the same in both input sf files we rename column2
+
+  if(confid1!="" && confid1==confid2){
+    confid2<-paste0(confid1,".1")
+    sf2<-sf2 %>% mutate(!!confid2:=subset(sf2,select=confid1,drop=T))
+    sf2<-sf2 %>% mutate(!!confid1:=NULL)
   }
 
  print(paste(" The column ",column1, " of the dataset", namesf1,
@@ -235,7 +249,7 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
    # # Intersect geometries of both files
   ######################################################
     #intersection of geometries
-  echInt<-st_intersection(x=sf1[column1],y=sf2[column2])
+  echInt<-st_intersection(x=sf1[nom1],y=sf2[nom2])
     # checks if the two LCZ classifications agree
   echInt$accord<-subset(echInt,select=column1,drop=T)==subset(echInt,select=column2,drop=T)
 
@@ -260,11 +274,11 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
         nom<-paste0(wf1,"_",wf2,".csv")
 
         print(nom)
-        if (exwrite==T){
+        if (exwrite==TRUE){
         write.table(x=echIntExpo, file =nom, append = TRUE, quote = TRUE, sep = ";",
-                    eol = "\n", na = "NA", dec = ".", row.names = TRUE,
-                    col.names = FALSE, qmethod = c("escape", "double"),
-                    fileEncoding = "")
+                    eol = "\n", na = "NA", dec = ".",
+                   qmethod = c("escape", "double"),
+                    fileEncoding = "", col.names=TRUE,row.names=F)
         }
 ###################################################
 # Confusion Matrix

@@ -7,19 +7,18 @@
 #' @param column is the column that contains the LCZ.
 #' @param repr : if "brut" then an optimal set of colors is used to produce the plotted map.
 #' If "grouped", colors will be randomly chosen according to the number of groups present in the column.
-#'
+#' @import sf ggplot2 dplyr cowplot forcats
 #' @return no object is returned, but plots of the LCZ levels are produced
 #' @export
-#' @import sf ggplot2 dplyr cowplot forcats
 #' @examples
-showLCZ<-function(sf,wf,column,repr){
+showLCZ<-function(sf,wf,column,repr,niveaux="",colors=""){
 
   #dependancies should be dealt with @import
   # paquets<-c("sf","ggplot2","dplyr","cowplot","forcats")
   # lapply(paquets, require, character.only = TRUE)
 
   try(class(sf)[1]=="sf", stop("Input data must be sf object"))
-  sf<-sf %>% mutate(!!column:=factor(subset(sf,select=column,drop=T)))
+  sf<-sf %>% dplyr::mutate(!!column:=factor(subset(sf,select=column,drop=T)))
 
 
 
@@ -35,42 +34,63 @@ showLCZ<-function(sf,wf,column,repr){
   # Voir comment on attache un jeu de données à un package et mettre le chemin relatif qui va bien
 
   if (repr=='brut'){
-  CodeCoulLCZ<-read.csv("/home/gousseff/Documents/2_CodesSources/GeoClimate/GeoclimateDefaultCase/Manips_R/CodesCouleursLCZ.csv")  # A remplacer par un fichier embarqué dans le paquet
-  colorMap<-CodeCoulLCZ$Hexa.Color.code # création d'un vecteur de couleurs
-  names(colorMap)<-CodeCoulLCZ$Type     # attribution de noms qui sont les LCZ type
+  #CodeCoulLCZ<-read.csv("/home/gousseff/Documents/2_CodesSources/GeoClimate/GeoclimateDefaultCase/Manips_R/CodesCouleursLCZ.csv")  # A remplacer par un fichier embarqué dans le paquet
+  colorMap<-c("#8b0101","#cc0200","#fc0001","#be4c03","#ff6602","#ff9856",
+              "#fbed08","#bcbcba","#ffcca7","#57555a","#006700","#05aa05",
+              "#648423","#bbdb7a","#010101","#fdf6ae","#6d67fd")
+  names(colorMap)<-as.character(c(1:10,101:107)) # création d'un vecteur de couleurs
+  etiquettes<-c("LCZ 1: Compact high-rise","LCZ 2: Compact mid-rise","LCZ 3: Compact low-rise",
+                     "LCZ 4: Open high-rise","LCZ 5: Open mid-rise","LCZ 6: Open low-rise",
+                     "LCZ 7: Lightweight low-rise","LCZ 8: Large low-rise",
+                     "LCZ 9: Sparsely built","LCZ 10: Heavy industry",
+                     "LCZ A: Dense trees", "LCZ B: Scattered trees",
+                     "LCZ C: Bush,scrub","LCZ D: Low plants",
+                     "LCZ E: Bare rock or paved","LCZ F: Bare soil or sand","LCZ G: Water"
+  )     # attribution de noms qui sont les LCZ type
+
   }
 
-
-  # print(paste("traitement avec wf =", wf, "et repr= ",repr,
-  #             "et sf est de classe ",
-  #             ifelse((wf=="bdt"|wf=="osm"), class(sf$rsu_lcz)[1],class(sf)[1])))
-
 ###### Représentations des LCZ Brutes sorties de GeoClimate
-  if ((wf=="bdt"|wf=="osm") & (repr=="brut"|repr=="both")){
+  if (repr=="brut"|repr=="both"){
 
     print(head(sf[column]))
-    wtitre<-ifelse(wf=="bdt","BD_TOPO v2","Open Street Map")
+    wtitre<-wf
 
     pBrut<-ggplot(sf) + # les données
-        geom_sf(aes(fill=get(column))) +        # Le type de géométrie : ici un sf, avec fill pour remplir les polygones
-        scale_fill_manual(values=colorMap,labels=CodeCoulLCZ$Type.definition)+
-        ggtitle(paste("LCZ Geoclimate", wtitre))
+      geom_sf(aes(fill=get(column))) +        # Le type de géométrie : ici un sf, avec fill pour remplir les polygones
+      scale_fill_manual(values=colorMap,labels=etiquettes)+
+      ggtitle(paste("LCZ Geoclimate from", wtitre))
     #print(pBrut)
   }
   #
 
 ###### Représentations des LCZ Geoclimate reclassées en occupation du sol
 
-  if ((wf=="bdt"|wf=="osm") && (repr=="grouped"|repr=="both")){
+  if (repr=="grouped"|repr=="both"){
 
+
+    if (length(niveaux)==1&&niveaux==""){
     niveaux<-levels(subset(sf,select=column,drop=T))
     print(niveaux)
-    wtitreOc<-paste(ifelse(wf=="bdt","BD_TOPO v2","Open Street Map"), "grouped")
+    }
+
+    wtitreOc<-paste(wf,"grouped")
+
+    if(length(colors)==1 && colors==""){couleurs<-sample(x=1:657,size=length(niveaux))} else{
+      if (length(colors)!=length(niveaux))
+      {print("colors argument must contain the same number of colors as the number of levels of LCZ.
+             Maybe you didn't take into account empty levels ? Colors will be randomly picked from the colors you submitted.
+               If this number is unknown, leave colors=\"\" and random colors will be picked for you")
+        couleurs<-colors ; names(couleurs)<-niveaux} else{
+                 couleurs<-colors ; names(couleurs)<-niveaux
+               }
+    }
+
 
     pgrouped<-
       ggplot(sf) + # les données
       geom_sf(aes(fill=get(column))) +        # Le type de géométrie : ici un sf, avec fill pour remplir les polygones
-      scale_fill_manual(values=colors()[sample(x=1:657,size=length(niveaux))],
+      scale_fill_manual(values=couleurs,
                         labels=niveaux)+
       ggtitle(paste("LCZ Geoclimate",wtitreOc))
    #print(pgrouped)
@@ -79,25 +99,25 @@ showLCZ<-function(sf,wf,column,repr){
 # Représentation des LCZ issues de Wudapt
 
 
-  if (wf=="wudapt" & repr=="brut"){
-    sf$EU_LCZ_map<-codeNivLCZ(sf$EU_LCZ_map,orig="wudapt")
-
-    print(head(sf$EU_LCZ_map))
-    wtitre<-"WUDAPT"
-    pBrut<-ggplot(sf) + # les données
-      geom_sf(aes(fill=EU_LCZ_map)) +        # Le type de géométrie : ici un sf, avec fill pour remplir les polygones
-      scale_fill_manual(values=colorMap,labels=CodeCoulLCZ$Type.definition)
-    }
-  if (wf=="wudapt" & repr=="grouped"){
-    niveaux<-levels(subset(sf,select=column,drop=T))
-    print(niveaux)
-       wtitreOc<-"Grouped classes"
-    pgrouped<-ggplot(sf)+
-      geom_sf(aes(fill=grouped)) +        # Le type de géométrie : ici un sf, avec fill pour remplir les polygones
-      scale_fill_manual(values=colors()[sample(x=1:657,size=length(niveaux))],
-                        labels=niveaux)+
-      ggtitle(paste("LCZ Wudapt ",wtitreOc))
-  }
+  # if (wf=="wudapt" & repr=="brut"){
+  #   sf$EU_LCZ_map<-codeNivLCZ(sf$EU_LCZ_map,orig="wudapt")
+  #
+  #   print(head(sf$EU_LCZ_map))
+  #   wtitre<-"WUDAPT"
+  #   pBrut<-ggplot(sf) + # les données
+  #     geom_sf(aes(fill=EU_LCZ_map)) +        # Le type de géométrie : ici un sf, avec fill pour remplir les polygones
+  #     scale_fill_manual(values=colorMap,labels=etiquettes)
+  #   }
+  # if (wf=="wudapt" & repr=="grouped"){
+  #   niveaux<-levels(subset(sf,select=column,drop=T))
+  #   print(niveaux)
+  #      wtitreOc<-"Grouped classes"
+  #   pgrouped<-ggplot(sf)+
+  #     geom_sf(aes(fill=grouped)) +        # Le type de géométrie : ici un sf, avec fill pour remplir les polygones
+  #     scale_fill_manual(values=colors()[sample(x=1:657,size=length(niveaux))],
+  #                       labels=niveaux)+
+  #     ggtitle(paste("LCZ Wudapt ",wtitreOc))
+  # }
 
 
 
