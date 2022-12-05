@@ -22,7 +22,7 @@ importLCZgen<-function(dirPath, file, output, column, geomID="", confid="",
                                                         "105"="15", "106"="16","107"="17"),drop=T){
   fileName<-paste0(dirPath,file)
   # select only the needed column that is the unempty strings among column, geomID and confid
-  colonnes<-c(column,geomID,confid)
+  colonnes<-c(geomID,column,confid)
   colonnes<-colonnes[sapply(colonnes,nchar)!=0]
   sfFile<-st_read(dsn=fileName)[,colonnes]
 

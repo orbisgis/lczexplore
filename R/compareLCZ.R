@@ -33,7 +33,7 @@
 #' @param ... allow to pass arguments if representation is grouped.
 #' The expected arguments are the name of each grouped label,
 #' the levels of LCZ they contain, and last a vector of the colors to use to plot them.
-#' @import sf ggplot2 dplyr cowplot forcats units tidyr RColorBrewer
+#' @import sf ggplot2 dplyr cowplot forcats units tidyr RColorBrewer utils
 #' @return returns an object called matConfOut which contains
 #' matConfLong, a confusion matrix in a longer form, which can be written in a file by the compareLCZ function
 #' and is used by the geom_tile function of the ggplot2 package.
@@ -112,9 +112,9 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
   try(st_crs(sf1)==st_crs(sf2),stop("Input sf objects must have the same SRID"))
 
 
- nom1<-c(column1,geomID1,confid1)
+ nom1<-c(geomID1,column1,confid1)
  nom1<-nom1[sapply(nom1,nchar)!=0]
- nom2<-c(column2,geomID2,confid2)
+ nom2<-c(geomID2,column2,confid2)
  nom2<-nom2[sapply(nom2,nchar)!=0]
 
 
@@ -274,11 +274,20 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
         nom<-paste0(wf1,"_",wf2,".csv")
 
         print(nom)
+        filePath<-paste0(getwd(),"/",nom)
+
         if (exwrite==TRUE){
+        if (!file.exists(filePath)){
         write.table(x=echIntExpo, file =nom, append = TRUE, quote = TRUE, sep = ";",
                     eol = "\n", na = "NA", dec = ".",
                    qmethod = c("escape", "double"),
                     fileEncoding = "", col.names=TRUE,row.names=F)
+        }else{
+          write.table(x=echIntExpo, file =nom, append = TRUE, quote = TRUE, sep = ";",
+                      eol = "\n", na = "NA", dec = ".",
+                      qmethod = c("escape", "double"),
+                      fileEncoding = "", col.names=FALSE,row.names=F)
+        }
         }
 ###################################################
 # Confusion Matrix

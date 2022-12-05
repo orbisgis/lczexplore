@@ -1,6 +1,7 @@
 #' Compares two LCZ classifications on several locations
 #'
 #' @param filePath : the full path to the file to import
+#' @param file : if filePath is an empty string file is the name of data set already loaded in the R session
 #' @param wf1 : a string indicating the origin of the LCZ classification 1
 #' @param wf2 : a string indicating the origin of the LCZ classification 1
 #' @param sep : the seperator used in the csv file
@@ -19,16 +20,25 @@
 #' @export
 #'
 #' @examples
-matConfLCZGlob<-function(filePath,wf1,wf2,column1,column2,sep=";",repr="brut",
-                        niveaux="",plot=T,...){
+matConfLCZGlob<-function(filePath="", file, wf1, wf2, geomID1="", column1, confid1="",
+                         geomID2="", column2, confid2="", sep=";", repr="brut",
+                        niveaux="", plot=T, ...){
 
   if(column1==column2){
     column2<-paste0(column1,".1")
   }
 
 
-  echInt<-read.csv(filePath,sep,header=F,stringsAsFactors = T)
-  names(echInt)<-c("ID",column1,column2,"accord","aire","ville")
+  colonnes<-c(geomID1,column1,confid1,geomID2,column2,confid2)
+  colonnes<-colonnes[sapply(colonnes,nchar)!=0] %>% c("accord","aire","location")
+
+  if(filePath!=""){
+    echInt<-read.csv(filePath,sep,header=T,stringsAsFactors = T)
+    names(echInt)<-colonnes
+  } else {echInt<-file[,colonnes]}
+
+
+
 
   nbTowns<-length(unique(echInt$ville))
 
