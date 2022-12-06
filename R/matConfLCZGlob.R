@@ -53,8 +53,8 @@ matConfLCZGlob<-function(filePath="", file, wf1, wf2, geomID1="", column1, confi
   echInt[,column1]<-factor(echInt[,column1],levels=niveaux)
   echInt[,column2]<-factor(echInt[,column2],levels=niveaux)
 
-  print("echInt")
-  print(head(echInt))
+  # print("echInt")
+  # print(head(echInt))
 
   # Marginal areas
 
@@ -78,9 +78,9 @@ matConfLCZGlob<-function(filePath="", file, wf1, wf2, geomID1="", column1, confi
   # Here is an ugly solution to overcome this (and see later to include the potentially missing combination of levels)
 
   aires<-data.frame(niveaux=niveaux, aire1=0, aire2=0)
-  print(aires)
-
-  print(head(areaLCZ1[,column1]))
+  # print(aires)
+  #
+  # print(head(areaLCZ1[,column1]))
 
   for (i in areaLCZ1[,column1]){
     aires[aires$niveaux==i,'aire1']<-areaLCZ1[areaLCZ1[,column1]==i,'aire']
@@ -101,15 +101,15 @@ matConfLCZGlob<-function(filePath="", file, wf1, wf2, geomID1="", column1, confi
   matConf<-echInt %>% group_by_at(.vars=c(column1,column2)) %>%
     summarize(aire=sum(aire))%>% drop_units %>% ungroup %>% ungroup
 
-  print("matConf")
-  print(head(matConf))
+  # print("matConf")
+  # print(head(matConf))
 
   matConfLarge<-pivot_wider(data=matConf,names_from=column2,values_from=aire)
   readable<-matConfLarge[,-1]/rowSums(matConfLarge[,-1],na.rm=T)*100
   matConfLarge<-cbind(matConfLarge[,1],round(x=readable,digits=2))
 
-  print("matConfLarge")
-  print(head(matConfLarge))
+  # print("matConfLarge")
+  # print(head(matConfLarge))
 
 
   ###############################################################
@@ -119,7 +119,7 @@ matConfLCZGlob<-function(filePath="", file, wf1, wf2, geomID1="", column1, confi
   # Longer format to feet the geom_tile aes in ggplot2
 
   matConfLong<-pivot_longer(matConfLarge,cols=-1,names_to = column2)
-  print("matConfLong avant reorder factor")
+  # print("matConfLong avant reorder factor")
   names(matConfLong)<-c(column1,column2,"accord")
 
   # Reordering of factors (as they were sorted in the order of showing in the file)
@@ -162,8 +162,8 @@ matConfLCZGlob<-function(filePath="", file, wf1, wf2, geomID1="", column1, confi
   matConfLong<-matConfLong %>% arrange(column1,column2)
   #Include all the lcz levels, even if they are not present in the datasets
 
-  print("matConfLongaprès reorder factor")
-  print(matConfLong)
+  # print("matConfLongaprès reorder factor")
+  # print(matConfLong)
   datatemp<-data.frame(a=factor(niveaux),pourcAire=aires$aire1)
   ############
   # Plot

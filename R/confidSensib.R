@@ -108,7 +108,7 @@ confidSensib<-function(file, filePath="", nPoints=5,
                      Agreement=c(percAgrKeep,percAgrDrop),
                      Kept=rep(c("confidence >= threshold","confidence < threshold"),each=nPoints),
                      nbGeoms=c(nbKeep,nbDrop))
-
+    data$Kept<-factor(data$Kept,levels=c("confidence >= threshold","confidence < threshold"))
     # graphics
 
     etiquette<-paste0("average agreement percentage for LCZ with no confidence value : ",
@@ -116,6 +116,9 @@ confidSensib<-function(file, filePath="", nPoints=5,
 
     confThreshPlot<-ggplot(data=data, aes(x=Confidence, y=Agreement, color=Kept, shape=Kept))+
       labs(x="Confidence threshold", color = "Geom set", shape="Geom set")+
+      scale_fill_discrete(breaks=c("confidence >= threshold","confidence < threshold"),)+
+      scale_color_manual(values =
+                           c("confidence >= threshold" = "#00BFC4", "confidence < threshold" = "#F8766D"))+
       geom_point() +
       geom_text(aes(x=Confidence,y=Agreement,label=nbGeoms), nudge_y=-2)+
       geom_hline(yintercept=NAPercAgr,linetype='dashed',color='grey')+
@@ -133,9 +136,9 @@ confidSensib<-function(file, filePath="", nPoints=5,
 # Per LCZ levels of the first classification
 #############################################################################################
 niveaux<-unique(echIntConf[,column1]) %>% as.vector
-  print("niveaux")
-  print(niveaux)
- print("echinConf avant boucle LCZ") ; print(head(echIntConf))
+ #  print("niveaux")
+ #  print(niveaux)
+ # print("echinConf avant boucle LCZ") ; print(head(echIntConf))
   byLCZ<-data.frame(Confidence=numeric(), Agreement=numeric(),
                     Kept=character(),nbGeoms=numeric(),LCZ=character())
 
@@ -147,12 +150,27 @@ niveaux<-unique(echIntConf[,column1]) %>% as.vector
  nivList<-names(sortieParLCZ)
  sortie<-data.frame(Confidence=numeric(0),Agreement=numeric(0),Kept=character(0),nbGeom=numeric(0),LCZ=character(0))
  for (i in names(sortieParLCZ)){
-    sortie<-rbind(sortie,cbind(sortieParLCZ[[i]],rep(i,nrow(sortieParLCZ[[i]]))))
+    sortie<-rbind(sortie,cbind(sortieParLCZ[[i]],LCZ=rep(i,nrow(sortieParLCZ[[i]]))))
  }
 
-
- #sortie<-do.call(what="rbind",sortieParLCZ)
+ byLCZPLot<-ggplot(data=sortie, aes(x=Confidence, y=Agreement, color=Kept, shape=Kept))+
+   labs(x="Confidence threshold", color = "Geom set", shape="Geom set")+
+   scale_fill_discrete(breaks=c("confidence >= threshold","confidence < threshold"),)+
+   scale_color_manual(values =
+                        c("confidence >= threshold" = "#00BFC4", "confidence < threshold" = "#F8766D"))+
+   geom_point() +
+   geom_text(aes(x=Confidence,y=Agreement,label=nbGeoms), nudge_y=-4.3)+
+   ggtitle(label="Agreement by minimum confidence within LCZ level",
+           subtitle="Number of geoms used to compute agreement written under each point")+
+   facet_wrap(~LCZ)
+ plot(byLCZPLot)
  return(sortie)
+
+
+
+ #return(sortie)
+
+
 
  # for (i in 1:length(niveaux)){
 #   print("boucle BYLCZ")
