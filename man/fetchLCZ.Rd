@@ -14,6 +14,8 @@ fetchLCZ(location, outDir, wf = "bdtopo_2_2", refYear = "2022", ...)
 \item{wf}{workflow can be bdtopo_2_2, when GeoClimate used the BDTOPO data base, or osm when it used the open street map data.}
 
 \item{refYear}{this parameters is integrated in the name given to the data, in order to allow to re-run the function according to the reference year. At the moment only 2022 data have been tried}
+
+\item{...}{allows to pass arguments from the produce analysis function to the LCZgroup2 and compareLCZ functions}
 }
 \value{
 returns no R object. The data are uploaded from the GeoClimate cloud and locally unpacked in the outDir directory

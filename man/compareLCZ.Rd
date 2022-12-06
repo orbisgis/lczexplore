@@ -7,15 +7,19 @@ produces a map for each classification, a map of their agreement and a represent
 \usage{
 compareLCZ(
   sf1,
+  geomID1 = "",
   column1,
+  confid1 = "",
   wf1 = "bdtopo_2_2",
   sf2,
   column2,
+  geomID2 = "",
+  confid2 = "",
   wf2 = "osm",
   ref = 1,
   repr = "brut",
   saveG = "",
-  exwrite = T,
+  exwrite = TRUE,
   location = "Redon",
   ...
 )
@@ -23,7 +27,14 @@ compareLCZ(
 \arguments{
 \item{sf1}{is the sf object that contains the first LCZ classification}
 
-\item{column1}{is the column of sf1 that contains the LCZ classification for each geom of sf1}
+\item{geomID1}{is the name of the column storing the ID of the geoms in sf1}
+
+\item{column1}{is the column of sf1 that contains the LCZ classification for each geom of sf1.
+By defautl it is set to an empty string and no ID is loaded.}
+
+\item{confid1}{is a column that contains an indicator of confidence
+of the level of the LCZ in column 1, e.g. a uniqueness value, or a probability of belonging to the class...
+By defautl it is set to an empty string and no confidence indicator is loaded.}
 
 \item{wf1}{is the workflow used to produce the first LCZ classification.
 When GeoClimate was used with BD_TOPO V2 data as input,
@@ -33,6 +44,12 @@ When the LCZ come from the wudapt Europe tiff, use "wudapt".}
 \item{sf2}{is the sf object that contains the second LCZ classification}
 
 \item{column2}{is the column of sf2 that contains the LCZ classification for each geom of sf2}
+
+\item{geomID2}{is the name of the column storing the ID of the geoms in sf2}
+
+\item{confid2}{is a column that contains an indicator of confidence
+of the level of the LCZ in column 2, e.g. a uniqueness value, or a probability of belonging to the class...
+By defautl it is set to an empty string and no confidence indicator is loaded.}
 
 \item{wf2}{is the workflow used to produce the second LCZ classification.
 When GeoClimate was used with BD_TOPO V2 data as input,
@@ -63,7 +80,6 @@ and is used by the geom_tile function of the ggplot2 package.
 matConfPlot is a ggplot2 object showing the confusion matrix. If plot=T, it is also directly plotted
 aires contains the sums of each LCZ area
 pourcAcc is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
-
 If saveG is not an empty string, graphics are saved under "saveG.png"
 }
 \description{

@@ -22,6 +22,7 @@ Imports: RColorBrewer,
           tidyr,
           units
 Suggests: 
+    tinytest,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)

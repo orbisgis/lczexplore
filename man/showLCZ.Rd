@@ -4,7 +4,7 @@
 \alias{showLCZ}
 \title{Produces a simple representation of the LCZ contained in an sf file.}
 \usage{
-showLCZ(sf, wf, column, repr)
+showLCZ(sf, wf, column, repr, niveaux = "", colors = "")
 }
 \arguments{
 \item{sf}{is the sf file which contains the LCZ column to be plotted.}

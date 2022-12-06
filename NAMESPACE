@@ -3,6 +3,7 @@
 export(LCZgroup2)
 export(codeNivLCZ)
 export(compareLCZ)
+export(confidSensib)
 export(fetchLCZ)
 export(importLCZgc)
 export(importLCZgen)

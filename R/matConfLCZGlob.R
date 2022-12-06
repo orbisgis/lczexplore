@@ -200,8 +200,6 @@ sousTitre<-paste0("number of analysed locations : ", nbTowns)
 
   matConfOut<-list(matConf=matConfLong,matConfPlot=matConfPlot,aires=aires,pourcAcc=pourcAcc)
   return(matConfOut)
-
-
 }
 
 

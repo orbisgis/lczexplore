@@ -61,14 +61,20 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
 
 
   # handling of different crs for the two datasets
-  if(st_crs(sf1)!=st_crs(sf2)){sf2<-sf2 %>% st_transform(crs=st_crs(sf1))
+  if(st_crs(sf1)!=st_crs(sf2)){
+    warning("The coordonate systems of the input files differ, they will be
+                        coerced to the specified reference (ref)")
     # if (ref!=""){crsOpt=ref} else {
     #     crsOpt<-readline("Both sf datasets need to live in the same crs projection (srid/epsg) :
     #           type 1 to keep the crs of the first sf dataset, type 2 to keep the crs of the second,
     #           if unsure press 3 to interrupt")
-    # if(crsOpt==1){sf2<-sf2 %>% st_transform(crs=st_crs(sf1))}
-    #     else if(crsOpt==2){sf1<-sf1 %>% st_transform(crs=st_crs(sf2))}
-    #          else {print("Instructions about which crs to use are unclear")}
+     if(ref==1){sf2<-sf2 %>% st_transform(crs=st_crs(sf1))}
+         else if(ref==2){sf1<-sf1 %>% st_transform(crs=st_crs(sf2))}
+              else {
+                warning("The ref argument is unclear (should be either 1 or 2), so the files
+                        will be coerced to the crs of sf1 file")
+                sf2<-sf2 %>% st_transform(crs=st_crs(sf1))
+              }
     # }
   }
 

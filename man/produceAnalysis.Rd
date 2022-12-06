@@ -2,9 +2,11 @@
 % Please edit documentation in R/produceAnalysis.R
 \name{produceAnalysis}
 \alias{produceAnalysis}
-\title{Calls functions of the package to produce an analysis of two set of LCZ produced by GeoClimate.
+\title{Calls functions of the package to produce an analysis of two set of LCZ
+produced exclusively by GeoClimate.
 Typically one will compare the LCZ produced by GeoClimate using the OSM data as input
-to the LCZ produced by GeoClimate using the french BD_TOPO as input}
+to the LCZ produced by GeoClimate using the french BD_TOPO as input.
+Same analysis are reproducible using all the generic functions of the package.}
 \usage{
 produceAnalysis(
   location = "Redon",
@@ -44,8 +46,15 @@ It is important for "osm" workflow as the data are updated frequently.}
 The expected arguments are the name of each grouped label,
 the levels of LCZ they contain, and last a vector of the colors to use to plot them.}
 }
+\value{
+: the function doesn't return an object, as all the results
+are exported either in csv (both LCZ by geoms by town) either in png
+(maps of LCZ classifications and agreement, and confusion matrix).
+}
 \description{
-Calls functions of the package to produce an analysis of two set of LCZ produced by GeoClimate.
+Calls functions of the package to produce an analysis of two set of LCZ
+produced exclusively by GeoClimate.
 Typically one will compare the LCZ produced by GeoClimate using the OSM data as input
-to the LCZ produced by GeoClimate using the french BD_TOPO as input
+to the LCZ produced by GeoClimate using the french BD_TOPO as input.
+Same analysis are reproducible using all the generic functions of the package.
 }
