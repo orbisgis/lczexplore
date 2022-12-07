@@ -119,7 +119,7 @@ matConfLCZ<-function(sf1,column1,sf2,column2,repr="brut",niveaux=as.character(c(
   # Longer format to feet the geom_tile aes in ggplot2
 
   matConfLong<-pivot_longer(matConfLarge,cols=-1,names_to = column2)
-  print("matConfLong avant reorder factor")
+  # print("matConfLong avant reorder factor")
   names(matConfLong)<-c(column1,column2,"accord")
 
   # Reordering of factors (as they were sorted in the order of showing in the file)
@@ -162,9 +162,9 @@ matConfLCZ<-function(sf1,column1,sf2,column2,repr="brut",niveaux=as.character(c(
   matConfLong<-matConfLong %>% arrange(column1,column2)
   #Include all the lcz levels, even if they are not present in the datasets
 
-  print("matConfLongaprès reorder factor")
-  print(matConfLong)
-  datatemp<-data.frame(a=factor(niveaux),pourcAire=aires$aire1)
+  # print("matConfLongaprès reorder factor")
+  # print(matConfLong)
+  datatemp<-data.frame(a=factor(niveaux),pourcAire1=aires$aire1,pourcAire2=aires$aire2)
   ############
   # Plot
   coordRef=length(niveaux)+1
@@ -180,8 +180,8 @@ matConfLCZ<-function(sf1,column1,sf2,column2,repr="brut",niveaux=as.character(c(
               color="black") +coord_fixed()+
     theme(axis.text.x = element_text(angle =70, hjust = 1),
           panel.background = element_rect(fill="grey"))+
-    geom_tile(datatemp,mapping=aes(x=a,y=coordRef,fill=pourcAire,height=0.8))+
-    geom_tile(datatemp,mapping=aes(x=coordRef,y=a,fill=pourcAire,height=0.8))+
+    geom_tile(datatemp,mapping=aes(x=a,y=coordRef,fill=pourcAire2,height=0.8))+
+    geom_tile(datatemp,mapping=aes(x=coordRef,y=a,fill=pourcAire1,height=0.8))+
     ggtitle("Repartition of Reference classes into alternative classes")
     print(matConfPlot)} else {matConfPlot=NULL}
 

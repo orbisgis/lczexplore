@@ -164,7 +164,7 @@ matConfLCZGlob<-function(filePath="", file, wf1, wf2, geomID1="", column1, confi
 
   # print("matConfLongaprès reorder factor")
   # print(matConfLong)
-  datatemp<-data.frame(a=factor(niveaux),pourcAire=aires$aire1)
+  datatemp<-data.frame(a=factor(niveaux),pourcAire1=aires$aire1,pourcAire2=aires$aire2)
   ############
   # Plot
   coordRef=length(niveaux)+1
@@ -193,8 +193,8 @@ sousTitre<-paste0("number of analysed locations : ", nbTowns)
                 color="black") +coord_fixed()+
       theme(axis.text.x = element_text(angle =70, hjust = 1),
             panel.background = element_rect(fill="grey"))+
-      geom_tile(datatemp,mapping=aes(x=a,y=coordRef,fill=pourcAire,height=0.8,width=0.8))+
-      geom_tile(datatemp,mapping=aes(x=coordRef,y=a,fill=pourcAire,height=0.8,width=0.8))+
+      geom_tile(datatemp,mapping=aes(x=a,y=coordRef,fill=pourcAire2,height=0.8,width=0.8))+
+      geom_tile(datatemp,mapping=aes(x=coordRef,y=a,fill=pourcAire1,height=0.8,width=0.8))+
       ggtitle(titre4,subtitle=sousTitre)
     print(matConfPlot)} else {matConfPlot=NULL}
 

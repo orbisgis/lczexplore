@@ -47,6 +47,8 @@ confidSensib<-function(file, filePath="", nPoints=5,
 
 # What is the agreement between LCZ classifications when no confidence value is available on any of them ?
   echIntNoconf<-subset(echInt,is.na(echInt$confidMin))
+  nbOutCasted<-nrow(echIntNoconf)
+  print(paste0("Nombre de geoms sans uniqueness"),)
 
   NAPercAgr<-matConfLCZGlob(file=echIntNoconf, wf1=wf1, wf2=wf2,
                  geomID1=geomID1, column1=column1, confid1=confid1,
@@ -112,7 +114,7 @@ confidSensib<-function(file, filePath="", nPoints=5,
     # graphics
 
     etiquette<-paste0("average agreement percentage for LCZ with no confidence value : ",
-                      NAPercAgr," \n (these geoms are excluded from computing other points)")
+                      NAPercAgr," \n (these ",nbOutCasted," geoms are excluded from computing other points)")
 
     confThreshPlot<-ggplot(data=data, aes(x=Confidence, y=Agreement, color=Kept, shape=Kept))+
       labs(x="Confidence threshold", color = "Geom set", shape="Geom set")+

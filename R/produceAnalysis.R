@@ -110,7 +110,7 @@ if(repr=="brut"){
                      sf2=df2,
                      column2="LCZ_PRIMARY", geomID2="ID_RSU", confid2="LCZ_UNIQUENESS_VALUE",wf2=wf2,
                      ref=1,
-                     repr="brut",saveG="",exwrite=T,location=location)
+                     repr="brut", saveG=nameG, exwrite=T,location=location)
                )
 
       }

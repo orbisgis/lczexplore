@@ -238,7 +238,7 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
               else{
           niveaux<-argums[indSep[-indCol]] %>% names
           valeurs<-argums[indSep[indCol]] %>% unlist() %>% as.vector()
-          print("niveaux");print(niveaux);print("valeurs");print(valeurs)
+          # print("niveaux");print(niveaux);print("valeurs");print(valeurs)
           names(valeurs)<-niveaux
           etiquettes<-niveaux
       }
@@ -334,7 +334,7 @@ etiquettes2<-etiquettes
 etiquettes2<-gsub(":.*",": ",etiquettes)
 etiquettes2<-paste(etiquettes2, aires$aire2 ," %")
 etiquettes1.2<-paste(etiquettes2,aires$aire1)
-datatemp<-data.frame(a=factor(niveaux),pourcAire=aires$aire1)
+datatemp<-data.frame(a=factor(niveaux),pourcAire=aires$aire1,pourcAire1=aires$aire1,pourcAire2=aires$aire2)
 
 boundary1<-sf1 %>% st_union %>% st_boundary()
 centro<-st_centroid(boundary1)
@@ -385,8 +385,8 @@ nbgeom2<-nrow(sf2)
                color="black") +coord_fixed()+
      theme(axis.text.x = element_text(angle =70, hjust = 1),
            panel.background = element_rect(fill="grey"))+
-      geom_tile(datatemp,mapping=aes(x=a,y=coordRef,fill=pourcAire,height=0.8))+
-     geom_tile(datatemp,mapping=aes(x=coordRef,y=a,fill=pourcAire,height=0.8))+
+      geom_tile(datatemp,mapping=aes(x=a,y=coordRef,fill=pourcAire1,height=0.8))+
+     geom_tile(datatemp,mapping=aes(x=coordRef,y=a,fill=pourcAire2,height=0.8))+
      ggtitle(titre4,subtitle="Percentage inferior to 0.5 are rounded to 0")
 
      # annotate("segment",x=0.6, xend=0.6, y=ypos-2, yend=ypos+2,color="lightskyblue1",
