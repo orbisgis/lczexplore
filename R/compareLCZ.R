@@ -208,8 +208,7 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
                  "Bare soil sand",
                  "Water")
   names(valeurs)<-niveaux
-    # print(sf1[column1])
-  # print(sf2[column2])
+rm(temp1) ; rm(temp2)
   }
 
 
@@ -344,7 +343,7 @@ boundary<-st_buffer(x=centro,dist=dist1) %>% st_make_grid(n=1)
 
 nbgeom1<-nrow(sf1)
 nbgeom2<-nrow(sf2)
-
+nbgeomInter<-nrow(echInt)
 
 # Plot the first classification
    l1Plot<- ggplot(boundary)+ # les données
@@ -368,9 +367,10 @@ nbgeom2<-nrow(sf2)
    accordPlot<-ggplot(boundary)+
      geom_sf(data=boundary, fill=NA,lty='blank')+
      geom_sf(data=echInt,aes(fill=accord),lwd=0)+
-     scale_fill_manual(values=c("red","green"),name="Agreement")+
-     ggtitle(label=titre3, subtitle=paste0("The two classifications agree for ",
-                                           pourcAcc, " % of the area "))
+     scale_fill_manual(values=c("red","green"),
+                       name=paste0(
+                         "The two classifications agree for \n ",pourcAcc, " % of the area Agreement"))+
+     ggtitle(label=titre3, subtitle=paste0("Number of intersected geoms : ", nbgeomInter))
 
 # Plot how the LCZ each level of the first classification is split into levels of the second classification
    coordRef=length(niveaux)+1
@@ -385,8 +385,8 @@ nbgeom2<-nrow(sf2)
                color="black") +coord_fixed()+
      theme(axis.text.x = element_text(angle =70, hjust = 1),
            panel.background = element_rect(fill="grey"))+
-      geom_tile(datatemp,mapping=aes(x=a,y=coordRef,fill=pourcAire1,height=0.8))+
-     geom_tile(datatemp,mapping=aes(x=coordRef,y=a,fill=pourcAire2,height=0.8))+
+     geom_tile(datatemp,mapping=aes(x=a,y=coordRef,fill=pourcAire1, height=0.8,width=0.8))+
+     geom_tile(datatemp,mapping=aes(x=coordRef,y=a,fill=pourcAire2, height=0.8,width=0.8))+
      ggtitle(titre4,subtitle="Percentage inferior to 0.5 are rounded to 0")
 
      # annotate("segment",x=0.6, xend=0.6, y=ypos-2, yend=ypos+2,color="lightskyblue1",

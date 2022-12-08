@@ -78,9 +78,9 @@ showLCZ<-function(sf,wf,column,repr,niveaux="",colors=""){
 
     if(length(colors)==1 && colors==""){couleurs<-sample(x=1:657,size=length(niveaux))} else{
       if (length(colors)!=length(niveaux))
-      {print("colors argument must contain the same number of colors as the number of levels of LCZ.
-             Maybe you didn't take into account empty levels ? Colors will be randomly picked from the colors you submitted.
-               If this number is unknown, leave colors=\"\" and random colors will be picked for you")
+      {print(paste("colors argument must contain the same number of colors (here ",length(colors),
+                   ") as the number of levels of LCZ (here ",length(niveaux),"). \n, Maybe you didn't take into account empty levels ? Colors will be randomly picked from the colors you submitted.
+               If this number is unknown, leave colors=\"\" and random colors will be picked for you"))
         couleurs<-colors ; names(couleurs)<-niveaux} else{
                  couleurs<-colors ; names(couleurs)<-niveaux
                }
@@ -92,7 +92,7 @@ showLCZ<-function(sf,wf,column,repr,niveaux="",colors=""){
       geom_sf(aes(fill=get(column))) +        # Le type de géométrie : ici un sf, avec fill pour remplir les polygones
       scale_fill_manual(values=couleurs,
                         labels=niveaux)+
-      ggtitle(paste("LCZ Geoclimate",wtitreOc))
+      ggtitle(paste("LCZ",wtitreOc))
    #print(pgrouped)
   }
 

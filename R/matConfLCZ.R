@@ -101,8 +101,8 @@ matConfLCZ<-function(sf1,column1,sf2,column2,repr="brut",niveaux=as.character(c(
   matConf<-echInt %>% st_drop_geometry %>% group_by_at(.vars=c(column1,column2)) %>%
     summarize(aire=sum(aire))%>% drop_units %>% ungroup %>% ungroup
 
-  print("matConf")
-  print(head(matConf))
+  # print("matConf")
+  # print(head(matConf))
 
   # Wider format to compute area based confusion
 
@@ -180,8 +180,8 @@ matConfLCZ<-function(sf1,column1,sf2,column2,repr="brut",niveaux=as.character(c(
               color="black") +coord_fixed()+
     theme(axis.text.x = element_text(angle =70, hjust = 1),
           panel.background = element_rect(fill="grey"))+
-    geom_tile(datatemp,mapping=aes(x=a,y=coordRef,fill=pourcAire2,height=0.8))+
-    geom_tile(datatemp,mapping=aes(x=coordRef,y=a,fill=pourcAire1,height=0.8))+
+    geom_tile(datatemp,mapping=aes(x=a,y=coordRef,fill=pourcAire2, height=0.8,width=0.8))+
+    geom_tile(datatemp,mapping=aes(x=coordRef,y=a,fill=pourcAire1, height=0.8,width=0.8))+
     ggtitle("Repartition of Reference classes into alternative classes")
     print(matConfPlot)} else {matConfPlot=NULL}
 

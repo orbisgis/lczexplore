@@ -7,7 +7,7 @@
 importLCZgen(
   dirPath,
   file,
-  output,
+  output = "sfFile",
   column,
   geomID = "",
   confid = "",

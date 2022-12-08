@@ -124,7 +124,7 @@ confidSensib<-function(file, filePath="", nPoints=5,
       geom_point() +
       geom_text(aes(x=Confidence,y=Agreement,label=nbGeoms), nudge_y=-2)+
       geom_hline(yintercept=NAPercAgr,linetype='dashed',color='grey')+
-      geom_text(aes(x=0.50,y=NAPercAgr,label=etiquette,vjust=1.5),inherit.aes=F,color='grey',size=4)+
+      geom_text(aes(x=0.50,y=NAPercAgr,label=etiquette,vjust=1.5),inherit.aes=F,color='darkgrey',size=4)+
       ggtitle(label="Agreement according to the minimum confidence granted to LCZ level",
               subtitle="Number of geoms used to compute agreement written under each point")
 

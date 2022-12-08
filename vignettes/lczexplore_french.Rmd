@@ -27,14 +27,158 @@ Il a pour objectif de faciliter la comparaison de classifications en zones clima
 ## Installation 
 A vérifier une fois le package testé ! A COMPLÉTER PLUS TARD
 Dézipper le tar.gz fourni ou utiliser une install depuis le github lczexplore : à compléter
-l'appeler avec install.packages
+l'installer avec install.packages("lczexplore")
+le charger avec library(lczexplore)
+
+# Cas général : charger un fichier contenant des geométries et les LCZ associées
+
+## Importer les fichiers avec la fonction importLCZgen
+
+La fonction importLCZgen est la fonction générique d'import du fichier contenant les LCZ. Les fichiers geojson et shp sont normalement importés sans problème. 
+Il faut lui indiquer le chemin du répertoire où se trouve le fichier (argument `dirPath`) et le nom du fichier (argument `file`).
+L'argument `column`, obligatoire, renseigne le nom de la colonne contenant les niveaux de LCZ, l'argument optionnel `geomID` celui des identifiants de géométries et l'argument optionnel `confid` celui d'une éventuelle mesure de la confiance qu'on a en la valeur de LCZ attribuée à une géométrie.
+
+Par défaut, cette fonction ressort un fichier de classe simple feature, telle que définie par l'OpenGIS et gérée par le paquet `sf`, paquet de référence pour la gestion des données vecteurs dans R [https://doi.org/10.32614/RJ-2018-009]. Mais on peut choisir `output="bBox"` pour que la fonction ressorte la bounding box des géométries contenues dans le fichier concerné.
+
+```{R, echo = FALSE}
+dirPath<-paste0(system.file("extdata",package="lczexplore"),"/")
+
+redonOSM<-importLCZgen(dirPath=dirPath,file="rsu_lcz_osm_redon.geojson",column = "LCZ_PRIMARY")
+redonBDT<-importLCZgen(dirPath=dirPath,file="rsu_lcz_bdt_redon.geojson",column = "LCZ_PRIMARY")
+#
+```
+## Représenter les LCZ avec la fonction showLCZ
+Une fois que le fichier a été chargé dans un objet R de classe `sf`, il est possible de le représenter avec la fonction `showLCZ`. On lui spécifie le jeu de données qu'on a chargé par l'argument `sf`, et on lui précise la colonne contenant les valeurs de LCZ par l'argument `column`.L'argument `wf` permet de spécifier le workflow qui a servi à générer les données. Il sera repris dans le titre du graphique produit. 
+
+Si on représente des LCZ avec des niveaux de 1 à 10 puis de 101 à 107 selon la convention adoptée dans la chaîne GeoClimate, on peut le spécifier en renseignant repr à `brut`. Ainsi, un choix standardisé de couleurs sera utilisé. C'est le choix recommandé.
+
+```{R, echo=FALSE, fig.dim = c(8, 6)}
+showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="brut",niveaux="",colors="")
+```
+
+Dans le cas contraire, on peut préciser les niveaux (c'est à dire les modalités) de LCZ. On peut notamment avoir regroupé des niveaux (voir paragraphe suivant), et on renseigne alors l'argument `repr` à "grouped". Il faut alors spécifier les couleurs qu'on a choisies. Si on ne spécifie rien, les couleurs sont choisies au hasard. Sinon, il faut préciser un vecteurs de couleurs de la même taille que les niveaux présents spécifiés par l'argument niveaux. 
+```{r, fig.dim = c(8, 6)}
+# Choix de couleurs prises au hasard
+
+# Après une première représentation on constate qu'il n'y a que les niveaux 2, 3, 5, 6, 8, 9, 101, 102, 104, 105, 107.
+# Je spécifie un vecteur de couleur de taille 11 colors
+niveaux<-c(2, 3, 5, 6, 8, 9, 101, 102, 104, 105, 107)
+couleurs<-c("red","brown1","orange","coral","grey","darkgreen","chartreuse4","springgreen3",
+            "darkolivegreen","black","royalblue2")
+showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="grouped",niveaux=niveaux,colors=couleurs)
+
+```
+
+## Regrouper des niveaux de LCZ avec la fonction LCZgroup2
+
+Par exemple, on peut choisir de regrouper les LCZ urbaines et les LCZ de végétation. La fonction LCZgroup2 prend en argument le jeu de données à regrouper, sf, et la colonne où se trouvent les LCZ à regrouper, column. Les arguments suivants sont une succession où les noms des groupes de niveaux reçoivent le vecteur des niveaux qu'ils regroupent, puis un vecteur de couleurs contenant autant de valeurs que de groupes de niveaux. 
+La fonction ressort un jeu de données identique, mais augmenté d'une colonne "grouped" dans laquelle se trouvent les nouveaux groupes de niveaux. 
+On peut alors l'affecter à l'argument column de showLCZ pour représenter les nouveaux groupes de niveaux, en reprenant le nom de ces groupes comme niveaux et le vecteurs de couleurs pour l'argiment colors. 
+
+```{r}
+redonOSMgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",
+                           urban=c("1","2","3","4","5","6","7","8","9"),
+                           industry="10",
+                           vegetation=c("101","102","103","104"),
+                           impervious="105",pervious="106",water="107",colors=c("red","black","green","grey","burlywood","blue"))
+showLCZ(redonOSMgrouped, column="grouped",repr="grouped",wf="OSM", 
+        niveaux = c("urban","industry","vegetation","impervious","pervious","water"),
+        colors=c("red","black","green","grey","burlywood","blue"))
+
+```
+
+# Comparer deux classifications LCZ avec la fonction compareLCZ
+
+L'objectif de ce paquet R est de proposer une comparaison facile de deux classifications en LCZ. 
+Dans notre exemple, on compare naturellement les LCZ créés par la chaîne GeoClimate à partir des données de la BD TOPO® v2.2 produite par l'IGN et celles produites à partir d'Open Street Map sur la même zone. 
+
+*Le graphique produit contient quatre graphiques, il est plus lisible zoomé.* 
+
+```{r, fig.dim = c(12,9 )}
+comparaison<-compareLCZ(sf1=redonBDT,column1="LCZ_PRIMARY", wf1="BD TOPO v2.2", 
+           sf2=redonOSM,column2="LCZ_PRIMARY",wf2="Open Street Map", ref=1,
+           repr="brut",exwrite=F,location="Redon",saveG="")
+dirPath<-paste0(system.file("extdata",package="lczexplore"),"/")
+
+```
+
+La fonction compareLCZ produit un graphique représentant les LCZ du premier jeu de données, et un pour LCZ du second jeu de donnée. 
+
+La fonction compareLCZ intersecte ensuite les géométries des deux fichiers afin d'obtenir des géométries sur lesquelles les deux classifications sont soit tout à fait d'accord soit tout à fait en désaccord. 
+Cet accord entre géométries intersectées est ensuite représenté dans un troisième graphique. 
+La fonction compareLCZ calcule une matrice de confusion (appelée parfois matrice d'agrément) : pour chaque géométrie, on retient sa surface et les valeurs des deux classifications en LCZ. On calcule alors comment chaque modalité de la première classification LCZ est ventilée parmi les modalités de la seconde classification LCZ. Le dernier graphique représente cette information.  
+
+Lecture du fichier correctement zoomé et enregistré en png.
+
+```{r}
+knitr::include_graphics('/home/gousseff/Documents/2_CodesSources/R/lczexplore/lczexplore/vignettes/Redon.png')
+```
+
+Efin, si l'argument `exwrite=TRUE` la fonction compareLCZ exporte les données qui ont servi à produire la matrice de confusion dans un fichier csv. Ce fichier peut ensuite être chargé dans R pour d'autres analyses. 
+
+# Etude de la sensibilité de l'accord à la confiance accordée aux valeurs de LCZ
+
+Certains algorithmes de classement en LCZ peuvent apporter une valeur de confiance à la modalité de classification qu'ils proposent. 
+Par exemple, GeoClimate, pour une géométrie donnée, peut lui avoir attribué une modalité de LCZ principale, mais également indiquer qu'une autre modalité secondaire était possible, même si moins justifiée. GeoClimate propose alors une valeur d'unicité, ou uniqueness. Cette unicité évolue entre 1 et 0, plus elle s'éloigne de 1, plus la seconde modalité était une candidate crédible. Cette uniqueness est donc une mesure de confiance. 
+
+## Prise en compte des géométries et des valeurs de confiance lors de l'import des fichiers. 
+
+La fonction `importLCZgen` permet d'indiquer quelles colonnes du geojson contiennent l'identifiant de la géométrie (`geomID`) et l'indicateur de confiance associé (`confid`).
+```{r}
+dirPath<-paste0(system.file("extdata",package="lczexplore"),"/")
+
+redonOSM<-importLCZgen(dirPath=dirPath,file="rsu_lcz_osm_redon.geojson",column = "LCZ_PRIMARY",
+                       geomID = "ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
+# La fonction d'import fonctionne en réalité aussi avec les fichiers shape
+redonBDT<-importLCZgen(dirPath=dirPath,file="rsu_lcz_bdt_redon.shp", 
+                       column ="LCZ_PRIMAR",geomID = "ID_RSU",,confid="LCZ_UNIQUE" )
+
+```
+L'analyse de sensibilité demande qu'on exporte l'accord entre les géométries en conservant les indicateurs de confiance de chacune des classifications. On renseigne alors les nouvelles colonnes en entrée de la fonction de comparaison, et on charge les données qui ont permis de produire la matrice de confusion dans un objet R. Chaque géom aura maintenant une valeur de confiance associée. 
+
+```{r}
+redonCompare<-compareLCZ(sf1=redonBDT,wf1="bdt", geomID1 = "ID_RSU",column1 ="LCZ_PRIMAR",
+                         confid1 = "LCZ_UNIQUE",
+           sf2=redonOSM,wf2="osm",geomID2 = "ID_RSU",column2="LCZ_PRIMARY",confid2 ="LCZ_UNIQUENESS_VALUE",exwrite=T)
+# redonInputSensib<-read.csv()
+```
+
+Il est important de noter que si les colonnes des deux fichiers ont le même nom compareLCZ ca renommer les colonnes du deuxième fichier en leur concaténant '.1'
+
+
+ A FINIR
+
+```{r}
+
+confidSensib(file=redonCompare$data,filePath="", nPoints=10,
+             wf1="bdtopo_2_2", wf2="osm",
+             geomID1="ID_RSU", column1="LCZ_PRIMAR", confid1="LCZ_UNIQUE",
+             geomID2="ID_RSU.1",column2="LCZ_PRIMARY", confid2="LCZ_UNIQUENESS_VALUE",
+             sep=";", repr="brut",
+             niveaux="", plot=TRUE)
+
+```
+
+
+
+
+
+
+redonOSM<-importLCZgen(dirPath=dirPath,file="rsu_lcz_osm_redon.geojson",column = "LCZ_PRIMARY")
+redonBDT<-importLCZgen(dirPath=dirPath,file="rsu_lcz_bdt_redon.geojson",column = "LCZ_PRIMARY")
+
+importLCZgen<-function(dirPath, file, output="sfFile", column, geomID="", confid="",
+                       niveaux=c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",
+                                                        "9"="9","10"="10","101"="101","102"="102","103"="103","104"="104",
+                                                         "105"="105","106"="106","107"="107","101"="11","102"="12","103"="13","104"="14",
+                                                        "105"="15", "106"="16","107"="17"),drop=T)
 
 
 # étudier une ville déjà chargée par l'équipe GeoCliamate
 
-Choisir le répertoire de travail et les zones d'étude
+A venir : appel et effet de la fonction produceAnalysis
 
-```
+```{R}
 outDir<-"/home/gousseff/Documents/2_CodesSources/R/lczexplore/packageManualTesting"
 setwd(outDir)
 locations<-c("Allaire","Redon","Paris")
@@ -45,7 +189,7 @@ Pour chacun des éléments de locations, on lance la comparaison entre OSM et BD
 Les géométries des deux fichiers sont ensuite intersectées et on compare sur chaque géomtrie intersectée si les deux classifications LCZ sont en accord ou non. 
 
 
-```
+```{R}
 for (i in locations){
 produceAnalysis(location=i,
   outDir=outDir,
