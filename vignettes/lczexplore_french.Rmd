@@ -114,7 +114,13 @@ Lecture du fichier correctement zoomé et enregistré en png.
 knitr::include_graphics('/home/gousseff/Documents/2_CodesSources/R/lczexplore/lczexplore/vignettes/Redon.png')
 ```
 
-Efin, si l'argument `exwrite=TRUE` la fonction compareLCZ exporte les données qui ont servi à produire la matrice de confusion dans un fichier csv. Ce fichier peut ensuite être chargé dans R pour d'autres analyses. 
+Enfin, si l'argument `exwrite=TRUE` la fonction compareLCZ exporte les données qui ont servi à produire la matrice de confusion dans un fichier csv. Ce fichier peut ensuite être chargé dans R pour d'autres analyses.
+
+La fonction renvoie dans R un objet appelé matConfOut qui contient plusieurs éléments : 
+- MatConfOut$data renvoie les géométries intersectées, leur Identifiants s'il était en entrée, leur valeur de LCZ et leur surface. 
+- matConfOut$matConf renvoie la matrice de confusion qui a servi à produire le graphique correspondant. 
+- matConfOut$pourcAcc renvoie une valeur unique qui est le pourcentage d'accord global entre les deuxlassification sur les jeux de données traités. 
+
 
 # Etude de la sensibilité de l'accord à la confiance accordée aux valeurs de LCZ
 
@@ -132,9 +138,11 @@ redonOSM<-importLCZgen(dirPath=dirPath,file="rsu_lcz_osm_redon.geojson",column =
 # La fonction d'import fonctionne en réalité aussi avec les fichiers shape
 redonBDT<-importLCZgen(dirPath=dirPath,file="rsu_lcz_bdt_redon.shp", 
                        column ="LCZ_PRIMAR",geomID = "ID_RSU",,confid="LCZ_UNIQUE" )
+## Notez que les noms des colonnes sont différents pour le fichier shape, dans tous les cas
+## c'est le nom des colonnes de votre fichier que vous rentrerez. 
 
 ```
-L'analyse de sensibilité demande qu'on exporte l'accord entre les géométries en conservant les indicateurs de confiance de chacune des classifications. On renseigne alors les nouvelles colonnes en entrée de la fonction de comparaison, et on charge les données qui ont permis de produire la matrice de confusion dans un objet R. Chaque géom aura maintenant une valeur de confiance associée. 
+L'analyse de sensibilité demande qu'on exporte l'accord entre les géométries en conservant les indicateurs de confiance de chacune des classifications. On renseigne alors les nouvelles colonnes en entrée de la fonction de comparaison, et on charge les données qui ont permis de produire la matrice de confusion dans un objet R. Chaque géom aura maintenant une valeur de confiance associée.
 
 ```{r}
 redonCompare<-compareLCZ(sf1=redonBDT,wf1="bdt", geomID1 = "ID_RSU",column1 ="LCZ_PRIMAR",
@@ -144,6 +152,10 @@ redonCompare<-compareLCZ(sf1=redonBDT,wf1="bdt", geomID1 = "ID_RSU",column1 ="LC
 ```
 
 Il est important de noter que si les colonnes des deux fichiers ont le même nom compareLCZ ca renommer les colonnes du deuxième fichier en leur concaténant '.1'
+
+La question à laquelle cette fonction permet de répondre est : est-ce que l'accord entre les deux classification LCZ augmente si on ne conserve que les géométries pour lesquelles l'indicateur de confiance associé aux LCZ est supérieur à un certain seuil ? 
+
+En entrant le nombre de point `nPoints` que l'on désire, et en chargenat 
 
 
  A FINIR

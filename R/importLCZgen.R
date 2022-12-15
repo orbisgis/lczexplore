@@ -33,7 +33,9 @@ importLCZgen<-function(dirPath, file, output="sfFile", column, geomID="", confid
   if (column!=""){
     if(drop==T){sfFile<-subset(sfFile,select=colonnes)}
     sfFile <-
-    sfFile%>% mutate(!!column:=fct_recode(factor(subset(sfFile,select=column,drop=T),levels=niveaux),!!!niveaux))
+    sfFile%>%
+      mutate(!!column:=fct_recode(factor(subset(sfFile,select=column,drop=T),levels=niveaux),!!!niveaux)) %>%
+      drop_na(column)
     return(sfFile)}
   else {stop("You must specify the coolumn containing the LCZ")}
 

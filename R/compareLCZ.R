@@ -274,7 +274,6 @@ rm(temp1) ; rm(temp2)
         echIntExpo<-echInt %>% mutate(location=location,aire=as.numeric(aire)) %>%
           st_set_geometry(NULL) %>% as.data.frame()
 
-        # nom<-paste0(deparse(substitute(location)),deparse(substitute(sf2)),"_",deparse(substitute(wf1)),deparse(substitute(sf2)),"_",deparse(substitute(wf2)),".geojson")
 
         nom<-paste0(wf1,"_",wf2,".csv")
 
@@ -299,7 +298,7 @@ rm(temp1) ; rm(temp2)
 ###################################################
 
 matConfOut<-matConfLCZ(sf1=sf1,column1=column1,sf2=sf2,column2=column2,repr=repr,niveaux=niveaux)
-
+matConfOut$data<-echIntExpo
 matConfLong<-matConfOut$matConf
 aires<-matConfOut$aires
 pourcAcc<-matConfOut$pourcAcc
