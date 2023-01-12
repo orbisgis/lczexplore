@@ -14,17 +14,31 @@
 #' @return
 #' @export
 #'
-#' @examples
-importLCZgen<-function(dirPath, file, output="sfFile", column, geomID="", confid="",
+#' @examples importLCZgen(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),
+#' file="rsu_lcz.geojson",
+#' column="LCZ_PRIMARY",geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
+importLCZgen<-function(dirPath, file="rsu_lcz.geojson", output="sfFile", column="LCZ_PRIMARY",
+                       geomID="", confid="",
                        niveaux=c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",
                                                         "9"="9","10"="10","101"="101","102"="102","103"="103","104"="104",
                                                          "105"="105","106"="106","107"="107","101"="11","102"="12","103"="13","104"="14",
                                                         "105"="15", "106"="16","107"="17"),drop=T){
-  fileName<-paste0(dirPath,file)
-  # select only the needed column that is the unempty strings among column, geomID and confid
+  if (!file.exists(dirPath)){stop(message="The directory set in dirPath doesn't seem to exist")}
+
+  fileName<-paste0(dirPath,"/",file)
+  # select only the needed column, that is the unempty strings among column, geomID and confid
   colonnes<-c(geomID,column,confid)
   colonnes<-colonnes[sapply(colonnes,nchar)!=0]
-  sfFile<-st_read(dsn=fileName)[,colonnes]
+
+  # Check if all the desired columns are present in the source file and only loads the file if the columns exist
+  nom<-gsub(pattern="(.+?)(\\.[^.]*$|$)",x=file,replacement="\\1")
+  query<-paste0("select * from ",nom," limit 0")
+  sourceCol<-st_read(dsn=fileName,query=query) %>% names
+  inCol<-colonnes%in%sourceCol
+  badCol<-colonnes[!inCol]
+  colErr<-c("It seems that some of the columns you try to import do not exist in the source file, are you sure you meant ",
+                 paste(badCol)," ?")
+  if (prod(inCol)==0){stop(colErr)}else {sfFile<-st_read(dsn=fileName)[,colonnes]}
 
   if (length(niveaux)==1){
     niveaux<-unique(subset(sfFile,select=column))
@@ -32,12 +46,23 @@ importLCZgen<-function(dirPath, file, output="sfFile", column, geomID="", confid
 
   if (column!=""){
     if(drop==T){sfFile<-subset(sfFile,select=colonnes)}
+
+    if(prod(unique(subset(st_drop_geometry(sfFile,select=column)))%in%niveaux)==0){
+
+        print("levels in niveaux are : ")
+        print(niveaux)
+        print("levels in original data set are ")
+        print(unique(st_drop_geometry(subset(sfFile[,column]))))
+        #warning("The levels you specified with the niveaux argument don't cover the LCZ values in your source file.
+        #            Some geoms have been dropped,this could seriously alter your analysis, please check the levels or enter an empty string as niveaux")
+
+    }
     sfFile <-
     sfFile%>%
       mutate(!!column:=fct_recode(factor(subset(sfFile,select=column,drop=T),levels=niveaux),!!!niveaux)) %>%
       drop_na(column)
-    return(sfFile)}
-  else {stop("You must specify the coolumn containing the LCZ")}
+    }
+  else {stop("You must specify the column containing the LCZ")}
 
 
   #sfFile <- sfFile%>% mutate(!!column:=fct_recode(subset(sfFile,select=column,drop=T),!!!niveaux))
@@ -46,7 +71,7 @@ importLCZgen<-function(dirPath, file, output="sfFile", column, geomID="", confid
     if(output=="bBox"){bBox=st_bbox(sfFile,crs=st_crs(sfFile)) %>% st_as_sfc
     return(bBox)}
     else {
-      stop("output must be sfFile to return geoms and LCZ or bBox to return the bounding box")}
+      stop("Output must be sfFile to return geoms and LCZ or bBox to return the bounding box")}
 
     }
 }

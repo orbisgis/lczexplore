@@ -11,7 +11,7 @@
 #' @return no object is returned, but plots of the LCZ levels are produced
 #' @export
 #' @examples
-showLCZ<-function(sf,wf,column,repr,niveaux="",colors=""){
+showLCZ<-function(sf,wf="",column="LCZ_PRIMARY",repr="brut",niveaux="",colors=""){
 
   #dependancies should be dealt with @import
   # paquets<-c("sf","ggplot2","dplyr","cowplot","forcats")
