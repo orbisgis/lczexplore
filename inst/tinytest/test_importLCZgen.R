@@ -12,7 +12,12 @@
 
 
 expect_silent(importLCZgen(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),
-                          column="LCZ_PRIMARY",geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE"))
+                          column="LCZ_PRIMARY",geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE",verbose=T))
+
+expect_silent(importLCZgen(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon")
+                           ,file="rsu_lcz.geojson",
+                           column="LCZ_PRIMARY",geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE"))
+
 
 # Tests if the imported version of Redon test data matches the Redon test data in the package
 redonBDT2<-importLCZgen(dirPath=paste0(
@@ -63,10 +68,10 @@ expect_error(
   "You must specify the column containing the LCZ")
 
 # test if the output is a bounding box or a sfFile and if none other output is asked for
-
-test<-class(importLCZgen(dirPath=paste0(
-  system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),file="rsu_lcz.geojson",column="LCZ_PRIMARY",
-  geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE",output="bBox"))
+#
+# test<-class(importLCZgen(dirPath=paste0(
+#   system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),file="rsu_lcz.geojson",column="LCZ_PRIMARY",
+#   geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE",output="bBox"))
 
 expect_equal(class(importLCZgen(dirPath=paste0(
   system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),file="rsu_lcz.geojson",column="LCZ_PRIMARY",
@@ -85,16 +90,12 @@ expect_error(importLCZgen(dirPath=paste0(
 
 
 # test what happens if the levels of LCZ are not coherent ?
-test<-importLCZgen(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),
+expect_warning(importLCZgen(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),
              file="rsu_lcz.geojson", output="sfFile", column="LCZ_PRIMARY",
              geomID="", confid="",
              niveaux=c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",
                        "9"="9","10"="10","101"="101","102"="102","103"="103","104"="104",
-                       "105"="105","106"="106","107"="107","101"="11","102"="12","103"="13","104"="14",
-                       "105"="15", "106"="16","107"="17"),drop=T)
-test %>% summary
-
-nivbid1<-c("bleu"="bleu","blanc"="blanc","rouge"="vert")
-nivbid2<-c("blanc","bleu","rouge")
-nivbid1%in%nivbid2
+                       "105"="105","106"="106","101"="11","102"="12","103"="13","104"="14",
+                       "105"="15", "106"="16","107"="17"),drop=T),
+             "The levels you specified with the niveaux argument don't cover the LCZ values")
 

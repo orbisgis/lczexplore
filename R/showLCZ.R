@@ -5,13 +5,18 @@
 #' that LCZ were produced by GeoClimate using the BD_TOPO_V2 or the Open Street Map data as input, respectively.
 #' If the LCZ were produced by WUDAPT, use "wudapt".
 #' @param column is the column that contains the LCZ.
-#' @param repr : if "brut" then an optimal set of cols is used to produce the plotted map.
-#' If "grouped", cols will be randomly chosen according to the number of groups present in the column.
+#' @param repr indicates if the sf dataset contains brute LCZ levels or grouped LCZ.
+#' If "brut" then an optimal set of cols is used to produce the plotted map. Else, colors can be specified with the cols argument.
+#' @param niveaux is a vector of strings specifying the name of the expected levels when repr is set to 'grouped'.
+#' If \'niveaux\' is set to an empty string, then the unique values taken in the specified \'column\' will be used.
+#' @param cols is a vector of strings specifying the colors of each levels of \'niveaux.\'
+#' If cols is an empty string, or if the number of specified color is less than the number of levels in \'niveaux\',
+#' random colors will be chosen.
 #' @import sf ggplot2 dplyr cowplot forcats
 #' @return no object is returned, but plots of the LCZ levels are produced
 #' @export
 #' @examples showLCZ(redonBDT,column="LCZ_PRIMARY", repr="brut", niveaux="", cols="")
-showLCZ<-function(sf, wf="",column="LCZ_PRIMARY", repr="brut", niveaux="", cols=""){
+showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY", repr="brut", niveaux="", cols=""){
 
   datasetName<-print(deparse(substitute(sf)))
   #dependancies should be dealt with @import
@@ -43,7 +48,7 @@ showLCZ<-function(sf, wf="",column="LCZ_PRIMARY", repr="brut", niveaux="", cols=
 sf<-sf %>% mutate(!!column:=factor(subset(sf,select=column,drop=T),levels=niveaux))
 
   #Color style for brut lcz from geoclimate
-
+if (wf!=""){nomLegende<-paste0("LCZ from ",wf," workflow")} else{nomLegende<-"LCZ"}
 
   if (repr=='brut'){
 
@@ -68,10 +73,13 @@ sf<-sf %>% mutate(!!column:=factor(subset(sf,select=column,drop=T),levels=niveau
   if (repr=="brut"|repr=="both"){
     print(datasetName)
     #print(head(sf[column]))
-    if(wf!=""){wtitre<-paste("LCZ from", wtitre, "workflow, for ", datasetName,"dataset")} else{
-    wtitre<-paste("LCZ from", datasetName,"dataset")
-     }
-
+      if(title==""){
+        if(wf!=""){wtitre<-paste("LCZ from", wf, "workflow, for ", datasetName,"dataset")} else{
+        wtitre<-paste("LCZ from", datasetName,"dataset")
+        }
+      }else{
+        wtitre<-title
+      }
 
     pBrut<-ggplot(sf) + # les données
       geom_sf(aes(fill=get(column))) +        # Le type de géométrie : ici un sf, avec fill pour remplir les polygones
@@ -84,35 +92,45 @@ sf<-sf %>% mutate(!!column:=factor(subset(sf,select=column,drop=T),levels=niveau
 ###### Représentations des LCZ Geoclimate reclassées en occupation du sol
 
   if (repr=="grouped"|repr=="both"){
+     if(length(cols)>1&&length(cols)==length(niveaux)){
+       couleurs<-cols ; names(couleurs)<-niveaux
+       nomLegende<-"Grouped LCZ"
+     }else{
+       if(length(niveaux)>36){
+         stop("The number of levels must be less than 37 for the map to be readable,
+              you may want to group some of the levels using LCZgroup2 function ")} else {
+                if(length(cols)<=1){
+                  warning("No cols were specified, cols will be picked from the Polychrome 36 palette")
+                  couleurs<-palette.colors(n=length(niveaux), palette="Polychrome 36")
+                  names(couleurs)<-niveaux
+                  nomLegende<-"Grouped LCZ"
+                  } else{
+                  if (length(cols)<length(niveaux)){
+                    message(paste("you specified less colors in cols argument (here ",length(cols),
+                    ") than levels of LCZ in the niveaux argument (here ",length(niveaux),").
+                     \n, Maybe you didn't take into account empty levels ?
+                     missing cols will be randomly picked from the Polychrom 36 palette."))
+                  nMissCol<-length(niveaux)-length(cols)
+                  couleurs<-c(cols,palette.colors(n=nMissCol,palette="Polychrome 36"))
+                  names(couleurs)<-niveaux
+                  warning(paste0(
+                    "only ", length(cols), " colors were specified \n for ",
+                    length(niveaux)," levels of grouped LCZ \n", nMissCol, " was/were chosen at random. \n ",
+                    "For a better rendition, specify as many colors as levels of LCZ"))
+                  nomLegende<-"Grouped LCZ"
+                      }
+                  }
+              }
+     }
 
-   wtitreOc<-paste(wf,"grouped")
-
-   if(length(cols)>1&&length(cols)==length(niveaux)){
-     couleurs<-cols ; names(couleurs)<-niveaux
-     nomLegende<-"Grouped LCZ"
+   print(datasetName)
+   #print(head(sf[column]))
+   if(title==""){
+     if(wf!=""){wtitre<-paste("Grouped LCZ for ", wf, "workflow, applied to ", datasetName,"dataset")} else{
+       wtitre<-paste("Grouped LCZ from", datasetName," dataset")
+     }
    }else{
-     if(length(niveaux)>36){
-       stop("The number of levels must be less than 37 for the map to be readable,
-            you may want to group some of the levels using LCZgroup2 function ")} else {
-              if(length(cols)<=1){
-                message("No cols were specified, cols will be picked from the Polychrome 36 palette")
-
-                couleurs<-palette.colors(n=length(niveaux),palette="Polychrome 36")
-
-                names(couleurs)<-niveaux
-                nomLegende<-"Grouped LCZ \n for a better map \n specify a vector of colors \n in argument \'cols\' "
-                } else{
-                  if (length(cols)!=length(niveaux)){
-                    print(paste("cols argument must contain the same number of cols (here ",length(cols),
-                   ") as the number of levels of LCZ (here ",length(niveaux),").
-                   \n, Maybe you didn't take into account empty levels ?
-                   cols will be randomly picked from the Polychrom 36 palette."))
-                    couleurs<-palette.colors(n=length(niveaux),palette="Polychrome 36")
-                    names(couleurs)<-niveaux
-                    nomLegende<-"Grouped LCZ \n for a better map \n specify as many colors in \'cols\' \n as there are levels in \'niveaux\'"
-                    }
-                }
-            }
+     wtitre<-title
    }
 
     pgrouped<-
@@ -121,7 +139,7 @@ sf<-sf %>% mutate(!!column:=factor(subset(sf,select=column,drop=T),levels=niveau
       scale_fill_manual(values=couleurs,
                         labels=niveaux,drop=FALSE)+
       guides(fill=guide_legend(nomLegende))+
-      ggtitle(paste("LCZ",wtitreOc))
+      ggtitle(wtitre)
 
   }
 

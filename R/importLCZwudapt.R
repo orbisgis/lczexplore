@@ -14,28 +14,73 @@
 #'
 #' @examples
 importLCZwudapt<-function(dirPath,zone="europe",bBox){
-  #paquets<-c("sf","dplyr","terra","forcats")
-  #lapply(paquets, require, character.only = TRUE)
-  fileName<-paste0(dirPath,"EU_LCZ_map.tif")
-  sfFile<-rast(fileName)
-  bBox<-st_transform(bBox,st_crs(sfFile,proj=T))
+
+  if (!file.exists(dirPath)){stop(message="The directory set in dirPath doesn't seem to exist")}
+  else{
+    fileName<-paste0(dirPath,"EU_LCZ_map.tif")
+    if (!file.exists(fileName)){
+      choice<-readline(prompt="The wudapt Europe map tiff file doesn't exist in the specified directory. \n
+              If you want lczexplore to try and download it type 1, else type 2 to exit and get the tiff map by yourself")
+      print("choice: ");print(choice);
+      if (choice==1){
+        url<-"https://figshare.com/ndownloader/files/35069446"
+        try_fetch<-try(download.file(url=url,method="auto",destfile=fileName))
+        if(is(try_fetch,"try-error")){
+          stop("The file couldn't be downloaded, maybe try to dowload another way.")
+        } else {
+          sfFile<-rast(fileName)
+          bBox<-st_transform(bBox,st_crs(sfFile,proj=T))
 
 
-  sfFile<-sfFile %>% crop(bBox) %>% as.polygons(dissolve=F) %>%
-    st_as_sf() %>% st_intersection(bBox)
+          sfFile<-sfFile %>% crop(bBox) %>% as.polygons(dissolve=F) %>%
+            st_as_sf() %>% st_intersection(bBox)
 
-  niveaux<-c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",
+          niveaux<-c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",
+                     "9"="9","10"="10","101"="11","102"="12","103"="13","104"="14",
+                     "105"="15", "106"="16","107"="17")
+          # niveaux2<-as.character(c(1:10,101:107))
+
+          sfFile<-sfFile %>% mutate(EU_LCZ_map=factor(subset(sfFile,select='EU_LCZ_map',drop=T)))
+          temp<-subset(sfFile,select='EU_LCZ_map',drop=T)
+          # the use of !!! is a special way to parse the elements in the tidyverse packages
+          temp<-fct_recode(temp,!!!niveaux)
+          sfFile<-sfFile %>% mutate(EU_LCZ_map=temp)
+
+          cat(levels(subset(sfFile,select='EU_LCZ_map',drop=T)))
+          #plot(sfFile)
+          sfFile
+          }
+      }
+    }
+    else{
+      sfFile<-rast(fileName)
+      bBox<-st_transform(bBox,st_crs(sfFile,proj=T))
+
+
+      sfFile<-sfFile %>% crop(bBox) %>% as.polygons(dissolve=F) %>%
+        st_as_sf() %>% st_intersection(bBox)
+
+      niveaux<-c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",
                  "9"="9","10"="10","101"="11","102"="12","103"="13","104"="14",
                  "105"="15", "106"="16","107"="17")
-  # niveaux2<-as.character(c(1:10,101:107))
+      # niveaux2<-as.character(c(1:10,101:107))
 
-  sfFile<-sfFile %>% mutate(EU_LCZ_map=factor(subset(sfFile,select='EU_LCZ_map',drop=T)))
-  temp<-subset(sfFile,select='EU_LCZ_map',drop=T)
-  # the use of !!! is a special way to parse the elements in the tidyverse packages
-  temp<-fct_recode(temp,!!!niveaux)
-  sfFile<-sfFile %>% mutate(EU_LCZ_map=temp)
+      sfFile<-sfFile %>% mutate(EU_LCZ_map=factor(subset(sfFile,select='EU_LCZ_map',drop=T)))
+      temp<-subset(sfFile,select='EU_LCZ_map',drop=T)
+      # the use of !!! is a special way to parse the elements in the tidyverse packages
+      temp<-fct_recode(temp,!!!niveaux)
+      sfFile<-sfFile %>% mutate(EU_LCZ_map=temp)
 
-  cat(levels(subset(sfFile,select='EU_LCZ_map',drop=T)))
-  #plot(sfFile)
-  sfFile
+      cat(levels(subset(sfFile,select='EU_LCZ_map',drop=T)))
+      #plot(sfFile)
+      sfFile
+      }
+  }
+
+
+  #paquets<-c("sf","dplyr","terra","forcats")
+  #lapply(paquets, require, character.only = TRUE)
+
+
+
 }
