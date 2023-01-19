@@ -54,10 +54,9 @@ importLCZgen<-function(dirPath, file="rsu_lcz.geojson", output="sfFile", column=
 
   if (column!=""){
     if(drop==T){sfFile<-subset(sfFile,select=colonnes)}
-#print(unique(subset(st_drop_geometry(sfFile,select=column)))%in%niveaux)
+
  prov<-as.character(unique((st_drop_geometry(subset(sfFile,select=column,drop=T))))) %>% as.character
- print("prov in niveaux")
- print(prod(prov%in%niveaux))
+
     if( prod(prov%in%niveaux)==0 ){
       if (verbose==T){
         print("levels in niveaux are : ")
@@ -80,7 +79,7 @@ importLCZgen<-function(dirPath, file="rsu_lcz.geojson", output="sfFile", column=
   #sfFile <- sfFile%>% mutate(!!column:=fct_recode(subset(sfFile,select=column,drop=T),!!!niveaux))
 
   if(output=="sfFile"){return(sfFile)} else {
-    if(output=="bBox"){bBox=st_bbox(sfFile,crs=st_crs(sfFile)) %>% st_as_sfc
+    if(output=="bBox"){bBox<-st_bbox(sfFile,crs=st_crs(sfFile)) %>% st_as_sfc
     return(bBox)}
     else {
       stop("Output must be sfFile to return geoms and LCZ or bBox to return the bounding box")}
