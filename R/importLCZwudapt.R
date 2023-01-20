@@ -20,7 +20,8 @@ importLCZwudapt<-function(dirPath,zone="europe",bBox){
     bBox<-st_transform(bBox,st_crs(sfFile,proj=T))
 
     cropTry<-try(sfFile %>% crop(bBox))
-    if(is(cropTry,"try-error")){stop("The bounding box doesn't intersect with the Wudapt tiff : maybe it's out of the Europe zone covered by this package")}
+    if(is(cropTry,"try-error")){stop("The bounding box doesn't intersect with the Wudapt tiff : \n
+                                     maybe it's out of the Europe zone covered by this package. \n Future versions may include other zones.")}
     else{
     sfFile<-sfFile %>% crop(bBox) %>% as.polygons(dissolve=F) %>%
       st_as_sf() %>% st_intersection(bBox)

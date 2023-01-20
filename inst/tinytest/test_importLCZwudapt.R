@@ -14,11 +14,11 @@ redonWudapt<-importLCZwudapt("/home/gousseff/Documents/2_CodesSources/Wudapt/Wud
 expect_warning(importLCZwudapt("/home/gousseff/Documents/2_CodesSources/Wudapt/WudaptEurope/",bBox=redonBbox),
               'attribute variables are assumed to be spatially constant throughout all geometries' )
 
-showLCZ(sf=redonWudapt,column="EU_LCZ_map",repr="brut")
+expect_silent(showLCZ(sf=redonWudapt,column="EU_LCZ_map",repr="brut"))
 
 # Test out of Europe Bbox (supposed to fail)
 library(sf)
-bBoxCoord<-c(-117.312698,32.805168,-117.227554,32.864593)
+#bBoxCoord<-c(-117.312698,32.805168,-117.227554,32.864593)
 lowCorner<-st_point(c(-117.312698,32.805168))
 upCorner<-st_point(c(-117.227554,32.864593))
 outBbox<-st_sfc(lowCorner,upCorner,crs=4326)
@@ -26,6 +26,7 @@ importLCZwudapt("/home/gousseff/Documents/2_CodesSources/Wudapt/WudaptEurope/",b
 
 
 expect_error(current = importLCZwudapt("/home/gousseff/Documents/2_CodesSources/Wudapt/WudaptEurope/",bBox=outBbox),
-             "The bounding box doesn't intersect with the Wudapt tiff : maybe it's out of the Europe zone"
+             "The bounding box doesn't intersect with the Wudapt tiff : maybe it's out of the Europe zone."
                )
+
 
