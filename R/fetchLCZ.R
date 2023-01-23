@@ -7,8 +7,8 @@
 #' @param baseURL is the adress of the server where the function fetches the data. The data must be organised in a bdtopo_2_2 and an osm/year directories.
 #' This function is intended to be used by Paendora project members, so the default is the Geomanum Foundation cloud.
 #' @param ... allows to pass arguments from the produce analysis function to the LCZgroup2 and compareLCZ functions
-#' @import utils
-#utils curl RCurl
+#' @import utils methods
+
 
 #' @return returns no R object. The data are uploaded from the GeoClimate cloud and locally unpacked in the outDir directory
 #' @export

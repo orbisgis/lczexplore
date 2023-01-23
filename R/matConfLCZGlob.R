@@ -10,13 +10,18 @@
 #' reading the data, but one can input a character string vector of levels,
 #' for instance to produce several graphs with the same levels or levels in a specific order
 #' @param plot if TRUE, then confusion matrix plot is shown, else it is just returned in the matConfOut object
-#' @param ...
+#' @param column1 is the name of the column containing the Local Climatic Zone of the first type of datasets in the \'file\' dump file  be analyzed
+#' @param column2 see column1 but for the second type of datasets
+#' @param geomID1 is the name of the column containing the ID of each spatial units from the first type of datasets in \'file\', it allows to post-treat some of the units
+#' @param geomID2 is the name of the column containing the ID of each spatial units from the second type of datasets in \'file\'
+#' @param confid1 is the name of the column measuring the confidence given to the LCZ level in column1
+#' @param confid2 is the name of the column measuring the confidence given to the LCZ level in column2
+#' @param ... other parameters that may be passed from a function calling matConfLCZGlob
 
 #' @import tidyr units ggplot2 dplyr cowplot forcats units tidyr RColorBrewer
-#' @return matConfOut is a list containing the confusion matrix in its longer form, matConf,
-#' a ggplot2 plot of said matrix called matConfPlot,
-#' the summed area per levels for both LCZ classification called aires,
-#' and the general agreement expressed in percent, pourcAcc
+#' @return matConfOut is a list containing : matconf, the confusion matrix in its longer form ; matConfPlot,
+#' a ggplot2 plot of said matrix ; aires, the summed area per levels for both LCZ classification ;
+#' and pourcAcc, the general agreement between classifications expressed in percent of areas
 #' @export
 #'
 #' @examples

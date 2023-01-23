@@ -12,7 +12,8 @@
 #' @param niveaux the levels of the imported LCZ classification
 #' @param verbose if TRUE show the discrepancies between specified levels of LCZ and
 #' levels actually present in column
-#' @import dplyr forcats
+#' @param drop : the default is TRUE, which means all the column are dropped excepted those specified in previous parameters
+#' @import dplyr forcats rlang
 
 #' @return
 #' @export

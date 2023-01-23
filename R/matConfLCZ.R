@@ -11,7 +11,7 @@
 #' @param niveaux by default the levels of lcz incoded from 1 to 10 and 101 to 107.
 #' When comparing grouped LCZ, the grouped levels have to be specified.
 #' @param plot if TRUE the plot of the matrix
-#' @param ...
+#' @param ... a set of unspecified arguments, for instance when the produceAnalysis function calls other functions
 #'
 #' @return returns an object called matConfOut which contains
 #' matConfLong, a confusion matrix in a longer form, which can be written in a file by the compareLCZ function
@@ -19,7 +19,7 @@
 #' matConfPlot is a ggplot2 object showing the confusion matrix. If plot=T, it is also directly plotted
 #' aires contains the sums of each LCZ area
 #' pourcAcc is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
-#' @import sf ggplot2 dplyr cowplot forcats units tidyr RColorBrewer
+#' @import sf ggplot2 dplyr cowplot forcats units tidyr RColorBrewer rlang
 
 #' @export
 #'
@@ -169,7 +169,7 @@ matConfLCZ<-function(sf1,column1,sf2,column2,repr="brut",niveaux=as.character(c(
   # Plot
   coordRef=length(niveaux)+1
 
-  if(plot==T){
+
   matConfPlot<-ggplot(data = matConfLong, aes(x=get(column1), y=get(column2), fill =accord)) +
     geom_tile(color = "white",lwd=1.2,linetype=1)+
     labs(x="Reference",y="Alternative")+
@@ -183,7 +183,8 @@ matConfLCZ<-function(sf1,column1,sf2,column2,repr="brut",niveaux=as.character(c(
     geom_tile(datatemp,mapping=aes(x=a,y=coordRef,fill=pourcAire2, height=0.8,width=0.8))+
     geom_tile(datatemp,mapping=aes(x=coordRef,y=a,fill=pourcAire1, height=0.8,width=0.8))+
     ggtitle("Repartition of Reference classes into alternative classes")
-    print(matConfPlot)} else {matConfPlot=NULL}
+
+  if(plot==T){print(matConfPlot)}
 
   matConfOut<-list(matConf=matConfLong,matConfPlot=matConfPlot,aires=aires,pourcAcc=pourcAcc)
   return(matConfOut)

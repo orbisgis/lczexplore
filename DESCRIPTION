@@ -20,7 +20,10 @@ Imports: RColorBrewer,
           sf,
           terra,
           tidyr,
-          units
+          units,
+          rlang,
+          grDevices,
+          methods
 Suggests: 
     tinytest,
     knitr,

@@ -3,7 +3,7 @@
 #' @param sf is the input files. It must be an sf file and contain an LCZ column (levels 1 to 10 and 101 to 107). It must contain the geom column.
 #' @param column is the name of the column containing the LCZ to be grouped
 #' @param ... the names of the groups followed by the levels the regrouped for instance urban=c("1","2","3","4","5","6","7","8","9")
-#' @import forcats dplyr
+#' @import forcats dplyr rlang grDevices
 
 #' @return a file containing the original geom and lcz, and a new grouped column
 #' @export

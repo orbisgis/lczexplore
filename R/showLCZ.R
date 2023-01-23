@@ -12,7 +12,8 @@
 #' @param cols is a vector of strings specifying the colors of each levels of \'niveaux.\'
 #' If cols is an empty string, or if the number of specified color is less than the number of levels in \'niveaux\',
 #' random colors will be chosen.
-#' @import sf ggplot2 dplyr cowplot forcats
+#' @param title allows the user to set the title of the plot
+#' @import sf ggplot2 dplyr cowplot forcats grDevices
 #' @return no object is returned, but plots of the LCZ levels are produced
 #' @export
 #' @examples showLCZ(redonBDT,column="LCZ_PRIMARY", repr="brut", niveaux="", cols="")

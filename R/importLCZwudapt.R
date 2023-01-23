@@ -5,6 +5,7 @@
 #' A future version may include the world data once a strategy is defined to deal with CRS.
 #'
 #' @param dirPath is the path to the directory where the
+#' @param fileName is by default \'EU_LCZ_map.tif\' but can be changed for test prurposes. Will be useful when other zones will be added
 #' @param zone set to europe by default, may include world once a strategy is defined
 #' @param bBox bBox is the bounding box needed to crop the wudapt tiff file.
 #' It can be produced bu the importLCZgen function
@@ -13,7 +14,7 @@
 #' @export
 #'
 #' @examples
-importLCZwudapt<-function(dirPath,zone="europe",bBox){
+importLCZwudapt<-function(dirPath,zone="europe",bBox,fileName="EU_LCZ_map.tif"){
 # internal import function used in two loops
   effectiveImport<-function(fileName,bBox){
     sfFile<-rast(fileName)
@@ -49,7 +50,8 @@ importLCZwudapt<-function(dirPath,zone="europe",bBox){
 
   if (!file.exists(dirPath)){stop(message="The directory set in dirPath doesn't seem to exist")}
   else{
-    fileName<-paste0(dirPath,"EU_LCZ_map.tif")
+    fileName<-paste0(dirPath,"/",fileName)
+    print(fileName)
     if (!file.exists(fileName)){
       choice<-readline(prompt="The wudapt Europe map tiff file doesn't exist in the specified directory. \n
               If you want lczexplore to try and download it type 1, else type 2 to exit and get the tiff map by yourself")
@@ -70,10 +72,6 @@ importLCZwudapt<-function(dirPath,zone="europe",bBox){
       sfFile
       }
   }
-
-
-  #paquets<-c("sf","dplyr","terra","forcats")
-  #lapply(paquets, require, character.only = TRUE)
 
 
 

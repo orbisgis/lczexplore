@@ -9,9 +9,9 @@ redonBbox<-importLCZgen(dirPath=paste0(
   system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),file="rsu_lcz.geojson",column="LCZ_PRIMARY",
   geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE",output="bBox")
 
-redonWudapt<-importLCZwudapt("/home/gousseff/Documents/2_CodesSources/Wudapt/WudaptEurope/",bBox=redonBbox)
 
-expect_warning(importLCZwudapt("/home/gousseff/Documents/2_CodesSources/Wudapt/WudaptEurope/",bBox=redonBbox),
+expect_warning(redonWudapt<-importLCZwudapt(
+  system.file("extdata", package = "lczexplore"),fileName="redonWudapt.tif",bBox=redonBbox),
               'attribute variables are assumed to be spatially constant throughout all geometries' )
 
 expect_silent(showLCZ(sf=redonWudapt,column="EU_LCZ_map",repr="brut"))
@@ -22,11 +22,12 @@ library(sf)
 lowCorner<-st_point(c(-117.312698,32.805168))
 upCorner<-st_point(c(-117.227554,32.864593))
 outBbox<-st_sfc(lowCorner,upCorner,crs=4326)
-importLCZwudapt("/home/gousseff/Documents/2_CodesSources/Wudapt/WudaptEurope/",bBox=outBbox)
+#importLCZwudapt("/home/gousseff/Documents/2_CodesSources/Wudapt/WudaptEurope/",bBox=outBbox)
 
 
-expect_error(current = importLCZwudapt("/home/gousseff/Documents/2_CodesSources/Wudapt/WudaptEurope/",bBox=outBbox),
-             "The bounding box doesn't intersect with the Wudapt tiff : maybe it's out of the Europe zone."
+expect_error(current = test<-importLCZwudapt("/home/gousseff/Documents/2_CodesSources/Wudapt/WudaptEurope/",bBox=outBbox),
+             "The bounding box doesn\'t intersect with the Wudapt tiff :"
                )
-
+expect_error(current = test<-importLCZwudapt("/home/gousseff/Documents/2_CodesSources/Wudapt/WudaptEurope/",bBox=outBbox),
+             "maybe it\'s out of the Europe zone.")
 

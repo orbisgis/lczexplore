@@ -96,14 +96,14 @@ if (wf1=="wudapt"){
   }
 
 if(repr=="brut"){
-  print("boucle brut")
+  print("brut loop entered")
       #name of output Graph
           nameG<-paste0(location,"_",wf1,"_",wf2,"_",repr)
 
       # Compare LCZ
       condition<-((wf1=="osm" | wf1=="bdtopo_2_2") & (wf2=="bdtopo_2_2" | wf2=="osm"))
       if((wf1=="osm" | wf1=="bdtopo_2_2") & (wf2=="bdtopo_2_2" | wf2=="osm")){
-        print("boucle compareLCZ")
+        print("compareLCZ called")
         return(
           compareLCZ(sf1=df1, geomID1="ID_RSU", confid1="LCZ_UNIQUENESS_VALUE",
                      column1="LCZ_PRIMARY", wf1=wf1,
@@ -135,7 +135,7 @@ if(repr=="brut"){
 }
   if(repr=='grouped'){
 
-    print("entrée dans la boucle grouped")
+    print("grouped loop")
 
     nameG<-paste0(location,"_",wf1,"_",wf2,"_",repr)
 
