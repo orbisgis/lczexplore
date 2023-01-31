@@ -1,7 +1,7 @@
 #' Compares two LCZ classifications on several locations
 #'
-#' @param filePath : the full path to the file to import
-#' @param file : if filePath is an empty string file is the name of data set already loaded in the R session
+#' @param filePath : the full path to the inputDfto import
+#' @param inputDf: if filePath is an empty string inputDf is the name of an R dataframe containing the data
 #' @param wf1 : a string indicating the origin of the LCZ classification 1
 #' @param wf2 : a string indicating the origin of the LCZ classification 1
 #' @param sep : the seperator used in the csv file
@@ -12,8 +12,8 @@
 #' @param plot if TRUE, then confusion matrix plot is shown, else it is just returned in the matConfOut object
 #' @param column1 is the name of the column containing the Local Climatic Zone of the first type of datasets in the \'file\' dump file  be analyzed
 #' @param column2 see column1 but for the second type of datasets
-#' @param geomID1 is the name of the column containing the ID of each spatial units from the first type of datasets in \'file\', it allows to post-treat some of the units
-#' @param geomID2 is the name of the column containing the ID of each spatial units from the second type of datasets in \'file\'
+#' @param geomID1 is the name of the column containing the ID of each spatial units from the first type of datasets in \'inputDf\', it allows to post-treat some of the units
+#' @param geomID2 is the name of the column containing the ID of each spatial units from the second type of datasets in \'inputDf\'
 #' @param confid1 is the name of the column measuring the confidence given to the LCZ level in column1
 #' @param confid2 is the name of the column measuring the confidence given to the LCZ level in column2
 #' @param ... other parameters that may be passed from a function calling matConfLCZGlob
@@ -25,7 +25,7 @@
 #' @export
 #'
 #' @examples
-matConfLCZGlob<-function(filePath="", file, wf1, wf2, geomID1="", column1, confid1="",
+matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, confid1="",
                          geomID2="", column2, confid2="", sep=";", repr="brut",
                         niveaux="", plot=T, ...){
 
@@ -40,7 +40,7 @@ matConfLCZGlob<-function(filePath="", file, wf1, wf2, geomID1="", column1, confi
   if(filePath!=""){
     echInt<-read.csv(filePath,sep,header=T,stringsAsFactors = T)
     names(echInt)<-colonnes
-  } else {echInt<-file[,colonnes]}
+  } else {echInt<-inputDf[,colonnes]}
 
 
 
