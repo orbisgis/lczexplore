@@ -24,7 +24,7 @@
 #' @export
 #'
 #' @examples
-matConfLCZ<-function(sf1,column1,sf2,column2,repr="brut",niveaux=as.character(c(1:10,101:107)),plot=F,...){
+matConfLCZ<-function(sf1, column1, sf2, column2, repr="brut", niveaux=as.character(c(1:10,101:107)), plot=F, ...){
   # coerce the crs of sf2 to the crs of sf1
   if(st_crs(sf1)!=st_crs(sf2)){sf2<-sf2 %>% st_transform(crs=st_crs(sf1))}
 
@@ -184,7 +184,7 @@ matConfLCZ<-function(sf1,column1,sf2,column2,repr="brut",niveaux=as.character(c(
     geom_tile(datatemp,mapping=aes(x=coordRef,y=a,fill=pourcAire1, height=0.8,width=0.8))+
     ggtitle("Repartition of Reference classes into alternative classes")
 
-  if(plot==T){print(matConfPlot)}
+  # if(plot==T){print(matConfPlot)}
 
   matConfOut<-list(matConf=matConfLong,matConfPlot=matConfPlot,aires=aires,pourcAcc=pourcAcc)
   return(matConfOut)

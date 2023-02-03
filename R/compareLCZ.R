@@ -251,7 +251,7 @@ rm(temp1) ; rm(temp2)
    # # Intersect geometries of both files
   ######################################################
     #intersection of geometries
-  echInt<-st_intersection(x=sf1[nom1],y=sf2[nom2])
+  echInt<-st_intersection(x=sf1[,nom1],y=sf2[,nom2])
     # checks if the two LCZ classifications agree
   echInt$accord<-subset(echInt,select=column1,drop=T)==subset(echInt,select=column2,drop=T)
 

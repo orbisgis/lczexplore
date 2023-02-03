@@ -21,6 +21,7 @@ compareLCZ(
   saveG = "",
   exwrite = TRUE,
   location = "Redon",
+  plot = TRUE,
   ...
 )
 }
@@ -68,6 +69,8 @@ In the latter case, the ... arguments must contain the groups and a color vector
 
 \item{location}{: the name of the study area, as chosen as the name of the directory on the GeoClimate team cloud.
 If the area you wish to analyse is not uploaded yet, please contact the GeoClimate Team.}
+
+\item{plot}{: when FALSE non of the graphics are plotted or saved}
 
 \item{...}{allow to pass arguments if representation is grouped.
 The expected arguments are the name of each grouped label,

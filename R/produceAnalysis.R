@@ -28,7 +28,7 @@
 #'
 #' @examples
 produceAnalysis<-function(location="Redon",
-                          outDir="/home/gousseff/Documents/3_data/GeoClimateSource",
+                          outDir=getwd(),
                           wf1="bdtopo_2_2",
                           wf2="osm",refYear1="2022",refYear2="2022",repr="brut",saveG=location,...)
 {
@@ -66,7 +66,7 @@ if (wf1=="wudapt"){
   inDirCont<-paste0(outDir,"/",wf1,"/",location,"/")
   dfBDTcontour<-importLCZgc(dirPath=inDirCont,output="contour")
   inDir<-paste0(outDir,"/",wf1,"/",refYear1,"/",location)
-  df1<-importLCZwudapt("/home/gousseff/Documents/3_data/WUDAPTSources/WudaptEurope/",
+  df1<-importLCZwudapt(getwd(),
                        bBox=dfBDTcontour)
 }
 
@@ -91,7 +91,7 @@ if (wf1=="wudapt"){
     inDirCont<-paste0(outDir,"/",wf2,"/",location,"/")
     dfBDTcontour<-importLCZgc(dirPath=inDir,output="contour")
     inDir<-paste0(outDir,"/",wf2,"/",refYear1,"/",location,"/")
-    df2<-importLCZwudapt("/home/gousseff/Documents/3_data/WUDAPTSources/WudaptEurope/",
+    df2<-importLCZwudapt(getwd(),
                          bBox=dfBDTcontour)
   }
 
