@@ -53,11 +53,11 @@ if (wf!=""){nomLegende<-paste0("LCZ from ",wf," workflow")} else{nomLegende<-"LC
 
   if (repr=='brut'){
 
-  #CodeCoulLCZ<-read.csv("/home/gousseff/Documents/2_CodesSources/GeoClimate/GeoclimateDefaultCase/Manips_R/CodesCouleursLCZ.csv")  # A remplacer par un fichier embarqué dans le paquet
+  
   colorMap<-c("#8b0101","#cc0200","#fc0001","#be4c03","#ff6602","#ff9856",
               "#fbed08","#bcbcba","#ffcca7","#57555a","#006700","#05aa05",
               "#648423","#bbdb7a","#010101","#fdf6ae","#6d67fd")
-  names(colorMap)<-niveaux # création d'un vecteur de couleurs
+  names(colorMap)<-niveaux # color vector Creation
   etiquettes<-c("LCZ 1: Compact high-rise","LCZ 2: Compact mid-rise","LCZ 3: Compact low-rise",
                      "LCZ 4: Open high-rise","LCZ 5: Open mid-rise","LCZ 6: Open low-rise",
                      "LCZ 7: Lightweight low-rise","LCZ 8: Large low-rise",
@@ -70,7 +70,7 @@ if (wf!=""){nomLegende<-paste0("LCZ from ",wf," workflow")} else{nomLegende<-"LC
 
   }
 
-###### Représentations des LCZ Brutes sorties de GeoClimate
+###### Shows the geoms with the original values of LCZ as described by Stewardt & Oke, and produced for instance by the GeoClimate workflow
   if (repr=="brut"|repr=="both"){
     print(datasetName)
     #print(head(sf[column]))
@@ -90,7 +90,7 @@ if (wf!=""){nomLegende<-paste0("LCZ from ",wf," workflow")} else{nomLegende<-"LC
   }
   #
 
-###### Représentations des LCZ Geoclimate reclassées en occupation du sol
+###### Shows LCZ once they are regrouped in more general classes, for instance outputs of the LCZgroup2 function
 
   if (repr=="grouped"|repr=="both"){
      if(length(cols)>1&&length(cols)==length(niveaux)){

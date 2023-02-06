@@ -205,7 +205,7 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
                  "Bare soil sand",
                  "Water")
   names(valeurs)<-niveaux
-rm(temp1) ; rm(temp2)
+  rm(temp1) ; rm(temp2)
   }
 
 
@@ -265,9 +265,6 @@ rm(temp1) ; rm(temp2)
   # Export of lcz and area for each geom for further analysis
 
         echInt<-echInt %>% mutate(aire=st_area(geometry)) %>% drop_units
-          # print("echInt")
-          # print(head(echInt))
-        #echInt
         echIntExpo<-echInt %>% mutate(location=location,aire=as.numeric(aire)) %>%
           st_set_geometry(NULL) %>% as.data.frame()
 
@@ -293,7 +290,8 @@ rm(temp1) ; rm(temp2)
 # Confusion Matrix
 ###################################################
 
-matConfOut<-matConfLCZ(sf1=sf1,column1=column1,sf2=sf2,column2=column2,repr=repr,niveaux=niveaux,plot=FALSE)
+matConfOut<-matConfLCZ(sf1=sf1, column1=column1, sf2=sf2, column2=column2,
+                       repr=repr, niveaux=niveaux, plot=FALSE)
 matConfOut$data<-echIntExpo
 matConfLong<-matConfOut$matConf
 aires<-matConfOut$aires
@@ -324,12 +322,15 @@ if (plot == TRUE){
   lab2<-paste(titrou, adtitre2)
   # ypos<-if (repr=="brut"){ypos=5} else {ypos=2}
   etiquettes1<-paste(etiquettes, aires$aire1 ," %")
+  names(etiquettes1)<-niveaux
   etiquettes2<-etiquettes
   etiquettes2<-gsub(":.*",": ",etiquettes)
   etiquettes2<-paste(etiquettes2, aires$aire2 ," %")
+
   etiquettes1.2<-paste(etiquettes2,aires$aire1)
   datatemp<-data.frame(a=factor(niveaux),pourcAire=aires$aire1,pourcAire1=aires$aire1,pourcAire2=aires$aire2)
 
+  # center all plots
   boundary1<-sf1 %>% st_union %>% st_boundary()
   centro<-st_centroid(boundary1)
   boundary1<-boundary1 %>% st_cast("POINT")
@@ -343,8 +344,8 @@ if (plot == TRUE){
   # Plot the first classification
      l1Plot<- ggplot(boundary)+ # les données
           geom_sf(data=boundary, fill=NA,lty='blank')+
-     geom_sf(data=sf1,aes(fill=get(column1)),lwd=0)+
-     scale_fill_manual(values=valeurs,labels=etiquettes1)+
+     geom_sf(data=sf1,aes(fill=get(column1)), colour=NA)+
+     scale_fill_manual(values=valeurs,labels=etiquettes1, drop=FALSE)+
      guides(fill=guide_legend(title=titrou))+
      ggtitle(titre1, subtitle=paste0("Number of RSU : ",nbgeom1))
      #
@@ -353,15 +354,15 @@ if (plot == TRUE){
   # Plot the second classification
      l2Plot<-ggplot(boundary)+
       geom_sf(data=boundary, fill=NA,lty='blank')+
-      geom_sf(data=sf2,aes(fill=get(column2)),lwd=0)+
-      scale_fill_manual(values=valeurs,labels=etiquettes2)+
+      geom_sf(data=sf2,aes(fill=get(column2)), colour=NA)+
+      scale_fill_manual(values=valeurs,labels=etiquettes2,drop=FALSE)+
       guides(fill=guide_legend(title=titrou))+
-      ggtitle(titre2,subtitle=paste0("Number of RSU : ",nbgeom2))
+      ggtitle(titre2,subtitle=paste0("Number of RSU : ", nbgeom2))
 
   # Plot areas where classifications agree
      accordPlot<-ggplot(boundary)+
        geom_sf(data=boundary, fill=NA,lty='blank')+
-       geom_sf(data=echInt,aes(fill=accord),lwd=0)+
+       geom_sf(data=echInt,aes(fill=accord),lwd=0,colour=NA)+
        scale_fill_manual(values=c("red","green"),
                          name=paste0(
                            "The two classifications agree for \n ",pourcAcc, " % of the area Agreement"))+
@@ -384,8 +385,6 @@ if (plot == TRUE){
        geom_tile(datatemp,mapping=aes(x=coordRef,y=a,fill=pourcAire2, height=0.8,width=0.8))+
        ggtitle(titre4,subtitle="Percentage inferior to 0.5 are rounded to 0")
 
-       # annotate("segment",x=0.6, xend=0.6, y=ypos-2, yend=ypos+2,color="lightskyblue1",
-       #          arrow = arrow(type = "closed", length = unit(0.02, "npc")))
 
 
        if (saveG!=""){
@@ -396,7 +395,7 @@ if (plot == TRUE){
        } else {
          print(plot_grid(l1Plot,l2Plot,accordPlot,matConfPlot, align='hv'))
        }
-  }else{message("no plots created")}
+}else{message("Plot set to FALSE, no plots created")}
 
 return(matConfOut)
 

@@ -10,7 +10,7 @@
 expect_message(compareRedonBDTOSM<-
                  compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU", confid1="LCZ_UNIQUENESS_VALUE", wf1="bdtopo_2_2",
                             sf2=redonOSM, column2="LCZ_PRIMARY", geomID2 = "ID_RSU", confid2="LCZ_UNIQUENESS_VALUE", wf2="osm",
-                            repr="brut", saveG="", exwrite=TRUE, location="Redon", plot=F),
+                            repr="brut", saveG="", exwrite=TRUE, location="Redon", plot=T),
           "Both sf datasets need to live in the same crs projection \\(srid / epsg\\),")
 
 expect_message(compareRedonBDTOSM<-
@@ -62,5 +62,26 @@ compareRedonBDTwudaptPlot<-compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", wf1="
 "they will be coerced to the specified reference \\(redonWudapt\\)"
 )
 
+######################################
+### Test some grouped LCZ files
+########################################
 
+
+redonOSMgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
+                           industry="10",
+                           vegetation=c("101","102","103","104"),
+                           impervious="105",pervious="106",water="107",cols=c("red","black","green","grey","burlywood","blue"))
+
+redonOSMgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
+                           industry="10",
+                           vegetation=c("101","102","103","104"),
+                           impervious="105",pervious="106",water="107",cols=c("red","black","green","grey","burlywood","blue"))
+
+compareRedonBDTOSMgrouped<-
+  compareLCZ(sf1=redonBDTgrouped, column1="LCZ_PRIMARY", geomID1 = "ID_RSU", confid1="LCZ_UNIQUENESS_VALUE", wf1="bdtopo_2_2",
+             sf2=redonOSMgrouped, column2="LCZ_PRIMARY", geomID2 = "ID_RSU", confid2="LCZ_UNIQUENESS_VALUE", wf2="osm",
+             repr="grouped", ref=2, saveG="", exwrite=TRUE, location="Redon", plot=T,redonOSM,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
+             industry="10",
+             vegetation=c("101","102","103","104"),
+             impervious="105",pervious="106",water="107",cols=c("red","black","green","grey","burlywood","blue"))
 

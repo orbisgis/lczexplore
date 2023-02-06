@@ -15,9 +15,10 @@
 #' @param geomID2 is the name of the column that contains the geom ID associated to the second workflow
 #' @param column2 is the name of the column storing the second LCZ classification values
 #' @param confid2 is the name of the column storing the second LCZ classification confidence value
-#' @param sep the separator used if filePAth is not empty
+#' @param sep the separator used if filePath is not empty
 #' @param repr were the levels grouped or do we expect original LCZ values
-#' @param plot if True the graph is plotted
+#' @param plot if TRUE the graph is plotted
+#' @param saveG if not an empty string, specifies where to save graphs
 #' @import dplyr ggplot2
 #' @return
 #' @export
@@ -28,7 +29,7 @@ confidSensib<-function(inputDf="", filePath="", nPoints=5,
                        geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
                        geomID2="ID_RSU.1",column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1",
                        sep=";", repr="brut",
-                       plot=TRUE){
+                       plot=TRUE, saveG=""){
 
   colonnes<-c(geomID1,column1,confid1,geomID2,column2,confid2)
   colonnes<-colonnes[sapply(colonnes,nchar)!=0] %>% c("accord","aire","location")
@@ -135,7 +136,17 @@ confidSensib<-function(inputDf="", filePath="", nPoints=5,
 }
 
   allLCZ<-internFunction(echIntConf=echIntConf,nPoints=nPoints)
+  if(plot==TRUE){
   plot(allLCZ$ctPlot)
+  }
+
+  if(saveG!=""){
+        plotName<-paste0(saveG,"/GeneralUniquenessSensib.jpg")
+    png(filename = plotName,width=1200,height=900)
+    print(allLCZ$ctPlot)
+    dev.off()
+  }
+
 #############################################################################################
 # Per LCZ levels of the first classification
 #############################################################################################
@@ -146,7 +157,7 @@ niveaux<-unique(echIntConf[,column1]) %>% as.vector
   byLCZ<-data.frame(Confidence=numeric(), Agreement=numeric(),
                     Kept=character(),nbGeoms=numeric(),LCZ=character())
 
- echIntConfSplit<-split(x=echIntConf,f=echIntConf[[column1]])
+ echIntConfSplit<-split(x=echIntConf,f=echIntConf[[column1]],drop=T)
 
  internFunction2<-function(echIntConf,nPoints){internFunction(echIntConf,nPoints)$ctData}
  # sortieParLCZ<-aggregate(echIntConf,by=echIntConf[[column1]],internFunction2,nPoints=nPoints)
@@ -166,8 +177,21 @@ niveaux<-unique(echIntConf[,column1]) %>% as.vector
    geom_text(aes(x=Confidence,y=Agreement,label=nbGeoms), nudge_y=-4.3)+
    ggtitle(label="Agreement by minimum confidence within LCZ level",
            subtitle="Number of geoms used to compute agreement written under each point")+
-   facet_wrap(~LCZ)
+   facet_wrap(~LCZ, drop=TRUE)
+
+
+ if (plot==TRUE){
  plot(byLCZPLot)
+ }
+
+ if(saveG!=""){
+   plotName<-paste0(saveG,"/byLCZUniquenessSensib.jpg")
+   png(filename = plotName,width=1200,height=900)
+   print(byLCZPLot)
+   dev.off()
+ }
+
+
  return(sortie)
 
 }
