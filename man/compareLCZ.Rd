@@ -89,3 +89,10 @@ If saveG is not an empty string, graphics are saved under "saveG.png"
 Compares two LCZ classification on the same zone,
 produces a map for each classification, a map of their agreement and a representation of a confusion matric between them
 }
+\examples{
+compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU",
+confid1="LCZ_UNIQUENESS_VALUE", wf1="bdtopo_2_2",
+sf2=redonOSM, column2="LCZ_PRIMARY", geomID2 = "ID_RSU",
+confid2="LCZ_UNIQUENESS_VALUE", wf2="osm",
+repr="brut", saveG="", exwrite=TRUE, location="Redon", plot=TRUE)
+}

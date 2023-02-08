@@ -24,10 +24,16 @@
 #' and pourcAcc, the general agreement between classifications expressed in percent of areas
 #' @export
 #'
-#' @examples
+#' @examples matConfLCZGlob(filePath= paste0(
+#' system.file("extdata", package = "lczexplore"),"/bdtopo_2_2_osm.csv"),
+#' file="bdtopo_2_2_osm.csv", wf1="bdt", wf2="osm",
+#' geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
+#' geomID2="ID_RSU.1", column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1", sep=";", repr="brut",
+#' sniveaux="", plot=TRUE)
+
 matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, confid1="",
                          geomID2="", column2, confid2="", sep=";", repr="brut",
-                        niveaux="", plot=T, ...){
+                        niveaux="", plot=TRUE, ...){
 
   if(column1==column2){
     column2<-paste0(column1,".1")
@@ -61,7 +67,7 @@ matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, co
   # print("echInt")
   # print(head(echInt))
 
-  # Marginal areas
+  # Marginal areas for first LCZ
 
   areaLCZ1<-echInt %>% group_by_at(.vars=column1) %>%
     summarize(aire=sum(aire,na.rm=F))%>%
@@ -83,15 +89,20 @@ matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, co
   # Here is an ugly solution to overcome this (and see later to include the potentially missing combination of levels)
 
   aires<-data.frame(niveaux=niveaux, aire1=0, aire2=0)
-  # print(aires)
-  #
-  # print(head(areaLCZ1[,column1]))
+  #print("aires")
+  #print(aires)
+  #print("head of areaLCZ1 column1")
+  #print(head(areaLCZ1[,column1]))
 
   for (i in areaLCZ1[,column1]){
+    #print(" i as a level of areaLCZ1 equals")
+    #print(i)
     aires[aires$niveaux==i,'aire1']<-areaLCZ1[areaLCZ1[,column1]==i,'aire']
   }
 
   for (i in areaLCZ2[,column2]){
+    print(" i as a level of areaLCZ2 equals")
+    print(i)
     aires[aires$niveaux==i,'aire2']<-areaLCZ2[areaLCZ2[,column2]==i,'aire']
   }
 

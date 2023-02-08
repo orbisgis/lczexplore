@@ -33,7 +33,7 @@ When comparing grouped LCZ, the grouped levels have to be specified.}
 
 \item{plot}{if TRUE the plot of the matrix}
 
-\item{...}{}
+\item{...}{a set of unspecified arguments, for instance when the produceAnalysis function calls other functions}
 }
 \value{
 returns an object called matConfOut which contains
@@ -48,4 +48,8 @@ Produces a confusion matrix between two sets of lcz on the same area (geoms do n
 }
 \details{
 Most of the time this function will not be called directly by the user but by the compareLCZ function
+}
+\examples{
+matConfRedonBDTOSM<-matConfLCZ(sf1=redonBDT,column1='LCZ_PRIMARY',
+sf2=redonOSM,column2='LCZ_PRIMARY',plot=FALSE)
 }

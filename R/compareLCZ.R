@@ -34,7 +34,7 @@
 #' @param ... allow to pass arguments if representation is grouped.
 #' The expected arguments are the name of each grouped label,
 #' the levels of LCZ they contain, and last a vector of the colors to use to plot them.
-#' @import sf ggplot2 dplyr cowplot forcats units tidyr RColorBrewer utils
+#' @import sf ggplot2 dplyr cowplot forcats units tidyr RColorBrewer utils grDevices
 #' @return returns an object called matConfOut which contains
 #' matConfLong, a confusion matrix in a longer form, which can be written in a file by the compareLCZ function
 #' and is used by the geom_tile function of the ggplot2 package.
@@ -44,6 +44,11 @@
 #' If saveG is not an empty string, graphics are saved under "saveG.png"
 #' @export
 #' @examples
+#' compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU",
+#' confid1="LCZ_UNIQUENESS_VALUE", wf1="bdtopo_2_2",
+#' sf2=redonOSM, column2="LCZ_PRIMARY", geomID2 = "ID_RSU",
+#' confid2="LCZ_UNIQUENESS_VALUE", wf2="osm",
+#' repr="brut", saveG="", exwrite=TRUE, location="Redon", plot=TRUE)
 compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
                      sf2,column2,geomID2="",confid2="",wf2="osm",ref=1,
                      repr="brut",saveG="",exwrite=TRUE,location="Redon", plot=TRUE, ...){
@@ -210,31 +215,52 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
 
 
 
-  if(repr=="grouped"){
+  if(repr=="grouped"){ ############### This is a temporary feature. Grouping LCZ, showing and comparing grouped LCZ will be re-written in a  cleaner way in a later version
+    args<-list(...)
+    cols<-args$cols
+
+    indSep<-names(args)
+    indCol<-grep(x=indSep,pattern="col")
+    if(is.null(indCol)){niveaux<-names(args)} else{
+      args2<-args[indSep[-indCol]]
+      args2<-args2
+      niveaux<-names(args2)
+      etiquettes<-niveaux
+    }
 
     # Generate colors to plot grouped values, according to the number of levels of grouped
       # generate palette
       # get the name of colors, specified by user in the (produceAnalysis function)
 
-    argums<-list(...)
-    indSep<-names(argums)
-    indCol<-grep(x=indSep,pattern="col")
-
-      if (is.null(indCol)){
-        niveaux<-names(argums) #no color passed in arguments, the name of the grouped lcz are the names of the arguments passed in ...
-          qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
-        col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
-        set.seed(1)
-        longueur<-length(niveaux)
-        valeurs<-col_vector[sample(1:longueur,longueur,replace=F)]
-        names(valeurs)<-niveaux
-        etiquettes<-niveaux
-        set.seed(NULL)}
-
-              else{
-          niveaux<-argums[indSep[-indCol]] %>% names
-          valeurs<-argums[indSep[indCol]] %>% unlist() %>% as.vector()
-          # print("niveaux");print(niveaux);print("valeurs");print(valeurs)
+    if(length(cols)>1&&length(cols)==length(niveaux)){
+      valeurs<-cols ; names(valeurs)<-niveaux ; etiquettes<-niveaux
+      nomLegende<-"Grouped LCZ"
+    }else{
+      if(length(niveaux)>36){
+        stop("The number of levels must be less than 37 for the map to be readable,
+              you may want to group some of the levels using LCZgroup2 function ")} else {
+                if(length(cols)<=1){
+                  warning("No cols were specified, cols will be picked from the Polychrome 36 palette")
+                  valeurs<-palette.colors(n=length(niveaux), palette="Polychrome 36")
+                  names(valeurs)<-niveaux
+                  nomLegende<-"Grouped LCZ"
+                } else{
+                  if (length(cols)<length(niveaux)){
+                    message(paste("you specified less colors in cols argument (here ",length(cols),
+                                  ") than levels of LCZ in the niveaux argument (here ",length(niveaux),").
+                     \n, Maybe you didn't take into account empty levels ?
+                     missing cols will be randomly picked from the Polychrom 36 palette."))
+                    nMissCol<-length(niveaux)-length(cols)
+                    valeurs<-c(cols,palette.colors(n=nMissCol,palette="Polychrome 36"))
+                    names(valeurs)<-niveaux
+                    warning(paste0(
+                      "only ", length(cols), " colors were specified \n for ",
+                      length(niveaux)," levels of grouped LCZ \n", nMissCol, " was/were chosen at random. \n ",
+                      "For a better rendition, specify as many colors as levels of LCZ"))
+                    nomLegende<-"Grouped LCZ"
+                  }
+                }
+              }
           names(valeurs)<-niveaux
           etiquettes<-niveaux
       }

@@ -1,13 +1,12 @@
 Package: lczexplore
 Title: lczexplore
-Version: 0.0.0.9000
+Version: 0.0.1.0000
 Authors@R: c(
     person("Matthieu", "Gousseff", , "matthieu.gousseff@univ-ubs.fr", role = c("aut", "cre")),
     person(, "Centre National de la Recherche Scientifique, Lab-Sticc", role = "cph")
   )
-Description: This lczexplore package may be useful to the members of the paendora 2 project, 
-  in order to plot and compare a pair of sets of lcz computed on the same area.
-License: CC0
+Description: This lczexplore package automatize the comparison of sets of local climate zones.It was developped thanks to the project PAENDORA2 (Pour la gestion du confort estival : Données, Outils et Recherche-Action) (2022 -2025), funded by ADEME
+License: LGPL3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3

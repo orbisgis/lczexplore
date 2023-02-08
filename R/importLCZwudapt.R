@@ -14,6 +14,11 @@
 #' @export
 #'
 #' @examples
+#' redonBbox<-importLCZgen(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),
+#' file="rsu_lcz.geojson",column="LCZ_PRIMARY", geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE",output="bBox")
+#'
+#' redonWudapt<-importLCZwudapt(system.file("extdata", package = "lczexplore"),fileName="redonWudapt.tif",bBox=redonBbox)
+#'
 importLCZwudapt<-function(dirPath,zone="europe",bBox,fileName="EU_LCZ_map.tif"){
 # internal import function used in two loops
   effectiveImport<-function(fileName,bBox){

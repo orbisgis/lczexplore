@@ -4,7 +4,14 @@
 \alias{fetchLCZ}
 \title{Fetches the data from the Geomanum cloud, for locations already uploaded there by the Geoclimate team}
 \usage{
-fetchLCZ(location, outDir, wf = "bdtopo_2_2", refYear = "2022", ...)
+fetchLCZ(
+  location,
+  outDir,
+  wf = "bdtopo_2_2",
+  refYear = "2022",
+  baseURL = "https://cloud.geomanum.org/index.php/s/geoclimate/download?path=\%2F",
+  ...
+)
 }
 \arguments{
 \item{location}{is the name of the place for which you want to get the GeoClimate data}
@@ -15,6 +22,9 @@ fetchLCZ(location, outDir, wf = "bdtopo_2_2", refYear = "2022", ...)
 
 \item{refYear}{this parameters is integrated in the name given to the data, in order to allow to re-run the function according to the reference year. At the moment only 2022 data have been tried}
 
+\item{baseURL}{is the adress of the server where the function fetches the data. The data must be organised in a bdtopo_2_2 and an osm/year directories.
+This function is intended to be used by Paendora project members, so the default is the Geomanum Foundation cloud.}
+
 \item{...}{allows to pass arguments from the produce analysis function to the LCZgroup2 and compareLCZ functions}
 }
 \value{
@@ -22,4 +32,9 @@ returns no R object. The data are uploaded from the GeoClimate cloud and locally
 }
 \description{
 Fetches the data from the Geomanum cloud, for locations already uploaded there by the Geoclimate team
+}
+\examples{
+fetchLCZ(location="Allaire",
+outDir=system.file("extdata", package = "lczexplore"),
+wf="bdtopo_2_2",refYear="2022")
 }

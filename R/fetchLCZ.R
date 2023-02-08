@@ -13,7 +13,9 @@
 #' @return returns no R object. The data are uploaded from the GeoClimate cloud and locally unpacked in the outDir directory
 #' @export
 #'
-#' @examples fetchLCZ(location="Allaire",outDir=system.file("extdata", package = "lczexplore"),wf="bdtopo_2_2",refYear="2022")
+#' @examples fetchLCZ(location="Allaire",
+#' outDir=system.file("extdata", package = "lczexplore"),
+#' wf="bdtopo_2_2",refYear="2022")
 fetchLCZ<-function(location,outDir,wf="bdtopo_2_2",refYear="2022",
                    baseURL="https://cloud.geomanum.org/index.php/s/geoclimate/download?path=%2F",...){
 

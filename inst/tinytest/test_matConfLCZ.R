@@ -25,7 +25,7 @@ realMatConfLargeAuto<-as.matrix(matConfLargeAuto[,!is.na(as.numeric(names(matCon
 testAuto<-prod((diag(realMatConfLargeAuto)==100)|(diag(realMatConfLargeAuto)==0))
 expect_equal(testAuto,1)
 
-######## test that different classification do not agreee everytime
+######## test that different classification do not agreee everywhere
 
 matConfRedonBDTOSM<-matConfLCZ(sf1=redonBDT,column1='LCZ_PRIMARY',
                             sf2=redonOSM,column2='LCZ_PRIMARY',plot=FALSE)

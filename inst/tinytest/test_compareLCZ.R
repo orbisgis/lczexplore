@@ -67,7 +67,7 @@ compareRedonBDTwudaptPlot<-compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", wf1="
 ########################################
 
 
-redonOSMgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
+redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
                            industry="10",
                            vegetation=c("101","102","103","104"),
                            impervious="105",pervious="106",water="107",cols=c("red","black","green","grey","burlywood","blue"))
@@ -78,10 +78,10 @@ redonOSMgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",urban=c("1","2","3","4"
                            impervious="105",pervious="106",water="107",cols=c("red","black","green","grey","burlywood","blue"))
 
 compareRedonBDTOSMgrouped<-
-  compareLCZ(sf1=redonBDTgrouped, column1="LCZ_PRIMARY", geomID1 = "ID_RSU", confid1="LCZ_UNIQUENESS_VALUE", wf1="bdtopo_2_2",
-             sf2=redonOSMgrouped, column2="LCZ_PRIMARY", geomID2 = "ID_RSU", confid2="LCZ_UNIQUENESS_VALUE", wf2="osm",
-             repr="grouped", ref=2, saveG="", exwrite=TRUE, location="Redon", plot=T,redonOSM,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
+  compareLCZ(sf1=redonBDTgrouped, column1="grouped", geomID1 = "ID_RSU", confid1="LCZ_UNIQUENESS_VALUE", wf1="groupedBDT",
+             sf2=redonOSMgrouped, column2="grouped", geomID2 = "ID_RSU", confid2="LCZ_UNIQUENESS_VALUE", wf2="groupedOSM",
+             repr="grouped", ref=2, saveG="", exwrite=TRUE, location="Redon", plot=T,urban=c("1","2","3","4","5","6","7","8","9"),
              industry="10",
              vegetation=c("101","102","103","104"),
-             impervious="105",pervious="106",water="107",cols=c("red","black","green","grey","burlywood","blue"))
+             impervious="105",pervious="106",water="107", cols=c("red","black","green","grey","burlywood","blue"))
 

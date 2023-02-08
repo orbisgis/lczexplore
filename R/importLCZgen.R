@@ -15,9 +15,11 @@
 #' @param drop : the default is TRUE, which means all the column are dropped excepted those specified in previous parameters
 #' @import dplyr forcats rlang
 
-#' @return
+#' @return returns an sf object containing at least the geoms and the LCZ values, and if specified, columns for the IDs of the geoms and the confidence value of the LCZ levels.
 #' @export
-#' @examples importLCZgen(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"), file="rsu_lcz.geojson", column="LCZ_PRIMARY",geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
+#' @examples importLCZgen(dirPath=paste0(system.file("extdata", package = "lczexplore"),
+#' "/bdtopo_2_2/Redon"), file="rsu_lcz.geojson", column="LCZ_PRIMARY",
+#' geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
 importLCZgen<-function(dirPath, file="rsu_lcz.geojson", output="sfFile", column="LCZ_PRIMARY",
                        geomID="", confid="",
                        niveaux=c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",
@@ -44,7 +46,7 @@ importLCZgen<-function(dirPath, file="rsu_lcz.geojson", output="sfFile", column=
 
   # if niveaux is empty
   if (length(niveaux)==1){
-    niveaux<-unique(subset(sfFile,select=column,drop=T))
+    niveaux<-unique(subset(sfFile,select=column,drop=TRUE))
   }
 
   # if niveaux is not specified it will be st to default and we need to capture this later

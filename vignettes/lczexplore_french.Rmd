@@ -1,6 +1,7 @@
 ---
 title: "lczexplore_french"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{lczexplore_french}
   %\VignetteEngine{knitr::rmarkdown}
@@ -25,7 +26,7 @@ Le paquet lczexplore a été développé dans le cadre du projet Pændora 2 fina
 Il a pour objectif de faciliter la comparaison de classifications en zones climatiques locales produites par différents algorithmes sur une même zone. 
 
 ## Installation 
-A vérifier une fois le package testé ! A COMPLÉTER PLUS TARD
+À vérifier une fois le package testé ! A COMPLÉTER PLUS TARD
 Dézipper le tar.gz fourni ou utiliser une install depuis le github lczexplore : à compléter
 l'installer avec install.packages("lczexplore")
 le charger avec library(lczexplore)
@@ -42,9 +43,10 @@ Par défaut, cette fonction ressort un fichier de classe simple feature, telle q
 
 ```{R, echo = FALSE}
 dirPath<-paste0(system.file("extdata",package="lczexplore"),"/")
-
-redonOSM<-importLCZgen(dirPath=dirPath,file="rsu_lcz_osm_redon.geojson",column = "LCZ_PRIMARY")
-redonBDT<-importLCZgen(dirPath=dirPath,file="rsu_lcz_bdt_redon.geojson",column = "LCZ_PRIMARY")
+dirPathOSM<-paste0(dirPath,"osm/2022/Redon")
+dirPathBDT<-paste0(dirPath,"bdtopo_2_2/Redon")
+redonOSM<-importLCZgen(dirPath=dirPathOSM,file="rsu_lcz.geojson",column = "LCZ_PRIMARY")
+redonBDT<-importLCZgen(dirPath=dirPathBDT,file="rsu_lcz.geojson",column = "LCZ_PRIMARY")
 #
 ```
 ## Représenter les LCZ avec la fonction showLCZ
@@ -53,7 +55,7 @@ Une fois que le fichier a été chargé dans un objet R de classe `sf`, il est p
 Si on représente des LCZ avec des niveaux de 1 à 10 puis de 101 à 107 selon la convention adoptée dans la chaîne GeoClimate, on peut le spécifier en renseignant repr à `brut`. Ainsi, un choix standardisé de couleurs sera utilisé. C'est le choix recommandé.
 
 ```{R, echo=FALSE, fig.dim = c(8, 6)}
-showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="brut",niveaux="",colors="")
+showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="brut",niveaux="",cols="")
 ```
 
 Dans le cas contraire, on peut préciser les niveaux (c'est à dire les modalités) de LCZ. On peut notamment avoir regroupé des niveaux (voir paragraphe suivant), et on renseigne alors l'argument `repr` à "grouped". Il faut alors spécifier les couleurs qu'on a choisies. Si on ne spécifie rien, les couleurs sont choisies au hasard. Sinon, il faut préciser un vecteurs de couleurs de la même taille que les niveaux présents spécifiés par l'argument niveaux. 
@@ -61,11 +63,11 @@ Dans le cas contraire, on peut préciser les niveaux (c'est à dire les modalit�
 # Choix de couleurs prises au hasard
 
 # Après une première représentation on constate qu'il n'y a que les niveaux 2, 3, 5, 6, 8, 9, 101, 102, 104, 105, 107.
-# Je spécifie un vecteur de couleur de taille 11 colors
+# Je spécifie un vecteur de couleur de taille 11 cols
 niveaux<-c(2, 3, 5, 6, 8, 9, 101, 102, 104, 105, 107)
 couleurs<-c("red","brown1","orange","coral","grey","darkgreen","chartreuse4","springgreen3",
             "darkolivegreen","black","royalblue2")
-showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="grouped",niveaux=niveaux,colors=couleurs)
+showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="grouped",niveaux=niveaux,cols=couleurs)
 
 ```
 
@@ -73,17 +75,17 @@ showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="grouped",niveaux=niveaux
 
 Par exemple, on peut choisir de regrouper les LCZ urbaines et les LCZ de végétation. La fonction LCZgroup2 prend en argument le jeu de données à regrouper, sf, et la colonne où se trouvent les LCZ à regrouper, column. Les arguments suivants sont une succession où les noms des groupes de niveaux reçoivent le vecteur des niveaux qu'ils regroupent, puis un vecteur de couleurs contenant autant de valeurs que de groupes de niveaux. 
 La fonction ressort un jeu de données identique, mais augmenté d'une colonne "grouped" dans laquelle se trouvent les nouveaux groupes de niveaux. 
-On peut alors l'affecter à l'argument column de showLCZ pour représenter les nouveaux groupes de niveaux, en reprenant le nom de ces groupes comme niveaux et le vecteurs de couleurs pour l'argiment colors. 
+On peut alors l'affecter à l'argument column de showLCZ pour représenter les nouveaux groupes de niveaux, en reprenant le nom de ces groupes comme niveaux et le vecteurs de couleurs pour l'argument cols. 
 
 ```{r}
 redonOSMgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",
                            urban=c("1","2","3","4","5","6","7","8","9"),
                            industry="10",
                            vegetation=c("101","102","103","104"),
-                           impervious="105",pervious="106",water="107",colors=c("red","black","green","grey","burlywood","blue"))
+                           impervious="105",pervious="106",water="107",cols=c("red","black","green","grey","burlywood","blue"))
 showLCZ(redonOSMgrouped, column="grouped",repr="grouped",wf="OSM", 
         niveaux = c("urban","industry","vegetation","impervious","pervious","water"),
-        colors=c("red","black","green","grey","burlywood","blue"))
+        cols=c("red","black","green","grey","burlywood","blue"))
 
 ```
 
@@ -132,14 +134,21 @@ Par exemple, GeoClimate, pour une géométrie donnée, peut lui avoir attribué 
 La fonction `importLCZgen` permet d'indiquer quelles colonnes du geojson contiennent l'identifiant de la géométrie (`geomID`) et l'indicateur de confiance associé (`confid`).
 ```{r}
 dirPath<-paste0(system.file("extdata",package="lczexplore"),"/")
+dirPathOSM<-paste0(dirPath,"osm/2022/Redon")
+dirPathBDT<-paste0(dirPath,"bdtopo_2_2/Redon")
+redonOSM<-importLCZgen(dirPath=dirPathOSM,file="rsu_lcz.geojson",column = "LCZ_PRIMARY",geomID = "ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
+# Afin de conserver les mêmes noms, on réimporte avec le geojson
+redonBDT<-importLCZgen(dirPath=dirPathBDT,file="rsu_lcz.geojson",column = "LCZ_PRIMARY")
 
-redonOSM<-importLCZgen(dirPath=dirPath,file="rsu_lcz_osm_redon.geojson",column = "LCZ_PRIMARY",
-                       geomID = "ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
-# La fonction d'import fonctionne en réalité aussi avec les fichiers shape
-redonBDT<-importLCZgen(dirPath=dirPath,file="rsu_lcz_bdt_redon.shp", 
-                       column ="LCZ_PRIMAR",geomID = "ID_RSU",,confid="LCZ_UNIQUE" )
+## La fonction d'import fonctionne en réalité aussi avec les fichiers shape
 ## Notez que les noms des colonnes sont différents pour le fichier shape, dans tous les cas
 ## c'est le nom des colonnes de votre fichier que vous rentrerez. 
+redonBDT<-importLCZgen(dirPath=dirPathBDT,file="rsu_lcz_bdt_redon.shp", 
+                       column ="LCZ_PRIMAR",geomID = "ID_RSU",confid="LCZ_UNIQUE" )
+
+
+
+
 
 ```
 L'analyse de sensibilité demande qu'on exporte l'accord entre les géométries en conservant les indicateurs de confiance de chacune des classifications. On renseigne alors les nouvelles colonnes en entrée de la fonction de comparaison, et on charge les données qui ont permis de produire la matrice de confusion dans un objet R. Chaque géom aura maintenant une valeur de confiance associée.
@@ -162,12 +171,12 @@ En entrant le nombre de point `nPoints` que l'on désire, et en chargenat
 
 ```{r}
 
-confidSensib(file=redonCompare$data,filePath="", nPoints=10,
+confidSensib(inputDf=redonCompare$data,filePath="", nPoints=10,
              wf1="bdtopo_2_2", wf2="osm",
              geomID1="ID_RSU", column1="LCZ_PRIMAR", confid1="LCZ_UNIQUE",
              geomID2="ID_RSU.1",column2="LCZ_PRIMARY", confid2="LCZ_UNIQUENESS_VALUE",
              sep=";", repr="brut",
-             niveaux="", plot=TRUE)
+             plot=TRUE)
 
 ```
 
@@ -176,17 +185,10 @@ confidSensib(file=redonCompare$data,filePath="", nPoints=10,
 
 
 
-redonOSM<-importLCZgen(dirPath=dirPath,file="rsu_lcz_osm_redon.geojson",column = "LCZ_PRIMARY")
-redonBDT<-importLCZgen(dirPath=dirPath,file="rsu_lcz_bdt_redon.geojson",column = "LCZ_PRIMARY")
-
-importLCZgen<-function(dirPath, file, output="sfFile", column, geomID="", confid="",
-                       niveaux=c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",
-                                                        "9"="9","10"="10","101"="101","102"="102","103"="103","104"="104",
-                                                         "105"="105","106"="106","107"="107","101"="11","102"="12","103"="13","104"="14",
-                                                        "105"="15", "106"="16","107"="17"),drop=T)
 
 
-# étudier une ville déjà chargée par l'équipe GeoCliamate
+
+# étudier une ville déjà chargée par l'équipe GeoClimate
 
 A venir : appel et effet de la fonction produceAnalysis
 

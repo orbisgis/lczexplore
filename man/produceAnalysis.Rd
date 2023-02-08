@@ -10,7 +10,7 @@ Same analysis are reproducible using all the generic functions of the package.}
 \usage{
 produceAnalysis(
   location = "Redon",
-  outDir = "/home/gousseff/Documents/3_data/GeoClimateSource",
+  outDir = getwd(),
   wf1 = "bdtopo_2_2",
   wf2 = "osm",
   refYear1 = "2022",
@@ -57,4 +57,8 @@ produced exclusively by GeoClimate.
 Typically one will compare the LCZ produced by GeoClimate using the OSM data as input
 to the LCZ produced by GeoClimate using the french BD_TOPO as input.
 Same analysis are reproducible using all the generic functions of the package.
+}
+\examples{
+produceAnalysis(location="Redon", outDir=paste0(system.file(package="lczexplore"),"/tinytest"),
+wf1="bdtopo_2_2", wf2="osm", refYear1="2022", refYear2="2022", repr="brut", saveG=location)
 }

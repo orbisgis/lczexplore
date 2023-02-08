@@ -6,16 +6,17 @@
 \usage{
 importLCZgen(
   dirPath,
-  file,
+  file = "rsu_lcz.geojson",
   output = "sfFile",
-  column,
+  column = "LCZ_PRIMARY",
   geomID = "",
   confid = "",
   niveaux = c(`1` = "1", `2` = "2", `3` = "3", `4` = "4", `5` = "5", `6` = "6", `7` =
     "7", `8` = "8", `9` = "9", `10` = "10", `101` = "101", `102` = "102", `103` = "103",
     `104` = "104", `105` = "105", `106` = "106", `107` = "107", `101` = "11", `102` =
     "12", `103` = "13", `104` = "14", `105` = "15", `106` = "16", `107` = "17"),
-  drop = T
+  drop = T,
+  verbose = F
 )
 }
 \arguments{
@@ -35,7 +36,20 @@ columns will be dropped. If empty string, all the colums will be kept}
 for instance the uniqueness of the LCZ level of each geom}
 
 \item{niveaux}{the levels of the imported LCZ classification}
+
+\item{drop}{: the default is TRUE, which means all the column are dropped excepted those specified in previous parameters}
+
+\item{verbose}{if TRUE show the discrepancies between specified levels of LCZ and
+levels actually present in column}
+}
+\value{
+returns an sf object containing at least the geoms and the LCZ values, and if specified, columns for the IDs of the geoms and the confidence value of the LCZ levels.
 }
 \description{
 Imports LCZ from a standard geographical file (tested : geojson, shp, more to come)
+}
+\examples{
+importLCZgen(dirPath=paste0(system.file("extdata", package = "lczexplore"),
+"/bdtopo_2_2/Redon"), file="rsu_lcz.geojson", column="LCZ_PRIMARY",
+geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
 }

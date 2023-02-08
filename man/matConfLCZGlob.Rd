@@ -6,7 +6,7 @@
 \usage{
 matConfLCZGlob(
   filePath = "",
-  file,
+  inputDf,
   wf1,
   wf2,
   geomID1 = "",
@@ -18,18 +18,28 @@ matConfLCZGlob(
   sep = ";",
   repr = "brut",
   niveaux = "",
-  plot = T,
+  plot = TRUE,
   ...
 )
 }
 \arguments{
-\item{filePath}{: the full path to the file to import}
-
-\item{file}{: if filePath is an empty string file is the name of data set already loaded in the R session}
+\item{filePath}{: the full path to the inputDfto import}
 
 \item{wf1}{: a string indicating the origin of the LCZ classification 1}
 
 \item{wf2}{: a string indicating the origin of the LCZ classification 1}
+
+\item{geomID1}{is the name of the column containing the ID of each spatial units from the first type of datasets in \'inputDf\', it allows to post-treat some of the units}
+
+\item{column1}{is the name of the column containing the Local Climatic Zone of the first type of datasets in the \'file\' dump file  be analyzed}
+
+\item{confid1}{is the name of the column measuring the confidence given to the LCZ level in column1}
+
+\item{geomID2}{is the name of the column containing the ID of each spatial units from the second type of datasets in \'inputDf\'}
+
+\item{column2}{see column1 but for the second type of datasets}
+
+\item{confid2}{is the name of the column measuring the confidence given to the LCZ level in column2}
 
 \item{sep}{: the seperator used in the csv file}
 
@@ -40,13 +50,24 @@ reading the data, but one can input a character string vector of levels,
 for instance to produce several graphs with the same levels or levels in a specific order}
 
 \item{plot}{if TRUE, then confusion matrix plot is shown, else it is just returned in the matConfOut object}
+
+\item{...}{other parameters that may be passed from a function calling matConfLCZGlob}
+
+\item{inputDf:}{if filePath is an empty string inputDf is the name of an R dataframe containing the data}
 }
 \value{
-matConfOut is a list containing the confusion matrix in its longer form, matConf,
-a ggplot2 plot of said matrix called matConfPlot,
-the summed area per levels for both LCZ classification called aires,
-and the general agreement expressed in percent, pourcAcc
+matConfOut is a list containing : matconf, the confusion matrix in its longer form ; matConfPlot,
+a ggplot2 plot of said matrix ; aires, the summed area per levels for both LCZ classification ;
+and pourcAcc, the general agreement between classifications expressed in percent of areas
 }
 \description{
 Compares two LCZ classifications on several locations
+}
+\examples{
+matConfLCZGlob(filePath= paste0(
+system.file("extdata", package = "lczexplore"),"/bdtopo_2_2_osm.csv"),
+file="bdtopo_2_2_osm.csv", wf1="bdt", wf2="osm",
+geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
+geomID2="ID_RSU.1", column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1", sep=";", repr="brut",
+sniveaux="", plot=TRUE)
 }

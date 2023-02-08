@@ -20,10 +20,19 @@
 #' @param plot if TRUE the graph is plotted
 #' @param saveG if not an empty string, specifies where to save graphs
 #' @import dplyr ggplot2
-#' @return
+#' @return returns an object called sortie, which contains the values of the thresholds
+#' for the confidence value and the agreement between classifications for the LCZ levels presents in the dataset
 #' @export
 #'
 #' @examples
+#' mainPath<-system.file("extdata", package = "lczexplore")
+#' testSourceFact<-read.csv(paste0(mainPath,"/bdtopo_2_2_osm.csv"),
+#' sep=";",header=TRUE,stringsAsFactors = TRUE)
+#' confidSensib(inputDf=testSourceFact, filePath="",
+#' nPoints=5, wf1="bdtopo_2_2", wf2="osm",
+#' geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
+#' geomID2="ID_RSU.1",column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1",
+#' sep=";", repr="brut", plot=TRUE, saveG=mainPath)
 confidSensib<-function(inputDf="", filePath="", nPoints=5,
                        wf1="bdtopo_2_2", wf2="osm",
                        geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",

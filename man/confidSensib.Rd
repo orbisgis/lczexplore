@@ -3,10 +3,10 @@
 \name{confidSensib}
 \alias{confidSensib}
 \title{Computes the agreement between LCZ classification on a range of values of
-an indicator of confidence granted to each LCZ classification}
+an indicator of confidence granted to each LCZ classification. The input file or dataset must have been produced by compareLCZ function, or at least the columns must be in the same order.}
 \usage{
 confidSensib(
-  file,
+  inputDf = "",
   filePath = "",
   nPoints = 5,
   wf1 = "bdtopo_2_2",
@@ -19,12 +19,12 @@ confidSensib(
   confid2 = "LCZ_UNIQUENESS_VALUE.1",
   sep = ";",
   repr = "brut",
-  niveaux = levLCZ,
-  plot = TRUE
+  plot = TRUE,
+  saveG = ""
 )
 }
 \arguments{
-\item{file}{is an R file with geom IDs, LCZ classifications and
+\item{inputDf}{is an R file with geom IDs, LCZ classifications and
 a confidence value granted for the LCZ value of each geom. Ignored if filePath is not empty.}
 
 \item{filePath}{is the path to a csv file containing geom IDs, LCZ classifications and
@@ -49,15 +49,29 @@ the average agreement between classifs will be computed}
 
 \item{confid2}{is the name of the column storing the second LCZ classification confidence value}
 
-\item{sep}{the separator used if filePAth is not empty}
+\item{sep}{the separator used if filePath is not empty}
 
 \item{repr}{were the levels grouped or do we expect original LCZ values}
 
-\item{niveaux}{levels of LCZ expected in both LCZ classifications}
+\item{plot}{if TRUE the graph is plotted}
 
-\item{plot}{if True the graph is plotted}
+\item{saveG}{if not an empty string, specifies where to save graphs}
+}
+\value{
+returns an object called sortie, which contains the values of the thresholds
+for the confidence value and the agreement between classifications for the LCZ levels presents in the dataset
 }
 \description{
 Computes the agreement between LCZ classification on a range of values of
-an indicator of confidence granted to each LCZ classification
+an indicator of confidence granted to each LCZ classification. The input file or dataset must have been produced by compareLCZ function, or at least the columns must be in the same order.
+}
+\examples{
+mainPath<-system.file("extdata", package = "lczexplore")
+testSourceFact<-read.csv(paste0(mainPath,"/bdtopo_2_2_osm.csv"),
+sep=";",header=TRUE,stringsAsFactors = TRUE)
+confidSensib(inputDf=testSourceFact, filePath="",
+nPoints=5, wf1="bdtopo_2_2", wf2="osm",
+geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
+geomID2="ID_RSU.1",column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1",
+sep=";", repr="brut", plot=TRUE, saveG=mainPath)
 }

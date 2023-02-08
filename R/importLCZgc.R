@@ -9,7 +9,7 @@
 #' @import sf dplyr
 #' @export
 #'
-#' @examples
+#' @examples importLCZgc(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon/"))
 importLCZgc<-function(dirPath,output="sfFile"){
   # output can be sfFile, bBox or Contour
 

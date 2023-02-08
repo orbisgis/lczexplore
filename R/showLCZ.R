@@ -16,7 +16,7 @@
 #' @import sf ggplot2 dplyr cowplot forcats grDevices
 #' @return no object is returned, but plots of the LCZ levels are produced
 #' @export
-#' @examples showLCZ(redonBDT,column="LCZ_PRIMARY", repr="brut", niveaux="", cols="")
+#' @examples showLCZ(redonBDT,column="LCZ_PRIMARY", repr="brut")
 showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY", repr="brut", niveaux="", cols=""){
 
   datasetName<-print(deparse(substitute(sf)))
@@ -53,7 +53,7 @@ if (wf!=""){nomLegende<-paste0("LCZ from ",wf," workflow")} else{nomLegende<-"LC
 
   if (repr=='brut'){
 
-  
+
   colorMap<-c("#8b0101","#cc0200","#fc0001","#be4c03","#ff6602","#ff9856",
               "#fbed08","#bcbcba","#ffcca7","#57555a","#006700","#05aa05",
               "#648423","#bbdb7a","#010101","#fdf6ae","#6d67fd")
