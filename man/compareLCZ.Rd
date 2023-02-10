@@ -3,7 +3,7 @@
 \name{compareLCZ}
 \alias{compareLCZ}
 \title{Compares two LCZ classification on the same zone,
-produces a map for each classification, a map of their agreement and a representation of a confusion matric between them}
+produces a map for each classification, a map of their agreement and a representation of a confusion matrix between them}
 \usage{
 compareLCZ(
   sf1,
@@ -87,7 +87,7 @@ If saveG is not an empty string, graphics are saved under "saveG.png"
 }
 \description{
 Compares two LCZ classification on the same zone,
-produces a map for each classification, a map of their agreement and a representation of a confusion matric between them
+produces a map for each classification, a map of their agreement and a representation of a confusion matrix between them
 }
 \examples{
 compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU",

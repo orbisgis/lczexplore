@@ -6,7 +6,7 @@ Authors@R: c(
     person(, "Centre National de la Recherche Scientifique, Lab-Sticc", role = "cph")
   )
 Description: This lczexplore package automatize the comparison of sets of local climate zones.It was developped thanks to the project PAENDORA2 (Pour la gestion du confort estival : Données, Outils et Recherche-Action) (2022 -2025), funded by ADEME
-License: LGPL3
+License: LGPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3

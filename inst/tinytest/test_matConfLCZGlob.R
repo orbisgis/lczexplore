@@ -21,7 +21,7 @@ expect_silent(
 
   )
 
-testSource<-read.csv("bdtopo_2_2_osm.csv", sep=";",header=T)
+testSource<-read.csv(paste0(system.file("extdata", package = "lczexplore"),"/bdtopo_2_2_osm.csv"), sep=";",header=T)
 
 expect_silent(
 matConfLCZGlob(filePath="",

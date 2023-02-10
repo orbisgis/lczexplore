@@ -1,5 +1,5 @@
 #' Compares two LCZ classification on the same zone,
-#' produces a map for each classification, a map of their agreement and a representation of a confusion matric between them
+#' produces a map for each classification, a map of their agreement and a representation of a confusion matrix between them
 #'
 #' @param sf1 is the sf object that contains the first LCZ classification
 #' @param geomID1 is the name of the column storing the ID of the geoms in sf1

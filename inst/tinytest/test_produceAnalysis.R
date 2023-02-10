@@ -3,8 +3,6 @@
 # library(lczexplore)
 # library(sf)
 
-report_side_effects()
-
 system.file(package="lczexplore")
 
 expect_warning(produceAnalysis(location="Redon",
@@ -59,4 +57,3 @@ produceAnalysis(location="Redon",
                 wf1="bdtopo_2_2",
                 wf2="osm",refYear1="2022",refYear2="2022",repr="brut",saveG=location)
 
-report_side_effects(FALSE)
