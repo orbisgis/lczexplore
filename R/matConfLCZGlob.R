@@ -1,7 +1,7 @@
 #' Compares two LCZ classifications on several locations
 #'
 #' @param filePath : the full path to the inputDfto import
-#' @param inputDf: if filePath is an empty string inputDf is the name of an R dataframe containing the data
+#' @param inputDf : if filePath is an empty string inputDf is the name of an R dataframe containing the data
 #' @param wf1 : a string indicating the origin of the LCZ classification 1
 #' @param wf2 : a string indicating the origin of the LCZ classification 1
 #' @param sep : the seperator used in the csv file
@@ -24,23 +24,24 @@
 #' and pourcAcc, the general agreement between classifications expressed in percent of areas
 #' @export
 #'
-#' @examples matConfLCZGlob(filePath= paste0(
+#' @examples
+#' matConfLCZGlob(filePath= paste0(
 #' system.file("extdata", package = "lczexplore"),"/bdtopo_2_2_osm.csv"),
 #' file="bdtopo_2_2_osm.csv", wf1="bdt", wf2="osm",
 #' geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
 #' geomID2="ID_RSU.1", column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1", sep=";", repr="brut",
-#' sniveaux="", plot=TRUE)
+#' niveaux="", plot=TRUE)
 #' testSource<-read.csv(paste0(system.file("extdata", package = "lczexplore"),
-#' "/bdtopo_2_2_osm.csv"), sep=";",header=T)
+#' "/bdtopo_2_2_osm.csv"), sep=";",header=TRUE)
 #' matConfLCZGlob(filePath="",
 #' inputDf = testSource, wf1="bdt", wf2="osm",
 #' geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
 #' geomID2="ID_RSU.1", column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1", sep=";", repr="brut",
-#' niveaux="", plot=T)
+#' niveaux="", plot=TRUE)
 
 matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, confid1="",
                          geomID2="", column2, confid2="", sep=";", repr="brut",
-                        niveaux="", plot=TRUE, ...){
+                         niveaux="", plot=TRUE, ...){
 
   if(column1==column2){
     column2<-paste0(column1,".1")
@@ -202,8 +203,8 @@ matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, co
     if(wf2=="osm"){adtitre2<-" OSM "} else
       if(wf2=="wudapt"){adtitre2<-" WUDAPT"} else {adtitre2<-wf2}
 
-titre4<-paste(" Repartition of", adtitre1, " LCZ into LCZs of", adtitre2)
-sousTitre<-paste0("number of analysed locations : ", nbTowns)
+  titre4<-paste(" Repartition of", adtitre1, " LCZ into LCZs of", adtitre2)
+  sousTitre<-paste0("number of analysed locations : ", nbTowns)
 
   if(plot==T){
     matConfPlot<-ggplot(data = matConfLong, aes(x=get(column1), y=get(column2), fill =accord)) +
@@ -224,5 +225,4 @@ sousTitre<-paste0("number of analysed locations : ", nbTowns)
   matConfOut<-list(matConf=matConfLong,matConfPlot=matConfPlot,aires=aires,pourcAcc=pourcAcc)
   return(matConfOut)
 }
-
 

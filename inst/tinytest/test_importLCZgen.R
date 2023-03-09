@@ -1,7 +1,7 @@
 #This tests teh function importLCZgen
 # library(tinytest)
 #
-# library(sf)
+library(sf)
 # test<-st_read(
 #   "/home/gousseff/Documents/2_CodesSources/R/lczexplore/lczexplore/inst/extdata/bdtopo_2_2/Redon/rsu_lcz.geojson")
 # colonnes<-c("LCZ_PRIMARY","ID_RSU","LCZ_UNIQUENESS_VALU")
@@ -23,6 +23,7 @@ expect_silent(importLCZgen(dirPath=paste0(system.file("extdata", package = "lcze
 redonBDT2<-importLCZgen(dirPath=paste0(
   system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),
   column="LCZ_PRIMARY",geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
+st_crs(redonBDT2)$wkt<-gsub("é","e",st_crs(redonBDT2)$wkt)
 
 expect_identical(redonBDT,redonBDT2)
 

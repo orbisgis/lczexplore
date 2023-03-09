@@ -20,7 +20,7 @@
 #' @param ... allow to pass arguments if representation is grouped.
 #' The expected arguments are the name of each grouped label,
 #' the levels of LCZ they contain, and last a vector of the colors to use to plot them.
-#' @import magrittr
+#' @importFrom magrittr "%>%"
 #' @return : the function doesn't return an object, as all the results
 #' are exported either in csv (both LCZ by geoms by town) either in png
 #' (maps of LCZ classifications and agreement, and confusion matrix).
@@ -34,7 +34,9 @@ produceAnalysis<-function(location="Redon",
                           wf1="bdtopo_2_2",
                           wf2="osm",refYear1="2022",refYear2="2022",repr="brut",saveG=location,...)
 {
-setwd(outDir)
+# wd<-getwd()
+#
+# setwd(outDir)
   args<-list(...)
   indSep<-names(args)
   indCol<-grep(x=indSep,pattern="colors")
@@ -68,7 +70,7 @@ if (wf1=="wudapt"){
   inDirCont<-paste0(outDir,"/",wf1,"/",location,"/")
   dfBDTcontour<-importLCZgc(dirPath=inDirCont,output="contour")
   inDir<-paste0(outDir,"/",wf1,"/",refYear1,"/",location)
-  df1<-importLCZwudapt(getwd(),
+  df1<-importLCZraster(getwd(),
                        bBox=dfBDTcontour)
 }
 
@@ -93,7 +95,7 @@ if (wf1=="wudapt"){
     inDirCont<-paste0(outDir,"/",wf2,"/",location,"/")
     dfBDTcontour<-importLCZgc(dirPath=inDir,output="contour")
     inDir<-paste0(outDir,"/",wf2,"/",refYear1,"/",location,"/")
-    df2<-importLCZwudapt(getwd(),
+    df2<-importLCZraster(getwd(),
                          bBox=dfBDTcontour)
   }
 
@@ -172,5 +174,6 @@ if(repr=="brut"){
     }
 
   }
+  # setwd(wd)
 }
 

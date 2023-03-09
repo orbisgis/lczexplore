@@ -14,6 +14,8 @@
 #' levels actually present in column
 #' @param drop : the default is TRUE, which means all the column are dropped excepted those specified in previous parameters
 #' @import dplyr forcats rlang
+#' @importFrom terra crop
+#' @importFrom terra rast
 
 #' @return returns an sf object containing at least the geoms and the LCZ values, and if specified, columns for the IDs of the geoms and the confidence value of the LCZ levels.
 #' @export

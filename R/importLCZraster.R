@@ -10,16 +10,19 @@
 #' @param bBox bBox is the bounding box needed to crop the wudapt tiff file.
 #' It can be produced bu the importLCZgen function
 #' @return an sf file containing the geom and LCZ levels from the WUDAPT Europe tiff within the bBox bounding box
-#' @import sf dplyr terra forcats
+#' @import sf dplyr forcats
+#' @importFrom terra crop
+#' @importFrom terra rast
+#' @importFrom terra as.polygons
 #' @export
 #'
 #' @examples
 #' redonBbox<-importLCZgen(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),
 #' file="rsu_lcz.geojson",column="LCZ_PRIMARY", geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE",output="bBox")
 #'
-#' redonWudapt<-importLCZwudapt(system.file("extdata", package = "lczexplore"),fileName="redonWudapt.tif",bBox=redonBbox)
+#' redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),fileName="redonWudapt.tif",bBox=redonBbox)
 #'
-importLCZwudapt<-function(dirPath,zone="europe",bBox,fileName="EU_LCZ_map.tif"){
+importLCZraster<-function(dirPath,zone="europe",bBox,fileName="EU_LCZ_map.tif"){
 # internal import function used in two loops
   effectiveImport<-function(fileName,bBox){
     sfFile<-rast(fileName)

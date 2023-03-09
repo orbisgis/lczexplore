@@ -10,7 +10,7 @@ redonBbox<-importLCZgen(dirPath=paste0(
   geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE",output="bBox")
 
 
-expect_warning(redonWudapt<-importLCZwudapt(
+expect_warning(redonWudapt<-importLCZraster(
   system.file("extdata", package = "lczexplore"),fileName="redonWudapt.tif",bBox=redonBbox),
               'attribute variables are assumed to be spatially constant throughout all geometries' )
 
@@ -22,12 +22,12 @@ library(sf)
 lowCorner<-st_point(c(-117.312698,32.805168))
 upCorner<-st_point(c(-117.227554,32.864593))
 outBbox<-st_sfc(lowCorner,upCorner,crs=4326)
-#importLCZwudapt("/home/gousseff/Documents/2_CodesSources/Wudapt/WudaptEurope/",bBox=outBbox)
+#importLCZraster("/home/gousseff/Documents/2_CodesSources/Wudapt/WudaptEurope/",bBox=outBbox)
 
 
-expect_error(current = test<-importLCZwudapt("/home/gousseff/Documents/2_CodesSources/Wudapt/WudaptEurope/",bBox=outBbox),
+expect_error(current = test<-importLCZraster("/home/gousseff/Documents/2_CodesSources/Wudapt/WudaptEurope/",bBox=outBbox),
              "The bounding box doesn\'t intersect with the Wudapt tiff :"
                )
-expect_error(current = test<-importLCZwudapt("/home/gousseff/Documents/2_CodesSources/Wudapt/WudaptEurope/",bBox=outBbox),
+expect_error(current = test<-importLCZraster("/home/gousseff/Documents/2_CodesSources/Wudapt/WudaptEurope/",bBox=outBbox),
              "maybe it\'s out of the Europe zone.")
 

@@ -172,7 +172,8 @@ niveaux<-unique(echIntConf[,column1]) %>% as.vector
  # sortieParLCZ<-aggregate(echIntConf,by=echIntConf[[column1]],internFunction2,nPoints=nPoints)
  sortieParLCZ<-lapply(echIntConfSplit,internFunction2,nPoints=nPoints)
  nivList<-names(sortieParLCZ)
- sortie<-data.frame(Confidence=numeric(0),Agreement=numeric(0),Kept=character(0),nbGeom=numeric(0),LCZ=character(0))
+ sortie<-data.frame(Confidence=numeric(0), Agreement=numeric(0), Kept=character(0),
+                    nbGeom=numeric(0), LCZ=character(0))
  for (i in names(sortieParLCZ)){
     sortie<-rbind(sortie,cbind(sortieParLCZ[[i]],LCZ=rep(i,nrow(sortieParLCZ[[i]]))))
  }

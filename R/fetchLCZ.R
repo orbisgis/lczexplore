@@ -19,7 +19,7 @@
 fetchLCZ<-function(location,outDir,wf="bdtopo_2_2",refYear="2022",
                    baseURL="https://cloud.geomanum.org/index.php/s/geoclimate/download?path=%2F",...){
 
-      wd<-getwd()
+      #wd<-getwd()
 
 
 
