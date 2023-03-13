@@ -193,8 +193,9 @@ confidSensib(inputDf=redonCompare$data,filePath="", nPoints=10,
 A venir : appel et effet de la fonction produceAnalysis
 
 ```{R}
+wd<-getwd() 
 outDir<-"/home/gousseff/Documents/2_CodesSources/R/lczexplore/packageManualTesting"
-setwd(outDir)
+ setwd(outDir)
 locations<-c("Allaire","Redon","Paris")
 ```
 
@@ -210,6 +211,8 @@ produceAnalysis(location=i,
   wf1="bdtopo_2_2",
   wf2="osm",refYear1="2022",refYear2="2022",repr="brut",saveG=location)
 }
+
+setwd(wd)
 ```
 Les graphiques ont été créés dans le répertoire dont le chemin est outDir.
 

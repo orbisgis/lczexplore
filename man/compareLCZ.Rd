@@ -81,7 +81,7 @@ returns an object called matConfOut which contains
 matConfLong, a confusion matrix in a longer form, which can be written in a file by the compareLCZ function
 and is used by the geom_tile function of the ggplot2 package.
 matConfPlot is a ggplot2 object showing the confusion matrix. If plot=T, it is also directly plotted
-aires contains the sums of each LCZ area
+areas contains the sums of each LCZ area
 pourcAcc is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
 If saveG is not an empty string, graphics are saved under "saveG.png"
 }

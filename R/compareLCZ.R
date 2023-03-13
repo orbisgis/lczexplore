@@ -39,7 +39,7 @@
 #' matConfLong, a confusion matrix in a longer form, which can be written in a file by the compareLCZ function
 #' and is used by the geom_tile function of the ggplot2 package.
 #' matConfPlot is a ggplot2 object showing the confusion matrix. If plot=T, it is also directly plotted
-#' aires contains the sums of each LCZ area
+#' areas contains the sums of each LCZ area
 #' pourcAcc is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
 #' If saveG is not an empty string, graphics are saved under "saveG.png"
 #' @export
@@ -290,8 +290,8 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
 
   # Export of lcz and area for each geom for further analysis
 
-        echInt<-echInt %>% mutate(aire=st_area(geometry)) %>% drop_units
-        echIntExpo<-echInt %>% mutate(location=location,aire=as.numeric(aire)) %>%
+        echInt<-echInt %>% mutate(area=st_area(geometry)) %>% drop_units
+        echIntExpo<-echInt %>% mutate(location=location,area=as.numeric(area)) %>%
           st_set_geometry(NULL) %>% as.data.frame()
 
 
@@ -320,7 +320,7 @@ matConfOut<-matConfLCZ(sf1=sf1, column1=column1, sf2=sf2, column2=column2,
                        repr=repr, niveaux=niveaux, plot=FALSE)
 matConfOut$data<-echIntExpo
 matConfLong<-matConfOut$matConf
-aires<-matConfOut$aires
+areas<-matConfOut$areas
 pourcAcc<-matConfOut$pourcAcc
 
 ################################################
@@ -347,14 +347,14 @@ if (plot == TRUE){
   lab1<-paste(titrou, adtitre1)
   lab2<-paste(titrou, adtitre2)
   # ypos<-if (repr=="brut"){ypos=5} else {ypos=2}
-  etiquettes1<-paste(etiquettes, aires$aire1 ," %")
+  etiquettes1<-paste(etiquettes, areas$area1 ," %")
   names(etiquettes1)<-niveaux
   etiquettes2<-etiquettes
   etiquettes2<-gsub(":.*",": ",etiquettes)
-  etiquettes2<-paste(etiquettes2, aires$aire2 ," %")
+  etiquettes2<-paste(etiquettes2, areas$area2 ," %")
 
-  etiquettes1.2<-paste(etiquettes2,aires$aire1)
-  datatemp<-data.frame(a=factor(niveaux),pourcAire=aires$aire1,pourcAire1=aires$aire1,pourcAire2=aires$aire2)
+  etiquettes1.2<-paste(etiquettes2,areas$area1)
+  datatemp<-data.frame(a=factor(niveaux),percArea=areas$area1,percArea1=areas$area1,percArea2=areas$area2)
 
   # center all plots
   boundary1<-sf1 %>% st_union %>% st_boundary()
@@ -395,7 +395,7 @@ if (plot == TRUE){
        ggtitle(label=titre3, subtitle=paste0("Number of intersected geoms : ", nbgeomInter))
 
   # Plot how the LCZ each level of the first classification is split into levels of the second classification
-     coordRef=length(niveaux)+1
+     coordRef<-length(niveaux)+1
 
      matConfPlot<-ggplot(data = matConfLong, aes(x=get(column1), y=get(column2), fill =accord)) +
        geom_tile(color = "white",lwd=1.2,linetype=1)+
@@ -407,8 +407,8 @@ if (plot == TRUE){
                  color="black") +coord_fixed()+
        theme(axis.text.x = element_text(angle =70, hjust = 1),
              panel.background = element_rect(fill="grey"))+
-       geom_tile(datatemp,mapping=aes(x=a,y=coordRef,fill=pourcAire1, height=0.8,width=0.8))+
-       geom_tile(datatemp,mapping=aes(x=coordRef,y=a,fill=pourcAire2, height=0.8,width=0.8))+
+       geom_tile(datatemp,mapping=aes(x=a,y=coordRef,fill=percArea1, height=0.8,width=0.8))+
+       geom_tile(datatemp,mapping=aes(x=coordRef,y=a,fill=percArea2, height=0.8,width=0.8))+
        ggtitle(titre4,subtitle="Percentage inferior to 0.5 are rounded to 0")
 
 

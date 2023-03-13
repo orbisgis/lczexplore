@@ -25,6 +25,8 @@ matConfLCZGlob(
 \arguments{
 \item{filePath}{: the full path to the inputDfto import}
 
+\item{inputDf}{: if filePath is an empty string inputDf is the name of an R dataframe containing the data}
+
 \item{wf1}{: a string indicating the origin of the LCZ classification 1}
 
 \item{wf2}{: a string indicating the origin of the LCZ classification 1}
@@ -52,12 +54,10 @@ for instance to produce several graphs with the same levels or levels in a speci
 \item{plot}{if TRUE, then confusion matrix plot is shown, else it is just returned in the matConfOut object}
 
 \item{...}{other parameters that may be passed from a function calling matConfLCZGlob}
-
-\item{inputDf:}{if filePath is an empty string inputDf is the name of an R dataframe containing the data}
 }
 \value{
 matConfOut is a list containing : matconf, the confusion matrix in its longer form ; matConfPlot,
-a ggplot2 plot of said matrix ; aires, the summed area per levels for both LCZ classification ;
+a ggplot2 plot of said matrix ; areas, the summed area per levels for both LCZ classification ;
 and pourcAcc, the general agreement between classifications expressed in percent of areas
 }
 \description{
@@ -69,12 +69,12 @@ system.file("extdata", package = "lczexplore"),"/bdtopo_2_2_osm.csv"),
 file="bdtopo_2_2_osm.csv", wf1="bdt", wf2="osm",
 geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
 geomID2="ID_RSU.1", column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1", sep=";", repr="brut",
-sniveaux="", plot=TRUE)
+niveaux="", plot=TRUE)
 testSource<-read.csv(paste0(system.file("extdata", package = "lczexplore"),
-"/bdtopo_2_2_osm.csv"), sep=";",header=T)
+"/bdtopo_2_2_osm.csv"), sep=";",header=TRUE)
 matConfLCZGlob(filePath="",
 inputDf = testSource, wf1="bdt", wf2="osm",
 geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
 geomID2="ID_RSU.1", column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1", sep=";", repr="brut",
-niveaux="", plot=T)
+niveaux="", plot=TRUE)
 }

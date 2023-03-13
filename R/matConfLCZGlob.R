@@ -20,7 +20,7 @@
 
 #' @import tidyr units ggplot2 dplyr cowplot forcats units tidyr RColorBrewer
 #' @return matConfOut is a list containing : matconf, the confusion matrix in its longer form ; matConfPlot,
-#' a ggplot2 plot of said matrix ; aires, the summed area per levels for both LCZ classification ;
+#' a ggplot2 plot of said matrix ; areas, the summed area per levels for both LCZ classification ;
 #' and pourcAcc, the general agreement between classifications expressed in percent of areas
 #' @export
 #'
@@ -49,7 +49,7 @@ matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, co
 
 
   colonnes<-c(geomID1,column1,confid1,geomID2,column2,confid2)
-  colonnes<-colonnes[sapply(colonnes,nchar)!=0] %>% c("accord","aire","location")
+  colonnes<-colonnes[sapply(colonnes,nchar)!=0] %>% c("accord","area","location")
 
   if(filePath!=""){
     echInt<-read.csv(filePath,sep,header=T,stringsAsFactors = T)
@@ -78,57 +78,57 @@ matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, co
   # Marginal areas for first LCZ
 
   areaLCZ1<-echInt %>% group_by_at(.vars=column1) %>%
-    summarize(aire=sum(aire,na.rm=F))%>%
+    summarize(area=sum(area,na.rm=F))%>%
     drop_units %>%
     ungroup()
-  areaLCZ1$aire<-round(areaLCZ1$aire/sum(areaLCZ1$aire,na.rm=F)*100,digits = 2)
+  areaLCZ1$area<-round(areaLCZ1$area/sum(areaLCZ1$area,na.rm=F)*100,digits = 2)
   areaLCZ1<-areaLCZ1 %>% as.data.frame()
 
   # marginal for second LCZ
   areaLCZ2<-echInt %>% group_by_at(.vars=column2) %>%
-    summarize(aire=sum(aire,na.rm=F))%>%
+    summarize(area=sum(area,na.rm=F))%>%
     drop_units %>%
     ungroup()
-  areaLCZ2$aire<-round(areaLCZ2$aire/sum(areaLCZ2$aire,na.rm=F)*100,digits = 2)
+  areaLCZ2$area<-round(areaLCZ2$area/sum(areaLCZ2$area,na.rm=F)*100,digits = 2)
   areaLCZ2<-areaLCZ2 %>% as.data.frame()
 
   # Problem : some of the input files do not exhibit all possible LCZ values :
   # pasting the area to the labels would return an error
   # Here is an ugly solution to overcome this (and see later to include the potentially missing combination of levels)
 
-  aires<-data.frame(niveaux=niveaux, aire1=0, aire2=0)
-  #print("aires")
-  #print(aires)
+  areas<-data.frame(niveaux=niveaux, area1=0, area2=0)
+  #print("areas")
+  #print(areas)
   #print("head of areaLCZ1 column1")
   #print(head(areaLCZ1[,column1]))
 
   for (i in areaLCZ1[,column1]){
     #print(" i as a level of areaLCZ1 equals")
     #print(i)
-    aires[aires$niveaux==i,'aire1']<-areaLCZ1[areaLCZ1[,column1]==i,'aire']
+    areas[areas$niveaux==i,'area1']<-areaLCZ1[areaLCZ1[,column1]==i,'area']
   }
 
   for (i in areaLCZ2[,column2]){
     # print(" i as a level of areaLCZ2 equals")
     # print(i)
-    aires[aires$niveaux==i,'aire2']<-areaLCZ2[areaLCZ2[,column2]==i,'aire']
+    areas[areas$niveaux==i,'area2']<-areaLCZ2[areaLCZ2[,column2]==i,'area']
   }
 
   # Get the general agreement between both input files
-  pourcAcc<-(((echInt %>%  filter(accord==T) %>% select(aire) %>% sum) /
-                (echInt %>% select(aire) %>% sum))*100) %>% round(digits=2)
+  pourcAcc<-(((echInt %>%  filter(accord==T) %>% select(area) %>% sum) /
+                (echInt %>% select(area) %>% sum))*100) %>% round(digits=2)
 
   # the way to "feed" group_by is through .dots, to be checked, as it seems to be deprecated :
   # fixed with group_by_at
 
 
   matConf<-echInt %>% group_by_at(.vars=c(column1,column2)) %>%
-    summarize(aire=sum(aire))%>% drop_units %>% ungroup %>% ungroup
+    summarize(area=sum(area))%>% drop_units %>% ungroup %>% ungroup
 
   # print("matConf")
   # print(head(matConf))
 
-  matConfLarge<-pivot_wider(data=matConf,names_from=column2,values_from=aire)
+  matConfLarge<-pivot_wider(data=matConf,names_from=column2,values_from=area)
   readable<-matConfLarge[,-1]/rowSums(matConfLarge[,-1],na.rm=T)*100
   matConfLarge<-cbind(matConfLarge[,1],round(x=readable,digits=2))
 
@@ -163,7 +163,7 @@ matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, co
                     data.frame(
                       indice=apply(
                         crossing(niveaux,niveaux),1,paste,collapse="."),
-                      aire=0
+                      area=0
                     )
   )
 
@@ -188,11 +188,11 @@ matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, co
 
   # print("matConfLongaprès reorder factor")
   # print(matConfLong)
-  datatemp<-data.frame(a=factor(niveaux),pourcAire1=aires$aire1,pourcAire2=aires$aire2)
+  datatemp<-data.frame(a=factor(niveaux),percArea1=areas$area1,percArea2=areas$area2)
   ############
   # Plot
-  coordRef=length(niveaux)+1
-  if (repr=='brut'){titrou<-"LCZ"} else {titrou<-"Grouped LCZs"}
+  coordRef<-length(niveaux)+1
+  # if (repr=='brut'){titrou<-"LCZ"} else {titrou<-"Grouped LCZs"}
 
   if (wf1=="bdtopo_2_2"){adtitre1<-" BDTOPO V2.2"} else
     if(wf1=="osm"){adtitre1<-" OSM "} else
@@ -217,12 +217,12 @@ matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, co
                 color="black") +coord_fixed()+
       theme(axis.text.x = element_text(angle =70, hjust = 1),
             panel.background = element_rect(fill="grey"))+
-      geom_tile(datatemp,mapping=aes(x=a,y=coordRef,fill=pourcAire1,height=0.8,width=0.8))+
-      geom_tile(datatemp,mapping=aes(x=coordRef,y=a,fill=pourcAire2,height=0.8,width=0.8))+
+      geom_tile(datatemp,mapping=aes(x=a,y=coordRef,fill=percArea1,height=0.8,width=0.8))+
+      geom_tile(datatemp,mapping=aes(x=coordRef,y=a,fill=percArea2,height=0.8,width=0.8))+
       ggtitle(titre4,subtitle=sousTitre)
-    print(matConfPlot)} else {matConfPlot=NULL}
+    print(matConfPlot)} else {matConfPlot<-NULL}
 
-  matConfOut<-list(matConf=matConfLong,matConfPlot=matConfPlot,aires=aires,pourcAcc=pourcAcc)
+  matConfOut<-list(matConf=matConfLong,matConfPlot=matConfPlot,areas=areas,pourcAcc=pourcAcc)
   return(matConfOut)
 }
 

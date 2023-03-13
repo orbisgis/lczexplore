@@ -1,13 +1,12 @@
-#' Produces a confusion matrix between two sets of lcz on the same area (geoms do not need to be the same)
+#' Produces a confusion matrix between two sets of lcz on the same area 
+#' (geoms do not need to be the same)
 #'
-#' @details Most of the time this function will not be called directly by the user but by the compareLCZ function
+#' @details Most of the time this function will not be called directly 
+#' by the user but by the compareLCZ function
 #' @param sf1 is the sf dataset containing the first lcz classification
 #' @param column1 is the column of the first data set containing the lcz to be compared
 #' @param sf2 is the sf dataset containing the second lcz classification
 #' @param column2 is the column of the second data set containing the lcz to be compared
-#' @param repr brut allows to use the optimal color scheme to represent the original LCZ.
-#' If set to grouped, the ... arguments must contain the name of the groups and
-#' the names of the colors associated to these user defined groups
 #' @param niveaux by default the levels of lcz incoded from 1 to 10 and 101 to 107.
 #' When comparing grouped LCZ, the grouped levels have to be specified.
 #' @param plot if TRUE the plot of the matrix
@@ -17,8 +16,8 @@
 #' matConfLong, a confusion matrix in a longer form, which can be written in a file by the compareLCZ function
 #' and is used by the geom_tile function of the ggplot2 package.
 #' matConfPlot is a ggplot2 object showing the confusion matrix. If plot=T, it is also directly plotted
-#' aires contains the sums of each LCZ area
-#' pourcAcc is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
+#' areas contains the sums of each LCZ area
+#' percAcc is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
 #' @import sf ggplot2 dplyr cowplot forcats units tidyr RColorBrewer rlang
 
 #' @export
@@ -26,7 +25,7 @@
 #' @examples
 #' matConfRedonBDTOSM<-matConfLCZ(sf1=redonBDT,column1='LCZ_PRIMARY',
 #' sf2=redonOSM,column2='LCZ_PRIMARY',plot=FALSE)
-matConfLCZ<-function(sf1, column1, sf2, column2, repr="brut", niveaux=as.character(c(1:10,101:107)), plot=F, ...){
+matConfLCZ<-function(sf1, column1, sf2, column2, niveaux=as.character(c(1:10,101:107)), plot=F, ...){
   # coerce the crs of sf2 to the crs of sf1
   if(st_crs(sf1)!=st_crs(sf2)){sf2<-sf2 %>% st_transform(crs=st_crs(sf1))}
 
@@ -53,55 +52,55 @@ matConfLCZ<-function(sf1, column1, sf2, column2, repr="brut", niveaux=as.charact
   ######################################################
 
   # compute the area of geoms (used later as wieght of agreement between classifcations)
-  echInt<-echInt %>% mutate(aire=st_area(geometry)) %>% drop_units
+  echInt<-echInt %>% mutate(area=st_area(geometry)) %>% drop_units
 
   # the writing/appending will happen in compareLCZ function
 
   # marginal areas (grouped by levels of LCZ for each input dataset) rounded at the unit
     # marginal for first LCZ
    areaLCZ1<-echInt %>% st_drop_geometry %>% group_by_at(.vars=column1) %>%
-    summarize(aire=sum(aire,na.rm=F))%>%
+    summarize(area=sum(area,na.rm=F))%>%
     drop_units %>%
     ungroup()
-  areaLCZ1$aire<-round(areaLCZ1$aire/sum(areaLCZ1$aire,na.rm=F)*100,digits = 2)
+  areaLCZ1$area<-round(areaLCZ1$area/sum(areaLCZ1$area,na.rm=F)*100,digits = 2)
 
     # marginal for second LCZ
   areaLCZ2<-echInt %>% st_drop_geometry %>% group_by_at(.vars=column2) %>%
-    summarize(aire=sum(aire,na.rm=F))%>%
+    summarize(area=sum(area,na.rm=F))%>%
     drop_units %>%
     ungroup()
-  areaLCZ2$aire<-round(areaLCZ2$aire/sum(areaLCZ2$aire,na.rm=F)*100,digits = 2)
+  areaLCZ2$area<-round(areaLCZ2$area/sum(areaLCZ2$area,na.rm=F)*100,digits = 2)
 
   # Problem : some of the input files do not exhibit all possible LCZ values :
   # pasting the area to the labels would return an error
   # Here is an ugly solution to overcome this (and see later to include the potentially missing combination of levels)
 
-  aires<-data.frame(niveaux=niveaux, aire1=0, aire2=0)
+  areas<-data.frame(niveaux=niveaux, area1=0, area2=0)
 
 
   for (i in subset(areaLCZ1,select=column1,drop=T)){
     if (!is.na(i)){
-      aires[aires$niveaux==i,'aire1']<-areaLCZ1[subset(areaLCZ1,select=column1,drop=T)==i,'aire']
+      areas[areas$niveaux==i, 'area1']<-areaLCZ1[subset(areaLCZ1, select=column1, drop=T)==i, 'area']
     }
   }
 
   for (i in subset(areaLCZ2,select=column2,drop=T)){
     if (!is.na(i)){
-      aires[aires$niveaux==i,'aire2']<-areaLCZ2[subset(areaLCZ2,select=column2,drop=T)==i,'aire']
-      #testprov<-areaLCZ1[subset(areaLCZ1,select=column1,drop=T)==i,'aire']
+      areas[areas$niveaux==i, 'area2']<-areaLCZ2[subset(areaLCZ2, select=column2, drop=T)==i, 'area']
+      #testprov<-areaLCZ1[subset(areaLCZ1,select=column1,drop=T)==i,'area']
     }
   }
 
   # Get the general agreement between both input files
-  pourcAcc<-(((echInt %>% st_drop_geometry() %>% filter(accord==T) %>% select(aire) %>% sum) /
-                (echInt %>% st_drop_geometry()%>% select(aire) %>% sum))*100) %>% round(digits=2)
+  percAcc<-(((echInt %>% st_drop_geometry() %>% filter(accord==T) %>% select(area) %>% sum) /
+                (echInt %>% st_drop_geometry()%>% select(area) %>% sum))*100) %>% round(digits=2)
 
   # the way to "feed" group_by is through .dots, to be checked, as it seems to be deprecated :
   # fixed with group_by_at
 
 
   matConf<-echInt %>% st_drop_geometry %>% group_by_at(.vars=c(column1,column2)) %>%
-    summarize(aire=sum(aire))%>% drop_units %>% ungroup %>% ungroup
+    summarize(area=sum(area))%>% drop_units %>% ungroup %>% ungroup
 
   # print("matConf")
   # print(head(matConf))
@@ -110,7 +109,7 @@ matConfLCZ<-function(sf1, column1, sf2, column2, repr="brut", niveaux=as.charact
 
   # This "confusion matrix" contains the area of intersected geom who have the i LCZ
   # for the first dataset and the j LCZ for the second dataset
-  matConfLarge<-pivot_wider(data=matConf,names_from=column2,values_from=aire)
+  matConfLarge<-pivot_wider(data=matConf,names_from=column2,values_from=area)
   readable<-matConfLarge[,-1]/rowSums(matConfLarge[,-1],na.rm=T)*100
   matConfLarge<-cbind(matConfLarge[,1],round(x=readable,digits=2))
 
@@ -141,7 +140,7 @@ matConfLCZ<-function(sf1, column1, sf2, column2, repr="brut", niveaux=as.charact
                     data.frame(
                       indice=apply(
                         crossing(niveaux,niveaux),1,paste,collapse="."),
-                      aire=0
+                      area=0
                     )
     )
 
@@ -166,10 +165,10 @@ matConfLCZ<-function(sf1, column1, sf2, column2, repr="brut", niveaux=as.charact
 
   # print("matConfLongaprès reorder factor")
   # print(matConfLong)
-  datatemp<-data.frame(a=factor(niveaux),pourcAire1=aires$aire1,pourcAire2=aires$aire2)
+  datatemp<-data.frame(a=factor(niveaux), percArea1=areas$area1, percArea2=areas$area2)
   ############
   # Plot
-  coordRef=length(niveaux)+1
+  coordRef<-length(niveaux)+1
 
 
   matConfPlot<-ggplot(data = matConfLong, aes(x=get(column1), y=get(column2), fill =accord)) +
@@ -182,13 +181,13 @@ matConfLCZ<-function(sf1, column1, sf2, column2, repr="brut", niveaux=as.charact
               color="black") +coord_fixed()+
     theme(axis.text.x = element_text(angle =70, hjust = 1),
           panel.background = element_rect(fill="grey"))+
-    geom_tile(datatemp,mapping=aes(x=a,y=coordRef,fill=pourcAire2, height=0.8,width=0.8))+
-    geom_tile(datatemp,mapping=aes(x=coordRef,y=a,fill=pourcAire1, height=0.8,width=0.8))+
+    geom_tile(datatemp,mapping=aes(x=a,y=coordRef,fill=percArea2, height=0.8,width=0.8))+
+    geom_tile(datatemp,mapping=aes(x=coordRef,y=a,fill=percArea1, height=0.8,width=0.8))+
     ggtitle("Repartition of Reference classes into alternative classes")
 
-  # if(plot==T){print(matConfPlot)}
+  if(plot==T){print(matConfPlot)}
 
-  matConfOut<-list(matConf=matConfLong,matConfPlot=matConfPlot,aires=aires,pourcAcc=pourcAcc)
+  matConfOut<-list(matConf=matConfLong, matConfPlot=matConfPlot, areas=areas, percAcc=percAcc)
   return(matConfOut)
 
 }

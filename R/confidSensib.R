@@ -41,7 +41,7 @@ confidSensib<-function(inputDf="", filePath="", nPoints=5,
                        plot=TRUE, saveG=""){
 
   colonnes<-c(geomID1,column1,confid1,geomID2,column2,confid2)
-  colonnes<-colonnes[sapply(colonnes,nchar)!=0] %>% c("accord","aire","location")
+  colonnes<-colonnes[sapply(colonnes,nchar)!=0] %>% c("accord","area","location")
 
   # Import the data if they are in a csv file or in a R object
   if(filePath!=""){
@@ -49,7 +49,7 @@ confidSensib<-function(inputDf="", filePath="", nPoints=5,
     names(echInt)<-colonnes
   } else {
     if(!is.null(inputDf)) {echInt<-dplyr::distinct(inputDf[,colonnes])}
-    else {error("You must specifiy a file path or the name of the object storing confidence and agreement")}
+    else {stop("You must specifiy a file path or the name of the object storing confidence and agreement")}
   }
 
 
@@ -60,7 +60,8 @@ confidSensib<-function(inputDf="", filePath="", nPoints=5,
 # What is the agreement between LCZ classifications when no confidence value is available on any of them ?
   echIntNoconf<-subset(echInt,is.na(echInt$confidMin))
   nbOutCasted<-nrow(echIntNoconf)
-  print("Number of geoms without any confidence value : "); print(nbOutCasted);
+  print("Number of geoms without any confidence value : ")
+  print(nbOutCasted)
 
   NAPercAgr<-matConfLCZGlob(inputDf=echIntNoconf, wf1=wf1, wf2=wf2,
                  geomID1=geomID1, column1=column1, confid1=confid1,

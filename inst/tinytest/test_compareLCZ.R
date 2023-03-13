@@ -26,6 +26,11 @@ expect_message(compareRedonBDTOSM<-
                             repr="brut", ref=2, saveG="", exwrite=TRUE, location="Redon", plot=F),
                "\\(redonOSM\\)")
 
+compareRedonBDTOSM<-
+  compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU", confid1="LCZ_UNIQUENESS_VALUE", wf1="bdtopo_2_2",
+             sf2=redonOSM, column2="LCZ_PRIMARY", geomID2 = "ID_RSU", confid2="LCZ_UNIQUENESS_VALUE", wf2="osm",
+             repr="brut", ref=2, saveG="", exwrite=TRUE, location="Redon", plot=F)
+
 expect_message(compareRedonBDTsquare<-
   compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU", confid1="LCZ_UNIQUENESS_VALUE", wf1="bdtopo_2_2",
              sf2=redonBDT, column2="LCZ_PRIMARY", geomID2 = "ID_RSU", confid2="LCZ_UNIQUENESS_VALUE", wf2="bdt",
@@ -34,7 +39,7 @@ expect_message(compareRedonBDTsquare<-
 
 #names(compareRedonBDTOSM)
 expect_equal(class(compareRedonBDTOSM$matConf),"data.frame")
-expect_equal(class(compareRedonBDTOSM$aires),"data.frame")
+expect_equal(class(compareRedonBDTOSM$areas),"data.frame")
 expect_equal(class(compareRedonBDTOSM$data),"data.frame")
 expect_equal(class(compareRedonBDTOSM$matConfPlot)[2],"ggplot")
 

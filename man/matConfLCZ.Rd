@@ -2,7 +2,8 @@
 % Please edit documentation in R/matConfLCZ.R
 \name{matConfLCZ}
 \alias{matConfLCZ}
-\title{Produces a confusion matrix between two sets of lcz on the same area (geoms do not need to be the same)}
+\title{Produces a confusion matrix between two sets of lcz on the same area
+(geoms do not need to be the same)}
 \usage{
 matConfLCZ(
   sf1,
@@ -40,14 +41,16 @@ returns an object called matConfOut which contains
 matConfLong, a confusion matrix in a longer form, which can be written in a file by the compareLCZ function
 and is used by the geom_tile function of the ggplot2 package.
 matConfPlot is a ggplot2 object showing the confusion matrix. If plot=T, it is also directly plotted
-aires contains the sums of each LCZ area
-pourcAcc is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
+areas contains the sums of each LCZ area
+percAcc is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
 }
 \description{
-Produces a confusion matrix between two sets of lcz on the same area (geoms do not need to be the same)
+Produces a confusion matrix between two sets of lcz on the same area
+(geoms do not need to be the same)
 }
 \details{
-Most of the time this function will not be called directly by the user but by the compareLCZ function
+Most of the time this function will not be called directly
+by the user but by the compareLCZ function
 }
 \examples{
 matConfRedonBDTOSM<-matConfLCZ(sf1=redonBDT,column1='LCZ_PRIMARY',
