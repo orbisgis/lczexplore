@@ -20,6 +20,7 @@ compareLCZ(
   repr = "brut",
   saveG = "",
   exwrite = TRUE,
+  outDir = getwd(),
   location = "Redon",
   plot = TRUE,
   ...
@@ -66,6 +67,9 @@ In the latter case, the ... arguments must contain the groups and a color vector
 \item{saveG}{: when an empty character string, "", the plots are not saved. Else, the saveG string is used to produce the name of the saved png file.}
 
 \item{exwrite}{: when TRUE, the values of the LCZ on the intersected geoms are written down in a csv file}
+
+\item{outDir}{: when exwrite equals TRUE, outDir is the path to the folder where one wants to write
+the csv file containing the values of the LCZ on the intersected geoms}
 
 \item{location}{: the name of the study area, as chosen as the name of the directory on the GeoClimate team cloud.
 If the area you wish to analyse is not uploaded yet, please contact the GeoClimate Team.}

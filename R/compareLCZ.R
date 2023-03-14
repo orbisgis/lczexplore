@@ -31,6 +31,8 @@
 #' @param location : the name of the study area, as chosen as the name of the directory on the GeoClimate team cloud.
 #' If the area you wish to analyse is not uploaded yet, please contact the GeoClimate Team.
 #' @param exwrite : when TRUE, the values of the LCZ on the intersected geoms are written down in a csv file
+#' @param outDir : when exwrite equals TRUE, outDir is the path to the folder where one wants to write
+#' the csv file containing the values of the LCZ on the intersected geoms
 #' @param ... allow to pass arguments if representation is grouped.
 #' The expected arguments are the name of each grouped label,
 #' the levels of LCZ they contain, and last a vector of the colors to use to plot them.
@@ -51,7 +53,7 @@
 #' repr="brut", saveG="", exwrite=TRUE, location="Redon", plot=TRUE)
 compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
                      sf2,column2,geomID2="",confid2="",wf2="osm",ref=1,
-                     repr="brut",saveG="",exwrite=TRUE,location="Redon", plot=TRUE, ...){
+                     repr="brut",saveG="",exwrite=TRUE,outDir=getwd(),location="Redon", plot=TRUE, ...){
 
   # dependancies dealt with @import through roxygen
   #paquets<-c("sf","ggplot2","dplyr","cowplot","forcats","units","tidyr","RColorBrewer")
@@ -297,10 +299,14 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
 
         nom<-paste0(wf1,"_",wf2,".csv")
         print(paste0("Comparison data will be appended to the following file : ",nom))
-        filePath<-paste0(getwd(),"/",nom)
+        filePath<-paste0(outDir,"/",nom)
 
         if (exwrite==TRUE){
-          print(paste0("The data wille be exported in the ",nom,"file, in your working directory"))
+          print(paste0("The data will be exported in the ",
+                       nom,
+                       " file, in your working directory:",
+                       getwd())
+                )
         if (!file.exists(filePath)){
         write.table(x=echIntExpo, file =nom, append = TRUE, quote = TRUE, sep = ";",
                     eol = "\n", na = "NA", dec = ".",

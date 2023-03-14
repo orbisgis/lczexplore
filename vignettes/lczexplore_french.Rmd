@@ -136,15 +136,17 @@ La fonction `importLCZgen` permet d'indiquer quelles colonnes du geojson contien
 dirPath<-paste0(system.file("extdata",package="lczexplore"),"/")
 dirPathOSM<-paste0(dirPath,"osm/2022/Redon")
 dirPathBDT<-paste0(dirPath,"bdtopo_2_2/Redon")
-redonOSM<-importLCZgen(dirPath=dirPathOSM,file="rsu_lcz.geojson",column = "LCZ_PRIMARY",geomID = "ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
-# Afin de conserver les mêmes noms, on réimporte avec le geojson
-redonBDT<-importLCZgen(dirPath=dirPathBDT,file="rsu_lcz.geojson",column = "LCZ_PRIMARY")
-
 ## La fonction d'import fonctionne en réalité aussi avec les fichiers shape
 ## Notez que les noms des colonnes sont différents pour le fichier shape, dans tous les cas
 ## c'est le nom des colonnes de votre fichier que vous rentrerez. 
 redonBDT<-importLCZgen(dirPath=dirPathBDT,file="rsu_lcz_bdt_redon.shp", 
                        column ="LCZ_PRIMAR",geomID = "ID_RSU",confid="LCZ_UNIQUE" )
+
+redonOSM<-importLCZgen(dirPath=dirPathOSM,file="rsu_lcz.geojson",column = "LCZ_PRIMARY",geomID = "ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
+# Afin de conserver les mêmes noms, on réimporte avec le geojson
+redonBDT<-importLCZgen(dirPath=dirPathBDT,file="rsu_lcz.geojson",column = "LCZ_PRIMARY",geomID = "ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
+
+
 
 
 
@@ -154,8 +156,8 @@ redonBDT<-importLCZgen(dirPath=dirPathBDT,file="rsu_lcz_bdt_redon.shp",
 L'analyse de sensibilité demande qu'on exporte l'accord entre les géométries en conservant les indicateurs de confiance de chacune des classifications. On renseigne alors les nouvelles colonnes en entrée de la fonction de comparaison, et on charge les données qui ont permis de produire la matrice de confusion dans un objet R. Chaque géom aura maintenant une valeur de confiance associée.
 
 ```{r}
-redonCompare<-compareLCZ(sf1=redonBDT,wf1="bdt", geomID1 = "ID_RSU",column1 ="LCZ_PRIMAR",
-                         confid1 = "LCZ_UNIQUE",
+redonCompare<-compareLCZ(sf1=redonBDT,wf1="bdt", geomID1 = "ID_RSU",column1 ="LCZ_PRIMARY",
+                         confid1 = "LCZ_UNIQUENESS_VALUE",
            sf2=redonOSM,wf2="osm",geomID2 = "ID_RSU",column2="LCZ_PRIMARY",confid2 ="LCZ_UNIQUENESS_VALUE",exwrite=T)
 # redonInputSensib<-read.csv()
 ```
@@ -170,11 +172,11 @@ En entrant le nombre de point `nPoints` que l'on désire, et en chargenat
  A FINIR
 
 ```{r}
-
+names(redonCompare$data)
 confidSensib(inputDf=redonCompare$data,filePath="", nPoints=10,
              wf1="bdtopo_2_2", wf2="osm",
-             geomID1="ID_RSU", column1="LCZ_PRIMAR", confid1="LCZ_UNIQUE",
-             geomID2="ID_RSU.1",column2="LCZ_PRIMARY", confid2="LCZ_UNIQUENESS_VALUE",
+             geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
+             geomID2="ID_RSU.1",column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1",
              sep=";", repr="brut",
              plot=TRUE)
 
@@ -193,10 +195,7 @@ confidSensib(inputDf=redonCompare$data,filePath="", nPoints=10,
 A venir : appel et effet de la fonction produceAnalysis
 
 ```{R}
-wd<-getwd() 
-outDir<-"/home/gousseff/Documents/2_CodesSources/R/lczexplore/packageManualTesting"
- setwd(outDir)
-locations<-c("Allaire","Redon","Paris")
+locations<-c("Allaire","Redon")
 ```
 
 Pour chacun des éléments de locations, on lance la comparaison entre OSM et BD_TOPO_2_2 avec la principale fonction de package, qui appelle les autres fonctions de manière transparente. Elle va d'abord chercher les données, les enregistre dans le répertoire outDir, les dézippe. Puis elle les importe dans R la geom et la colonne qui contient les LCZ. 
@@ -205,14 +204,19 @@ Les géométries des deux fichiers sont ensuite intersectées et on compare sur 
 
 
 ```{R}
+#wd<-getwd() 
+outDir<-system.file("extdata",package="lczexplore")
+#setwd(outDir)
+
 for (i in locations){
+print(i)
 produceAnalysis(location=i,
   outDir=outDir,
   wf1="bdtopo_2_2",
   wf2="osm",refYear1="2022",refYear2="2022",repr="brut",saveG=location)
 }
 
-setwd(wd)
+#setwd(wd)
 ```
 Les graphiques ont été créés dans le répertoire dont le chemin est outDir.
 
