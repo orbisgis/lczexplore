@@ -17,3 +17,6 @@ the function returns the original lcz column, recoded with the 101 to 107 levels
 \description{
 This function is deprecated, the refactoring is embedded in othe functions
 }
+\examples{
+codeNivLCZ(lcz=redonBDT$LCZ_PRIMARY, orig="geoClimate")
+}

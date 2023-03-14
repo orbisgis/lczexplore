@@ -44,7 +44,7 @@ testHetero<-prod((diag(realMatConfLargeHetero)==100)|(diag(realMatConfLargeHeter
 
 expect_equal(testHetero,0)
 expect_equal(diagHetero,diagHeteroRef)
-expect_equal(names(matConfRedonBDTOSM),c("matConf","matConfPlot","areas","pourcAcc"))
+expect_equal(names(matConfRedonBDTOSM),c("matConf","matConfPlot","areas","percAcc"))
 
 
 

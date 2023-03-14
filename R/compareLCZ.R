@@ -300,6 +300,7 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
         filePath<-paste0(getwd(),"/",nom)
 
         if (exwrite==TRUE){
+          print(paste0("The data wille be exported in the ",nom,"file, in your working directory"))
         if (!file.exists(filePath)){
         write.table(x=echIntExpo, file =nom, append = TRUE, quote = TRUE, sep = ";",
                     eol = "\n", na = "NA", dec = ".",

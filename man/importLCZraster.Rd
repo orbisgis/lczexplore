@@ -31,9 +31,11 @@ at the following url : https://figshare.com/articles/dataset/European_LCZ_map/13
 A future version may include the world data once a strategy is defined to deal with CRS.
 }
 \examples{
-redonBbox<-importLCZgen(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),
-file="rsu_lcz.geojson",column="LCZ_PRIMARY", geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE",output="bBox")
+redonBbox<-importLCZgen(dirPath=paste0(system.file("extdata", package = "lczexplore"),
+"/bdtopo_2_2/Redon"),#' file="rsu_lcz.geojson",column="LCZ_PRIMARY", geomID="ID_RSU",
+confid="LCZ_UNIQUENESS_VALUE",output="bBox")
 
-redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),fileName="redonWudapt.tif",bBox=redonBbox)
+redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
+fileName="redonWudapt.tif",bBox=redonBbox)
 
 }

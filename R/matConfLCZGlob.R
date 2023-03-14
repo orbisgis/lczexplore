@@ -17,8 +17,8 @@
 #' @param confid1 is the name of the column measuring the confidence given to the LCZ level in column1
 #' @param confid2 is the name of the column measuring the confidence given to the LCZ level in column2
 #' @param ... other parameters that may be passed from a function calling matConfLCZGlob
-
 #' @import tidyr units ggplot2 dplyr cowplot forcats units tidyr RColorBrewer
+#' @importFrom stats quantile
 #' @return matConfOut is a list containing : matconf, the confusion matrix in its longer form ; matConfPlot,
 #' a ggplot2 plot of said matrix ; areas, the summed area per levels for both LCZ classification ;
 #' and pourcAcc, the general agreement between classifications expressed in percent of areas

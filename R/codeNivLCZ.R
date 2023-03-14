@@ -8,6 +8,7 @@
 #' @export
 #'
 #' @examples
+#' codeNivLCZ(lcz=redonBDT$LCZ_PRIMARY, orig="geoClimate")
 codeNivLCZ<-function(lcz,orig){
   # this is deprecated and taken care of in import functions
   print("this is deprecated and taken care of in import functions")

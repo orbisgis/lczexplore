@@ -17,6 +17,9 @@ This is the 0.0.1.0000 version of the package lczexplore.
 The code of this package is under the LGPL-3 licence as described in 
 https://www.r-project.org/Licenses/LGPL-3
 
+# Citation
+If you are kind enough to cite this package, please check in the /inst directory for the CITATION file (in cff style without the extension)
+
 # Installation
 This package can be installed from github using the install_github function of the devtools package. 
 ```R

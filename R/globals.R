@@ -1,4 +1,4 @@
 utils::globalVariables(c(":=","!!", "Agreement", "Confidence",
-                         "Kept","accord", "aire", "confidMin",
+                         "Kept","accord", "area", "confidMin",
                          "error", "geometry",
-                         "nbGeoms", "pourcAire1"," pourcAire2"))
+                         "nbGeoms", "percArea1","percArea2","a"))
