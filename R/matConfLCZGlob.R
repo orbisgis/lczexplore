@@ -49,7 +49,7 @@ matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, co
 
 
   colonnes<-c(geomID1,column1,confid1,geomID2,column2,confid2)
-  colonnes<-colonnes[sapply(colonnes,nchar)!=0] %>% c("accord","area","location")
+  colonnes<-colonnes[sapply(colonnes,nchar)!=0] %>% c("agree","area","location")
 
   if(filePath!=""){
     echInt<-read.csv(filePath,sep,header=T,stringsAsFactors = T)
@@ -115,7 +115,7 @@ matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, co
   }
 
   # Get the general agreement between both input files
-  pourcAcc<-(((echInt %>%  filter(accord==T) %>% select(area) %>% sum) /
+  pourcAcc<-(((echInt %>%  filter(agree==T) %>% select(area) %>% sum) /
                 (echInt %>% select(area) %>% sum))*100) %>% round(digits=2)
 
   # the way to "feed" group_by is through .dots, to be checked, as it seems to be deprecated :
@@ -144,7 +144,7 @@ matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, co
 
   matConfLong<-pivot_longer(matConfLarge,cols=-1,names_to = column2)
   # print("matConfLong avant reorder factor")
-  names(matConfLong)<-c(column1,column2,"accord")
+  names(matConfLong)<-c(column1,column2,"agree")
 
   # Reordering of factors (as they were sorted in the order of showing in the file)
 
@@ -172,10 +172,10 @@ matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, co
   # complement %>% head %>% print
 
   completed<-merge(x=matConfLong,y=complement,by.x=c(column1,column2),by.y=c("LCZ1","LCZ2"),all=T)
-  completed$accord[is.na(completed$accord)]<-completed$tempArea[is.na(completed$accord)]
+  completed$agree[is.na(completed$agree)]<-completed$tempArea[is.na(completed$agree)]
 
 
-  matConfLong<-completed[,c(column1,column2,"accord")]
+  matConfLong<-completed[,c(column1,column2,"agree")]
   matConfLong<-matConfLong %>%
     mutate(!!column1:=addNA(subset(matConfLong,select=column1,drop=T),ifany = T),
            !!column2:=addNA(subset(matConfLong,select=column2,drop=T),ifany = T),) %>%
@@ -207,13 +207,13 @@ matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, co
   sousTitre<-paste0("number of analysed locations : ", nbTowns)
 
   if(plot==T){
-    matConfPlot<-ggplot(data = matConfLong, aes(x=get(column1), y=get(column2), fill =accord)) +
+    matConfPlot<-ggplot(data = matConfLong, aes(x=get(column1), y=get(column2), fill =agree)) +
       geom_tile(color = "white",lwd=1.2,linetype=1)+
       labs(x="Reference",y="Alternative")+
       scale_fill_gradient2(low = "lightgrey", mid="cyan", high = "blue",
                            midpoint = 50, limit = c(0,100), space = "Lab",
                            name="% area") +
-      geom_text(data=matConfLong[matConfLong$accord!=0,],aes(label=round(accord,digits=0)),
+      geom_text(data=matConfLong[matConfLong$agree!=0,],aes(label=round(agree,digits=0)),
                 color="black") +coord_fixed()+
       theme(axis.text.x = element_text(angle =70, hjust = 1),
             panel.background = element_rect(fill="grey"))+

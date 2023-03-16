@@ -41,7 +41,7 @@ confidSensib<-function(inputDf="", filePath="", nPoints=5,
                        plot=TRUE, saveG=""){
 
   colonnes<-c(geomID1,column1,confid1,geomID2,column2,confid2)
-  colonnes<-colonnes[sapply(colonnes,nchar)!=0] %>% c("accord","area","location")
+  colonnes<-colonnes[sapply(colonnes,nchar)!=0] %>% c("agree","area","location")
 
   # Import the data if they are in a csv file or in a R object
   if(filePath!=""){

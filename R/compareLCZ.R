@@ -281,7 +281,7 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
     #intersection of geometries
   echInt<-st_intersection(x=sf1[,nom1],y=sf2[,nom2])
     # checks if the two LCZ classifications agree
-  echInt$accord<-subset(echInt,select=column1,drop=T)==subset(echInt,select=column2,drop=T)
+  echInt$agree<-subset(echInt,select=column1,drop=T)==subset(echInt,select=column2,drop=T)
 
 
 ######################################################
@@ -393,9 +393,9 @@ if (plot == TRUE){
       ggtitle(titre2,subtitle=paste0("Number of RSU : ", nbgeom2))
 
   # Plot areas where classifications agree
-     accordPlot<-ggplot(boundary)+
+     agreePlot<-ggplot(boundary)+
        geom_sf(data=boundary, fill=NA,lty='blank')+
-       geom_sf(data=echInt,aes(fill=accord),lwd=0,colour=NA)+
+       geom_sf(data=echInt,aes(fill=agree),lwd=0,colour=NA)+
        scale_fill_manual(values=c("red","green"),
                          name=paste0(
                            "The two classifications agree for \n ",pourcAcc, " % of the area Agreement"))+
@@ -404,13 +404,13 @@ if (plot == TRUE){
   # Plot how the LCZ each level of the first classification is split into levels of the second classification
      coordRef<-length(niveaux)+1
 
-     matConfPlot<-ggplot(data = matConfLong, aes(x=get(column1), y=get(column2), fill =accord)) +
+     matConfPlot<-ggplot(data = matConfLong, aes(x=get(column1), y=get(column2), fill =agree)) +
        geom_tile(color = "white",lwd=1.2,linetype=1)+
        labs(x=lab1,y=lab2)+
        scale_fill_gradient2(low = "lightgrey", mid="cyan", high = "blue",
                          midpoint = 50, limit = c(0,100), space = "Lab",
                          name="% area") +
-       geom_text(data=matConfLong[matConfLong$accord!=0,],aes(label=round(accord,digits=0)),
+       geom_text(data=matConfLong[matConfLong$agree!=0,],aes(label=round(agree,digits=0)),
                  color="black") +coord_fixed()+
        theme(axis.text.x = element_text(angle =70, hjust = 1),
              panel.background = element_rect(fill="grey"))+
@@ -423,10 +423,10 @@ if (plot == TRUE){
        if (saveG!=""){
          plotName<-paste0(saveG,".png")
          png(filename = plotName,width=1200,height=900)
-         print(plot_grid(l1Plot,l2Plot,accordPlot,matConfPlot, align='hv'))
+         print(plot_grid(l1Plot,l2Plot,agreePlot,matConfPlot, align='hv'))
          dev.off()
        } else {
-         print(plot_grid(l1Plot,l2Plot,accordPlot,matConfPlot, align='hv'))
+         print(plot_grid(l1Plot,l2Plot,agreePlot,matConfPlot, align='hv'))
        }
 }else{message("Plot set to FALSE, no plots created")}
 

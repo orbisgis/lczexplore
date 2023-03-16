@@ -41,7 +41,7 @@ matConfLCZ<-function(sf1, column1, sf2, column2, niveaux=as.character(c(1:10,101
   # creation of the data set with intersected geoms and the values of both lcz class in these geoms
   echInt<-st_intersection(x=sf1[column1],y=sf2[column2])
   # checks if the two LCZ classifications agree
-  echInt$accord<-subset(echInt,select=column1,drop=T)==subset(echInt,select=column2,drop=T)
+  echInt$agree<-subset(echInt,select=column1,drop=T)==subset(echInt,select=column2,drop=T)
 
 
 
@@ -92,7 +92,7 @@ matConfLCZ<-function(sf1, column1, sf2, column2, niveaux=as.character(c(1:10,101
   }
 
   # Get the general agreement between both input files
-  percAcc<-(((echInt %>% st_drop_geometry() %>% filter(accord==T) %>% select(area) %>% sum) /
+  percAcc<-(((echInt %>% st_drop_geometry() %>% filter(agree==T) %>% select(area) %>% sum) /
                 (echInt %>% st_drop_geometry()%>% select(area) %>% sum))*100) %>% round(digits=2)
 
   # the way to "feed" group_by is through .dots, to be checked, as it seems to be deprecated :
@@ -121,7 +121,7 @@ matConfLCZ<-function(sf1, column1, sf2, column2, niveaux=as.character(c(1:10,101
 
   matConfLong<-pivot_longer(matConfLarge,cols=-1,names_to = column2)
   # print("matConfLong avant reorder factor")
-  names(matConfLong)<-c(column1,column2,"accord")
+  names(matConfLong)<-c(column1,column2,"agree")
 
   # Reordering of factors (as they were sorted in the order of showing in the file)
 
@@ -149,10 +149,10 @@ matConfLCZ<-function(sf1, column1, sf2, column2, niveaux=as.character(c(1:10,101
   # complement %>% head %>% print
 
   completed<-merge(x=matConfLong,y=complement,by.x=c(column1,column2),by.y=c("LCZ1","LCZ2"),all=T)
-  completed$accord[is.na(completed$accord)]<-completed$tempArea[is.na(completed$accord)]
+  completed$agree[is.na(completed$agree)]<-completed$tempArea[is.na(completed$agree)]
 
 
-  matConfLong<-completed[,c(column1,column2,"accord")]
+  matConfLong<-completed[,c(column1,column2,"agree")]
   matConfLong<-matConfLong %>%
     mutate(!!column1:=addNA(subset(matConfLong,select=column1,drop=T),ifany = T),
            !!column2:=addNA(subset(matConfLong,select=column2,drop=T),ifany = T),) %>%
@@ -171,13 +171,13 @@ matConfLCZ<-function(sf1, column1, sf2, column2, niveaux=as.character(c(1:10,101
   coordRef<-length(niveaux)+1
 
 
-  matConfPlot<-ggplot(data = matConfLong, aes(x=get(column1), y=get(column2), fill =accord)) +
+  matConfPlot<-ggplot(data = matConfLong, aes(x=get(column1), y=get(column2), fill =agree)) +
     geom_tile(color = "white",lwd=1.2,linetype=1)+
     labs(x="Reference",y="Alternative")+
     scale_fill_gradient2(low = "lightgrey", mid="cyan", high = "blue",
                          midpoint = 50, limit = c(0,100), space = "Lab",
                          name="% area") +
-    geom_text(data=matConfLong[matConfLong$accord!=0,],aes(label=round(accord,digits=0)),
+    geom_text(data=matConfLong[matConfLong$agree!=0,],aes(label=round(agree,digits=0)),
               color="black") +coord_fixed()+
     theme(axis.text.x = element_text(angle =70, hjust = 1),
           panel.background = element_rect(fill="grey"))+

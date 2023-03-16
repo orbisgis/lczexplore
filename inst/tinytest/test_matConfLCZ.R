@@ -7,7 +7,7 @@ require(tidyr)
 #showLCZ(redonBDT)
 #showLCZ(redonOSM)
 
-########### Test if the accord of an sf file with itself is 100 % (or 0 for LCZ present in no geom)
+########### Test if the agree of an sf file with itself is 100 % (or 0 for LCZ present in no geom)
 expect_warning(
 matConfRedonBDTBDT<-matConfLCZ(sf1=redonBDT,column1='LCZ_PRIMARY',
                                sf2=redonBDT,column2='LCZ_PRIMARY',plot=FALSE),
@@ -19,7 +19,7 @@ matConfLongAuto<-matConfRedonBDTBDT$matConf
 
 
 matConfLargeAuto<-matConfLongAuto %>%
-  pivot_wider(names_from=LCZ_PRIMARY, values_from=accord, values_fill=0)
+  pivot_wider(names_from=LCZ_PRIMARY, values_from=agree, values_fill=0)
 
 realMatConfLargeAuto<-as.matrix(matConfLargeAuto[,!is.na(as.numeric(names(matConfLargeAuto)))])
 testAuto<-prod((diag(realMatConfLargeAuto)==100)|(diag(realMatConfLargeAuto)==0))
@@ -30,7 +30,7 @@ expect_equal(testAuto,1)
 matConfRedonBDTOSM<-matConfLCZ(sf1=redonBDT,column1='LCZ_PRIMARY',
                             sf2=redonOSM,column2='LCZ_PRIMARY',plot=FALSE)
 matConfLargeHetero<-matConfRedonBDTOSM$matConf %>%
-  pivot_wider(names_from=LCZ_PRIMARY, values_from=accord, values_fill=0)
+  pivot_wider(names_from=LCZ_PRIMARY, values_from=agree, values_fill=0)
 
 realMatConfLargeHetero<-as.matrix(matConfLargeHetero[,!is.na(as.numeric(names(matConfLargeHetero)))])
 diagHetero<-diag(realMatConfLargeHetero)
