@@ -23,7 +23,7 @@
 #' use "bdtopo_2_2". When GeoClimate was used with Open Street Map data as input, use "osm".
 #' When the LCZ come from the wudapt Europe tiff, use "wudapt".
 #' @param ref : If the coordinate reference system (CRS) of sf1 and sf2 differ, ref indicates which CRS to choose for both files (1 or 2)
-#' @param repr "brut" means that original values of LCZ are used,
+#' @param repr "standard" means that original values of LCZ are used,
 #'  "grouped" means the user has groupe some of the LCZ levels under a new label.
 #'  In the latter case, the ... arguments must contain the groups and a color vector.
 #' @param plot : when FALSE non of the graphics are plotted or saved
@@ -42,7 +42,7 @@
 #' and is used by the geom_tile function of the ggplot2 package.
 #' matConfPlot is a ggplot2 object showing the confusion matrix. If plot=T, it is also directly plotted
 #' areas contains the sums of each LCZ area
-#' pourcAcc is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
+#' percAgg is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
 #' If saveG is not an empty string, graphics are saved under "saveG.png"
 #' @export
 #' @examples
@@ -50,17 +50,11 @@
 #' confid1="LCZ_UNIQUENESS_VALUE", wf1="bdtopo_2_2",
 #' sf2=redonOSM, column2="LCZ_PRIMARY", geomID2 = "ID_RSU",
 #' confid2="LCZ_UNIQUENESS_VALUE", wf2="osm",
-#' repr="brut", saveG="", exwrite=TRUE, location="Redon", plot=TRUE)
+#' repr="standard", saveG="", exwrite=TRUE, location="Redon", plot=TRUE)
 compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
                      sf2,column2,geomID2="",confid2="",wf2="osm",ref=1,
-                     repr="brut",saveG="",exwrite=TRUE,outDir=getwd(),location="Redon", plot=TRUE, ...){
+                     repr="standard",saveG="",exwrite=TRUE,outDir=getwd(),location="Redon", plot=TRUE, ...){
 
-  # dependancies dealt with @import through roxygen
-  #paquets<-c("sf","ggplot2","dplyr","cowplot","forcats","units","tidyr","RColorBrewer")
-  #lapply(paquets, require, character.only = TRUE)
-
-  # if (!(wf1=="osm"||wf1=="bdtopo_2_2"||wf1=="wudapt")|| !(wf2=="osm"||wf2=="bdtopo_2_2"||wf2=="wudapt"))
-  #   stop("Workflow parameters wf1 and wf2 muste be one of bdtopo_2_2, osm or wudapt")
 
 
   # store the column names in a way that can be injected in functions A SUPPRIMER ?
@@ -132,16 +126,12 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
  sf2<-select(sf2,nom2) %>% drop_na(column2)
  # Prepare the levels of the expected LCZ
 
-  if(repr=="brut"){
-      #CodeCoulLCZ<-read.csv("/home/gousseff/Documents/2_CodesSources/GeoClimate/GeoclimateDefaultCase/Manips_R/CodesCouleursLCZ.csv")  # A remplacer par un fichier embarqué dans le paquet
-      #colorMap<-CodeCoulLCZ$Hexa.Color.code
-      #valeurs<-colorMap
+  if(repr=="standard"){
 
       valeurs<-c("#8b0101","#cc0200","#fc0001","#be4c03","#ff6602","#ff9856",
                   "#fbed08","#bcbcba","#ffcca7","#57555a","#006700","#05aa05",
                   "#648423","#bbdb7a","#010101","#fdf6ae","#6d67fd")
-      #valeurs=colorMap
-      #etiquettes=CodeCoulLCZ$Type.definition
+
       etiquettes<-c("LCZ 1: Compact high-rise","LCZ 2: Compact mid-rise","LCZ 3: Compact low-rise",
                     "LCZ 4: Open high-rise","LCZ 5: Open mid-rise","LCZ 6: Open low-rise",
                     "LCZ 7: Lightweight low-rise","LCZ 8: Large low-rise",
@@ -151,11 +141,11 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
                     "LCZ E: Bare rock or paved","LCZ F: Bare soil or sand","LCZ G: Water"
                     )
 
-      niveaux<-as.character(c(1:10,101:107))
-      #names(niveaux)<-niveaux
+      typeLevels<-as.character(c(1:10,101:107))
+      #names(typeLevels)<-typeLevels
       # Classification must be encoded as factors
-      sf1<-sf1 %>% mutate(!!column1:=factor(subset(sf1,select=column1,drop=T),levels=niveaux))
-      sf2<-sf2 %>% mutate(!!column2:=factor(subset(sf2,select=column2,drop=T),levels=niveaux))
+      sf1<-sf1 %>% mutate(!!column1:=factor(subset(sf1,select=column1,drop=T),levels=typeLevels))
+      sf2<-sf2 %>% mutate(!!column2:=factor(subset(sf2,select=column2,drop=T),levels=typeLevels))
       temp1<-subset(sf1,select=column1,drop=T) %>% fct_recode(
         "Compact high"="1",
         "Compact mid"="2",
@@ -194,7 +184,7 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
                                                               "Bare soil sand"="106",
                                                               "Water"="107")
       sf2<-sf2 %>% mutate(!!column2:=temp2)
-      niveaux<-c("Compact high",
+      typeLevels<-c("Compact high",
                  "Compact mid",
                  "Compact low",
                  "Open High",
@@ -211,7 +201,7 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
                  "Bare rock paved",
                  "Bare soil sand",
                  "Water")
-  names(valeurs)<-niveaux
+  names(valeurs)<-typeLevels
   rm(temp1) ; rm(temp2)
   }
 
@@ -223,53 +213,53 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
 
     indSep<-names(args)
     indCol<-grep(x=indSep,pattern="col")
-    if(is.null(indCol)){niveaux<-names(args)} else{
+    if(is.null(indCol)){typeLevels<-names(args)} else{
       args2<-args[indSep[-indCol]]
       args2<-args2
-      niveaux<-names(args2)
-      etiquettes<-niveaux
+      typeLevels<-names(args2)
+      etiquettes<-typeLevels
     }
 
     # Generate colors to plot grouped values, according to the number of levels of grouped
       # generate palette
       # get the name of colors, specified by user in the (produceAnalysis function)
 
-    if(length(cols)>1&&length(cols)==length(niveaux)){
-      valeurs<-cols ; names(valeurs)<-niveaux ; etiquettes<-niveaux
+    if(length(cols)>1&&length(cols)==length(typeLevels)){
+      valeurs<-cols ; names(valeurs)<-typeLevels ; etiquettes<-typeLevels
       nomLegende<-"Grouped LCZ"
     }else{
-      if(length(niveaux)>36){
+      if(length(typeLevels)>36){
         stop("The number of levels must be less than 37 for the map to be readable,
               you may want to group some of the levels using LCZgroup2 function ")} else {
                 if(length(cols)<=1){
                   warning("No cols were specified, cols will be picked from the Polychrome 36 palette")
-                  valeurs<-palette.colors(n=length(niveaux), palette="Polychrome 36")
-                  names(valeurs)<-niveaux
+                  valeurs<-palette.colors(n=length(typeLevels), palette="Polychrome 36")
+                  names(valeurs)<-typeLevels
                   nomLegende<-"Grouped LCZ"
                 } else{
-                  if (length(cols)<length(niveaux)){
+                  if (length(cols)<length(typeLevels)){
                     message(paste("you specified less colors in cols argument (here ",length(cols),
-                                  ") than levels of LCZ in the niveaux argument (here ",length(niveaux),").
+                                  ") than levels of LCZ in the typeLevels argument (here ",length(typeLevels),").
                      \n, Maybe you didn't take into account empty levels ?
                      missing cols will be randomly picked from the Polychrom 36 palette."))
-                    nMissCol<-length(niveaux)-length(cols)
+                    nMissCol<-length(typeLevels)-length(cols)
                     valeurs<-c(cols,palette.colors(n=nMissCol,palette="Polychrome 36"))
-                    names(valeurs)<-niveaux
+                    names(valeurs)<-typeLevels
                     warning(paste0(
                       "only ", length(cols), " colors were specified \n for ",
-                      length(niveaux)," levels of grouped LCZ \n", nMissCol, " was/were chosen at random. \n ",
+                      length(typeLevels)," levels of grouped LCZ \n", nMissCol, " was/were chosen at random. \n ",
                       "For a better rendition, specify as many colors as levels of LCZ"))
                     nomLegende<-"Grouped LCZ"
                   }
                 }
               }
-          names(valeurs)<-niveaux
-          etiquettes<-niveaux
+          names(valeurs)<-typeLevels
+          etiquettes<-typeLevels
       }
-    niveaux
+    typeLevels
     # Classification must be encoded as factors
-    sf1<-sf1 %>% mutate(!!column1:=factor(subset(sf1,select=column1,drop=T),levels=niveaux))
-    sf2<-sf2 %>% mutate(!!column2:=factor(subset(sf2,select=column2,drop=T),levels=niveaux))
+    sf1<-sf1 %>% mutate(!!column1:=factor(subset(sf1,select=column1,drop=T),levels=typeLevels))
+    sf2<-sf2 %>% mutate(!!column2:=factor(subset(sf2,select=column2,drop=T),levels=typeLevels))
   }
 
 
@@ -324,17 +314,17 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
 ###################################################
 
 matConfOut<-matConfLCZ(sf1=sf1, column1=column1, sf2=sf2, column2=column2,
-                       repr=repr, niveaux=niveaux, plot=FALSE)
+                       repr=repr, typeLevels=typeLevels, plot=FALSE)
 matConfOut$data<-echIntExpo
 matConfLong<-matConfOut$matConf
 areas<-matConfOut$areas
-pourcAcc<-matConfOut$pourcAcc
+percAgg<-matConfOut$percAgg
 
 ################################################
 #  GRAPHICS
 ################################################
 if (plot == TRUE){
-  if (repr=='brut'){titrou<-"LCZ"} else {titrou<-"Grouped LCZs"}
+  if (repr=='standard'){titrou<-"LCZ"} else {titrou<-"Grouped LCZs"}
 
   if (wf1=="bdtopo_2_2"){adtitre1<-" BDTOPO V2.2"} else
     if(wf1=="osm"){adtitre1<-" OSM "} else
@@ -353,15 +343,15 @@ if (plot == TRUE){
 
   lab1<-paste(titrou, adtitre1)
   lab2<-paste(titrou, adtitre2)
-  # ypos<-if (repr=="brut"){ypos=5} else {ypos=2}
+  # ypos<-if (repr=="standard"){ypos=5} else {ypos=2}
   etiquettes1<-paste(etiquettes, areas$area1 ," %")
-  names(etiquettes1)<-niveaux
+  names(etiquettes1)<-typeLevels
   etiquettes2<-etiquettes
   etiquettes2<-gsub(":.*",": ",etiquettes)
   etiquettes2<-paste(etiquettes2, areas$area2 ," %")
 
   etiquettes1.2<-paste(etiquettes2,areas$area1)
-  datatemp<-data.frame(a=factor(niveaux),percArea=areas$area1,percArea1=areas$area1,percArea2=areas$area2)
+  datatemp<-data.frame(a=factor(typeLevels),percArea=areas$area1,percArea1=areas$area1,percArea2=areas$area2)
 
   # center all plots
   boundary1<-sf1 %>% st_union %>% st_boundary()
@@ -398,11 +388,11 @@ if (plot == TRUE){
        geom_sf(data=echInt,aes(fill=agree),lwd=0,colour=NA)+
        scale_fill_manual(values=c("red","green"),
                          name=paste0(
-                           "The two classifications agree for \n ",pourcAcc, " % of the area Agreement"))+
+                           "The two classifications agree for \n ",percAgg, " % of the area Agreement"))+
        ggtitle(label=titre3, subtitle=paste0("Number of intersected geoms : ", nbgeomInter))
 
   # Plot how the LCZ each level of the first classification is split into levels of the second classification
-     coordRef<-length(niveaux)+1
+     coordRef<-length(typeLevels)+1
 
      matConfPlot<-ggplot(data = matConfLong, aes(x=get(column1), y=get(column2), fill =agree)) +
        geom_tile(color = "white",lwd=1.2,linetype=1)+
@@ -430,7 +420,7 @@ if (plot == TRUE){
        }
 }else{message("Plot set to FALSE, no plots created")}
 
-return(matConfOut)
+matConfOut<-matConfOut
 
 }
 

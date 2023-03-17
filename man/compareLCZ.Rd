@@ -17,7 +17,7 @@ compareLCZ(
   confid2 = "",
   wf2 = "osm",
   ref = 1,
-  repr = "brut",
+  repr = "standard",
   saveG = "",
   exwrite = TRUE,
   outDir = getwd(),
@@ -60,7 +60,7 @@ When the LCZ come from the wudapt Europe tiff, use "wudapt".}
 
 \item{ref}{: If the coordinate reference system (CRS) of sf1 and sf2 differ, ref indicates which CRS to choose for both files (1 or 2)}
 
-\item{repr}{"brut" means that original values of LCZ are used,
+\item{repr}{"standard" means that original values of LCZ are used,
 "grouped" means the user has groupe some of the LCZ levels under a new label.
 In the latter case, the ... arguments must contain the groups and a color vector.}
 
@@ -86,7 +86,7 @@ matConfLong, a confusion matrix in a longer form, which can be written in a file
 and is used by the geom_tile function of the ggplot2 package.
 matConfPlot is a ggplot2 object showing the confusion matrix. If plot=T, it is also directly plotted
 areas contains the sums of each LCZ area
-pourcAcc is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
+percAgg is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
 If saveG is not an empty string, graphics are saved under "saveG.png"
 }
 \description{
@@ -98,5 +98,5 @@ compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU",
 confid1="LCZ_UNIQUENESS_VALUE", wf1="bdtopo_2_2",
 sf2=redonOSM, column2="LCZ_PRIMARY", geomID2 = "ID_RSU",
 confid2="LCZ_UNIQUENESS_VALUE", wf2="osm",
-repr="brut", saveG="", exwrite=TRUE, location="Redon", plot=TRUE)
+repr="standard", saveG="", exwrite=TRUE, location="Redon", plot=TRUE)
 }

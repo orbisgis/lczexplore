@@ -32,12 +32,12 @@
 #' nPoints=5, wf1="bdtopo_2_2", wf2="osm",
 #' geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
 #' geomID2="ID_RSU.1",column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1",
-#' sep=";", repr="brut", plot=TRUE, saveG=mainPath)
+#' sep=";", repr="standard", plot=TRUE, saveG=mainPath)
 confidSensib<-function(inputDf="", filePath="", nPoints=5,
                        wf1="bdtopo_2_2", wf2="osm",
                        geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
                        geomID2="ID_RSU.1",column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1",
-                       sep=";", repr="brut",
+                       sep=";", repr="standard",
                        plot=TRUE, saveG=""){
 
   colonnes<-c(geomID1,column1,confid1,geomID2,column2,confid2)
@@ -66,7 +66,7 @@ confidSensib<-function(inputDf="", filePath="", nPoints=5,
   NAPercAgr<-matConfLCZGlob(inputDf=echIntNoconf, wf1=wf1, wf2=wf2,
                  geomID1=geomID1, column1=column1, confid1=confid1,
                  geomID2=geomID2, column2=column2, confid2=confid2,
-                 sep=";", repr="brut",niveaux="", plot=F)$pourcAcc
+                 sep=";", repr="standard",typeLevels="", plot=F)$pourcAcc
 
   #How does the max of the confidence value of the LCZ classifs influences the agreement
   # between LCZ classifications
@@ -96,7 +96,7 @@ confidSensib<-function(inputDf="", filePath="", nPoints=5,
                         matConfLCZGlob(inputDf = echIntKeep, wf1=wf1, wf2=wf2,
                                        geomID1 = geomID1, column1 = column1, confid1 = confid1,
                                        geomID2 = geomID2, column2 = column2, confid2 = confid2,
-                                       sep=";", repr="brut", niveaux="", plot = F)$pourcAcc)
+                                       sep=";", repr="standard", typeLevels="", plot = F)$pourcAcc)
            nbKeep<-c(nbKeep, nrow(echIntKeep))
 
          }else{
@@ -110,7 +110,7 @@ confidSensib<-function(inputDf="", filePath="", nPoints=5,
                           matConfLCZGlob(inputDf = echIntDrop, wf1 = wf1, wf2 = wf2,
                                          geomID1 = geomID1, column1 = column1, confid1 = confid1,
                                          geomID2 = geomID2, column2 = column2, confid2 = confid2,
-                                         sep=";", repr="brut", niveaux="", plot=F)$pourcAcc)
+                                         sep=";", repr="standard", typeLevels="", plot=F)$pourcAcc)
            nbDrop<-c(nbDrop,nrow(echIntDrop))
          }else{
            percAgrDrop<-c(percAgrDrop,NA)
@@ -160,9 +160,9 @@ confidSensib<-function(inputDf="", filePath="", nPoints=5,
 #############################################################################################
 # Per LCZ levels of the first classification
 #############################################################################################
-niveaux<-unique(echIntConf[,column1]) %>% as.vector
- #  print("niveaux")
- #  print(niveaux)
+typeLevels<-unique(echIntConf[,column1]) %>% as.vector
+ #  print("typeLevels")
+ #  print(typeLevels)
  # print("echinConf avant boucle LCZ") ; print(head(echIntConf))
   byLCZ<-data.frame(Confidence=numeric(), Agreement=numeric(),
                     Kept=character(),nbGeoms=numeric(),LCZ=character())

@@ -9,14 +9,14 @@ expect_warning(produceAnalysis(location="Redon",
                           outDir=paste0(
                             system.file(package="lczexplore"),"/tinytest"),
                           wf1="bdtopo_2_2",
-                          wf2="osm",refYear1="2022",refYear2="2022",repr="brut",saveG=location),
+                          wf2="osm",refYear1="2022",refYear2="2022",repr="standard",saveG=location),
                "attribute variables are assumed to be spatially constant")
 
 expect_message(produceAnalysis(location="Redon",
                 outDir=paste0(
                   system.file(package="lczexplore"),"/tinytest"),
                 wf1="bdtopo_2_2",
-                wf2="osm",refYear1="2022",refYear2="2022",repr="brut",saveG=location),
+                wf2="osm",refYear1="2022",refYear2="2022",repr="standard",saveG=location),
  "the unzipped rsu_lcz.geojson file already exists"
 )
 
@@ -28,7 +28,7 @@ expect_message(
                 outDir=paste0(
                   system.file(package="lczexplore"),"/tinytest"),
                 wf1="bdtopo_2_2",
-                wf2="osm",refYear1="2022",refYear2="2022",repr="brut",saveG=location),
+                wf2="osm",refYear1="2022",refYear2="2022",repr="standard",saveG=location),
   "and will be unzipped now"
 )
 
@@ -43,7 +43,7 @@ expect_message(
                   outDir=paste0(
                     system.file(package="lczexplore"),"/tinytest"),
                   wf1="bdtopo_2_2",
-                  wf2="osm",refYear1="2022",refYear2="2022",repr="brut",saveG=location),
+                  wf2="osm",refYear1="2022",refYear2="2022",repr="standard",saveG=location),
   "it will be downloaded and unzipped."
 )
 
@@ -55,5 +55,5 @@ produceAnalysis(location="Redon",
                 outDir=paste0(
                   system.file(package="lczexplore"),"/tinytest"),
                 wf1="bdtopo_2_2",
-                wf2="osm",refYear1="2022",refYear2="2022",repr="brut",saveG=location)
+                wf2="osm",refYear1="2022",refYear2="2022",repr="standard",saveG=location)
 

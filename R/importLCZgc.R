@@ -19,13 +19,13 @@ importLCZgc<-function(dirPath,output="sfFile"){
 
   #
   #
-  # niveaux<-niveaux<-list("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",
+  # typeLevels<-typeLevels<-list("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",
   #                        "9"="9","10"="10","101"="101","102"="102","103"="103","104"="104",
   #                        "105"="105","106"="106","107"="107","101"="11","102"="12","103"="13","104"="14",
   #                        "105"="15", "106"="16","107"="17")
   fileName<-paste0(dirPath,"rsu_lcz.geojson")
   sfFile<-st_read(dsn=fileName)
-  #sfFile<-sfFile %>% mutate(LCZ_PRIMARY<-factor(subset(sfFile,select=LCZ_PRIMARY,drop=T),levels=niveaux))
+  #sfFile<-sfFile %>% mutate(LCZ_PRIMARY<-factor(subset(sfFile,select=LCZ_PRIMARY,drop=T),levels=typeLevels))
 
 
   if(output=="sfFile"){return(sfFile)} else {

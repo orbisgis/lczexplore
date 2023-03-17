@@ -15,7 +15,7 @@ confidTest1<-confidSensib(inputDf=testSourceFact, filePath="", nPoints=5,
                        wf1="bdtopo_2_2", wf2="osm",
                        geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
                        geomID2="ID_RSU.1",column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1",
-                       sep=";", repr="brut",
+                       sep=";", repr="standard",
                        plot=TRUE, saveG=mainPath),
 "containing missing values")
 
@@ -24,7 +24,7 @@ expect_warning(
                            wf1="bdtopo_2_2", wf2="osm",
                            geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
                            geomID2="ID_RSU.1",column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1",
-                           sep=";", repr="brut",
+                           sep=";", repr="standard",
                            plot=TRUE,  saveG=mainPath),
   "containing missing values")
 

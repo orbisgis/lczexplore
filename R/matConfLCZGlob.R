@@ -5,8 +5,8 @@
 #' @param wf1 : a string indicating the origin of the LCZ classification 1
 #' @param wf2 : a string indicating the origin of the LCZ classification 1
 #' @param sep : the seperator used in the csv file
-#' @param repr : brut or grouped
-#' @param niveaux : by default levels of the LCZ classification are built
+#' @param repr : standard or grouped
+#' @param typeLevels : by default levels of the LCZ classification are built
 #' reading the data, but one can input a character string vector of levels,
 #' for instance to produce several graphs with the same levels or levels in a specific order
 #' @param plot if TRUE, then confusion matrix plot is shown, else it is just returned in the matConfOut object
@@ -29,19 +29,22 @@
 #' system.file("extdata", package = "lczexplore"),"/bdtopo_2_2_osm.csv"),
 #' file="bdtopo_2_2_osm.csv", wf1="bdt", wf2="osm",
 #' geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
-#' geomID2="ID_RSU.1", column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1", sep=";", repr="brut",
-#' niveaux="", plot=TRUE)
-#' testSource<-read.csv(paste0(system.file("extdata", package = "lczexplore"),
+#' geomID2="ID_RSU.1", column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1",
+#' sep=";", repr="standard",
+#' typeLevels="", plot=TRUE)
+#' testSource<-read.csv(paste0(
+#' system.file("extdata", package = "lczexplore"),
 #' "/bdtopo_2_2_osm.csv"), sep=";",header=TRUE)
 #' matConfLCZGlob(filePath="",
 #' inputDf = testSource, wf1="bdt", wf2="osm",
 #' geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
-#' geomID2="ID_RSU.1", column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1", sep=";", repr="brut",
-#' niveaux="", plot=TRUE)
+#' geomID2="ID_RSU.1", column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1",
+#' sep=";", repr="standard",
+#' typeLevels="", plot=TRUE)
 
 matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, confid1="",
-                         geomID2="", column2, confid2="", sep=";", repr="brut",
-                         niveaux="", plot=TRUE, ...){
+                         geomID2="", column2, confid2="", sep=";", repr="standard",
+                         typeLevels="", plot=TRUE, ...){
 
   if(column1==column2){
     column2<-paste0(column1,".1")
@@ -61,16 +64,16 @@ matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, co
 
   nbTowns<-length(unique(echInt$ville))
 
-  # if niveaux not specified, it is created from the file (longer sys.time)
+  # if typeLevels not specified, it is created from the file (longer sys.time)
 
-  if (length(niveaux)==1){
-    niveaux<-unique(
+  if (length(typeLevels)==1){
+    typeLevels<-unique(
       c(echInt[,column1],echInt[,column2])
     )
   }
 
-  echInt[,column1]<-factor(echInt[,column1],levels=niveaux)
-  echInt[,column2]<-factor(echInt[,column2],levels=niveaux)
+  echInt[,column1]<-factor(echInt[,column1],levels=typeLevels)
+  echInt[,column2]<-factor(echInt[,column2],levels=typeLevels)
 
   # print("echInt")
   # print(head(echInt))
@@ -96,7 +99,7 @@ matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, co
   # pasting the area to the labels would return an error
   # Here is an ugly solution to overcome this (and see later to include the potentially missing combination of levels)
 
-  areas<-data.frame(niveaux=niveaux, area1=0, area2=0)
+  areas<-data.frame(typeLevels=typeLevels, area1=0, area2=0)
   #print("areas")
   #print(areas)
   #print("head of areaLCZ1 column1")
@@ -105,13 +108,13 @@ matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, co
   for (i in areaLCZ1[,column1]){
     #print(" i as a level of areaLCZ1 equals")
     #print(i)
-    areas[areas$niveaux==i,'area1']<-areaLCZ1[areaLCZ1[,column1]==i,'area']
+    areas[areas$typeLevels==i,'area1']<-areaLCZ1[areaLCZ1[,column1]==i,'area']
   }
 
   for (i in areaLCZ2[,column2]){
     # print(" i as a level of areaLCZ2 equals")
     # print(i)
-    areas[areas$niveaux==i,'area2']<-areaLCZ2[areaLCZ2[,column2]==i,'area']
+    areas[areas$typeLevels==i,'area2']<-areaLCZ2[areaLCZ2[,column2]==i,'area']
   }
 
   # Get the general agreement between both input files
@@ -150,19 +153,19 @@ matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, co
 
   matConfLong<-matConfLong %>% mutate(across(where(is.character),as_factor))
   matConfLong<-matConfLong %>%
-    mutate(!!column1:=ordered(subset(matConfLong,select=column1,drop=T),levels=niveaux))
+    mutate(!!column1:=ordered(subset(matConfLong,select=column1,drop=T),levels=typeLevels))
   matConfLong<-matConfLong %>%
-    mutate(!!column2:=ordered(subset(matConfLong,select=column2,drop=T),levels=niveaux))
+    mutate(!!column2:=ordered(subset(matConfLong,select=column2,drop=T),levels=typeLevels))
 
 
   ##############################################################################################################
   # Some values of LCZ may not appear in all datasets, we want to force them to appear to make all heat map easy to compare
   #################################################################################################################
 
-  complement<-cbind(crossing(niveaux,niveaux),
+  complement<-cbind(crossing(typeLevels,typeLevels),
                     data.frame(
                       indice=apply(
-                        crossing(niveaux,niveaux),1,paste,collapse="."),
+                        crossing(typeLevels,typeLevels),1,paste,collapse="."),
                       area=0
                     )
   )
@@ -179,8 +182,8 @@ matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, co
   matConfLong<-matConfLong %>%
     mutate(!!column1:=addNA(subset(matConfLong,select=column1,drop=T),ifany = T),
            !!column2:=addNA(subset(matConfLong,select=column2,drop=T),ifany = T),) %>%
-    mutate(!!column1:=factor(subset(matConfLong,select=column1,drop=T),levels=niveaux),
-           !!column2:=factor(subset(matConfLong,select=column2,drop=T),levels=niveaux))
+    mutate(!!column1:=factor(subset(matConfLong,select=column1,drop=T),levels=typeLevels),
+           !!column2:=factor(subset(matConfLong,select=column2,drop=T),levels=typeLevels))
 
 
   matConfLong<-matConfLong %>% arrange(column1,column2)
@@ -188,11 +191,11 @@ matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, co
 
   # print("matConfLongaprès reorder factor")
   # print(matConfLong)
-  datatemp<-data.frame(a=factor(niveaux),percArea1=areas$area1,percArea2=areas$area2)
+  datatemp<-data.frame(a=factor(typeLevels),percArea1=areas$area1,percArea2=areas$area2)
   ############
   # Plot
-  coordRef<-length(niveaux)+1
-  # if (repr=='brut'){titrou<-"LCZ"} else {titrou<-"Grouped LCZs"}
+  coordRef<-length(typeLevels)+1
+  # if (repr=='standard'){titrou<-"LCZ"} else {titrou<-"Grouped LCZs"}
 
   if (wf1=="bdtopo_2_2"){adtitre1<-" BDTOPO V2.2"} else
     if(wf1=="osm"){adtitre1<-" OSM "} else

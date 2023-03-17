@@ -4,12 +4,14 @@
 \alias{LCZgroup2}
 \title{Allows to group local climate zones to improve the analysis.}
 \usage{
-LCZgroup2(sf, column, ...)
+LCZgroup2(sf, column, outCol = "grouped", ...)
 }
 \arguments{
 \item{sf}{is the input files. It must be an sf file and contain an LCZ column (levels 1 to 10 and 101 to 107). It must contain the geom column.}
 
 \item{column}{is the name of the column containing the LCZ to be grouped}
+
+\item{outCol}{is the name of the colum in which the grouped LCZ will be put}
 
 \item{...}{the names of the groups followed by the levels the regrouped for instance urban=c("1","2","3","4","5","6","7","8","9")}
 }

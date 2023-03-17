@@ -9,8 +9,8 @@ showLCZ(
   title = "",
   wf = "",
   column = "LCZ_PRIMARY",
-  repr = "brut",
-  niveaux = "",
+  repr = "standard",
+  typeLevels = "",
   cols = ""
 )
 }
@@ -25,14 +25,14 @@ If the LCZ were produced by WUDAPT, use "wudapt".}
 
 \item{column}{is the column that contains the LCZ.}
 
-\item{repr}{indicates if the sf dataset contains brute LCZ levels or grouped LCZ.
-If "brut" then an optimal set of cols is used to produce the plotted map. Else, colors can be specified with the cols argument.}
+\item{repr}{indicates if the sf dataset contains standarde LCZ levels or grouped LCZ.
+If "standard" then an optimal set of cols is used to produce the plotted map. Else, colors can be specified with the cols argument.}
 
-\item{niveaux}{is a vector of strings specifying the name of the expected levels when repr is set to 'grouped'.
-If \'niveaux\' is set to an empty string, then the unique values taken in the specified \'column\' will be used.}
+\item{typeLevels}{is a vector of strings specifying the name of the expected levels when repr is set to 'grouped'.
+If \code{typeLevels} is set to an empty string, then the unique values taken in the specified \'column\' will be used.}
 
-\item{cols}{is a vector of strings specifying the colors of each levels of \'niveaux.\'
-If cols is an empty string, or if the number of specified color is less than the number of levels in \'niveaux\',
+\item{cols}{is a vector of strings specifying the colors of each levels of \'typeLevels.\'
+If cols is an empty string, or if the number of specified color is less than the number of levels in \'typeLevels\',
 random colors will be chosen.}
 }
 \value{
@@ -42,8 +42,8 @@ no object is returned, but plots of the LCZ levels are produced
 Produces a simple representation of the LCZ contained in an sf file.
 }
 \examples{
-# On original LCZ levels, use the \'brut\' value for the \'repr\' argument.
-showLCZ(redonBDT,column="LCZ_PRIMARY", repr="brut")
+# On original LCZ levels, use the \'standard\' value for the \'repr\' argument.
+showLCZ(redonBDT,column="LCZ_PRIMARY", repr="standard")
 # On grouped data, use the grouped value for the repr argument.
 redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",
 urban=c("1","2","3","4","5","6","7","8","9"),

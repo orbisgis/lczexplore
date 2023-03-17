@@ -15,7 +15,7 @@ produceAnalysis(
   wf2 = "osm",
   refYear1 = "2022",
   refYear2 = "2022",
-  repr = "brut",
+  repr = "standard",
   saveG = location,
   ...
 )
@@ -38,7 +38,7 @@ It is important for "osm" workflow as the data are updated frequently.}
 
 \item{refYear2}{see refYear1.}
 
-\item{repr}{: "brut" means that original values of LCZ are used, "grouped" means the user wishes to group some of the LCZ levels under a new label.}
+\item{repr}{: "standard" means that original values of LCZ are used, "grouped" means the user wishes to group some of the LCZ levels under a new label.}
 
 \item{saveG}{: when an empty character string, "", the plots are not saved. Else, the saveG string is used to produce the name of the saved png file.}
 
@@ -60,5 +60,5 @@ Same analysis are reproducible using all the generic functions of the package.
 }
 \examples{
 produceAnalysis(location="Redon", outDir=paste0(system.file(package="lczexplore"),"/tinytest"),
-wf1="bdtopo_2_2", wf2="osm", refYear1="2022", refYear2="2022", repr="brut", saveG=location)
+wf1="bdtopo_2_2", wf2="osm", refYear1="2022", refYear2="2022", repr="standard", saveG=location)
 }

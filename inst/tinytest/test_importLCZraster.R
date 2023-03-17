@@ -14,7 +14,7 @@ expect_warning(redonWudapt<-importLCZraster(
   system.file("extdata", package = "lczexplore"),fileName="redonWudapt.tif",bBox=redonBbox),
               'attribute variables are assumed to be spatially constant throughout all geometries' )
 
-expect_silent(showLCZ(sf=redonWudapt,column="EU_LCZ_map",repr="brut"))
+expect_silent(showLCZ(sf=redonWudapt,column="EU_LCZ_map",repr="standard"))
 
 # Test out of Europe Bbox (supposed to fail)
 library(sf)

@@ -10,8 +10,8 @@ matConfLCZ(
   column1,
   sf2,
   column2,
-  niveaux = as.character(c(1:10, 101:107)),
-  plot = F,
+  typeLevels = as.character(c(1:10, 101:107)),
+  plot = FALSE,
   ...
 )
 }
@@ -24,7 +24,7 @@ matConfLCZ(
 
 \item{column2}{is the column of the second data set containing the lcz to be compared}
 
-\item{niveaux}{by default the levels of lcz incoded from 1 to 10 and 101 to 107.
+\item{typeLevels}{by default the levels of lcz incoded from 1 to 10 and 101 to 107.
 When comparing grouped LCZ, the grouped levels have to be specified.}
 
 \item{plot}{if TRUE the plot of the matrix}
@@ -35,9 +35,9 @@ When comparing grouped LCZ, the grouped levels have to be specified.}
 returns an object called matConfOut which contains
 matConfLong, a confusion matrix in a longer form, which can be written in a file by the compareLCZ function
 and is used by the geom_tile function of the ggplot2 package.
-matConfPlot is a ggplot2 object showing the confusion matrix. If plot=T, it is also directly plotted
+matConfPlot is a ggplot2 object showing the confusion matrix. If plot=TRUE, it is also directly plotted
 areas contains the sums of each LCZ area
-percAcc is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
+percAgg is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
 }
 \description{
 Produces a confusion matrix between two sets of lcz on the same area
@@ -49,5 +49,5 @@ by the user but by the compareLCZ function
 }
 \examples{
 matConfRedonBDTOSM<-matConfLCZ(sf1=redonBDT,column1='LCZ_PRIMARY',
-sf2=redonOSM,column2='LCZ_PRIMARY',plot=FALSE)
+sf2=redonOSM,column2='LCZ_PRIMARY',plot=TRUE)
 }

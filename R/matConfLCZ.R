@@ -1,13 +1,13 @@
-#' Produces a confusion matrix between two sets of lcz on the same area 
+#' Produces a confusion matrix between two sets of lcz on the same area
 #' (geoms do not need to be the same)
 #'
-#' @details Most of the time this function will not be called directly 
+#' @details Most of the time this function will not be called directly
 #' by the user but by the compareLCZ function
 #' @param sf1 is the sf dataset containing the first lcz classification
 #' @param column1 is the column of the first data set containing the lcz to be compared
 #' @param sf2 is the sf dataset containing the second lcz classification
 #' @param column2 is the column of the second data set containing the lcz to be compared
-#' @param niveaux by default the levels of lcz incoded from 1 to 10 and 101 to 107.
+#' @param typeLevels by default the levels of lcz incoded from 1 to 10 and 101 to 107.
 #' When comparing grouped LCZ, the grouped levels have to be specified.
 #' @param plot if TRUE the plot of the matrix
 #' @param ... a set of unspecified arguments, for instance when the produceAnalysis function calls other functions
@@ -15,17 +15,17 @@
 #' @return returns an object called matConfOut which contains
 #' matConfLong, a confusion matrix in a longer form, which can be written in a file by the compareLCZ function
 #' and is used by the geom_tile function of the ggplot2 package.
-#' matConfPlot is a ggplot2 object showing the confusion matrix. If plot=T, it is also directly plotted
+#' matConfPlot is a ggplot2 object showing the confusion matrix. If plot=TRUE, it is also directly plotted
 #' areas contains the sums of each LCZ area
-#' percAcc is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
+#' percAgg is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
 #' @import sf ggplot2 dplyr cowplot forcats units tidyr RColorBrewer rlang
 
 #' @export
 #'
 #' @examples
 #' matConfRedonBDTOSM<-matConfLCZ(sf1=redonBDT,column1='LCZ_PRIMARY',
-#' sf2=redonOSM,column2='LCZ_PRIMARY',plot=FALSE)
-matConfLCZ<-function(sf1, column1, sf2, column2, niveaux=as.character(c(1:10,101:107)), plot=F, ...){
+#' sf2=redonOSM,column2='LCZ_PRIMARY',plot=TRUE)
+matConfLCZ<-function(sf1, column1, sf2, column2, typeLevels=as.character(c(1:10,101:107)), plot=FALSE, ...){
   # coerce the crs of sf2 to the crs of sf1
   if(st_crs(sf1)!=st_crs(sf2)){sf2<-sf2 %>% st_transform(crs=st_crs(sf1))}
 
@@ -35,8 +35,8 @@ matConfLCZ<-function(sf1, column1, sf2, column2, niveaux=as.character(c(1:10,101
     sf2<-sf2 %>% mutate(!!column1:=NULL)
   }
 
-  sf1<-sf1 %>% mutate(!!column1:=factor(subset(sf1,select=column1,drop=T),levels=niveaux))%>% drop_na(column1)
-  sf2<-sf2 %>% mutate(!!column2:=factor(subset(sf2,select=column2,drop=T),levels=niveaux))%>% drop_na(column2)
+  sf1<-sf1 %>% mutate(!!column1:=factor(subset(sf1,select=column1,drop=T),levels=typeLevels))%>% drop_na(column1)
+  sf2<-sf2 %>% mutate(!!column2:=factor(subset(sf2,select=column2,drop=T),levels=typeLevels))%>% drop_na(column2)
 
   # creation of the data set with intersected geoms and the values of both lcz class in these geoms
   echInt<-st_intersection(x=sf1[column1],y=sf2[column2])
@@ -75,24 +75,24 @@ matConfLCZ<-function(sf1, column1, sf2, column2, niveaux=as.character(c(1:10,101
   # pasting the area to the labels would return an error
   # Here is an ugly solution to overcome this (and see later to include the potentially missing combination of levels)
 
-  areas<-data.frame(niveaux=niveaux, area1=0, area2=0)
+  areas<-data.frame(typeLevels=typeLevels, area1=0, area2=0)
 
 
   for (i in subset(areaLCZ1,select=column1,drop=T)){
     if (!is.na(i)){
-      areas[areas$niveaux==i, 'area1']<-areaLCZ1[subset(areaLCZ1, select=column1, drop=T)==i, 'area']
+      areas[areas$typeLevels==i, 'area1']<-areaLCZ1[subset(areaLCZ1, select=column1, drop=T)==i, 'area']
     }
   }
 
   for (i in subset(areaLCZ2,select=column2,drop=T)){
     if (!is.na(i)){
-      areas[areas$niveaux==i, 'area2']<-areaLCZ2[subset(areaLCZ2, select=column2, drop=T)==i, 'area']
+      areas[areas$typeLevels==i, 'area2']<-areaLCZ2[subset(areaLCZ2, select=column2, drop=T)==i, 'area']
       #testprov<-areaLCZ1[subset(areaLCZ1,select=column1,drop=T)==i,'area']
     }
   }
 
   # Get the general agreement between both input files
-  percAcc<-(((echInt %>% st_drop_geometry() %>% filter(agree==T) %>% select(area) %>% sum) /
+  percAgg<-(((echInt %>% st_drop_geometry() %>% filter(agree==T) %>% select(area) %>% sum) /
                 (echInt %>% st_drop_geometry()%>% select(area) %>% sum))*100) %>% round(digits=2)
 
   # the way to "feed" group_by is through .dots, to be checked, as it seems to be deprecated :
@@ -127,19 +127,19 @@ matConfLCZ<-function(sf1, column1, sf2, column2, niveaux=as.character(c(1:10,101
 
   matConfLong<-matConfLong %>% mutate(across(where(is.character),as_factor))
   matConfLong<-matConfLong %>%
-    mutate(!!column1:=ordered(subset(matConfLong,select=column1,drop=T),levels=niveaux))
+    mutate(!!column1:=ordered(subset(matConfLong,select=column1,drop=T),levels=typeLevels))
   matConfLong<-matConfLong %>%
-    mutate(!!column2:=ordered(subset(matConfLong,select=column2,drop=T),levels=niveaux))
+    mutate(!!column2:=ordered(subset(matConfLong,select=column2,drop=T),levels=typeLevels))
 
 
   ##############################################################################################################
   # Some values of LCZ may not appear in all datasets, we want to force them to appear to make all heat map easy to compare
   #################################################################################################################
 
-  complement<-cbind(crossing(niveaux,niveaux),
+  complement<-cbind(crossing(typeLevels,typeLevels),
                     data.frame(
                       indice=apply(
-                        crossing(niveaux,niveaux),1,paste,collapse="."),
+                        crossing(typeLevels,typeLevels),1,paste,collapse="."),
                       area=0
                     )
     )
@@ -156,8 +156,8 @@ matConfLCZ<-function(sf1, column1, sf2, column2, niveaux=as.character(c(1:10,101
   matConfLong<-matConfLong %>%
     mutate(!!column1:=addNA(subset(matConfLong,select=column1,drop=T),ifany = T),
            !!column2:=addNA(subset(matConfLong,select=column2,drop=T),ifany = T),) %>%
-    mutate(!!column1:=factor(subset(matConfLong,select=column1,drop=T),levels=niveaux),
-           !!column2:=factor(subset(matConfLong,select=column2,drop=T),levels=niveaux))
+    mutate(!!column1:=factor(subset(matConfLong,select=column1,drop=T),levels=typeLevels),
+           !!column2:=factor(subset(matConfLong,select=column2,drop=T),levels=typeLevels))
 
 
   matConfLong<-matConfLong %>% arrange(column1,column2)
@@ -165,13 +165,14 @@ matConfLCZ<-function(sf1, column1, sf2, column2, niveaux=as.character(c(1:10,101
 
   # print("matConfLongaprès reorder factor")
   # print(matConfLong)
-  datatemp<-data.frame(a=factor(niveaux), percArea1=areas$area1, percArea2=areas$area2)
+  datatemp<-data.frame(a=factor(typeLevels), percArea1=areas$area1, percArea2=areas$area2)
   ############
   # Plot
-  coordRef<-length(niveaux)+1
+  coordRef<-length(typeLevels)+1
 
 
-  matConfPlot<-ggplot(data = matConfLong, aes(x=get(column1), y=get(column2), fill =agree)) +
+  matConfPlot<-ggplot_build(
+    ggplot(data = matConfLong, aes(x=get(column1), y=get(column2), fill =agree)) +
     geom_tile(color = "white",lwd=1.2,linetype=1)+
     labs(x="Reference",y="Alternative")+
     scale_fill_gradient2(low = "lightgrey", mid="cyan", high = "blue",
@@ -184,10 +185,11 @@ matConfLCZ<-function(sf1, column1, sf2, column2, niveaux=as.character(c(1:10,101
     geom_tile(datatemp,mapping=aes(x=a,y=coordRef,fill=percArea2, height=0.8,width=0.8))+
     geom_tile(datatemp,mapping=aes(x=coordRef,y=a,fill=percArea1, height=0.8,width=0.8))+
     ggtitle("Repartition of Reference classes into alternative classes")
+  )
 
-  if(plot==T){print(matConfPlot)}
+  if(isTRUE(plot)){print(matConfPlot)}
 
-  matConfOut<-list(matConf=matConfLong, matConfPlot=matConfPlot, areas=areas, percAcc=percAcc)
+  matConfOut<-list(matConf=matConfLong, matConfPlot=matConfPlot, areas=areas, percAgg=percAgg)
   return(matConfOut)
 
 }

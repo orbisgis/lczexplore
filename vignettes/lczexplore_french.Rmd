@@ -37,7 +37,7 @@ le charger avec library(lczexplore)
 
 La fonction importLCZgen est la fonction générique d'import du fichier contenant les LCZ. Les fichiers geojson et shp sont normalement importés sans problème. 
 Il faut lui indiquer le chemin du répertoire où se trouve le fichier (argument `dirPath`) et le nom du fichier (argument `file`).
-L'argument `column`, obligatoire, renseigne le nom de la colonne contenant les niveaux de LCZ, l'argument optionnel `geomID` celui des identifiants de géométries et l'argument optionnel `confid` celui d'une éventuelle mesure de la confiance qu'on a en la valeur de LCZ attribuée à une géométrie.
+L'argument `column`, obligatoire, renseigne le nom de la colonne contenant les typeLevels de LCZ, l'argument optionnel `geomID` celui des identifiants de géométries et l'argument optionnel `confid` celui d'une éventuelle mesure de la confiance qu'on a en la valeur de LCZ attribuée à une géométrie.
 
 Par défaut, cette fonction ressort un fichier de classe simple feature, telle que définie par l'OpenGIS et gérée par le paquet `sf`, paquet de référence pour la gestion des données vecteurs dans R [https://doi.org/10.32614/RJ-2018-009]. Mais on peut choisir `output="bBox"` pour que la fonction ressorte la bounding box des géométries contenues dans le fichier concerné.
 
@@ -52,30 +52,30 @@ redonBDT<-importLCZgen(dirPath=dirPathBDT,file="rsu_lcz.geojson",column = "LCZ_P
 ## Représenter les LCZ avec la fonction showLCZ
 Une fois que le fichier a été chargé dans un objet R de classe `sf`, il est possible de le représenter avec la fonction `showLCZ`. On lui spécifie le jeu de données qu'on a chargé par l'argument `sf`, et on lui précise la colonne contenant les valeurs de LCZ par l'argument `column`.L'argument `wf` permet de spécifier le workflow qui a servi à générer les données. Il sera repris dans le titre du graphique produit. 
 
-Si on représente des LCZ avec des niveaux de 1 à 10 puis de 101 à 107 selon la convention adoptée dans la chaîne GeoClimate, on peut le spécifier en renseignant repr à `brut`. Ainsi, un choix standardisé de couleurs sera utilisé. C'est le choix recommandé.
+Si on représente des LCZ avec des typeLevels de 1 à 10 puis de 101 à 107 selon la convention adoptée dans la chaîne GeoClimate, on peut le spécifier en renseignant repr à `standard`. Ainsi, un choix standardisé de couleurs sera utilisé. C'est le choix recommandé.
 
 ```{R, echo=FALSE, fig.dim = c(8, 6)}
-showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="brut",niveaux="",cols="")
+showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="standard",typeLevels="",cols="")
 ```
 
-Dans le cas contraire, on peut préciser les niveaux (c'est à dire les modalités) de LCZ. On peut notamment avoir regroupé des niveaux (voir paragraphe suivant), et on renseigne alors l'argument `repr` à "grouped". Il faut alors spécifier les couleurs qu'on a choisies. Si on ne spécifie rien, les couleurs sont choisies au hasard. Sinon, il faut préciser un vecteurs de couleurs de la même taille que les niveaux présents spécifiés par l'argument niveaux. 
+Dans le cas contraire, on peut préciser les typeLevels (c'est à dire les modalités) de LCZ. On peut notamment avoir regroupé des typeLevels (voir paragraphe suivant), et on renseigne alors l'argument `repr` à "grouped". Il faut alors spécifier les couleurs qu'on a choisies. Si on ne spécifie rien, les couleurs sont choisies au hasard. Sinon, il faut préciser un vecteurs de couleurs de la même taille que les typeLevels présents spécifiés par l'argument typeLevels.
 ```{r, fig.dim = c(8, 6)}
 # Choix de couleurs prises au hasard
 
-# Après une première représentation on constate qu'il n'y a que les niveaux 2, 3, 5, 6, 8, 9, 101, 102, 104, 105, 107.
+# Après une première représentation on constate qu'il n'y a que les typeLevels 2, 3, 5, 6, 8, 9, 101, 102, 104, 105, 107.
 # Je spécifie un vecteur de couleur de taille 11 cols
-niveaux<-c(2, 3, 5, 6, 8, 9, 101, 102, 104, 105, 107)
+typeLevels<-c(2, 3, 5, 6, 8, 9, 101, 102, 104, 105, 107)
 couleurs<-c("red","brown1","orange","coral","grey","darkgreen","chartreuse4","springgreen3",
             "darkolivegreen","black","royalblue2")
-showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="grouped",niveaux=niveaux,cols=couleurs)
+showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="grouped",typeLevels=typeLevels,cols=couleurs)
 
 ```
 
-## Regrouper des niveaux de LCZ avec la fonction LCZgroup2
+## Regrouper des typeLevels de LCZ avec la fonction LCZgroup2
 
-Par exemple, on peut choisir de regrouper les LCZ urbaines et les LCZ de végétation. La fonction LCZgroup2 prend en argument le jeu de données à regrouper, sf, et la colonne où se trouvent les LCZ à regrouper, column. Les arguments suivants sont une succession où les noms des groupes de niveaux reçoivent le vecteur des niveaux qu'ils regroupent, puis un vecteur de couleurs contenant autant de valeurs que de groupes de niveaux. 
-La fonction ressort un jeu de données identique, mais augmenté d'une colonne "grouped" dans laquelle se trouvent les nouveaux groupes de niveaux. 
-On peut alors l'affecter à l'argument column de showLCZ pour représenter les nouveaux groupes de niveaux, en reprenant le nom de ces groupes comme niveaux et le vecteurs de couleurs pour l'argument cols. 
+Par exemple, on peut choisir de regrouper les LCZ urbaines et les LCZ de végétation. La fonction LCZgroup2 prend en argument le jeu de données à regrouper, sf, et la colonne où se trouvent les LCZ à regrouper, column. Les arguments suivants sont une succession où les noms des groupes de typeLevels reçoivent le vecteur des typeLevels qu'ils regroupent, puis un vecteur de couleurs contenant autant de valeurs que de groupes de typeLevels.
+La fonction ressort un jeu de données identique, mais augmenté d'une colonne "grouped" dans laquelle se trouvent les nouveaux groupes de typeLevels.
+On peut alors l'affecter à l'argument column de showLCZ pour représenter les nouveaux groupes de typeLevels, en reprenant le nom de ces groupes comme typeLevels et le vecteurs de couleurs pour l'argument cols.
 
 ```{r}
 redonOSMgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",
@@ -84,7 +84,7 @@ redonOSMgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",
                            vegetation=c("101","102","103","104"),
                            impervious="105",pervious="106",water="107",cols=c("red","black","green","grey","burlywood","blue"))
 showLCZ(redonOSMgrouped, column="grouped",repr="grouped",wf="OSM", 
-        niveaux = c("urban","industry","vegetation","impervious","pervious","water"),
+        typeLevels = c("urban","industry","vegetation","impervious","pervious","water"),
         cols=c("red","black","green","grey","burlywood","blue"))
 
 ```
@@ -99,7 +99,7 @@ Dans notre exemple, on compare naturellement les LCZ créés par la chaîne GeoC
 ```{r, fig.dim = c(12,9 )}
 comparaison<-compareLCZ(sf1=redonBDT,column1="LCZ_PRIMARY", wf1="BD TOPO v2.2", 
            sf2=redonOSM,column2="LCZ_PRIMARY",wf2="Open Street Map", ref=1,
-           repr="brut",exwrite=F,location="Redon",saveG="")
+           repr="standard",exwrite=F,location="Redon",saveG="")
 dirPath<-paste0(system.file("extdata",package="lczexplore"),"/")
 
 ```
@@ -177,7 +177,7 @@ confidSensib(inputDf=redonCompare$data,filePath="", nPoints=10,
              wf1="bdtopo_2_2", wf2="osm",
              geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
              geomID2="ID_RSU.1",column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1",
-             sep=";", repr="brut",
+             sep=";", repr="standard",
              plot=TRUE)
 
 ```
@@ -213,7 +213,7 @@ print(i)
 produceAnalysis(location=i,
   outDir=outDir,
   wf1="bdtopo_2_2",
-  wf2="osm",refYear1="2022",refYear2="2022",repr="brut",saveG=location)
+  wf2="osm",refYear1="2022",refYear2="2022",repr="standard",saveG=location)
 }
 
 #setwd(wd)

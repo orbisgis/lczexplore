@@ -16,8 +16,8 @@ matConfLCZGlob(
   column2,
   confid2 = "",
   sep = ";",
-  repr = "brut",
-  niveaux = "",
+  repr = "standard",
+  typeLevels = "",
   plot = TRUE,
   ...
 )
@@ -45,9 +45,9 @@ matConfLCZGlob(
 
 \item{sep}{: the seperator used in the csv file}
 
-\item{repr}{: brut or grouped}
+\item{repr}{: standard or grouped}
 
-\item{niveaux}{: by default levels of the LCZ classification are built
+\item{typeLevels}{: by default levels of the LCZ classification are built
 reading the data, but one can input a character string vector of levels,
 for instance to produce several graphs with the same levels or levels in a specific order}
 
@@ -68,13 +68,13 @@ matConfLCZGlob(filePath= paste0(
 system.file("extdata", package = "lczexplore"),"/bdtopo_2_2_osm.csv"),
 file="bdtopo_2_2_osm.csv", wf1="bdt", wf2="osm",
 geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
-geomID2="ID_RSU.1", column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1", sep=";", repr="brut",
-niveaux="", plot=TRUE)
+geomID2="ID_RSU.1", column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1", sep=";", repr="standard",
+typeLevels="", plot=TRUE)
 testSource<-read.csv(paste0(system.file("extdata", package = "lczexplore"),
 "/bdtopo_2_2_osm.csv"), sep=";",header=TRUE)
 matConfLCZGlob(filePath="",
 inputDf = testSource, wf1="bdt", wf2="osm",
 geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
-geomID2="ID_RSU.1", column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1", sep=";", repr="brut",
-niveaux="", plot=TRUE)
+geomID2="ID_RSU.1", column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1", sep=";", repr="standard",
+typeLevels="", plot=TRUE)
 }

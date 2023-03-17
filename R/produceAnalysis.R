@@ -15,7 +15,7 @@
 #' @param refYear1 allows to indicate on which year the analysis was produced.
 #' It is important for "osm" workflow as the data are updated frequently.
 #' @param refYear2 see refYear1.
-#' @param repr : "brut" means that original values of LCZ are used, "grouped" means the user wishes to group some of the LCZ levels under a new label.
+#' @param repr : "standard" means that original values of LCZ are used, "grouped" means the user wishes to group some of the LCZ levels under a new label.
 #' @param saveG : when an empty character string, "", the plots are not saved. Else, the saveG string is used to produce the name of the saved png file.
 #' @param ... allow to pass arguments if representation is grouped.
 #' The expected arguments are the name of each grouped label,
@@ -28,11 +28,11 @@
 #'
 #' @examples
 #' produceAnalysis(location="Redon", outDir=paste0(system.file(package="lczexplore"),"/tinytest"),
-#' wf1="bdtopo_2_2", wf2="osm", refYear1="2022", refYear2="2022", repr="brut", saveG=location)
+#' wf1="bdtopo_2_2", wf2="osm", refYear1="2022", refYear2="2022", repr="standard", saveG=location)
 produceAnalysis<-function(location="Redon",
                           outDir=getwd(),
                           wf1="bdtopo_2_2",
-                          wf2="osm",refYear1="2022",refYear2="2022",repr="brut",saveG=location,...)
+                          wf2="osm",refYear1="2022",refYear2="2022",repr="standard",saveG=location,...)
 {
  wd<-getwd()
 #setwd(outDir)
@@ -98,8 +98,8 @@ if (wf1=="wudapt"){
                          bBox=dfBDTcontour)
   }
 
-if(repr=="brut"){
-  print("brut loop entered")
+if(repr=="standard"){
+  print("standard loop entered")
       #name of output Graph
           nameG<-paste0(location,"_",wf1,"_",wf2,"_",repr)
 
@@ -113,7 +113,7 @@ if(repr=="brut"){
                      sf2=df2,
                      column2="LCZ_PRIMARY", geomID2="ID_RSU", confid2="LCZ_UNIQUENESS_VALUE",wf2=wf2,
                      ref=1,
-                     repr="brut", saveG=nameG, exwrite=T,outDir=outDir,location=location)
+                     repr="standard", saveG=nameG, exwrite=T,outDir=outDir,location=location)
                )
 
       }

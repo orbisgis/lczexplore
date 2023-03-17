@@ -94,9 +94,9 @@ expect_error(importLCZgen(dirPath=paste0(
 expect_warning(importLCZgen(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),
              file="rsu_lcz.geojson", output="sfFile", column="LCZ_PRIMARY",
              geomID="", confid="",
-             niveaux=c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",
+             typeLevels=c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",
                        "9"="9","10"="10","101"="101","102"="102","103"="103","104"="104",
                        "105"="105","106"="106","101"="11","102"="12","103"="13","104"="14",
                        "105"="15", "106"="16","107"="17"),drop=T),
-             "The levels you specified with the niveaux argument don't cover the LCZ values")
+             "The levels you specified with the typeLevels argument don't cover the LCZ values")
 

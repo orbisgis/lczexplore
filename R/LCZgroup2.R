@@ -2,6 +2,7 @@
 #'
 #' @param sf is the input files. It must be an sf file and contain an LCZ column (levels 1 to 10 and 101 to 107). It must contain the geom column.
 #' @param column is the name of the column containing the LCZ to be grouped
+#' @param outCol is the name of the colum in which the grouped LCZ will be put
 #' @param ... the names of the groups followed by the levels the regrouped for instance urban=c("1","2","3","4","5","6","7","8","9")
 #' @import forcats dplyr rlang grDevices
 
@@ -15,14 +16,14 @@
 #' impervious="105",pervious="106",water="107",
 #' cols=c("red","black","green","grey","burlywood","blue"))
 
-LCZgroup2<-function(sf,column,...)
+LCZgroup2<-function(sf,column,outCol='grouped',...)
 {
   #require(forcats)
   #require(dplyr)
 
   # ensure all the LCZ levels are present in the imported column
-  niveaux<-c(1:10,101:107)
-  sf<- sf %>%  mutate(!!column:=factor(st_drop_geometry(subset(sf,select=column,drop=T)) ,levels=niveaux))
+  typeLevels<-c(1:10,101:107)
+  sf<- sf %>%  mutate(!!column:=factor(st_drop_geometry(subset(sf,select=column,drop=T)) ,levels=typeLevels))
   temp<-subset(sf,select=column,drop=T)
 
     # get the grouping levels as passed by ..., but without keeping arguments about colours
@@ -35,7 +36,7 @@ LCZgroup2<-function(sf,column,...)
     temp<-do.call(fct_collapse,args2)
     }
   #levels(temp)<-etiquettes
-  sf<- sf %>%  mutate(grouped=temp)
+  sf<- sf %>%  mutate(!!outCol:=temp)
   return(sf)
   sf
 }
