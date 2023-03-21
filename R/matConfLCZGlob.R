@@ -41,7 +41,6 @@
 #' geomID2="ID_RSU.1", column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1",
 #' sep=";", repr="standard",
 #' typeLevels="", plot=TRUE)
-
 matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, confid1="",
                          geomID2="", column2, confid2="", sep=";", repr="standard",
                          typeLevels="", plot=TRUE, ...){

@@ -128,7 +128,7 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
 
   if(repr=="standard"){
 
-      valeurs<-c("#8b0101","#cc0200","#fc0001","#be4c03","#ff6602","#ff9856",
+      typeLevels<-c("#8b0101","#cc0200","#fc0001","#be4c03","#ff6602","#ff9856",
                   "#fbed08","#bcbcba","#ffcca7","#57555a","#006700","#05aa05",
                   "#648423","#bbdb7a","#010101","#fdf6ae","#6d67fd")
 
@@ -201,7 +201,7 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
                  "Bare rock paved",
                  "Bare soil sand",
                  "Water")
-  names(valeurs)<-typeLevels
+  names(typeLevels)<-typeLevels
   rm(temp1) ; rm(temp2)
   }
 
@@ -225,7 +225,7 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
       # get the name of colors, specified by user in the (produceAnalysis function)
 
     if(length(cols)>1&&length(cols)==length(typeLevels)){
-      valeurs<-cols ; names(valeurs)<-typeLevels ; etiquettes<-typeLevels
+      typeLevels<-cols ; names(typeLevels)<-typeLevels ; etiquettes<-typeLevels
       nomLegende<-"Grouped LCZ"
     }else{
       if(length(typeLevels)>36){
@@ -233,8 +233,8 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
               you may want to group some of the levels using LCZgroup2 function ")} else {
                 if(length(cols)<=1){
                   warning("No cols were specified, cols will be picked from the Polychrome 36 palette")
-                  valeurs<-palette.colors(n=length(typeLevels), palette="Polychrome 36")
-                  names(valeurs)<-typeLevels
+                  typeLevels<-palette.colors(n=length(typeLevels), palette="Polychrome 36")
+                  names(typeLevels)<-typeLevels
                   nomLegende<-"Grouped LCZ"
                 } else{
                   if (length(cols)<length(typeLevels)){
@@ -243,8 +243,8 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
                      \n, Maybe you didn't take into account empty levels ?
                      missing cols will be randomly picked from the Polychrom 36 palette."))
                     nMissCol<-length(typeLevels)-length(cols)
-                    valeurs<-c(cols,palette.colors(n=nMissCol,palette="Polychrome 36"))
-                    names(valeurs)<-typeLevels
+                    typeLevels<-c(cols,palette.colors(n=nMissCol,palette="Polychrome 36"))
+                    names(typeLevels)<-typeLevels
                     warning(paste0(
                       "only ", length(cols), " colors were specified \n for ",
                       length(typeLevels)," levels of grouped LCZ \n", nMissCol, " was/were chosen at random. \n ",
@@ -253,7 +253,7 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
                   }
                 }
               }
-          names(valeurs)<-typeLevels
+          names(typeLevels)<-typeLevels
           etiquettes<-typeLevels
       }
     typeLevels
@@ -368,7 +368,7 @@ if (plot == TRUE){
      l1Plot<- ggplot(boundary)+ # les données
           geom_sf(data=boundary, fill=NA,lty='blank')+
      geom_sf(data=sf1,aes(fill=get(column1)), colour=NA)+
-     scale_fill_manual(values=valeurs,labels=etiquettes1, drop=FALSE)+
+     scale_fill_manual(values=typeLevels,labels=etiquettes1, drop=FALSE)+
      guides(fill=guide_legend(title=titrou))+
      ggtitle(titre1, subtitle=paste0("Number of RSU : ",nbgeom1))
      #
@@ -378,7 +378,7 @@ if (plot == TRUE){
      l2Plot<-ggplot(boundary)+
       geom_sf(data=boundary, fill=NA,lty='blank')+
       geom_sf(data=sf2,aes(fill=get(column2)), colour=NA)+
-      scale_fill_manual(values=valeurs,labels=etiquettes2,drop=FALSE)+
+      scale_fill_manual(values=typeLevels,labels=etiquettes2,drop=FALSE)+
       guides(fill=guide_legend(title=titrou))+
       ggtitle(titre2,subtitle=paste0("Number of RSU : ", nbgeom2))
 

@@ -41,9 +41,9 @@ produceAnalysis<-function(location="Redon",
   indCol<-grep(x=indSep,pattern="colors")
   args2<-args[indSep[-indCol]]
   str(args2)
-  valeurs<-args[indSep[indCol]] %>% unlist %>% as.vector()
-  str(valeurs)
- if(length(args2)!=length(valeurs)) stop("You must specify as many colors as there are groups")
+  typeLevels<-args[indSep[indCol]] %>% unlist %>% as.vector()
+  str(typeLevels)
+ if(length(args2)!=length(typeLevels)) stop("You must specify as many colors as there are groups")
 
 
 # Download and import the first/reference dataset
