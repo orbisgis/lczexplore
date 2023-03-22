@@ -1,4 +1,4 @@
-# This tests teh function compareLCZ
+# This tests the function compareLCZ
 # library(tinytest)
 #
 # library(sf)

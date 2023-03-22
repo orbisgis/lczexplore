@@ -1,18 +1,218 @@
+# This tests the function levCol.R
+# library(tinytest)
+#
+# library(sf)
 # several vector covering the levels in the data, with colors of the proper size
+
+# case 0: The number of levels must be less than 37 for the map to be readable,
+#               you may want to group some of the levels using LCZgroup2 function
+expect_error(levCol(sf=redonBDT, column="LCZ_PRIMARY",1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+       19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38,cols="black"),"more than 36 arguments")
+
+# case 1: No level vector and no color vector, less than 36 levels,
+# levels will be deduced from the data
+# and colors will be chosen from a standard palette.
+
+test<-levCol(sf=redonBDT, column="LCZ_PRIMARY")
+expect_equal(grep("1:",test$case),1)
+
+# case 2: No levels but a color vector which size covers the number of levels in the data
+
+test<-levCol(sf=redonBDTgrouped,column="grouped",
+             cols=c("red","black","green","grey","burlywood","blue"))
+expect_equal(grep("2:",test$case),1)
+
+# case 3: No levels but a color vector which size does not cover the number of levels in the data,
+# colors will be picked from a standard palette..
+
+test<-levCol(sf=redonBDTgrouped,column="grouped",
+             cols=c("red","black","green","grey","burlywood"))
+expect_equal(grep("3:",test$case),1)
+
+# case 4:  A single vector was provided, whose names cover the levels in the data
+# and whose values are colors.
+test<-levCol(redonBDTgrouped, column="grouped", levels=c("urban"="red","industry"="black",
+                                                         "vegetation"="green",
+                                                         "impervious"="grey",
+                                                         "pervious"="burlywood","water"="blue"))
+expect_equal(grep("4:",test$case),1)
+
+# case 5: A single vector was provided, whose values are colors
+#         but whose names don't cover the levels in the data.
+#         Specified colors will be associated to levels deduced from the data,
+#          in order of appearence.
+test<-levCol(redonBDTgrouped, column="grouped", levels=c("urban"="red","industry"="black",
+                                                         "vegetation"="green",
+                                                         "impervious"="grey",
+                                                         "not present in the data"="white",
+                                                         "pervious"="burlywood","water"="blue"))
+expect_equal(grep("5:",test$case),1)
+
+# case 6: A single vector was provided, whose values are colors
+#         but whose names don't cover the levels in the data.
+#         Colors will be associated to unique values of the data
+#         and missing colors will be added from a standard palette.
+test<-levCol(redonBDTgrouped, column="grouped", levels=c("urban"="red","industry"="black",
+                                                         "vegetation"="green",
+                                                         "pervious"="burlywood","water"="blue"))
+expect_equal(grep("6:",test$case),1)
+
+# case 7: No color vector but a level vector whose names cover the levels in the data
+test<-levCol(redonBDTgrouped, column="grouped", levels=c("urban","industry","vegetation","impervious","pervious","water"))
+expect_equal(grep("7:",test$case),1)
+
+# case 8: No color vector but a level vector whose names don't cover the levels in the data
+#          Levels will be deduced from data and colors will be chosen from a standard palette.
+test<-levCol(redonBDTgrouped, column="grouped", levels=c("urban","industry","John Scofield","impervious","pervious","water"))
+expect_equal(grep("8:",test$case),1)
+
+# case 9: Levels specified in one vector, whose values cover the levels in the data,
+#           colors in another vector, these vectors having the same length
+test<-levCol(redonBDTgrouped, column="grouped",
+             levels=c("urban","industry","vegetation","impervious","pervious","water"),
+             cols=c("red","black","green","grey","burlywood","blue"))
+
+expect_equal(grep("9:",test$case),1)
+
+# case 10: Levels specified in one vector, whose values cover the levels in the data,
+#           colors in another vector, these vectors having the same length
+#           BUT some of the color names are not recognized as a color
+#           and will be replaced from a standard palette
+
+test<-levCol(redonBDTgrouped, column="grouped",
+             levels=c("urban","industry","vegetation","impervious","pervious","water"),
+             cols=c("red","black","green","grey","chaussures","blue"))
+
+expect_equal(grep("10:",test$case),1)
+
+# case 11: One vector seems to be a vector of levels,
+#           which covers the values of the data,
+#           the other a vector of colors, whose length is shorter than the specified levels.
+#           Missing colors will be picked from a standard palette.
+
+test<-levCol(redonBDTgrouped, column="grouped",
+             levels=c("urban","industry","vegetation","impervious","pervious","water"),
+             cols=c("red","black","green","grey","blue"))
+
+expect_equal(grep("11:",test$case),1)
+
+# case 12: One vector seems to be a vector of levels,
+#           which covers the values of the data,
+#           the other a vector of colors, whose length is longer than the specified levels.
+#           The supplemental colors will be dropped.
+
+test<-levCol(redonBDTgrouped, column="grouped",
+             levels=c("urban","industry","vegetation","impervious","pervious","water"),
+             cols=c("red","black","green","grey","burlywood","blue","purple"))
+
+expect_equal(grep("12:",test$case),1)
+
+# case 13: No color vector is specified, there seems to be two ambiguous level vectors,
+#         levels will be deduced from the data and colors chosen from a standard palette.
+test<-levCol(redonBDTgrouped, column="grouped",
+             level1=c("urban","industry","vegetation"),
+             level2=c("impervious","pervious","water"))
+expect_equal(grep("13:",test$case),1)
+
+# case 14:The specified levels don't cover the levels in the data
+#        and the number of specified colors is zero or less than the number of levels present,
+#        levels will be deduced from the data and colors will be chosen from a standard palette.
+
+levCol(redonBDTgrouped, column="grouped",
+       levels=c("urban","industry","vegetation","pervious","water"),
+       cols=c("red","black","green","grey","burlywood","blue","purple"))
+
+# test<-levCol(redonBDTgrouped, column="grouped",
+#              levels=c("urban","industry","vegetation","pervious","water"),
+#              cols=c("red","black","green","grey"))
+
+
+
 levCol(sf=redonBDTgrouped,column="grouped",urban=c("1","2","3","4","5","6","7","8","9"),
        industry="10",
        vegetation=c("101","102","103","104"),
        impervious="105",pervious="106",water="107",
        cols=c("red","black","green","grey","burlywood","blue"))
+# # several vector covering the levels in the data, with an error in the colors
+levCol(sf=redonBDTgrouped,column="grouped",urban=c("1","2","3","4","5","6","7","8","9"),
+       industry="10",
+       vegetation=c("101","102","103","104"),
+       impervious="105",pervious="106",water="107",
+       cols=c("red","black","green","grey","chaussure","blue"))
 
-# GERER L'APPEL A LCZGROUP2
+levCol(sf=redonBDTgrouped,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
+       industry="10",
+       vegetation=c("101","102","103","104"),
+       impervious="105",pervious="106",water="107",
+       cols=c("red","black","green","grey","chaussure","blue"))
+# one vector covering the levels in the data with one vector of colors of the proper size
 
-# one vector covering the levels in the data with colors of the proper size
-levCol(redonBDTgrouped,column="grouped",
-       anything=c("urban","industry","vegetation","impervious","pervious","water"),
-       cols=c("red","black","green","grey","burlywood","blue"))
+# one vector covering the levels in the data with one vector of colors of the proper size
+test<-levCol(redonBDTgrouped,column="grouped",
+             anything=c("urban","industry","vegetation","impervious","pervious","water"),
+             cols=c("red","black","green","grey","burlywood","blue"))
+test
+
+test<-levCol(redonBDTgrouped,column="grouped",
+             anything=c("urban","industry","vegetation","impervious","pervious","water"),
+             cols=c("red","black","green","grey","chaussure","blue"))
+test
+
+
+
 
 # levels as the names and colors as the values
 levCol(redonBDTgrouped, column="grouped", levels=c("urban"="red","industry"="black",
                                                    "vegetation"="green",
                                                    "impervious"="grey","pervious"="burlywood","water"="blue"))
+
+testLevCol<-function(sf,column,drop=FALSE,...){
+  args<-list(...)
+  print(length(args))
+  argNames<-names(args)
+
+  uniqueData<-sf[column] |> sf::st_drop_geometry()  |> unique() # Attention unique outputs a list of length 1
+  if(drop==TRUE){uniqueData<-droplevels(uniqueData)}
+  uniqueData<-levels(uniqueData[,1]) |> as.character() |> as.vector()
+
+  print("uniqueData") ; print(uniqueData)
+
+  indCol<-grep(x=argNames, pattern="cols")
+  if (length(indCol) != 0)
+  {
+    argCol <- args[indCol][[1]]
+    print("argCol");print(argCol)
+    argLev<-args[-indCol]
+    print("argLev"); print(argLev)
+  } else
+  {
+    argLev<-args
+    print("argLev"); print(argLev)
+  }
+
+  if ( length(args) > 2 ){
+    print("argLev"); print(argLev)
+    originLevels<-unlist(argLev)
+    print(uniqueData%in%originLevels)
+
+  }
+}
+
+testLevCol(redonBDTgrouped,column="grouped",
+       anything=c("urban","industry","vegetation","impervious","pervious","water"),
+       cols=c("red","black","green","grey","burlywood","blue"))
+
+testLevCol(redonBDTgrouped,column="grouped",
+             anything=c("urban","industry","vegetation","impervious","pervious","water"),
+             cols=c("red","black","green","grey","chaussure","blue"))
+
+testLevCol(sf=redonBDTgrouped,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
+       industry="10",
+       vegetation=c("101","102","103","104"),
+       impervious="105",pervious="106",water="107",
+       cols=c("red","black","green","grey","chaussure","blue"))
+
+
+
+# GERER L'APPEL A LCZGROUP2
+
