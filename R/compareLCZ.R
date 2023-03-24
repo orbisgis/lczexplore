@@ -58,6 +58,8 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
 
 
   # store the column names in a way that can be injected in functions A SUPPRIMER ?
+
+  column2Init<-column2 # in case of column1==column2, this will be used to call levCol
   namesf1<-deparse(substitute(sf1))
   namesf2<-deparse(substitute(sf2))
   message(paste(" The column ",column1, " of the dataset", namesf1,
@@ -81,6 +83,8 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
               }
     # }
   }
+
+
 
 
   # In order not to "carry" the whole file, keep only the column of interest (LCZ)
@@ -128,9 +132,29 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
 
   if(repr=="standard"){
 
-      typeLevels<-c("#8b0101","#cc0200","#fc0001","#be4c03","#ff6602","#ff9856",
-                  "#fbed08","#bcbcba","#ffcca7","#57555a","#006700","#05aa05",
-                  "#648423","#bbdb7a","#010101","#fdf6ae","#6d67fd")
+    uniqueData1<-sf1[column1] |> sf::st_drop_geometry()  |> unique() # Attention unique outputs a list of length 1
+    uniqueData1<-levels(uniqueData1[,1]) |> as.character() |> as.vector()
+
+    uniqueData2<-sf2[column2] |> sf::st_drop_geometry()  |> unique() # Attention unique outputs a list of length 1
+    uniqueData2<-levels(uniqueData2[,1]) |> as.character() |> as.vector()
+
+    LCZlevels<-as.character(c(1:10,101:107))
+    if (prod(uniqueData1%in%LCZlevels)==0){
+      line1<-"The column chosen for the first data set dosen't seem to be a standard LCZ encoding. \n"
+      line2<-"Did you import the data with importLCZgen ? \n"
+      line3<-" If the LCZ types are not standard, you can try to set repr to grouped and specify the levels. \n"
+      errorMessage<-paste(line1,line2,line3)
+      stop(errorMessage) }
+    if (prod(uniqueData2%in%LCZlevels)==0){
+      line1<-"The column chosen for the second data set dosen't seem to be a standard LCZ encoding. \n"
+      line2<-"Did you import the data with importLCZgen ? \n"
+      line3<-" If the LCZ types are not standard, you can try to set repr to grouped and specify the levels. \n"
+      errorMessage<-paste(line1,line2,line3)
+      stop(errorMessage) }
+
+       typeLevels<-c("#8b0101","#cc0200","#fc0001","#be4c03","#ff6602","#ff9856",
+                   "#fbed08","#bcbcba","#ffcca7","#57555a","#006700","#05aa05",
+                   "#648423","#bbdb7a","#010101","#fdf6ae","#6d67fd")
 
       etiquettes<-c("LCZ 1: Compact high-rise","LCZ 2: Compact mid-rise","LCZ 3: Compact low-rise",
                     "LCZ 4: Open high-rise","LCZ 5: Open mid-rise","LCZ 6: Open low-rise",
@@ -141,11 +165,11 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
                     "LCZ E: Bare rock or paved","LCZ F: Bare soil or sand","LCZ G: Water"
                     )
 
-      typeLevels<-as.character(c(1:10,101:107))
+
       #names(typeLevels)<-typeLevels
       # Classification must be encoded as factors
-      sf1<-sf1 %>% mutate(!!column1:=factor(subset(sf1,select=column1,drop=T),levels=typeLevels))
-      sf2<-sf2 %>% mutate(!!column2:=factor(subset(sf2,select=column2,drop=T),levels=typeLevels))
+      sf1<-sf1 %>% mutate(!!column1:=factor(subset(sf1,select=column1,drop=T),levels=LCZlevels))
+      sf2<-sf2 %>% mutate(!!column2:=factor(subset(sf2,select=column2,drop=T),levels=LCZlevels))
       temp1<-subset(sf1,select=column1,drop=T) %>% fct_recode(
         "Compact high"="1",
         "Compact mid"="2",
@@ -184,7 +208,7 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
                                                               "Bare soil sand"="106",
                                                               "Water"="107")
       sf2<-sf2 %>% mutate(!!column2:=temp2)
-      typeLevels<-c("Compact high",
+      LCZlevels<-c("Compact high",
                  "Compact mid",
                  "Compact low",
                  "Open High",
@@ -201,7 +225,7 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
                  "Bare rock paved",
                  "Bare soil sand",
                  "Water")
-  names(typeLevels)<-typeLevels
+  names(typeLevels)<-LCZlevels
   rm(temp1) ; rm(temp2)
   }
 
@@ -209,57 +233,68 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
 
   if(repr=="grouped"){ ############### This is a temporary feature. Grouping LCZ, showing and comparing grouped LCZ will be re-written in a  cleaner way in a later version
     args<-list(...)
-    cols<-args$cols
+
+    temporaire1<-levCol(sf1,column1,...)
+    temporaire2<-levCol(sf1,column2Init,...)
+    temporaire3<-c(temporaire1$levelsColors,temporaire2$levelsColors)
+    temporaire4<-temporaire3[unique(names(temporaire3))]
+    # this illustrates how silly it was to chose to store levels and colors in the same vector as names and values.
+
+    print(temporaire4)
 
     indSep<-names(args)
     indCol<-grep(x=indSep,pattern="col")
-    if(is.null(indCol)){typeLevels<-names(args)} else{
+    cols<-args[[indCol]]
+    if(is.null(indCol)){LCZlevels<-names(args)
+    } else{
       args2<-args[indSep[-indCol]]
       args2<-args2
-      typeLevels<-names(args2)
-      etiquettes<-typeLevels
+      LCZlevels<-names(args2)
+      etiquettes<-LCZlevels
     }
+
+
 
     # Generate colors to plot grouped values, according to the number of levels of grouped
       # generate palette
       # get the name of colors, specified by user in the (produceAnalysis function)
 
-    if(length(cols)>1&&length(cols)==length(typeLevels)){
-      typeLevels<-cols ; names(typeLevels)<-typeLevels ; etiquettes<-typeLevels
+    if(length(cols) > 1 && length(cols) == length(LCZlevels)){
+      typeLevels<-cols ; names(typeLevels)<-LCZlevels ; etiquettes<-LCZlevels
       nomLegende<-"Grouped LCZ"
     }else{
-      if(length(typeLevels)>36){
+      if(length(LCZlevels)>36){
         stop("The number of levels must be less than 37 for the map to be readable,
               you may want to group some of the levels using LCZgroup2 function ")} else {
                 if(length(cols)<=1){
                   warning("No cols were specified, cols will be picked from the Polychrome 36 palette")
-                  typeLevels<-palette.colors(n=length(typeLevels), palette="Polychrome 36")
-                  names(typeLevels)<-typeLevels
+                  typeLevels<-palette.colors(n=length(LCZlevels), palette="Polychrome 36")
+                  names(typeLevels)<-LCZlevels
                   nomLegende<-"Grouped LCZ"
                 } else{
-                  if (length(cols)<length(typeLevels)){
+                  if (length(cols)<length(LCZlevels)){
                     message(paste("you specified less colors in cols argument (here ",length(cols),
-                                  ") than levels of LCZ in the typeLevels argument (here ",length(typeLevels),").
+                                  ") than levels of LCZ in the typeLevels argument (here ",length(LCZlevels),").
                      \n, Maybe you didn't take into account empty levels ?
                      missing cols will be randomly picked from the Polychrom 36 palette."))
-                    nMissCol<-length(typeLevels)-length(cols)
+                    nMissCol<-length(LCZlevels)-length(cols)
                     typeLevels<-c(cols,palette.colors(n=nMissCol,palette="Polychrome 36"))
-                    names(typeLevels)<-typeLevels
+                    names(typeLevels)<-LCZlevels
                     warning(paste0(
                       "only ", length(cols), " colors were specified \n for ",
-                      length(typeLevels)," levels of grouped LCZ \n", nMissCol, " was/were chosen at random. \n ",
+                      length(LCZlevels)," levels of grouped LCZ \n", nMissCol, " was/were chosen at random. \n ",
                       "For a better rendition, specify as many colors as levels of LCZ"))
                     nomLegende<-"Grouped LCZ"
                   }
                 }
               }
-          names(typeLevels)<-typeLevels
-          etiquettes<-typeLevels
+          names(typeLevels)<-LCZlevels
+          etiquettes<-LCZlevels
       }
     typeLevels
     # Classification must be encoded as factors
-    sf1<-sf1 %>% mutate(!!column1:=factor(subset(sf1,select=column1,drop=T),levels=typeLevels))
-    sf2<-sf2 %>% mutate(!!column2:=factor(subset(sf2,select=column2,drop=T),levels=typeLevels))
+    sf1<-sf1 %>% mutate(!!column1:=factor(subset(sf1,select=column1,drop=T),levels=LCZlevels))
+    sf2<-sf2 %>% mutate(!!column2:=factor(subset(sf2,select=column2,drop=T),levels=LCZlevels))
   }
 
 
@@ -314,7 +349,7 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
 ###################################################
 
 matConfOut<-matConfLCZ(sf1=sf1, column1=column1, sf2=sf2, column2=column2,
-                       repr=repr, typeLevels=typeLevels, plot=FALSE)
+                       repr=repr, typeLevels=LCZlevels, plot=FALSE)
 matConfOut$data<-echIntExpo
 matConfLong<-matConfOut$matConf
 areas<-matConfOut$areas
@@ -345,13 +380,13 @@ if (plot == TRUE){
   lab2<-paste(titrou, adtitre2)
   # ypos<-if (repr=="standard"){ypos=5} else {ypos=2}
   etiquettes1<-paste(etiquettes, areas$area1 ," %")
-  names(etiquettes1)<-typeLevels
+  names(etiquettes1)<-LCZlevels
   etiquettes2<-etiquettes
   etiquettes2<-gsub(":.*",": ",etiquettes)
   etiquettes2<-paste(etiquettes2, areas$area2 ," %")
 
   etiquettes1.2<-paste(etiquettes2,areas$area1)
-  datatemp<-data.frame(a=factor(typeLevels),percArea=areas$area1,percArea1=areas$area1,percArea2=areas$area2)
+  datatemp<-data.frame(a=factor(LCZlevels),percArea=areas$area1,percArea1=areas$area1,percArea2=areas$area2)
 
   # center all plots
   boundary1<-sf1 %>% st_union %>% st_boundary()
