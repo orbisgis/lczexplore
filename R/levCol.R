@@ -5,11 +5,12 @@
 #' @param drop is set to TRUE if one wants to drop unused levels, in case column is a factor with unused levels
 #' @param ... other parameters specified, expected a vector of levels and a vector of colors
 #' whose name must begin with cols. Other cases are handled to enhance usability.
-#' @import dplyr
+#' @import dplyr sf
 #' @importFrom grDevices palette.colors
 #'
 #' @return output is a list containing levelColors, a named vector, which names are the levels
-#' present in the data and which values are the associated colors
+#' present in the data and which values are the associated colors,
+#' and case, a string spcifying what case was encountered when producing the levels and colors.
 #' @export
 #'
 #' @examples

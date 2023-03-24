@@ -53,7 +53,7 @@
 #' repr="standard", saveG="", exwrite=TRUE, location="Redon", plot=TRUE)
 compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
                      sf2,column2,geomID2="",confid2="",wf2="osm",ref=1,
-                     repr="standard",saveG="",exwrite=TRUE,outDir=getwd(),location="Redon", plot=TRUE, ...){
+                     repr="standard",saveG="",exwrite=TRUE,outDir=getwd(),location="Redon", plot=TRUE, tryGroup=FALSE, ...){
 
 
 
@@ -231,27 +231,70 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
 
 
 
-  if(repr=="grouped"){ ############### This is a temporary feature. Grouping LCZ, showing and comparing grouped LCZ will be re-written in a  cleaner way in a later version
+  if(repr=="grouped")
+  { ############### This is a temporary feature. Grouping LCZ, showing and comparing grouped LCZ will be re-written in a  cleaner way in a later version
     args<-list(...)
 
-    temporaire1<-levCol(sf1,column1,...)
-    temporaire2<-levCol(sf1,column2Init,...)
-    temporaire3<-c(temporaire1$levelsColors,temporaire2$levelsColors)
-    temporaire4<-temporaire3[unique(names(temporaire3))]
+    # Call levCol to deal with levels and colors
+    levCol1<-levCol(sf1,column1,...)
+    levCol2<-levCol(sf2,column2,...)
+    levColCase1<-levCol1$case
+    levColCase2<-levCol2$case
+    temporaire3<-c(levCol1$levelsColors,levCol2$levelsColors)
+    typeLevels<-temporaire3[unique(names(temporaire3))]
+    LCZlevels<-names(typeLevels)
+
+    # if there are several parameters to specify grouping levels
+    # and their names don't cover the values in column, and if tryGroup is T
+    # then we try to call LCZgroup2 And procede to grouping accordingly
+
+    if (tryGroup==TRUE && (length(grep("14: ",levColCase1))!=0 ||length(grep("15: ",levColCase1))!=0 )){
+      sfNew1<-LCZgroup2(sf1,column = column1,...)
+      #sf1[column1]<-sfNew1["grouped"]
+      temp1<-
+      sf1<-sfNew1 %>% mutate(!!column1:=subset(sfNew1,select="grouped",drop=TRUE))
+      print(summary(sf1))
+      levCol1<-levCol(sf1,column1,...)
+    }
+
+    if (tryGroup==TRUE && (length(grep("14: ",levColCase2))!=0 ||length(grep("15: ",levColCase2))!=0 )){
+      sfNew2<-LCZgroup2(sf2,column = column2,...)
+      #sf2[column2]<-sfNew2["grouped"]
+      sf1<-sfNew2 %>% mutate(!!column2:=subset(sfNew2,select="grouped",drop=TRUE))
+      print(summary(sf2))
+      levCol2<-levCol(sf2,column2,...)
+    }
+
+    print(summary(sf1))
+    print(summary(sf2))
+    temporaire3<-c(levCol1$levelsColors,levCol2$levelsColors)
+    typeLevels<-temporaire3[unique(names(temporaire3))]
+    LCZlevels<-names(typeLevels)
+    etiquettes<-LCZlevels
+
+    nom1<-c(geomID1,column1,confid1)
+    nom1<-nom1[sapply(nom1,nchar)!=0]
+    nom2<-c(geomID2,column2,confid2)
+    nom2<-nom2[sapply(nom2,nchar)!=0]
+
+
+    sf1<-select(sf1,nom1) %>% drop_na(column1)
+    sf2<-select(sf2,nom2) %>% drop_na(column2)
+
     # this illustrates how silly it was to chose to store levels and colors in the same vector as names and values.
 
-    print(temporaire4)
-
-    indSep<-names(args)
-    indCol<-grep(x=indSep,pattern="col")
-    cols<-args[[indCol]]
-    if(is.null(indCol)){LCZlevels<-names(args)
-    } else{
-      args2<-args[indSep[-indCol]]
-      args2<-args2
-      LCZlevels<-names(args2)
-      etiquettes<-LCZlevels
-    }
+    # print(temporaire4)
+    #
+    # indSep<-names(args)
+    # indCol<-grep(x=indSep,pattern="col")
+    # cols<-args[[indCol]]
+    # if(is.null(indCol)){LCZlevels<-names(args)
+    # } else{
+    #   args2<-args[indSep[-indCol]]
+    #   args2<-args2
+    #   LCZlevels<-names(args2)
+    #   etiquettes<-LCZlevels
+    # }
 
 
 
@@ -259,42 +302,42 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
       # generate palette
       # get the name of colors, specified by user in the (produceAnalysis function)
 
-    if(length(cols) > 1 && length(cols) == length(LCZlevels)){
-      typeLevels<-cols ; names(typeLevels)<-LCZlevels ; etiquettes<-LCZlevels
-      nomLegende<-"Grouped LCZ"
-    }else{
-      if(length(LCZlevels)>36){
-        stop("The number of levels must be less than 37 for the map to be readable,
-              you may want to group some of the levels using LCZgroup2 function ")} else {
-                if(length(cols)<=1){
-                  warning("No cols were specified, cols will be picked from the Polychrome 36 palette")
-                  typeLevels<-palette.colors(n=length(LCZlevels), palette="Polychrome 36")
-                  names(typeLevels)<-LCZlevels
-                  nomLegende<-"Grouped LCZ"
-                } else{
-                  if (length(cols)<length(LCZlevels)){
-                    message(paste("you specified less colors in cols argument (here ",length(cols),
-                                  ") than levels of LCZ in the typeLevels argument (here ",length(LCZlevels),").
-                     \n, Maybe you didn't take into account empty levels ?
-                     missing cols will be randomly picked from the Polychrom 36 palette."))
-                    nMissCol<-length(LCZlevels)-length(cols)
-                    typeLevels<-c(cols,palette.colors(n=nMissCol,palette="Polychrome 36"))
-                    names(typeLevels)<-LCZlevels
-                    warning(paste0(
-                      "only ", length(cols), " colors were specified \n for ",
-                      length(LCZlevels)," levels of grouped LCZ \n", nMissCol, " was/were chosen at random. \n ",
-                      "For a better rendition, specify as many colors as levels of LCZ"))
-                    nomLegende<-"Grouped LCZ"
-                  }
-                }
-              }
-          names(typeLevels)<-LCZlevels
-          etiquettes<-LCZlevels
-      }
-    typeLevels
-    # Classification must be encoded as factors
-    sf1<-sf1 %>% mutate(!!column1:=factor(subset(sf1,select=column1,drop=T),levels=LCZlevels))
-    sf2<-sf2 %>% mutate(!!column2:=factor(subset(sf2,select=column2,drop=T),levels=LCZlevels))
+    # if(length(cols) > 1 && length(cols) == length(LCZlevels)){
+    #   typeLevels<-cols ; names(typeLevels)<-LCZlevels ; etiquettes<-LCZlevels
+    #   nomLegende<-"Grouped LCZ"
+    # }else{
+    #   if(length(LCZlevels)>36){
+    #     stop("The number of levels must be less than 37 for the map to be readable,
+    #           you may want to group some of the levels using LCZgroup2 function ")} else {
+    #             if(length(cols)<=1){
+    #               warning("No cols were specified, cols will be picked from the Polychrome 36 palette")
+    #               typeLevels<-palette.colors(n=length(LCZlevels), palette="Polychrome 36")
+    #               names(typeLevels)<-LCZlevels
+    #               nomLegende<-"Grouped LCZ"
+    #             } else{
+    #               if (length(cols)<length(LCZlevels)){
+    #                 message(paste("you specified less colors in cols argument (here ",length(cols),
+    #                               ") than levels of LCZ in the typeLevels argument (here ",length(LCZlevels),").
+    #                  \n, Maybe you didn't take into account empty levels ?
+    #                  missing cols will be randomly picked from the Polychrom 36 palette."))
+    #                 nMissCol<-length(LCZlevels)-length(cols)
+    #                 typeLevels<-c(cols,palette.colors(n=nMissCol,palette="Polychrome 36"))
+    #                 names(typeLevels)<-LCZlevels
+    #                 warning(paste0(
+    #                   "only ", length(cols), " colors were specified \n for ",
+    #                   length(LCZlevels)," levels of grouped LCZ \n", nMissCol, " was/were chosen at random. \n ",
+    #                   "For a better rendition, specify as many colors as levels of LCZ"))
+    #                 nomLegende<-"Grouped LCZ"
+    #               }
+    #             }
+    #           }
+    #       names(typeLevels)<-LCZlevels
+    #       etiquettes<-LCZlevels
+    #   }
+    # typeLevels
+    # # Classification must be encoded as factors
+     sf1<-sf1 %>% mutate(!!column1:=factor(subset(sf1,select=column1,drop=T),levels=LCZlevels))
+     sf2<-sf2 %>% mutate(!!column2:=factor(subset(sf2,select=column2,drop=T),levels=LCZlevels))
   }
 
 

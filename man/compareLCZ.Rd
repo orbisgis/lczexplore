@@ -23,6 +23,7 @@ compareLCZ(
   outDir = getwd(),
   location = "Redon",
   plot = TRUE,
+  tryGroup = FALSE,
   ...
 )
 }
