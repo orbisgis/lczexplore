@@ -22,7 +22,8 @@
 #' cols=c("red","black","green","grey","burlywood","blue"))
 levCol<-function(sf,column,drop=FALSE,...){
   args<-list(...)
-  if (length(args)>37){ stop("This function can not deal with more than 36 arguments.
+
+  if (length(args)>=37){ stop("This function can not deal with more than 36 arguments.
   You can use the function LCZgroup2 to group some levels.")}
 
   print("length(args)"); print(length(args))
@@ -31,7 +32,8 @@ levCol<-function(sf,column,drop=FALSE,...){
   if(drop==TRUE){uniqueData<-droplevels(uniqueData)}
   uniqueData<-levels(uniqueData[,1]) |> as.character() |> as.vector()
 
-     if(length(uniqueData)>36){ stop("This package is not suited for classification with more than 36 levels or types.
+  if(length(uniqueData)>36){ stop(
+    "This package is not suited for classification with more than 36 levels or types.
   You can use the function LCZgroup2 to group some levels.") }
 
   print("uniqueData") ; print(uniqueData)
@@ -39,16 +41,24 @@ levCol<-function(sf,column,drop=FALSE,...){
 
   argNames<-names(args)
   indCol<-grep(x=argNames, pattern="cols")
-  if (length(indCol) != 0)
-  {
+  if (length(indCol) != 0) {
+      if (length(indCol)>1 ) { stop(
+    "only one argument can start with cols, and it must contain the colors,
+     please rename your arguments and retry.")} else {
     argCol <- args[indCol][[1]]
     print("argCol");print(argCol)
     argLev<-args[-indCol]
-  } else
+    if (prod(argCol=="")==1){argCol<-NULL}
+  }
+  }
+      else
   {
     argCol<-NULL
     argLev<-args
   }
+
+
+  print("prod(unlist(args)==\"\")"); print(prod(unlist(args)==""))
 
   if(length(argLev)>36){ stop("This package is not suited for classification with more than 36 levels or types.
   You can use the function LCZgroup2 to group some levels.") }
@@ -59,8 +69,10 @@ levCol<-function(sf,column,drop=FALSE,...){
 # if each level has an argument.
 
   # Define cases
-  # Case : no arguments at all in (...)
-  if ( length(args) == 0 ){
+  # Case : no arguments at all in (...), or cols and other arguments are NULL
+  if ( length(args) == 0 ||
+    (is.null(args)) ||
+    (prod(unlist(args)=="")==1) ){
 
     print("length(argLev)");print(length(argLev))
     print("argLev");print(argLev)
@@ -164,15 +176,16 @@ levCol<-function(sf,column,drop=FALSE,...){
 
 
 # Case (...) contains 2 argument, hopefully a vector of levels and a vector of colors
-  if (length(args)==2)
-    {
+  if ( length(args)==2 &&
+    !(prod(unlist(args)=="")==1)) {
+
       print("length(argLev)");print(length(argLev))
       print("argLev");print(argLev)
       typeLevels<-argLev
       print("typeLevels"); print(typeLevels)
 
       if(length(indCol==1))
-      { if ( length(argLev)<length(uniqueData) ){
+      { if ( length(argLev)<length(uniqueData) || argCol=="" ){
         case<-"14.0: The vector level doesn't cover the levels in the data
        and the number of specified colors is zero or less than the number of levels present,
        levels will be deduced from the data and colors will be chosen from a standard palette."
@@ -181,7 +194,6 @@ levCol<-function(sf,column,drop=FALSE,...){
         }
         if(length(argCol)==length(argLev[[1]]))
         {
-
           if(prod(areColors(argCol))==1)
           {
             if (prod(uniqueData%in%argLev[[1]])==1)
@@ -209,9 +221,10 @@ levCol<-function(sf,column,drop=FALSE,...){
 
            if(length(uniqueData)>length(argCol)){
              case<-"11: One vector seems to be a vector of levels,
-          which covers the values of the data,
-          the other a vector of colors, whose length is shorter than the specified levels.
-          Missing colors will be picked from a standard palette."
+          which covers the values of the data, the other a vector of colors,
+           who is empty or whose length is shorter than the specified levels.
+          Missing colors will be picked from a standard palette.
+          For a better rendition specify as many colors as levels."
              complement<-length(uniqueData)-length(argCol)
              typeLevels<-c(argCol,palette.colors(n=complement, palette="Polychrome 36"))
              names(typeLevels)<-argLev[[1]]
@@ -234,6 +247,7 @@ levCol<-function(sf,column,drop=FALSE,...){
 
       }
     }
+
 # Case (...) contain more than 2 arguments,
   # hopefully an argument for each level and zero or one vector of colors
 
@@ -296,6 +310,7 @@ levCol<-function(sf,column,drop=FALSE,...){
         }
 
   }
+
 
 output<-list(levelsColors=typeLevels,case=case)
   message(case)

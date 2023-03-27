@@ -18,7 +18,11 @@ expect_error(levCol(sf=redonBDT, column="LCZ_PRIMARY",1, 2, 3, 4, 5, 6, 7, 8, 9,
 
 # case 1: No level vector and no color vector, less than 36 levels,
 # levels will be deduced from the data
-# and colors will be chosen from a standard palette.
+# and colors will be chosen from a standard palette. Or there are a level vector and a color vector, but they are empty.
+
+test<-levCol(redonBDTgrouped,column="grouped",levels="",cols="")
+expect_equal(grep("1:",test$case),1)
+
 
 test<-levCol(sf=redonBDT, column="LCZ_PRIMARY")
 expect_equal(grep("1:",test$case),1)
@@ -100,6 +104,7 @@ expect_equal(grep("10:",test$case),1)
 test<-levCol(redonBDTgrouped, column="grouped",
              levels=c("urban","industry","vegetation","impervious","pervious","water"),
              cols=c("red","black","green","grey","blue"))
+
 
 expect_equal(grep("11:",test$case),1)
 
@@ -193,6 +198,17 @@ test<-levCol(sf=redonBDTgrouped,column="grouped",urban=c("1","2","3","4","5","6"
        cols=c("red","black","green","grey","DJ Shadow","blue"))
 expect_equal(grep("18:",test$case),1)
 test
+
+
+redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
+                           industry="10",
+                           vegetation=c("101","102","103","104"),
+                           impervious="105",pervious="106",water="107",cols=c("red","black","green","grey","burlywood","blue"))
+
+levCol(sf=redonBDTgrouped,
+       column="grouped",
+       LCZlevels=c("urban","industry","vegetation","impervious","pervious","water"),cols="")
+
 
 rm(test)
 rm(redonBDTgrouped)

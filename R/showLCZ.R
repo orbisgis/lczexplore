@@ -7,11 +7,11 @@
 #' @param column is the column that contains the LCZ.
 #' @param repr indicates if the sf dataset contains standarde LCZ levels or grouped LCZ.
 #' If "standard" then an optimal set of cols is used to produce the plotted map. Else, colors can be specified with the cols argument.
-#' @param typeLevels is a vector of strings specifying the name of the expected levels when repr is set to 'grouped'.
-#' If `typeLevels` is set to an empty string, then the unique values taken in the specified \'column\' will be used.
 #' @param cols is a vector of strings specifying the colors of each levels of \'typeLevels.\'
 #' If cols is an empty string, or if the number of specified color is less than the number of levels in \'typeLevels\',
 #' random colors will be chosen.
+#' @param LCZlevels allows you to set the grouped LCZ types.
+#' The values must at least cover the values of the column in the dataset, or it will be ignored.
 #' @param title allows the user to set the title of the plot
 #' @import sf ggplot2 dplyr cowplot forcats grDevices
 #' @return no object is returned, but plots of the LCZ levels are produced
@@ -24,7 +24,8 @@
 #' industry="10", vegetation=c("101","102","103","104"),
 #' impervious="105",pervious="106",water="107",
 #' cols=c("red","black","green","grey","burlywood","blue"))
-showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY", repr="standard", typeLevels="", cols=""){
+showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
+                  repr="standard", cols="", LCZlevels=""){
 
   datasetName<-print(deparse(substitute(sf)))
   #dependancies should be dealt with @import
@@ -34,45 +35,48 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY", repr="standard", typ
   try(class(sf)[1]=="sf", stop("Input data must be sf object"))
   # sf<-sf %>% dplyr::mutate(!!column:=factor(subset(sf,select=column,drop=T)))
 
-  if(repr=="standard"){typeLevels=as.character(c(1:10,101:107))} else{
-    if(repr=='grouped'){
-      if(length(typeLevels)<=1){
-        print("Argument \'typeLevels\' is not specified, levels are set to unique values from column")
-        typeLevels<-sf[[column]] %>% unique
-      }else {
-        temp<-sf[[column]] %>% unique
-        if(length(typeLevels)<length(temp)){
-          warning("There are more levels in your grouped columns than specified in the \'typeLevels\' argument.
-                This argument will be ignored and unique values will determine levels")
-          typeLevels<-temp
-          rm(temp)
-        } else{
-          print("Levels of LCZ will take the values specified in \'typeLevels\'")
-          }
-      }
-  }
-  }
-
-sf<-sf %>% mutate(!!column:=factor(subset(sf,select=column,drop=T),levels=typeLevels))
 
   #Color style for standard lcz from geoclimate
-if (wf!=""){nomLegende<-paste0("LCZ from ",wf," workflow")} else{nomLegende<-"LCZ"}
+ if(wf!=""){nomLegende<-paste0("LCZ from ",wf," workflow")} else{nomLegende<-"LCZ"}
 
   if (repr=='standard'){
+  LCZlevels<-as.character(c(1:10,101:107))
+  temp<-subset(sf,select=column,drop=T) %>% fct_recode("Compact high"="1",
+                                                            "Compact mid"="2",
+                                                            "Compact low"="3",
+                                                            "Open High"="4",
+                                                            "Open mid"="5",
+                                                            "Open low"="6",
+                                                            "Lightweight low"="7",
+                                                            "Large low"="8",
+                                                            "Sparsely Built"="9",
+                                                            "Heavy industry"="10",
+                                                            "Dense trees"="101",
+                                                            "Scattered trees"="102",
+                                                            "Bush scrub"="103",
+                                                            "Low plants"="104",
+                                                            "Bare rock paved"="105",
+                                                            "Bare soil sand"="106",
+                                                            "Water"="107")
 
+  sf<-sf %>% mutate(!!column:=temp)
 
   colorMap<-c("#8b0101","#cc0200","#fc0001","#be4c03","#ff6602","#ff9856",
-              "#fbed08","#bcbcba","#ffcca7","#57555a","#006700","#05aa05",
-              "#648423","#bbdb7a","#010101","#fdf6ae","#6d67fd")
-  names(colorMap)<-typeLevels # color vector Creation
+                "#fbed08","#bcbcba","#ffcca7","#57555a","#006700","#05aa05",
+                "#648423","#bbdb7a","#010101","#fdf6ae","#6d67fd")
+  typeLevels<-colorMap
+  names(typeLevels)<-levels(subset(sf,select=column,drop=T))
   etiquettes<-c("LCZ 1: Compact high-rise","LCZ 2: Compact mid-rise","LCZ 3: Compact low-rise",
-                     "LCZ 4: Open high-rise","LCZ 5: Open mid-rise","LCZ 6: Open low-rise",
-                     "LCZ 7: Lightweight low-rise","LCZ 8: Large low-rise",
-                     "LCZ 9: Sparsely built","LCZ 10: Heavy industry",
-                     "LCZ A: Dense trees", "LCZ B: Scattered trees",
-                     "LCZ C: Bush,scrub","LCZ D: Low plants",
-                     "LCZ E: Bare rock or paved","LCZ F: Bare soil or sand","LCZ G: Water"
-  )     # names of LCZ : would be better to call it from a hidden data file enclosed in the package, will be done later
+                "LCZ 4: Open high-rise","LCZ 5: Open mid-rise","LCZ 6: Open low-rise",
+                "LCZ 7: Lightweight low-rise","LCZ 8: Large low-rise",
+                "LCZ 9: Sparsely built","LCZ 10: Heavy industry",
+                "LCZ A: Dense trees", "LCZ B: Scattered trees",
+                "LCZ C: Bush,scrub","LCZ D: Low plants",
+                "LCZ E: Bare rock or paved","LCZ F: Bare soil or sand","LCZ G: Water")
+
+
+
+
   if (wf!=""){nomLegende<-paste0("LCZ from ",wf," workflow")} else{nomLegende<-"LCZ"}
 
   }
@@ -89,8 +93,8 @@ if (wf!=""){nomLegende<-paste0("LCZ from ",wf," workflow")} else{nomLegende<-"LC
         wtitre<-title
       }
 
-    pstandard<-ggplot(sf) + # les données
-      geom_sf(aes(fill=get(column))) +        # Le type de géométrie : ici un sf, avec fill pour remplir les polygones
+    pstandard<-ggplot(sf) + # data
+      geom_sf(data=sf,aes(fill=get(column)))+
       scale_fill_manual(values=colorMap,labels=etiquettes,drop=FALSE)+
       guides(fill=guide_legend(nomLegende))+
       ggtitle(wtitre)
@@ -100,81 +104,35 @@ if (wf!=""){nomLegende<-paste0("LCZ from ",wf," workflow")} else{nomLegende<-"LC
 ###### Shows LCZ once they are regrouped in more general classes, for instance outputs of the LCZgroup2 function
 
   if (repr=="grouped"|repr=="both"){
-     if(length(cols)>1&&length(cols)==length(typeLevels)){
-       couleurs<-cols ; names(couleurs)<-typeLevels
-       nomLegende<-"Grouped LCZ"
-     }else{
-       if(length(typeLevels)>36){
-         stop("The number of levels must be less than 37 for the map to be readable,
-              you may want to group some of the levels using LCZgroup2 function ")} else {
-                if(length(cols)<=1){
-                  warning("No colors were specified in the cols argument, colors will be picked from the Polychrome 36 palette")
-                  couleurs<-palette.colors(n=length(typeLevels), palette="Polychrome 36")
-                  names(couleurs)<-typeLevels
-                  nomLegende<-"Grouped LCZ"
-                  } else{
-                  if (length(cols)<length(typeLevels)){
-                    message(paste("you specified less colors in cols argument (here ",length(cols),
-                    ") than levels of LCZ in the typeLevels argument (here ",length(typeLevels),").
-                     \n, Maybe you didn't take into account empty levels ?
-                     missing cols will be randomly picked from the Polychrom 36 palette."))
-                  nMissCol<-length(typeLevels)-length(cols)
-                  couleurs<-c(cols,palette.colors(n=nMissCol,palette="Polychrome 36"))
-                  names(couleurs)<-typeLevels
-                  warning(paste0(
-                    "only ", length(cols), " colors were specified \n for ",
-                    length(typeLevels)," levels of grouped LCZ \n", nMissCol, " was/were chosen at random. \n ",
-                    "For a better rendition, specify as many colors as levels of LCZ"))
-                  nomLegende<-"Grouped LCZ"
-                      }
-                  }
-              }
-     }
+    print(datasetName)
+    typeLevels<-levCol(sf,column,levels=LCZlevels,cols=cols)$levelsColors
 
-   print(datasetName)
-   #print(head(sf[column]))
-   if(title==""){
-     if(wf!=""){wtitre<-paste("Grouped LCZ for ", wf, "workflow, applied to ", datasetName,"dataset")} else{
+    # if ( length(LCZlevels)<=1){
+    # typeLevels<-levCol(sf,column)$levelsColors
+    # }
+    # if(length(cols)==length(typeLevels)){typeLevels[1:length(typeLevels)]<-cols}
+
+    LCZlevels<-names(typeLevels)
+    sf<-sf %>% mutate(!!column:=factor(subset(sf,select=column,drop=T),levels=LCZlevels))
+
+
+   print("head(sf[column])");print(head(sf[column]))
+   if(title=="") {
+     if(wf!=""){wtitre<-paste("Grouped LCZ for ", wf, "workflow, applied to ", datasetName,"dataset")} else {
        wtitre<-paste("Grouped LCZ from", datasetName," dataset")
      }
-   }else{
+   } else {
      wtitre<-title
    }
 
     pgrouped<-
       ggplot(sf) + # les données
       geom_sf(aes(fill=get(column))) +        # Le type de géométrie : ici un sf, avec fill pour remplir les polygones
-      scale_fill_manual(values=couleurs,
-                        labels=typeLevels,drop=FALSE)+
+      scale_fill_manual(values=typeLevels,
+                        labels=LCZlevels,drop=FALSE)+
       guides(fill=guide_legend(nomLegende))+
       ggtitle(wtitre)
-
-  }
-
-# Représentation des LCZ issues de Wudapt
-
-
-  # if (wf=="wudapt" & repr=="standard"){
-  #   sf$EU_LCZ_map<-codeNivLCZ(sf$EU_LCZ_map,orig="wudapt")
-  #
-  #   print(head(sf$EU_LCZ_map))
-  #   wtitre<-"WUDAPT"
-  #   pstandard<-ggplot(sf) + # les données
-  #     geom_sf(aes(fill=EU_LCZ_map)) +        # Le type de géométrie : ici un sf, avec fill pour remplir les polygones
-  #     scale_fill_manual(values=colorMap,labels=etiquettes)
-  #   }
-  # if (wf=="wudapt" & repr=="grouped"){
-  #   typeLevels<-levels(subset(sf,select=column,drop=T))
-  #   print(typeLevels)
-  #      wtitreOc<-"Grouped classes"
-  #   pgrouped<-ggplot(sf)+
-  #     geom_sf(aes(fill=grouped)) +        # Le type de géométrie : ici un sf, avec fill pour remplir les polygones
-  #     scale_fill_manual(values=cols()[sample(x=1:657,size=length(typeLevels))],
-  #                       labels=typeLevels)+
-  #     ggtitle(paste("LCZ Wudapt ",wtitreOc))
-  # }
-
-
+ }
 
   if(repr=="both"){plot_grid(pstandard,pgrouped)}
   else {

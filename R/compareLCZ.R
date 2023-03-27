@@ -33,6 +33,9 @@
 #' @param exwrite : when TRUE, the values of the LCZ on the intersected geoms are written down in a csv file
 #' @param outDir : when exwrite equals TRUE, outDir is the path to the folder where one wants to write
 #' the csv file containing the values of the LCZ on the intersected geoms
+#' @param tryGroup : when TRUE, if the specified level names don't match the data, but the specified levels do,
+#' a call to the LCZgroup2 function will be tried, and if it works, the resulting grouping column will be named
+#' "grouped" and the comparison will be done using it.
 #' @param ... allow to pass arguments if representation is grouped.
 #' The expected arguments are the name of each grouped label,
 #' the levels of LCZ they contain, and last a vector of the colors to use to plot them.
@@ -249,20 +252,27 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
     # then we try to call LCZgroup2 And procede to grouping accordingly
 
     if (tryGroup==TRUE && (length(grep("14: ",levColCase1))!=0 ||length(grep("15: ",levColCase1))!=0 )){
+      message("Level names in your 1st dataset didn't match original data.
+      As tryGroup=TRUE, the function LCZgroup2 will try to create a \"grouped\" column with level names and levels specified in (...).
+      If this doesn't work, compareLCZ function may fail.")
       sfNew1<-LCZgroup2(sf1,column = column1,...)
       #sf1[column1]<-sfNew1["grouped"]
-      temp1<-
       sf1<-sfNew1 %>% mutate(!!column1:=subset(sfNew1,select="grouped",drop=TRUE))
       print(summary(sf1))
       levCol1<-levCol(sf1,column1,...)
+
+      rm(sfNew1)
     }
 
     if (tryGroup==TRUE && (length(grep("14: ",levColCase2))!=0 ||length(grep("15: ",levColCase2))!=0 )){
+      message("As tryGroup=TRUE, the function LCZgroup2 will try to create a \"grouped\" column with level names and levels specified in (...).
+      If this doesn't work, compareLCZ function may fail.")
       sfNew2<-LCZgroup2(sf2,column = column2,...)
       #sf2[column2]<-sfNew2["grouped"]
-      sf1<-sfNew2 %>% mutate(!!column2:=subset(sfNew2,select="grouped",drop=TRUE))
+      sf2<-sfNew2 %>% mutate(!!column2:=subset(sfNew2,select="grouped",drop=TRUE))
       print(summary(sf2))
       levCol2<-levCol(sf2,column2,...)
+      rm(sfNew2)
     }
 
     print(summary(sf1))
@@ -419,8 +429,7 @@ if (plot == TRUE){
   titre3<-"Agreement between classifications"
   titre4<-paste(" Repartition of", adtitre1, " LCZ into LCZs of", adtitre2)
 
-  lab1<-paste(titrou, adtitre1)
-  lab2<-paste(titrou, adtitre2)
+
   # ypos<-if (repr=="standard"){ypos=5} else {ypos=2}
   etiquettes1<-paste(etiquettes, areas$area1 ," %")
   names(etiquettes1)<-LCZlevels
@@ -474,7 +483,7 @@ if (plot == TRUE){
 
      matConfPlot<-ggplot(data = matConfLong, aes(x=get(column1), y=get(column2), fill =agree)) +
        geom_tile(color = "white",lwd=1.2,linetype=1)+
-       labs(x=lab1,y=lab2)+
+       labs(x=titre1,y=titre2)+
        scale_fill_gradient2(low = "lightgrey", mid="cyan", high = "blue",
                          midpoint = 50, limit = c(0,100), space = "Lab",
                          name="% area") +

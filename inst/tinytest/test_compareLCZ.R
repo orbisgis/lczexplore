@@ -76,7 +76,8 @@ file.remove("bdtopo_2_2_wudapt.csv")
 ########################################
 
 
-redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
+redonBDTgrouped<-LCZgroup2(
+  redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
                            industry="10",
                            vegetation=c("101","102","103","104"),
                            impervious="105",pervious="106",water="107",
@@ -88,34 +89,24 @@ redonOSMgrouped<-LCZgroup2(
   vegetation=c("101","102","103","104"),
   impervious="105",pervious="106",water="107",cols=c("red","black","green","grey","burlywood","blue"))
 
-levCol(redonOSMgrouped,"LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
-       industry="10",
-       vegetation=c("101","102","103","104"),
-       impervious="105",pervious="106",water="107",
-       cols=c("red","black","green","grey","burlywood","blue"))
-
-compareRedonBDTOSMgrouped<-
-  compareLCZ(sf1=redonBDTgrouped, column1="grouped", geomID1 = "ID_RSU", confid1="LCZ_UNIQUENESS_VALUE", wf1="groupedBDT",
-             sf2=redonOSMgrouped, column2="grouped", geomID2 = "ID_RSU", confid2="LCZ_UNIQUENESS_VALUE", wf2="groupedOSM",
-             repr="grouped", ref=2, saveG="", exwrite=FALSE, location="Redon", plot=TRUE,
-             urban=c("1","2","3","4","5","6","7","8","9"),
-             industry="10",
-             vegetation=c("101","102","103","104"),
-             impervious="105",pervious="106",water="107",
-             cols=c("red","black","green","grey","burlywood","blue"),tryGroup = TRUE)
+# levCol(redonOSMgrouped,"LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
+#        industry="10",
+#        vegetation=c("101","102","103","104"),
+#        impervious="105",pervious="106",water="107",
+#        cols=c("red","black","green","grey","burlywood","blue"))
 
 
 ###
-compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU", confid1="LCZ_UNIQUENESS_VALUE", wf1="groupedBDT",
-           sf2=redonOSMgrouped, column2="grouped", geomID2 = "ID_RSU", confid2="LCZ_UNIQUENESS_VALUE", wf2="groupedOSM",
-           repr="grouped", ref=2, saveG="", exwrite=FALSE, location="Redon", plot=TRUE,
-           urban=c("1","2","3","4","5","6","7","8","9"),
-           industry="10",
-           vegetation=c("101","102","103","104"),
-           impervious="105",pervious="106",water="107",
-           cols=c("red","black","green","grey","burlywood","blue"),tryGroup = TRUE)
+# compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU", confid1="LCZ_UNIQUENESS_VALUE", wf1="groupedBDT",
+#            sf2=redonOSMgrouped, column2="grouped", geomID2 = "ID_RSU", confid2="LCZ_UNIQUENESS_VALUE", wf2="groupedOSM",
+#            repr="grouped", ref=2, saveG="", exwrite=FALSE, location="Redon", plot=TRUE,
+#            urban=c("1","2","3","4","5","6","7","8","9"),
+#            industry="10",
+#            vegetation=c("101","102","103","104"),
+#            impervious="105",pervious="106",water="107",
+#            cols=c("red","black","green","grey","burlywood","blue"),tryGroup = TRUE)
 
-compareRedonBDTOSMgrouped<-
+expect_warning(compareRedonBDTOSMgrouped<-
   compareLCZ(sf1=redonBDTgrouped, column1="grouped", geomID1 = "ID_RSU", confid1="LCZ_UNIQUENESS_VALUE", wf1="groupedBDT",
              sf2=redonOSM, column2="LCZ_PRIMARY", geomID2 = "ID_RSU", confid2="LCZ_UNIQUENESS_VALUE", wf2="groupedOSM",
              repr="grouped", ref=2, saveG="", exwrite=FALSE, location="Redon", plot=TRUE,
@@ -123,15 +114,17 @@ compareRedonBDTOSMgrouped<-
              industry="10",
              vegetation=c("101","102","103","104"),
              impervious="105",pervious="106",water="107",
-             cols=c("red","black","green","grey","burlywood","blue"),tryGroup = TRUE)
+             cols=c("red","black","green","grey","burlywood","blue"),tryGroup = TRUE),
+               "attribute variables are assumed to be spatially constant throughout all geometries")
 
+file.remove("groupedBDT_groupedOSM.csv")
 
 redonBDTgrouped2<-
   LCZgroup2(redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),outCol="groupedLCZ",
   industry="10",vegetation=c("101","102","103","104"),impervious="105",pervious="106",water="107",
             cols=c("red","black","green","grey","burlywood","blue"))
 redonOSMgrouped2<-
-  LCZgroup2(redonOSM,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),outCol="groupedLCZ",
+  LCZgroup2(redonOSM,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),outCol="otherName",
             industry="10",vegetation=c("101","102","103","104"),impervious="105",pervious="106",water="107",
             cols=c("red","black","green","grey","burlywood","blue"))
 
@@ -147,5 +140,25 @@ expect_message(compareLCZ(sf1=redonBDTgrouped2, column1="groupedLCZ", wf1="BDT",
                "they will be coerced to the specified reference \\(redonBDTgrouped2\\)"
 )
 
+expect_warning(compareRedonBDTOSMgrouped<-
+                 compareLCZ(sf1=redonBDTgrouped, column1="grouped", geomID1 = "ID_RSU", confid1="LCZ_UNIQUENESS_VALUE", wf1="groupedBDT",
+                            sf2=redonOSM, column2="LCZ_PRIMARY", geomID2 = "ID_RSU", confid2="LCZ_UNIQUENESS_VALUE", wf2="groupedOSM",
+                            repr="grouped", ref=2, saveG="", exwrite=FALSE, location="Redon", plot=TRUE,
+                            urban=c("1","2","3","4","5","6","7","8","9","chaussure"),
+                            industry="10",
+                            vegetation=c("101","102","103","104"),
+                            impervious="105",pervious="106",water="107",
+                            cols=c("red","black","green","grey","burlywood","blue"),tryGroup = TRUE),
+               "attribute variables are assumed to be spatially constant throughout all geometries")
 
+expect_warning(compareRedonBDTOSMgrouped<-
+                 compareLCZ(sf1=redonBDTgrouped, column1="grouped", geomID1 = "ID_RSU", confid1="LCZ_UNIQUENESS_VALUE", wf1="groupedBDT",
+                            sf2=redonOSM, column2="LCZ_PRIMARY", geomID2 = "ID_RSU", confid2="LCZ_UNIQUENESS_VALUE", wf2="groupedOSM",
+                            repr="grouped", ref=2, saveG="", exwrite=FALSE, location="Redon", plot=TRUE,
+                            urban=c("1","2","3","4","5","6","7","8","chaussure"),
+                            industry="10",
+                            vegetation=c("101","102","103","104"),
+                            impervious="105",pervious="106",water="107",
+                            cols=c("red","black","green","grey","burlywood","blue"),tryGroup = TRUE),
+               "attribute variables are assumed to be spatially constant throughout all geometries")
 
