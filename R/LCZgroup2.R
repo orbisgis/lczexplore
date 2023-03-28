@@ -32,39 +32,32 @@ LCZgroup2<-function(sf,column,outCol='grouped',...)
   args<-list(...)
   indSep<-names(args)
   indCol<-grep(x=indSep,pattern="col")
-  #options(warn=2)
-     if(is.null(indCol)) {
-       temp<-do.call(fct_collapse,args)
-    # temp<-tryCatch(
-    # {do.call(fct_collapse,args)},
-    #   warning=function(w){
-    #     message(" The specified levels don't seem to cover the levels in the specified column.
-    #       The unspecified levels will be kept as their own group ")
-    #     return(temp)
-    #   },
-    # error=function(e){stop(" an unknown error occured while grouping")}
-    # )
+  print("indCol"); print(indCol)
+
+     if(length(indCol)==0) {
+       args<-append(list(temp),args)
+       # temp<-do.call(fct_collapse,args)
+    temp<-tryCatch(expr=do.call(fct_collapse,args),
+             warning=function(w){
+               message("One of the specified levels to group doesn't exist in the data, if it is a mispelled level of the data,
+               this level will be kept as ungrouped",w)
+             return(do.call(fct_collapse,args))
+             })
 
   } else {
     args2<-args[indSep[-indCol]]
     args2<-append(list(temp),args2)
-    temp<-do.call(fct_collapse,args2)
-    # temp<-tryCatch(
-    #    {do.call(fct_collapse,args2)},
-    #    warning=function(w){
-    #      message(" The specified levels don't seem to cover the levels in the specified column.
-    #       The unspecified levels will be kept as their own group ",w$message)
-    #      return(temp)
-    #    },
-    #    error=function(e){
-    #      stop(" an unknown error occured while grouping")}
-    #    )
+    #temp<-do.call(fct_collapse,args2)
+    temp<-tryCatch(expr=do.call(fct_collapse,args2),
+              warning=function(w){
+              message("One of the specified levels to group doesn't exist in the data, if it is a mispelled level of the data,
+              this level will be kept as ungrouped",w)
+              return(do.call(fct_collapse,args2))
+                      })
   }
-  #options(warn=0)
-  #levels(temp)<-etiquettes
+
   sf<- sf %>%  mutate(!!outCol:=temp)
   return(sf)
-  sf
 }
 
 

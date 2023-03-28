@@ -35,6 +35,8 @@ showLCZ(redonBDTgrouped,column="grouped",repr="grouped"),
 expect_message(
 showLCZ(redonBDTgrouped,column="grouped",repr="grouped",
         LCZlevels=c("urban","industry","vegetation","impervious","pervious","water")),
-  "is empty"
+  "7: No color vector but a level vector whose names cover the levels in the data"
 )
+
+
 

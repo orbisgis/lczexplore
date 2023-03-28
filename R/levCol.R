@@ -225,10 +225,14 @@ levCol<-function(sf,column,drop=FALSE,...){
            who is empty or whose length is shorter than the specified levels.
           Missing colors will be picked from a standard palette.
           For a better rendition specify as many colors as levels."
-             complement<-length(uniqueData)-length(argCol)
-             typeLevels<-c(argCol,palette.colors(n=complement, palette="Polychrome 36"))
-             names(typeLevels)<-argLev[[1]]
-           } else if (length(uniqueData)<=length(argCol)){
+
+
+             LCZlevels<-argLev[[1]]
+             typeLevels<-palette.colors(n=length(LCZlevels), palette="Polychrome 36")
+             indOK<-match(uniqueData,LCZlevels)[!is.na(match(uniqueData,LCZlevels))]
+             typeLevels[indOK]<-argCol[indOK]
+             names(typeLevels)<-LCZlevels
+             } else if (length(uniqueData)<=length(argCol)){
              case<-"12: One vector seems to be a vector of levels,
           which covers the values of the data,
           the other a vector of colors, whose length is longer than the specified levels.
@@ -256,44 +260,54 @@ levCol<-function(sf,column,drop=FALSE,...){
     print("length(args)");print(length(args))
     print("length(argLev)");print(length(argLev))
     print("argLev");print(argLev)
-    typeLevels<-names(argLev)
+    LCZlevels<-names(argLev)
     # print("typeLevels"); print(typeLevels)
     ### GERER L'APPEL À LCZgroup2 DANS CE CAS
-     if(prod(uniqueData%in%typeLevels)==0 && length(argCol)<=length(uniqueData)){
+     if(prod(uniqueData%in%LCZlevels)==0 && length(argCol)<=length(uniqueData)){
        case<-"14: The specified levels don't cover the levels in the data
        and the number of specified colors is zero or less than the number of levels present,
        levels will be deduced from the data and colors will be chosen from a standard palette."
-       typeLevels<-palette.colors(n=length(uniqueData), palette="Polychrome 36")
+       typeLevels<-c(palette.colors(n=length(uniqueData), palette="Polychrome 36"))
+       indOK<-match(uniqueData,LCZlevels)[!is.na(match(uniqueData,LCZlevels))]
+       typeLevels[indOK]<-argCol[indOK]
        names(typeLevels)<-uniqueData
-      } else if (prod(uniqueData%in%typeLevels)==0 && length(argCol)>=length(uniqueData)){
+      } else if (prod(uniqueData%in%LCZlevels)==0 && length(argCol)>=length(uniqueData)){
          case<-"15: The specified levels don't cover the levels in the data
          but the number of specified colors is greater or equal
          to the number of levels present in the data,
          they are matched in the order of appearence."
-         typeLevels<-argCol[seq_along(uniqueData)]
-         names(typeLevels)<-uniqueData
+         colTemp<-argCol
+         names(colTemp)[1:length(LCZlevels)]<-LCZlevels
+         allLev<-unique(c(LCZlevels,uniqueData))
+         colN<-palette.colors(n=length(allLev),palette = "Polychrome 36")
+         names(colN)<-allLev
+         indOK<-match(names(colN),LCZlevels)[!is.na(match(names(colN),LCZlevels))]
+         colN[indOK]<-colTemp[indOK]
+         typeLevels<-colN
        }
-     else if (prod(uniqueData%in%typeLevels)==1 && length(argCol)>length(uniqueData)){
+     else if (prod(uniqueData%in%LCZlevels)==1 && length(argCol)>length(uniqueData)){
        case<-"15.1: The specified levels cover the levels in the data
          but the number of specified colors is greater or equal
          to the number of levels present in the data,
-         they are matched in the order of appearence."
-       typeLevels<-argCol[seq_along(uniqueData)]
-       names(typeLevels)<-uniqueData
+         they are matched in the order of appearence and
+         levels non specified will be matched with color from a standard palette.
+         Maybe recheck your levels and colors. "
+       typeLevels<-argCol[seq_along(LCZlevels)]
+       names(typeLevels)<-LCZlevels
      }
-     else if (prod(uniqueData%in%typeLevels)==1 && length(indCol)==0 ){
+     else if (prod(uniqueData%in%LCZlevels)==1 && length(argCol)==0 ){
        case<-"16: The specified levels cover the levels in the data
        and no colors were specified, colors will be chosen from a standard palette."
-       typeLevels<-palette.colors(n=length(uniqueData), palette="Polychrome 36")
-       names(typeLevels)<-names(argLev)
+       typeLevels<-palette.colors(n=length(LCZlevels), palette="Polychrome 36")
+       names(typeLevels)<-LCZlevels
      }
-       else if (prod(uniqueData%in%typeLevels)==1 && length(argCol)==length(argLev)){
+       else if (prod(uniqueData%in%LCZlevels)==1 && length(argCol)==length(argLev)){
           if(prod(areColors(argCol))==1){
             case<-"17: Several arguments are specified, whose names cover
           the levels in the data and are associated with a vector of colors of the same size.
           Evrything seems OK and these levels and colors will be used."
             typeLevels<-argCol
-            names(typeLevels)<-names(argLev)
+            names(typeLevels)<-LCZlevels
           } else {
             print("length(args)");print(length(args))
             print("length(argCol)"); print(length(argCol))
@@ -305,7 +319,7 @@ levCol<-function(sf,column,drop=FALSE,...){
             typeLevels<-argCol
             typeLevels[colFalse]<-palette.colors(
               n=sum(as.numeric(colFalse)), palette="Polychrome 36")
-            names(typeLevels)<-names(argLev)
+            names(typeLevels)<-LCZlevels
           }
         }
 

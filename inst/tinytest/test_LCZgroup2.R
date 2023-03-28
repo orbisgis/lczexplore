@@ -3,16 +3,26 @@
 #
 # library(sf)
 
-# redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
-#                           industry="10",
-#                           vegetation=c("101","102","103","104"),
-#                           impervious="105",pervious="106",water="107",
-#                            cols=c("red","black","green","grey","burlywood","blue"))
-expect_silent(redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
+redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
+                          industry="10",
+                          vegetation=c("101","102","103","104"),
+                          impervious="105",pervious="106",water="107"
+                           )
+
+redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
+                           industry="10",
+                           vegetation=c("101","102","103","104"),
+                           impervious="105",pervious="106",water="107",
+                           cols=c("red","black","green","grey","burlywood","blue")
+)
+
+expect_silent(
+  redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
                                           industry="10",
                                           vegetation=c("101","102","103","104"),
                                           impervious="105",pervious="106",water="107",
-                                         cols=c("red","black","green","grey","burlywood","blue")))
+                                         cols=c("red","black","green","grey","burlywood","blue"))
+)
 
 
 expect_silent(redonOSMgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
@@ -38,9 +48,11 @@ expect_silent(redonOSMgrouped2<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",outCol="
                            cols=c("red","black","green","grey","burlywood","blue"))
 )
 
-expect_silent(showLCZ(redonBDTgrouped2,column="groupedLCZ",repr='grouped',
+expect_message(showLCZ(redonBDTgrouped2,column="groupedLCZ",repr='grouped',
         LCZlevels=c("urban","industry","vegetation","impervious","pervious","water"),
-        cols=c("red","black","green","grey","burlywood","blue"))
+        cols=c("red","black","green","grey","burlywood","blue")),
+               "9: Levels specified in one vector"
+
 )
 
 # compareLCZ(sf1=redonBDTgrouped2, column1="groupedLCZ", wf1="BDT",
@@ -50,26 +62,11 @@ expect_silent(showLCZ(redonBDTgrouped2,column="groupedLCZ",repr='grouped',
 
 #test the non-coverage of levels
 
-redonOSMgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",
-                           urban=c("1","2","3","4","5","6","7","8","9"),
-                           industry="10",
-                           vegetation=c("101","102","103","104"),
-                           impervious="105",pervious="106",water="107",
-                           cols=c("red","black","green","grey","burlywood","blue"))
-redonGoodLevels<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",outCol="otherName",
-                           urban=c("1","2","3","4","5","6","7","8","9"),
-                           industry="10",
-                           vegetation=c("101","102","103","104"),
-                           impervious="105",pervious="106",water="107",
-                           cols=c("red","black","green","grey","burlywood","blue"))
-
+expect_message(
 redonBadLevels<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",outCol="otherName",
-          urban=c("1","2","3","4","5","6","7","8","chaussure"),
-          industry="10",
-          vegetation=c("101","102","103","104"),
-          impervious="105",pervious="106",water="107",
-          cols=c("red","black","green","grey","burlywood","blue"))
-showLCZ(redonBadLevels,column = "otherName",cols=c("red","black","green","grey","burlywood","blue"))
-
-
-showLCZ(sf=RedonBadLevels,column="otherName", repr="grouped")
+                          urban=c("1","2","3","4","5","6","7","8","chaussure"),
+                          industry="10",
+                          vegetation=c("101","102","103","104"),
+                          impervious="105",pervious="106",water="107"),
+"One of the specified levels to group doesn't exist in the data"
+)

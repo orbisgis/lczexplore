@@ -13,8 +13,10 @@ redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4"
 
 # case 0: The number of levels must be less than 37 for the map to be readable,
 #               you may want to group some of the levels using LCZgroup2 function
-expect_error(levCol(sf=redonBDT, column="LCZ_PRIMARY",1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-       19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38,cols="black"),"more than 36 arguments")
+expect_error(
+  levCol(sf=redonBDT, column="LCZ_PRIMARY",1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+       19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38,cols="black"),
+  "more than 36 arguments")
 
 # case 1: No level vector and no color vector, less than 36 levels,
 # levels will be deduced from the data
@@ -69,12 +71,14 @@ test<-levCol(redonBDTgrouped, column="grouped", levels=c("urban"="red","industry
 expect_equal(grep("6:",test$case),1)
 
 # case 7: No color vector but a level vector whose names cover the levels in the data
-test<-levCol(redonBDTgrouped, column="grouped", levels=c("urban","industry","vegetation","impervious","pervious","water"))
+test<-levCol(redonBDTgrouped, column="grouped",
+             levels=c("urban","industry","vegetation","impervious","pervious","water"))
 expect_equal(grep("7:",test$case),1)
 
 # case 8: No color vector but a level vector whose names don't cover the levels in the data
 #          Levels will be deduced from data and colors will be chosen from a standard palette.
-test<-levCol(redonBDTgrouped, column="grouped", levels=c("urban","industry","John Scofield","impervious","pervious","water"))
+test<-levCol(redonBDTgrouped, column="grouped",
+             levels=c("urban","industry","John Scofield","impervious","pervious","water"))
 expect_equal(grep("8:",test$case),1)
 
 # case 9: Levels specified in one vector, whose values cover the levels in the data,
@@ -197,17 +201,15 @@ test<-levCol(sf=redonBDTgrouped,column="grouped",urban=c("1","2","3","4","5","6"
        impervious="105",pervious="106",water="107",
        cols=c("red","black","green","grey","DJ Shadow","blue"))
 expect_equal(grep("18:",test$case),1)
-test
-
 
 redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
                            industry="10",
                            vegetation=c("101","102","103","104"),
                            impervious="105",pervious="106",water="107",cols=c("red","black","green","grey","burlywood","blue"))
 
-levCol(sf=redonBDTgrouped,
-       column="grouped",
-       LCZlevels=c("urban","industry","vegetation","impervious","pervious","water"),cols="")
+# levCol(sf=redonBDTgrouped,
+#        column="grouped",
+#        LCZlevels=c("urban","industry","vegetation","impervious","pervious","water"),cols="")
 
 
 rm(test)

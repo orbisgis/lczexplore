@@ -28,15 +28,9 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
                   repr="standard", cols="", LCZlevels=""){
 
   datasetName<-print(deparse(substitute(sf)))
-  #dependancies should be dealt with @import
-  # paquets<-c("sf","ggplot2","dplyr","cowplot","forcats")
-  # lapply(paquets, require, character.only = TRUE)
 
   try(class(sf)[1]=="sf", stop("Input data must be sf object"))
-  # sf<-sf %>% dplyr::mutate(!!column:=factor(subset(sf,select=column,drop=T)))
 
-
-  #Color style for standard lcz from geoclimate
  if(wf!=""){nomLegende<-paste0("LCZ from ",wf," workflow")} else{nomLegende<-"LCZ"}
 
   if (repr=='standard'){
@@ -105,7 +99,15 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
 
   if (repr=="grouped"|repr=="both"){
     print(datasetName)
-    typeLevels<-levCol(sf,column,levels=LCZlevels,cols=cols)$levelsColors
+
+    if(length(LCZlevels)==1 && LCZlevels[1]=="" && cols==""){
+      typeLevels<-levCol(sf,column)$levelsColors
+    } else if (length(LCZlevels)==1 & LCZlevels[1]==""){
+      typeLevels<-levCol(sf,column,cols=cols)$levelsColors}
+    else if (length(cols)==1 & cols[1]==""){
+      typeLevels<-levCol(sf,column,levels=LCZlevels)$levelsColors
+    }
+    else {typeLevels<-levCol(sf,column,levels=LCZlevels, cols=cols)$levelsColors }
 
     # if ( length(LCZlevels)<=1){
     # typeLevels<-levCol(sf,column)$levelsColors
