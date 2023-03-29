@@ -52,7 +52,9 @@ levCol<-function(sf,column,drop=FALSE,...){
       if (prod(argCol=="")==1){
           args<-args[-indCol]
           argCol<-NULL
-        }}} else
+          if(prod(unlist(argLev)=="")==1){args<-NULL}
+        }
+    }} else
         {
           argCol<-NULL
           argLev<-args
@@ -96,7 +98,7 @@ levCol<-function(sf,column,drop=FALSE,...){
     # typeLevels<-names(argLev)
     # print("typeLevels"); print(typeLevels)
 
-    if (length(indCol) == 1 && argCol!="" && !is.null(argCol))
+    if (length(indCol) == 1 && prod(argCol!="")==1 && !is.null(argCol))
     {
       if (length(argCol) == length(uniqueData)){
            if ( prod(areColors(argCol)==1)){
