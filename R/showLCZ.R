@@ -13,6 +13,7 @@
 #' @param LCZlevels allows you to set the grouped LCZ types.
 #' The values must at least cover the values of the column in the dataset, or it will be ignored.
 #' @param title allows the user to set the title of the plot
+#' @param drop indicates if you want to show the levels present in no geometry.
 #' @import sf ggplot2 dplyr cowplot forcats grDevices
 #' @return no object is returned, but plots of the LCZ levels are produced
 #' @export
@@ -25,7 +26,7 @@
 #' impervious="105",pervious="106",water="107",
 #' cols=c("red","black","green","grey","burlywood","blue"))
 showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
-                  repr="standard", cols="", LCZlevels=""){
+                  repr="standard", drop=FALSE, cols="", LCZlevels=""){
 
   datasetName<-print(deparse(substitute(sf)))
 
@@ -77,7 +78,7 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
 
 ###### Shows the geoms with the original values of LCZ as described by Stewardt & Oke, and produced for instance by the GeoClimate workflow
   if (repr=="standard"|repr=="both"){
-    print(datasetName)
+    # print(datasetName)
     #print(head(sf[column]))
       if(title==""){
         if(wf!=""){wtitre<-paste("LCZ from", wf, "workflow, for ", datasetName,"dataset")} else{
@@ -101,13 +102,13 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
     print(datasetName)
 
     if(length(LCZlevels)==1 && LCZlevels[1]=="" && cols==""){
-      typeLevels<-levCol(sf,column)$levelsColors
+      typeLevels<-levCol(sf,column, drop=drop)$levelsColors
     } else if (length(LCZlevels)==1 & LCZlevels[1]==""){
-      typeLevels<-levCol(sf,column,cols=cols)$levelsColors}
+      typeLevels<-levCol(sf,column,cols=cols, drop=drop)$levelsColors}
     else if (length(cols)==1 & cols[1]==""){
-      typeLevels<-levCol(sf,column,levels=LCZlevels)$levelsColors
+      typeLevels<-levCol(sf,column,levels=LCZlevels, drop=drop)$levelsColors
     }
-    else {typeLevels<-levCol(sf,column,levels=LCZlevels, cols=cols)$levelsColors }
+    else {typeLevels<-levCol(sf,column,levels=LCZlevels, cols=cols, drop=drop)$levelsColors }
 
     # if ( length(LCZlevels)<=1){
     # typeLevels<-levCol(sf,column)$levelsColors
@@ -118,7 +119,7 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
     sf<-sf %>% mutate(!!column:=factor(subset(sf,select=column,drop=T),levels=LCZlevels))
 
 
-   print("head(sf[column])");print(head(sf[column]))
+   # print("head(sf[column])");print(head(sf[column]))
    if(title=="") {
      if(wf!=""){wtitre<-paste("Grouped LCZ for ", wf, "workflow, applied to ", datasetName,"dataset")} else {
        wtitre<-paste("Grouped LCZ from", datasetName," dataset")

@@ -26,7 +26,7 @@ levCol<-function(sf,column,drop=FALSE,...){
   if (length(args)>=37){ stop("This function can not deal with more than 36 arguments.
   You can use the function LCZgroup2 to group some levels.")}
 
-  print("length(args)"); print(length(args))
+  #
 
   uniqueData<-sf[column] |> sf::st_drop_geometry()  |> unique() # Attention unique outputs a list of length 1
   if(drop==TRUE){uniqueData<-droplevels(uniqueData)}
@@ -36,30 +36,31 @@ levCol<-function(sf,column,drop=FALSE,...){
     "This package is not suited for classification with more than 36 levels or types.
   You can use the function LCZgroup2 to group some levels.") }
 
-  print("uniqueData") ; print(uniqueData)
+  # print("uniqueData") ; print(uniqueData)
 
 
   argNames<-names(args)
   indCol<-grep(x=argNames, pattern="cols")
   if (length(indCol) != 0) {
-      if (length(indCol)>1 ) { stop(
-    "only one argument can start with cols, and it must contain the colors,
-     please rename your arguments and retry.")} else {
-    argCol <- args[indCol][[1]]
-    print("argCol");print(argCol)
-    argLev<-args[-indCol]
-    if (prod(argCol=="")==1){argCol<-NULL}
-  }
-  }
-      else
-  {
-    argCol<-NULL
-    argLev<-args
+    if (length(indCol)>1 ) {
+      stop(
+        "only one argument can start with cols, and it must contain the colors,
+      please rename your arguments and retry.")} else {
+      argCol <- args[indCol][[1]]
+      # print("argCol");print(argCol)
+      argLev<-args[-indCol]
+      if (prod(argCol=="")==1){
+          args<-args[-indCol]
+          argCol<-NULL
+        }}} else
+        {
+          argCol<-NULL
+          argLev<-args
   }
 
 
-  print("prod(unlist(args)==\"\")"); print(prod(unlist(args)==""))
-
+  # print("prod(unlist(args)==chainevide"); print(prod(unlist(args)==""))
+  # print("length(args)"); print(length(args))
   if(length(argLev)>36){ stop("This package is not suited for classification with more than 36 levels or types.
   You can use the function LCZgroup2 to group some levels.") }
 
@@ -70,45 +71,48 @@ levCol<-function(sf,column,drop=FALSE,...){
 
   # Define cases
   # Case : no arguments at all in (...), or cols and other arguments are NULL
-  if ( length(args) == 0 ||
+  if (length(args) == 0 ||
     (is.null(args)) ||
-    (prod(unlist(args)=="")==1) ){
-
-    print("length(argLev)");print(length(argLev))
-    print("argLev");print(argLev)
-    typeLevels<-names(argLev)
-    print("typeLevels"); print(typeLevels)
-
-    if (length(uniqueData) > 36)
-    {
-      case<-"Too many levels"
-      stop("0: The number of levels must be less than 37 for the map to be readable,
+    (prod(unlist(args)=="")==1)){
+      if (length(uniqueData) > 36)
+      {
+        case<-"Too many levels"
+        stop("0: The number of levels must be less than 37 for the map to be readable,
               you may want to group some of the levels using LCZgroup2 function ")
-    } else {
-      case<-"1: No level vector and no color vector, less than 36 levels,
-      levels will be deduced from the data
-      and colors will be chosen from a standard palette."
-      print("length(uniqueData)");print(length(uniqueData))
-      typeLevels<-palette.colors(n=length(uniqueData), palette="Polychrome 36")
-      names(typeLevels)<-uniqueData
-    }
+      } else {
+        case<-"1: No level vector and no color vector, less than 36 levels,
+        levels will be deduced from the data
+        and colors will be chosen from a standard palette."
+        # print("length(uniqueData)");print(length(uniqueData))
+        typeLevels<-palette.colors(n=length(uniqueData), palette="Polychrome 36")
+        names(typeLevels)<-uniqueData
+      }
   }
 
  # Case (...) contains only one argument (color OR levels)
   if(length(args) == 1) {
+    # print("length(argLev)");print(length(argLev))
+    # print("argLev");print(argLev)
+    # typeLevels<-names(argLev)
+    # print("typeLevels"); print(typeLevels)
 
-    print("length(argLev)");print(length(argLev))
-    print("argLev");print(argLev)
-    typeLevels<-names(argLev)
-    print("typeLevels"); print(typeLevels)
-
-    if (length(indCol) == 1)
+    if (length(indCol) == 1 && argCol!="" && !is.null(argCol))
     {
-      if (length(argCol) == length(uniqueData))
-      {
-        case<-"2: No level vector, but a color vector which size covers the number of levels in the data."
+      if (length(argCol) == length(uniqueData)){
+           if ( prod(areColors(argCol)==1)){
+             case<-"2: No level vector, but a color vector
+             which size covers the number of levels in the data."
+             typeLevels<-argCol
+             names(typeLevels)<-uniqueData
+      } else {
+        case<-"2.1 : No level vector, but a color vector which size covers the number of levels in the data.
+        Some of the specified colors are not recognized as colors and will be replaced by colors from a standard palette."
+        colFalse<-!areColors(argCol)
         typeLevels<-argCol
+        typeLevels[colFalse]<-palette.colors(
+          n=sum(as.numeric(colFalse)), palette="Polychrome 36")
         names(typeLevels)<-uniqueData
+        }
       }
      else
       {
@@ -118,11 +122,11 @@ levCol<-function(sf,column,drop=FALSE,...){
       names(typeLevels)<-uniqueData
       }
     }
-  if (length(indCol) == 0)
+  if (is.null(argCol))
     {
      if (prod(areColors(argLev[[1]]))==1)
      {
-       print("uniqueData");print(uniqueData);print("names(argLev)");print(names(argLev[[1]]))
+       # print("uniqueData");print(uniqueData);print("names(argLev) indcol is null");print(names(argLev[[1]]))
 
           if(prod(uniqueData%in%names(argLev[[1]]))==1 & length(uniqueData)==length(argLev[[1]]))
       {
@@ -164,7 +168,7 @@ levCol<-function(sf,column,drop=FALSE,...){
        {
          case<-"8: No color vector but a level vector whose names don't cover the levels in the data
          Levels will be deduced from data and colors will be chosen from a standard palette."
-         typeLevels<-palette.colors(n=length(argLev[[1]]),palette="Polychrome 36")
+         typeLevels<-palette.colors(n=length(uniqueData),palette="Polychrome 36")
          names(typeLevels)<-uniqueData
        }
 
@@ -179,10 +183,10 @@ levCol<-function(sf,column,drop=FALSE,...){
   if ( length(args)==2 &&
     !(prod(unlist(args)=="")==1)) {
 
-      print("length(argLev)");print(length(argLev))
-      print("argLev");print(argLev)
+      # print("length(argLev)");print(length(argLev))
+      # print("argLev");print(argLev)
       typeLevels<-argLev
-      print("typeLevels"); print(typeLevels)
+      # print("typeLevels"); print(typeLevels)
 
       if(length(indCol==1))
       { if ( length(argLev)<length(uniqueData) || argCol=="" ){
@@ -257,9 +261,9 @@ levCol<-function(sf,column,drop=FALSE,...){
 
   if ( length(args) > 2 )
   {
-    print("length(args)");print(length(args))
-    print("length(argLev)");print(length(argLev))
-    print("argLev");print(argLev)
+    # print("length(args)");print(length(args))
+    # print("length(argLev)");print(length(argLev))
+    # print("argLev");print(argLev)
     LCZlevels<-names(argLev)
     # print("typeLevels"); print(typeLevels)
     ### GERER L'APPEL À LCZgroup2 DANS CE CAS
@@ -309,8 +313,8 @@ levCol<-function(sf,column,drop=FALSE,...){
             typeLevels<-argCol
             names(typeLevels)<-LCZlevels
           } else {
-            print("length(args)");print(length(args))
-            print("length(argCol)"); print(length(argCol))
+            # print("length(args)");print(length(args))
+            # print("length(argCol)"); print(length(argCol))
             case<-"18: Several arguments are specified, whose names cover
           the levels in the data but the associated vector of colors
           contains names which are not colors.
