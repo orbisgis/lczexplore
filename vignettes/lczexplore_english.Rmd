@@ -70,26 +70,28 @@ Once the dataset has been loaded in R object of class `sf`, `showLCZ()` can prod
 
 Translation to be continued.
 
-Une fois que le fichier a été chargé dans un objet R de classe `sf`, la fonction `showLCZ` permet de le représenter. On lui spécifie le jeu de données qu'on a chargé par l'argument `sf`, et on lui précise la colonne contenant les valeurs de LCZ par l'argument `column`. L'argument `wf` permet de spécifier le workflow qui a servi à générer les données (il sera repris dans le titre du graphique produit).
+Once the dataset has been loaded into an R object of class `sf`, the function `showLCZ` produces the map of it's repartition. The argument`sf` sets the input dataset, the column of the LCZ types is passed to the argument `column`. The argument `wf` is just a string that will be used to produce the title of the plot, and it allows the user to specify which worflow produced the input data.
 
-Si on représente des LCZ avec des typeLevels de 1 à 10 puis de 101 à 107 selon la convention adoptée dans la chaîne GeoClimate, l'argument `repr=standard` met en forme la carte avec des couleurs standardisées. C'est le choix recommandé.
+For standard LCZ types, one sets the argument `repr="standard"`, and the function will recognize levels from 1 to 10 and from 101 to 107 (the original convention). It is the recommended choice. But `standard` represnetation will also accept levels from 11 to 17 and from 1 to G.
+
 
 
 ```{R, echo=FALSE, fig.dim = c(8, 6)}
 showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="standard",LCZlevels="",cols="")
 ```
 
-Dans le cas où on a procédé à un regroupage de modalités, si les LCZ ont un encodage particulier, ou si on veut utiliser la fonction pour représenter d'autres variables, on précisera `repr="grouped` et on passera le vecteur contenant les valeurs possibles à l'argument `LCZlevels` et les couleurs leur correspondant à l'argument `cols`.
+If one regrouped some LCZ types into more general categories, or if the LCZ don't have a standard enconding, the argument `repr` will be set to `grouped` and the possible levels fo the variable will be passed as a vector to the argument `LCZlevels`, and the associated colors as a vector of colors to the argument `cols`.
+If no vector of levels or no vector of colors are given, the levels will be deduced from the unique values present in the data, and the colors will be picked from the "Polychrome 36" palette of the `grDevices` package.
 
-Si `repr=grouped` et que `LCZlvels` et `cols` ne sont pas renseignés les couleurs sont choisies au sein de la palette "Polychrome 36" du package grDevice, et les niveaux déduits des valeurs présentes.
-
+For instance : one can first plot the column without knowing the LCZ levels present.
 ```{r, fig.dim = c(8, 6), echo = FALSE}
 #showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="grouped")
 showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="grouped")
 
 ```
 
-L'argument `LCZlevels` permet de spécifier les niveaux qui se trouvent dans les données.
+Then, after noticing that no RSU takes the LCZ value 1, 4, 10, 103 or 106, one can simplify the plot with the following code.
+Notice one has to explicitly set `drop=TRUE` if the unused levels are not to be plotted.
 ```{R, fig.dim = c(8, 6), echo = FALSE}
 
 LCZlevels<-c(2, 3, 5, 6, 8, 9, 101, 102, 104, 105, 107)
@@ -104,6 +106,8 @@ showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="grouped",drop=TRUE, LCZl
 
 ```
 
+The following code shows an example of color choice.
+
 ```{r, fig.dim = c(8, 6), echo = FALSE}
 # Choix de couleurs prises au hasard
 
@@ -116,7 +120,8 @@ showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="grouped",drop=TRUE,LCZle
 
 ```
 
-## Regrouper des types de LCZ avec la fonction LCZgroup2
+## Group several LCZ types in a category using LCZgroup2
+One may want to illustrate the contour of a city, by grouping the urban LCZ and the vegetation ones.
 
 Par exemple, on peut choisir de regrouper les LCZ urbaines et les LCZ de végétation. La fonction LCZgroup2 prend en argument le jeu de données à regrouper, `sf`, et la colonne où se trouvent les LCZ à regrouper, `column`. On renseigne ensuite des vecteurs dont le nom est celui de la catégorie regroupée et le contenu les niveaux qui sont regroupés dans cette catégorie. Les catégories créées sont ajoutées au jeu de données dans une colonne dont on précise le nom dans l'argument `outCol` (par défaut `outCol="grouped"`).
 On peut alors passer le nouveau jeu de données dans la fonction `LCZshow`.
