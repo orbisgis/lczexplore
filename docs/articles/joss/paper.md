@@ -31,10 +31,10 @@ affiliations:
    index: 1
  - name: University of Savoie Mont-Blanc, LOCIE, UMR 5271, France
    index: 2
- - name : Université Bretagne Sud, Lab-STICC, UMR 6285, Vannes, France
+ - name: Université Bretagne Sud, Lab-STICC, UMR 6285, Vannes, France
    index: 3
-- names : University of Gothenburg, Department of Earth Sciences, Sweden
-  index: 4
+ - name: University of Gothenburg, Department of Earth Sciences, Sweden
+   index: 4
   
    
 
