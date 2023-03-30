@@ -24,7 +24,7 @@ If you are kind enough to cite this package, please check in the /inst directory
 This package can be installed from github using the install_github function of the devtools package. 
 ```R
 library(devtools)
-devtools::install_github("MGousseff/lczexplore")
+devtools::install_github("orbisgis/lczexplore")
 ```
 It can also be installed from the tarball file. 
 ```R
