@@ -6,6 +6,10 @@
 #'
 #' @examples areColors(c(NA, "black", "blackk", "1", "#00", "#000000"))
 areColors <- function(x) {
+  numInd<-grepl('^-?[0-9.]+$', x)
+  if(sum(numInd)>0){message("please do not use numeric to specify colors, replace with a string with a color name,
+  for instance, replace 1 with the string black.")}
+  x[numInd]<-"number not seen as color"
   sapply(x, function(X) {
     tryCatch(is.matrix(col2rgb(X)),
              error = function(x) FALSE)

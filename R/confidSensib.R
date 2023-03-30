@@ -60,8 +60,8 @@ confidSensib<-function(inputDf="", filePath="", nPoints=5,
 # What is the agreement between LCZ classifications when no confidence value is available on any of them ?
   echIntNoconf<-subset(echInt,is.na(echInt$confidMin))
   nbOutCasted<-nrow(echIntNoconf)
-  print("Number of geoms without any confidence value : ")
-  print(nbOutCasted)
+  # print("Number of geoms without any confidence value : ")
+  # print(nbOutCasted)
 
   NAPercAgr<-matConfLCZGlob(inputDf=echIntNoconf, wf1=wf1, wf2=wf2,
                  geomID1=geomID1, column1=column1, confid1=confid1,
@@ -105,7 +105,7 @@ confidSensib<-function(inputDf="", filePath="", nPoints=5,
              }
 
          echIntDrop<-subset(echIntConf,confidMin<i)
-         if(nrow(echIntDrop)>0){print(nrow(echIntDrop))
+         if(nrow(echIntDrop)>0){#print(nrow(echIntDrop))
            percAgrDrop<-c(percAgrDrop,
                           matConfLCZGlob(inputDf = echIntDrop, wf1 = wf1, wf2 = wf2,
                                          geomID1 = geomID1, column1 = column1, confid1 = confid1,

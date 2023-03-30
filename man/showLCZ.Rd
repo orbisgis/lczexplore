@@ -10,8 +10,9 @@ showLCZ(
   wf = "",
   column = "LCZ_PRIMARY",
   repr = "standard",
-  typeLevels = "",
-  cols = ""
+  drop = FALSE,
+  cols = "",
+  LCZlevels = ""
 )
 }
 \arguments{
@@ -28,12 +29,14 @@ If the LCZ were produced by WUDAPT, use "wudapt".}
 \item{repr}{indicates if the sf dataset contains standarde LCZ levels or grouped LCZ.
 If "standard" then an optimal set of cols is used to produce the plotted map. Else, colors can be specified with the cols argument.}
 
-\item{typeLevels}{is a vector of strings specifying the name of the expected levels when repr is set to 'grouped'.
-If \code{typeLevels} is set to an empty string, then the unique values taken in the specified \'column\' will be used.}
+\item{drop}{indicates if you want to show the levels present in no geometry.}
 
 \item{cols}{is a vector of strings specifying the colors of each levels of \'typeLevels.\'
 If cols is an empty string, or if the number of specified color is less than the number of levels in \'typeLevels\',
 random colors will be chosen.}
+
+\item{LCZlevels}{allows you to set the grouped LCZ types.
+The values must at least cover the values of the column in the dataset, or it will be ignored.}
 }
 \value{
 no object is returned, but plots of the LCZ levels are produced

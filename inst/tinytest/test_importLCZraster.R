@@ -14,7 +14,12 @@ expect_warning(redonWudapt<-importLCZraster(
   system.file("extdata", package = "lczexplore"),fileName="redonWudapt.tif",bBox=redonBbox),
               'attribute variables are assumed to be spatially constant throughout all geometries' )
 
-expect_silent(showLCZ(sf=redonWudapt,column="EU_LCZ_map",repr="standard"))
+paste0(system.file("extdata", package = "lczexplore"),"/redonWudapt.tif")
+library(terra)
+test<-rast(paste0(system.file("extdata", package = "lczexplore"),"/redonWudapt.tif"))
+
+expect_warning(showLCZ(sf=redonWudapt,column="EU_LCZ_map",repr="standard"),
+               "Unknown levels ")
 
 # Test out of Europe Bbox (supposed to fail)
 library(sf)
