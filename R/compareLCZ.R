@@ -456,6 +456,5 @@ if (plot == TRUE){
 }else{message("Plot set to FALSE, no plots created")}
 
 matConfOut<-matConfOut
-
 }
 
