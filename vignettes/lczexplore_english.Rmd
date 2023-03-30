@@ -1,14 +1,14 @@
 ---
 title: "lczexplore_english"
 author: "Matthieu Gousseff"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 resource_files:
   - vignettes/Redon.png
-VignetteBuilder: knitr
 vignette: >
-    %\VignetteIndexEntry{lczexplore_english}
-    %\VignetteEngine{knitr::rmarkdown}
-    %\VignetteEncoding{UTF-8}
+ %\VignetteIndexEntry{lczexplore_english}
+ %\VignetteEngine{knitr::rmarkdown}
+ %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
