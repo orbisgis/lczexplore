@@ -27,9 +27,10 @@ Suggests:
     tinytest,
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    png
 Config/testthat/edition: 3
-VignetteBuilder: knitr, rmarkdown
+VignetteBuilder: knitr
 LazyData: true
 Depends: 
     R (>= 2.10)
