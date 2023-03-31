@@ -1,5 +1,5 @@
 ---
-title: 'lczexplore : an R package to explore Local Climate Zone classification'
+title: 'lczexplore : an R package to explore Local Climate Zone classifications'
 tags:
 - R SOFTWARE
 - climate
@@ -122,6 +122,7 @@ The package doesn't rely on regular tile grids (no rasterization). The `compareL
 on which classifications either totally agree either totally disagree, and this prevents artificial rounding effects.
 
 ![Intersecting geometries to have full agreement or disagreement \label{fig:Agreement independent of the shape of the geoms}](intersecDemo.png){ width=100% }
+
 This figure shows how the resulting intersected geometries either totally agree or totally disagree.
 
 Next, the function computes:  
@@ -156,6 +157,7 @@ in order to answer the question : **does keeping only geometries with a higher c
 This sensitivity analysis is performed considering all LCZ types or within each individual LCZ type.
 
 ![Sensitivity analysis according to confidence for all LCZ levels \label{fig: Sensitivity analysis according to confidence}](confidSensibGen.png)
+
 The agreement between classifications for the geometries with a confidence level higher than the threshold, and their numbers, are plotted in blue.
 The agreement and the numbers of geometries under the threshold are plotted in magenta.
 
@@ -217,7 +219,8 @@ showLCZ(sf=redonOSM, wf="OSM", column="LCZ_PRIMARY", repr="standard", LCZlevels=
 
 ```
 
-The result is a map of the Local Climate Zones on the area :
+The result is a map of the Local Climate Zones on the area :  
+
 ![Local Climate Zones for Redon city based on the GeoClimate workflow applied to OSM data \label{fig:LCZ on Redon spatial units}](showRedonOSM.png){ width=100% }
 
 ## Compare the two LCZ classifications
