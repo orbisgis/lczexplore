@@ -25,7 +25,8 @@ authors:
   orcid:
   corresponding: true
   affiliation: 3   
-  affiliations:
+  
+affiliations:
 - name: CNRS, Lab-STICC, UMR 6285, Vannes, France
   index: 1
 - name: University of Savoie Mont-Blanc, LOCIE, UMR 5271, France
@@ -200,6 +201,7 @@ redonOSM<-importLCZgen(dirPath=dirPathOSM, file="rsu_lcz.geojson", column = "LCZ
 # Import into an sf object the data produced with GeoClimate and 
 # the french BD TOPO data (city of Redon) 
 redonBDT<-importLCZgen(dirPath=dirPathBDT, file="rsu_lcz.geojson", column = "LCZ_PRIMARY")
+
 ```
 
 ## Visualize the data
@@ -211,10 +213,11 @@ To visualize an LCZ classification, use the `showLCZ` function :
 # from the sf object produced by importLCZgen function
 
 showLCZ(sf=redonOSM, wf="OSM", column="LCZ_PRIMARY", repr="standard", LCZlevels="", cols="")
+
 ```
 
 The result is a map of the Local Climate Zones on the area :
-![Local Climate Zones for Redon city based on the GeoClimate workflow applied to OSM data \label{fig:LCZ on Redon spatial units}](showRedonOSM.png)
+![Local Climate Zones for Redon city based on the GeoClimate workflow applied to OSM data \label{fig:LCZ on Redon spatial units}](showRedonOSM.png){ width=100% }
 
 ## Compare the two LCZ classifications
 
@@ -256,7 +259,8 @@ The following code produces an example of confidence sensitivity analysis:
  testSourceFact<-read.csv(paste0(mainPath,"/bdtopo_2_2_osm.csv"),
  sep=";",header=TRUE,stringsAsFactors = TRUE)
 # perform the sensibility analysis on this file
-# NOTE: one can also directly read the sfFile without importing it. To do so leave inputDf argument empty but set the filePath argument.
+# One can also directly read the sfFile without importing it. 
+# To do so leave inputDf argument empty but set the filePath argument.
  sensitAnalysis<-confidSensib(inputDf=testSourceFact, filePath="",
  nPoints=5, wf1="bdtopo_2_2", wf2="osm",
  geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
