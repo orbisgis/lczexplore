@@ -7,7 +7,8 @@ tags:
 - GIS
 - spatial analysis
 - cities
-  authors:
+   
+authors:
 - name: Matthieu Gousseff
   orcid: 0000-0000-0000-0000
   equal-contrib: true
@@ -138,11 +139,12 @@ The agreement between classifications for the geometries with a confidence level
 
 
 # Coding implementation
-`lczexplore` is an R package, all its specific functions are coded in R language. It relies on state-of-the art packages :
-- geographical computation requires the `sf` package for vector data and the `terra` package for raster data,
-- data management mainly requires the following packages : `dplyr, tidyr forcats, rlang` and` methods` packages,
-- graphical production uses `ggplot2, grDevices, cowplot` and `RColorBrewer` packages,
-- tests need the `tinytest` package.
+`lczexplore` is an R package, all its specific functions are coded in R language. It relies on state-of-the art packages :  
+- geographical computation requires the `sf` package for vector data and the `terra` package for raster data,  
+- data management mainly requires the following packages : `dplyr, tidyr forcats, rlang` and` methods` packages,  
+- graphical production uses `ggplot2, grDevices, cowplot` and `RColorBrewer` packages,  
+- tests need the `tinytest` package.  
+
 
 Every step correspond to an R function (see the workflow figure for the name of the main functions). Every function has an associated file for the unit tests.
 
@@ -153,7 +155,7 @@ The lczrexplore package can be downloaded from `https://github.com/orbisgis/lcze
 
 You can install it in R with the command (à modifier selon le dépôt):
 
-```r, echo=FALSE
+```r
 library(devtools)
 devtools::install_github("orbisgis/lczexplore")
 library(lczexplore)
@@ -162,7 +164,7 @@ library(lczexplore)
 ## Import the data
 In this example we will use two LCZ classifications of Redon city, produced using a single LCZ classification method (the GeoClimate workflow), using two different input data: the OpenStreetMap (OSM) data input and the french BDTopo data input.
 
-```r, echo = FALSE
+```r
 
 # Set the path to the example data folder created once you install the package
 
@@ -177,13 +179,13 @@ redonOSM<-importLCZgen(dirPath=dirPathOSM, file="rsu_lcz.geojson", column = "LCZ
 # Import into an sf object the data produced with GeoClimate and 
 # the french BD TOPO data (city of Redon) 
 redonBDT<-importLCZgen(dirPath=dirPathBDT, file="rsu_lcz.geojson", column = "LCZ_PRIMARY")
-#
 ```
+
 ## Visualize the data
 
 To visualize an LCZ classification, use the showLCZ function :
 
-```r, echo=FALSE, fig.dim = c(8, 6)
+```r
 # Plot the LCZ levels on the Redon Area using the default color set
 # from the sf object produced by importLCZgen function
 
@@ -197,7 +199,7 @@ The result is a map of the Local Climate Zones on the area :
 
 To compare the two loaded LCZ classifications, use the compareLCZ function :
 
-```r, echo=FALSE, fig.dim = c(8, 6)
+```r
 # Compare how the BD TOPO and the Open Street Map Data 
 # produce different classifications. 
 # The output are stored in a list, and also written un a csv file
@@ -225,7 +227,7 @@ The last graphic is a confusion matrix : how do the LCZ types of the first class
 
 The following code produces an example of confidence sensitivity analysis :
 
-```r, echo=FALSE, fig.dim = c(8, 6)
+```r
  # Set the path to the folder where compareLCZ stored output data file
  mainPath<-system.file("extdata", package = "lczexplore")
  # Read the csv file where compareLCZ stored the output data.
@@ -233,7 +235,7 @@ The following code produces an example of confidence sensitivity analysis :
  sep=";",header=TRUE,stringsAsFactors = TRUE)
 # perform the sensibility analysis on this file
 # NOTE : one can also directly read the sfFile without importing it. To do so leave inputDf argument empty but set the filePath argument.
- confidSensib(inputDf=testSourceFact, filePath="",
+ sensitAnalysis<-confidSensib(inputDf=testSourceFact, filePath="",
  nPoints=5, wf1="bdtopo_2_2", wf2="osm",
  geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
  geomID2="ID_RSU.1",column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1",
@@ -249,26 +251,32 @@ For each LCZ type, the x-axis shows the minimum confidence threshold. The y-axis
 ## Group some levels and perform the same analysis
 Use the `LCZgroup2` function to regroup some levels into a category. Specify the name of the column of the new regrouped categories with the argument `outCol` (the default is "grouped").
 
-```r, echo=FALSE, fig.dim = c(8, 6)
-redonOSMgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",
-
-urban=c("1","2","3","4","5","6","7","8","9"),
-
-industry="10",
-
-vegetation=c("101","102","103","104"),
-
-impervious="105",pervious="106",water="107",cols=c("red","black","green","grey","burlywood","blue"))
+```r
+redonOSMgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY", 
+                           urban=c("1","2","3","4","5","6","7","8","9"),
+                           industry="10", 
+                           vegetation=c("101","102","103","104"),
+                           impervious="105",
+                           pervious="106", 
+                           water="107",
+                           cols=c("red","black","green","grey","burlywood","blue"))
 ```
+
+
+
 
 You can then perform the same analysis, but you have to specify that the type of representation is grouped (`repr="grouped"`).
 
-```r, echo=FALSE, fig.dim = c(8, 6)
+```r
 showLCZ(redonOSMgrouped, column="grouped",repr="grouped",wf="OSM",  
         LCZlevels = c("urban","industry","vegetation","impervious","pervious","water"),  
         cols=c("red","black","green","grey","burlywood","blue"))
         
 ```
+
+![Map of grouped levels on the city of Redon \label{fig: Grouped LCZ on the city of Redon}](redonGrouped.png)
+
+You can also map any qualitative variable using this grouped representation, as long as you specify the expected levels the same way. 
 
 # Research projects involving GeoClimate
 The lczexplore package was developed within the PAENDORA 2 project (2022-2023) funded by ADEME
