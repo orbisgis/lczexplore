@@ -1,5 +1,5 @@
 ---
-title: 'lczexplore : an R package to explore Local Climate Zone classification'
+title: 'lczexplore : an R package to explore Local Climate Zone classifications'
 tags:
 - R SOFTWARE
 - climate
