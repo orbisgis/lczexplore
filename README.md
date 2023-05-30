@@ -17,6 +17,12 @@ This is the 0.0.1.0000 version of the package lczexplore.
 The code of this package is under the LGPL-3 licence as described in 
 https://www.r-project.org/Licenses/LGPL-3
 
+
+# Fundings
+
+The lczexplore library has been originally developed within the following research projects:
+* PAENDORA2 (Pour la gestion du confort estival : Données, Outils et Recherche-Action) (2022 -2025), funded by [ADEME](https://www.ademe.fr/)
+
 # Citation
 If you are kind enough to cite this package, please check in the /inst directory for the CITATION file (in cff style without the extension)
 
