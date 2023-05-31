@@ -8,7 +8,16 @@ produced by WUDAPT. Users MSUT DOWNLOAD the WUDAPT tiff file
 at the following url : https://figshare.com/articles/dataset/European_LCZ_map/13322450
 A future version may include the world data once a strategy is defined to deal with CRS.}
 \usage{
-importLCZraster(dirPath, zone = "europe", bBox, fileName = "EU_LCZ_map.tif")
+importLCZraster(
+  dirPath,
+  zone = "europe",
+  bBox,
+  fileName = "EU_LCZ_map.tif",
+  column = "EU_LCZ_map",
+  typeLevels = c(`1` = "1", `2` = "2", `3` = "3", `4` = "4", `5` = "5", `6` = "6", `7` =
+    "7", `8` = "8", `9` = "9", `10` = "10", `101` = "11", `102` = "12", `103` = "13",
+    `104` = "14", `105` = "15", `106` = "16", `107` = "17")
+)
 }
 \arguments{
 \item{dirPath}{is the path to the directory where the}
@@ -19,6 +28,10 @@ importLCZraster(dirPath, zone = "europe", bBox, fileName = "EU_LCZ_map.tif")
 It can be produced bu the importLCZgen function}
 
 \item{fileName}{is by default \'EU_LCZ_map.tif\' but can be changed for test prurposes. Will be useful when other zones will be added}
+
+\item{column}{indicates the name of the column containing LCZ values, all other}
+
+\item{typeLevels}{indicates a named vector of the unique values contained in column,}
 }
 \value{
 an sf file containing the geom and LCZ levels from the WUDAPT Europe tiff within the bBox bounding box

@@ -6,6 +6,8 @@
 #'
 #' @param dirPath is the path to the directory where the
 #' @param fileName is by default \'EU_LCZ_map.tif\' but can be changed for test prurposes. Will be useful when other zones will be added
+#' @param column indicates the name of the column containing LCZ values, all other
+#' @param typeLevels indicates a named vector of the unique values contained in column,
 #' @param zone set to europe by default, may include world once a strategy is defined
 #' @param bBox bBox is the bounding box needed to crop the wudapt tiff file.
 #' It can be produced bu the importLCZgen function
@@ -24,7 +26,10 @@
 #' redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
 #' fileName="redonWudapt.tif",bBox=redonBbox)
 #'
-importLCZraster<-function(dirPath,zone="europe",bBox,fileName="EU_LCZ_map.tif"){
+importLCZraster<-function(dirPath,zone="europe",bBox,fileName="EU_LCZ_map.tif", column='EU_LCZ_map',
+                          typeLevels=c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",
+                           "9"="9","10"="10","101"="11","102"="12","103"="13","104"="14",
+                            "105"="15", "106"="16","107"="17")){
 # internal import function used in two loops
   effectiveImport<-function(fileName,bBox){
     sfFile<-rast(fileName)
@@ -37,17 +42,16 @@ importLCZraster<-function(dirPath,zone="europe",bBox,fileName="EU_LCZ_map.tif"){
     sfFile<-sfFile %>% crop(bBox) %>% as.polygons(dissolve=F) %>%
       st_as_sf() %>% st_intersection(bBox)
 
+      if (length(typeLevels==1)){
     typeLevels<-c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",
                "9"="9","10"="10","101"="11","102"="12","103"="13","104"="14",
-               "105"="15", "106"="16","107"="17")
+               "105"="15", "106"="16","107"="17")}
     # typeLevels2<-as.character(c(1:10,101:107))
 
-
-    sfFile<-sfFile %>% mutate(EU_LCZ_map=factor(subset(sfFile,select='EU_LCZ_map',drop=T)))
-    temp<-subset(sfFile,select='EU_LCZ_map',drop=T)
-    # the use of !!! is a special way to parse the elements in the tidyverse packages
-    temp<-fct_recode(temp,!!!typeLevels)
-    sfFile<-sfFile %>% mutate(EU_LCZ_map=temp)
+    sfFile<-sfFile%>%
+        mutate(!!column:=fct_recode(factor(subset(sfFile,select=column,drop=T),levels=typeLevels),
+                                    !!!typeLevels)) %>%
+        drop_na(column)
 
     cat(levels(subset(sfFile,select='EU_LCZ_map',drop=T)))
     #plot(sfFile)
