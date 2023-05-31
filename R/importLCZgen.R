@@ -54,7 +54,7 @@ importLCZgen<-function(dirPath, file="rsu_lcz.geojson", output="sfFile", column=
     names(typeLevels)<-typeLevels
   }
 
-  # if typeLevels is not specified it will be st to default and we need to capture this later
+  # if typeLevels is not specified it will be set to default and we need to capture this later
   typeLevelsDefault<-c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",
                     "9"="9","10"="10","101"="101","102"="102","103"="103","104"="104",
                     "105"="105","106"="106","107"="107","101"="11","102"="12","103"="13","104"="14",
