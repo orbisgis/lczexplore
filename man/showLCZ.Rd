@@ -12,7 +12,8 @@ showLCZ(
   repr = "standard",
   drop = FALSE,
   cols = "",
-  LCZlevels = ""
+  LCZlevels = "",
+  useStandCol = TRUE
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ random colors will be chosen.}
 
 \item{LCZlevels}{allows you to set the grouped LCZ types.
 The values must at least cover the values of the column in the dataset, or it will be ignored.}
+
+\item{useStandCol, }{when set to TRUE, any levels detected as a standard LCZ level will receive the standard associated color}
 }
 \value{
 no object is returned, but plots of the LCZ levels are produced

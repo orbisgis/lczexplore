@@ -28,9 +28,11 @@ if (!require("png")) {
 ## Purpose and origin
 The lczexplore package was developped thanks to the Pændora 2 project, funded by ADEME, a french agency for ecological transition.
 
-Its purpose is to easily compare local climate zone classifications produced by different algorithms on the same study area.
+Its purpose is to easily compare different local climate zone classifications on the same study territory.
 
-Before using this package, one must assign a local climate zone (LCZ) type to each Spatial Reference Units (SRU) of a territory (geometries). As several workflow can produce these LCZ types, this package allows to represent them and to compare the results of these classifications (pairwise).
+Before using this package, one must assign a local climate zone (LCZ) type to each Spatial Reference Units of a territory.
+These units can be topological units or geometries derived from pixels of a rester approach after a simple conversion.
+As several workflow can produce these LCZ types, this package allows to represent them and to compare the results of these classifications (pairwise).
 
 
 ## Installation
@@ -41,17 +43,19 @@ One can also install it from the github repository. This repository will be modi
 
 
 Load the package : `library(lczexplore)`.
-```{r}
+```
+
 library(lczexplore)
+
 ```
 
 
-# Main use : load a file with geometries and standard LCZ
+# First use-case : load a file with geometries and standard LCZ
 
 
 ## Import files with importLCZgen function
 
-the function `importLCZgen` is the generic import function for the file containing geometries, or Reference Spatial Units (RSU) and the associated Local Climate Zone Type (LCZ). Import of geojson and shp files was tested, but any format accepted by the function `st_read` of the `sf` package should work.
+The function `importLCZgen` is the generic import function for the file containing geometries, or Reference Spatial Units (RSU) and the associated Local Climate Zone Type (LCZ). Import of geojson and shp files was tested, but any format accepted by the function `st_read` of the `sf` package should work.
 
 The `dirPath` and the `file` arguments set the path to the folder and the filename to be loaded. The compulsary argument  `column` is the name of the column in which are the LCZ types. The optional arguments `geomID` and `confid` allow the user to load column of geometry identifiers and a column containing a measure of the confidence associated to the LCZ type of a geometry.
 
@@ -70,13 +74,9 @@ redonBDT<-importLCZgen(dirPath=dirPathBDT,file="rsu_lcz.geojson",column = "LCZ_P
 ```
 ## Map the LCZ types with the function showLCZ
 
-Once the dataset has been loaded in R object of class `sf`, `showLCZ()` can produce a map.
-
-Translation to be continued.
-
 Once the dataset has been loaded into an R object of class `sf`, the function `showLCZ` produces the map of it's repartition. The argument`sf` sets the input dataset, the column of the LCZ types is passed to the argument `column`. The argument `wf` is just a string that will be used to produce the title of the plot, and it allows the user to specify which workflow produced the input data.
 
-For standard LCZ types, one sets the argument `repr="standard"`, and the function will recognize levels from 1 to 10 and from 101 to 107 (the original convention). It is the recommended choice. But `standard` representation will also accept levels from 11 to 17 and from 1 to G.
+For standard LCZ types, one sets the argument `repr="standard"`, and the function will recognize levels from 1 to 10 and from 101 to 107 (the original convention). It is the recommended choice. But `standard` representation will also accept levels from 11 to 17 and from A to G.
 
 
 

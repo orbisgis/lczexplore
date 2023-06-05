@@ -14,14 +14,10 @@
 #' @export
 #'
 #' @examples
-#' redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",
-#' urban=c("1","2","3","4","5","6","7","8","9"),
-#' industry="10",
-#' vegetation=c("101","102","103","104"),
-#' impervious="105",pervious="106",water="107",
-#' cols=c("red","black","green","grey","burlywood","blue"))
+#' #levCol is not to be used directly by user. It deals with levels and colors provided by the user
 levCol<-function(sf,column,drop=FALSE,...){
   args<-list(...)
+  # Note : case_match will be use in future version to ease readability of this function
 
   if (length(args)>=37){ stop("This function can not deal with more than 36 arguments.
   You can use the function LCZgroup2 to group some levels.")}
@@ -86,8 +82,11 @@ levCol<-function(sf,column,drop=FALSE,...){
         levels will be deduced from the data
         and colors will be chosen from a standard palette."
         # print("length(uniqueData)");print(length(uniqueData))
-        typeLevels<-palette.colors(n=length(uniqueData), palette="Polychrome 36")
-        names(typeLevels)<-uniqueData
+
+        typeLevels<-standLevCol( levels=uniqueData,
+                                 colors=palette.colors(n=length(uniqueData), palette="Polychrome 36"),
+                                 useStandCol=TRUE)
+
       }
   }
 

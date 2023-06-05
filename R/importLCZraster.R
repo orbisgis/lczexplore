@@ -69,7 +69,7 @@ importLCZraster<-function(dirPath,zone="europe",bBox,fileName="EU_LCZ_map.tif", 
     if (!file.exists(fileName)){
       choice<-readline(prompt="The wudapt Europe map tiff file doesn't exist in the specified directory. \n
               If you want lczexplore to try and download it type 1, else type 2 to exit and get the tiff map by yourself")
-      print("choice: ");print(choice);
+      print("choice: "); print(choice)
       if (choice==1){
         url<-"https://figshare.com/ndownloader/files/35069446"
         fetchTry<-try(download.file(url=url,method="auto",destfile=fileName))
