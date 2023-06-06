@@ -32,9 +32,17 @@ standLevCol<-function(levels,colors="",useStandCol=TRUE){
                   "15"="#010101","105"="#010101","E"="#010101",
                   "16"="#fdf6ae", "106" = "#fdf6ae" , "F" = "#fdf6ae",
                   "17"="#6d67fd","107"="#6d67fd","G"="#6d67fd")
-  if (length(colors)==length(levels) && prod(areColors(colors))==1){typeLevels<-colors} else {
-    print("Please, check your vector of colors")
-  typeLevels<-alienColors}
+
+  if (length(colors)==length(levels) && prod(areColors(colors))==1){
+    typeLevels<-colors
+    names(typeLevels)<-levels
+
+  } else {
+    print("Please, check your vectors of levels and colors")
+    typeLevels<-alienColors
+    names(typeLevels)<-levels
+    typeLevels
+  }
 
   if(useStandCol == TRUE){
     message("As useStandCol is set to TRUE, some of the specified colors may have been over-ridden to use standard colors if standard LCZ values have been detected")
@@ -42,10 +50,8 @@ standLevCol<-function(levels,colors="",useStandCol=TRUE){
     typeLevels[levels%in%standardLevels]<-
       standCorresp[names(standCorresp)%in%levels[levels%in%standardLevels]]
     typeLevels
-    }
+    } else {return(typeLevels)}
 
 
 
 }
-
-
