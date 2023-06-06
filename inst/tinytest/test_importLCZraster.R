@@ -18,8 +18,7 @@ paste0(system.file("extdata", package = "lczexplore"),"/redonWudapt.tif")
 library(terra)
 test<-rast(paste0(system.file("extdata", package = "lczexplore"),"/redonWudapt.tif"))
 
-expect_warning(showLCZ(sf=redonWudapt,column="EU_LCZ_map",repr="standard"),
-               "Unknown levels ")
+expect_silent(showLCZ(sf=redonWudapt,column="EU_LCZ_map",repr="standard"))
 
 # Test out of Europe Bbox (supposed to fail)
 library(sf)

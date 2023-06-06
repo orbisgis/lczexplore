@@ -1,0 +1,174 @@
+---
+title: "Raster_vector_comparison"
+author: "Matthieu Gousseff"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+resource_files:
+  - vignettes/Redon.png
+vignette: >
+ %\VignetteIndexEntry{Raster_vector_comparison}
+ %\VignetteEngine{knitr::rmarkdown}
+ %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+        collapse = TRUE,
+        comment = "#>"
+)
+if (!require("png")) {
+  install.packages("png")
+  library("png")
+}
+
+```
+
+To install and discover the package, please read the lczexplore_english vignette. To load it simply type :
+```{r}
+library(lczexplore)
+```
+
+Usecase : comparing the LCZ available on the WUDAPT european LCZ map and the Geoclimate approach using OpenStreetMap input data
+
+This vignette illustrates the use of the package to compare maps produced with different approaches, it does not aim at drawing conclusion on the relevance of these methods, nor does it aim at describing them in details.
+
+# Import and visualize a raster map of LCZ
+
+## Data : the Redon territory from the european LCZ map produced by the WUDAPT project
+
+The World Urban Database and Access Portal Tools is a project which aims at creating LCZ with earth observation data.
+The details of the project and the related papers can be found on the website of the project : https://www.wudapt.org/
+
+The map we are going to use in this vignette is the European LCZ map, as described in the paper available at the following url :
+https://doi.org/10.1371/journal.pone.0214474
+
+As this method is one of the most used we included the map tif in the embedded data of the package.
+
+## Load a territory from a raster map and a bounding box
+
+The first step is to define a bounding box of the territory of interest. The lczexplore comes with vector data for the Redon Territory, a rural town of Brittany, France.
+The importLCZgen is a generic import function for vector data, and when the `ouput` argument is set to `bBox`, it returns the bounding box of the input layer.
+Any bounding box of the bounding box class of the package `sf` can be used to crop the raster map.
+
+```{r}
+redonBbox<-importLCZgen(dirPath=paste0(system.file("extdata", package = "lczexplore"),
+"/bdtopo_2_2/Redon"), file="rsu_lcz.geojson",column="LCZ_PRIMARY",output="bBox")
+```
+
+The second step is to import the raster map and use the previous bounding box to crop the territory of interest.
+The importLCZraster function performs this in a simple call :
+```{r}
+redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
+fileName="redonWudapt.tif",bBox=redonBbox)
+
+```
+The resulting object is an sf file, the pixels of the geotiff have been transformed into geometries. The input file must be a geotiff, whose CRS will be read by the function.
+
+```{R}
+library(sf)
+st_crs(redonWudapt)
+```
+
+
+The LCZ are expressed with several conventions. We chose to use 1 to 10 for the urban and 101 to 107 for the land-use types.
+
+One can then use standard R functions to explore the data.
+```{R}
+summary(redonWudapt)
+summary(redonWudapt$EU_LCZ_map)
+```
+One can see, for instance that no pixel of the imported territory set to one of the following levels : 1, 2, 4, 5, 7, 10, 103 or 105,
+or that the most present LCZ type is 104, with 1116 pixels.
+
+
+## Visualize the LCZ map with the function showLCZ
+
+Once the dataset has been loaded into an R object of class `sf`, the function `showLCZ` produces the map of it's repartition. The argument`sf` sets the input dataset, the column of the LCZ types is passed to the argument `column`. The argument `wf` is just a string that will be used to produce the title of the plot, and it allows the user to specify which workflow produced the input data.
+
+For standard LCZ types, one sets the argument `repr="standard"`, and the function will recognize levels from 1 to 10 and from 101 to 107. It is the recommended choice. But `standard` representation will also accept levels from 11 to 17 and from A to G.
+
+
+
+```{R, fig.dim = c(8, 6)}
+showLCZ(sf = redonWudapt,column = 'EU_LCZ_map', repr= "standard")
+```
+
+
+
+
+
+The following code shows an example of color choice.
+
+# Import and visualize a vector layer map of LCZ
+
+## Data : LCZ on the Redon territory produced by the GeoClimate workflow using OpenStreetMap as input.
+These data are embedded in `lczexplore`. On can import them using the `importLCZgen` function.
+This function allows to load geojson or shp files, and one must specify the name of the column containing the LCZ types.
+
+```{R}
+# Path to embedded Data
+dirPath<-paste0(system.file("extdata",package="lczexplore"),"/")
+# Path to OSM data specifically
+dirPathOSM<-paste0(dirPath,"osm/2022/Redon")
+# loading Redon Data produced with GeoClimate on OSM input Data
+redonOSM<-importLCZgen(dirPath=dirPathOSM,file="rsu_lcz.geojson",column = "LCZ_PRIMARY", drop=TRUE)
+summary(redonOSM$LCZ_PRIMARY)
+
+```
+## Visualize the resulting LCZ types with the function showLCZ
+The resulting object is an sf object and can therefore also be visualized with the showLCZ function.
+```{R}
+showLCZ(sf = redonOSM, repr="standard")
+```
+
+# Comparison of the two LCZ classification
+**The purpose of this package is to easily compare local climate zone classifications produced by different algorithms on the same study area.**
+
+The `compareLCZ` function intersects the geometries of both input sf files. The resulting geometries then either agree or disagree.
+Both maps are plotted and a map of where they agree is produced. A confusion matrix is also plotted, revealing how each LCZ type of the first dataset break up into the LCZ types of the second dataset.
+If the two datasets are not in the same coordinate reference system (CRS), the function will ask which CRS will be kept.
+
+```{R}
+compareLCZ(sf1 = redonWudapt, column1 = "EU_LCZ_map", wf1="WUDAPT",
+           sf2 = redonOSM, column2 = "LCZ_PRIMARY", wf2 = "GeoClimate_OSM",
+           ref=1 ,exwrite=FALSE)
+```
+
+
+# Grouping some levels and comparing the grouped categories
+The intent of this section is not to discuss the quality of the algorithms used for example, but to illustrate how the package
+allow to compare grouped categories.
+For instance, 51% of the areas of Redon that wudapt classifies as compact low are seen as compact mid by Geoclimate
+on OpenStreet map input data. And 34% of what Wudapt classifies as open low are seen as sparsely built by GeoClimate.
+
+But how do Wudapt and GeoClimate agree on broader categories, as built LCZ versus vegetation LCZ ? One could group these LCZs
+to explore this, using the `LCZgroup2` function.
+```{R}
+# Regroup levels of the WUDAPT sf file.
+redonWudaptGrouped<-LCZgroup2(redonWudapt,column="EU_LCZ_map",
+                              urban=c("1","2","3","4","5","6","7","8","9"),
+                              industry="10", vegetation=c("101","102","103","104"),
+                              impervious="105",pervious="106",water="107", outCol = "Regrouped")
+
+# Regroup levels of the GeoClimate sf file
+redonOSMgrouped<-LCZgroup2(redonOSM, column="LCZ_PRIMARY",
+urban=c("1","2","3","4","5","6","7","8","9"),
+industry="10", vegetation=c("101","102","103","104"),
+impervious="105",pervious="106",water="107", outCol = "Regrouped")
+
+
+# Pass the files, the columsn and a vector of colors associated to the broader categories
+
+compareLCZ(sf1 = redonWudaptGrouped, column1 = "Regrouped", wf1 = "Wudapt",
+           sf2 = redonOSMgrouped, column2 = "Regrouped", wf2 = " GeoClimate on OSM data",
+           exwrite = FALSE, plot=TRUE, repr="grouped", levels=c("urban","industry","vegetation","impervious","pervious","water"),cols=c("red","black","green","grey","burlywood","blue"))
+
+
+```
+One can notice that the two explored algorithms agree rather well about vegetation, as 87% of the surface WUDAPT classifies as vegetation is classified as vegetation by Geoclimate.
+On urban LCZ, while 68% of the surface WUDAPT classifies as urban is also classified as urban by GeoClimate, 19% is classified as vegetation and 12% as impervious by GeoClimate.
+
+The confusion matrix compare percentage of areas, so if the global area concerned is small, one has to be careful about the interpretation. For instance, the very strong agreement about pervious soils or the relative agreement about water should not be over interpreted as they only represent less than 1% of the areas of the WUDAPT generated map.
+
+
+

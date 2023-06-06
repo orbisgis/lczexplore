@@ -324,10 +324,11 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
 
 
         nom<-paste0(wf1,"_",wf2,".csv")
-        print(paste0("Comparison data will be appended to the following file : ",nom))
+
         filePath<-paste0(outDir,"/",nom)
 
         if (exwrite==TRUE){
+          # print(paste0("Comparison data will be appended to the following file : ",nom))
           print(paste0("The data will be exported in the ",
                        nom,
                        " file, in your working directory:",
@@ -375,7 +376,7 @@ if (plot == TRUE){
   titre1<-paste(titrou,"from ", adtitre1)
   titre2<-paste(titrou,"from", adtitre2)
   titre3<-"Agreement between classifications"
-  titre4<-paste(" Repartition of", adtitre1, " LCZ into LCZs of", adtitre2)
+  titre4<-paste(" Repartition of", adtitre1, " LCZs into LCZs of", adtitre2)
 
 
   # ypos<-if (repr=="standard"){ypos=5} else {ypos=2}

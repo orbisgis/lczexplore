@@ -14,6 +14,7 @@
 #' The values must at least cover the values of the column in the dataset, or it will be ignored.
 #' @param title allows the user to set the title of the plot
 #' @param drop indicates if you want to show the levels present in no geometry.
+#' @param useStandCol is set to TRUE implies that any levels detected as a standard LCZ level will receive the standard associated color
 #' @import sf ggplot2 dplyr cowplot forcats grDevices
 #' @return no object is returned, but plots of the LCZ levels are produced
 #' @export
@@ -26,7 +27,7 @@
 #' impervious="105",pervious="106",water="107",
 #' cols=c("red","black","green","grey","burlywood","blue"))
 showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
-                  repr="standard", drop=FALSE, cols="", LCZlevels=""){
+                  repr="standard", drop=FALSE, cols="", LCZlevels="",useStandCol=TRUE){
 
   datasetName<-print(deparse(substitute(sf)))
 
@@ -61,13 +62,14 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
                 "#648423","#bbdb7a","#010101","#fdf6ae","#6d67fd")
   typeLevels<-colorMap
   names(typeLevels)<-levels(subset(sf,select=column,drop=T))
-  etiquettes<-c("LCZ 1: Compact high-rise","LCZ 2: Compact mid-rise","LCZ 3: Compact low-rise",
+  areas<-LCZareas(sf,column,LCZlevels=names(typeLevels))
+  etiquettes<-paste(c("LCZ 1: Compact high-rise","LCZ 2: Compact mid-rise","LCZ 3: Compact low-rise",
                 "LCZ 4: Open high-rise","LCZ 5: Open mid-rise","LCZ 6: Open low-rise",
                 "LCZ 7: Lightweight low-rise","LCZ 8: Large low-rise",
                 "LCZ 9: Sparsely built","LCZ 10: Heavy industry",
                 "LCZ A: Dense trees", "LCZ B: Scattered trees",
                 "LCZ C: Bush,scrub","LCZ D: Low plants",
-                "LCZ E: Bare rock or paved","LCZ F: Bare soil or sand","LCZ G: Water")
+                "LCZ E: Bare rock or paved","LCZ F: Bare soil or sand","LCZ G: Water"),": ", areas$area, "%")
 
 
 
@@ -101,7 +103,7 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
   if (repr=="grouped"|repr=="both"){
     print(datasetName)
 
-    if(length(LCZlevels)==1 && LCZlevels[1]=="" && cols==""){
+    if(length(LCZlevels)==1 && LCZlevels[1]=="" && length(cols)==1){
       typeLevels<-levCol(sf,column, drop=drop)$levelsColors
     } else if (length(LCZlevels)==1 & LCZlevels[1]==""){
       typeLevels<-levCol(sf,column,cols=cols, drop=drop)$levelsColors}
@@ -110,6 +112,10 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
     }
     else {typeLevels<-levCol(sf,column,levels=LCZlevels, cols=cols, drop=drop)$levelsColors }
 
+    # IN CAS ESOME STANDARD LEVELS ARE DETECTED, ONE MAY WANT STANDARD COLORS TO BE APPLIED
+
+    if(useStandCol==TRUE){typeLevels<-standLevCol(levels=names(typeLevels),colors=typeLevels,useStandCol = TRUE)}
+
     # if ( length(LCZlevels)<=1){
     # typeLevels<-levCol(sf,column)$levelsColors
     # }
@@ -117,7 +123,8 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
 
     LCZlevels<-names(typeLevels)
     sf<-sf %>% mutate(!!column:=factor(subset(sf,select=column,drop=T),levels=LCZlevels))
-
+    areas<-LCZareas(sf,column,LCZlevels=names(typeLevels))
+    etiquettes<-paste(LCZlevels,": ",areas$area,"%")
 
    # print("head(sf[column])");print(head(sf[column]))
    if(title=="") {
@@ -132,7 +139,7 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
       ggplot(sf) + # les données
       geom_sf(aes(fill=get(column))) +        # Le type de géométrie : ici un sf, avec fill pour remplir les polygones
       scale_fill_manual(values=typeLevels,
-                        labels=LCZlevels,drop=FALSE)+
+                        labels=etiquettes,drop=FALSE)+
       guides(fill=guide_legend(nomLegende))+
       ggtitle(wtitre)
  }

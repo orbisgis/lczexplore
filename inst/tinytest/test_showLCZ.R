@@ -7,6 +7,10 @@
 expect_silent(showLCZ(redonBDT, title="Zones climatiques locales à Redon",repr="standard"))
 expect_silent(showLCZ(redonBDT))
 
+testCol <- palette.colors(n=17, palette="Polychrome 36")
+showLCZ(redonBDT, title="Zones climatiques locales à Redon",repr="grouped",
+        cols = testCol )
+
 redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
                            industry="10",
                            vegetation=c("101","102","103","104"),
