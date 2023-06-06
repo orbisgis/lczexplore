@@ -2,7 +2,8 @@
 #'
 #' @param levels is the vector of the LCZ levels present in a dataset
 #' @param colors is the vector of colors one intends to use to visualize the LCZ of the dataset
-#' @param useStandCol allows to say if standard colors should replace user specified colors when stanrd levels are detected.
+#' @param useStandCol allows to say if standard colors should replace user specified colors
+#' when standard levels are detected.
 #' @import dplyr sf
 #' @importFrom grDevices palette.colors
 #'
@@ -12,12 +13,9 @@
 #' @export
 #'
 #' @examples
-#' #levCol is not to be used directly by user. It deals with levels and colors provided by the user
+#' #standLevCol is not to be used directly by user. It deals with levels and colors provided by the user
 standLevCol<-function(levels,colors="",useStandCol=TRUE){
-  standardColors<-c("#8b0101","#cc0200","#fc0001","#be4c03","#ff6602",
-                    "#ff9856","#fbed08","#bcbcba","#ffcca7","#57555a",
-                    "#006700","#05aa05","#648423","#bbdb7a","#010101",
-                    "#fdf6ae","#6d67fd")
+
   alienColors<-palette.colors(n=length(levels), palette="Polychrome 36")
 
   standardLevels<-c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",

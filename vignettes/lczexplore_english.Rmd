@@ -43,10 +43,8 @@ One can also install it from the github repository. This repository will be modi
 
 
 Load the package : `library(lczexplore)`.
-```
-
+```{r}
 library(lczexplore)
-
 ```
 
 

@@ -14,7 +14,7 @@
 #' The values must at least cover the values of the column in the dataset, or it will be ignored.
 #' @param title allows the user to set the title of the plot
 #' @param drop indicates if you want to show the levels present in no geometry.
-#' @param useStandCol, when set to TRUE, any levels detected as a standard LCZ level will receive the standard associated color
+#' @param useStandCol is set to TRUE implies that any levels detected as a standard LCZ level will receive the standard associated color
 #' @import sf ggplot2 dplyr cowplot forcats grDevices
 #' @return no object is returned, but plots of the LCZ levels are produced
 #' @export
