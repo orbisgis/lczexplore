@@ -444,10 +444,7 @@ if (plot == TRUE){
        geom_tile(datatemp,mapping=aes(x=coordRef,y=a,fill=percArea2, height=0.8,width=0.8))+
        ggtitle(titre4,subtitle="Percentage inferior to 0.5 are rounded to 0")
 
-
-
        if (saveG!=""){
-         if(plot==TRUE){plot_grid(l1Plot,l2Plot,agreePlot,matConfPlot, align='hv')}
          plotName<-paste0(saveG,".png")
          png(filename = plotName,width=1200,height=900)
          print(plot_grid(l1Plot,l2Plot,agreePlot,matConfPlot, align='hv'))
