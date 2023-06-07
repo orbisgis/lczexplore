@@ -447,6 +447,7 @@ if (plot == TRUE){
 
 
        if (saveG!=""){
+         if(plot==TRUE){plot_grid(l1Plot,l2Plot,agreePlot,matConfPlot, align='hv')}
          plotName<-paste0(saveG,".png")
          png(filename = plotName,width=1200,height=900)
          print(plot_grid(l1Plot,l2Plot,agreePlot,matConfPlot, align='hv'))
@@ -458,4 +459,3 @@ if (plot == TRUE){
 
 matConfOut<-matConfOut
 }
-
