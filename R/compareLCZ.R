@@ -319,6 +319,9 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
   # Export of lcz and area for each geom for further analysis
 
         echInt<-echInt %>% mutate(area=st_area(geometry)) %>% drop_units
+    # Drop intersected geometries with area equal to zero
+        echInt<-subset(echInt,area!=0)
+  
         echIntExpo<-echInt %>% mutate(location=location,area=as.numeric(area)) %>%
           st_set_geometry(NULL) %>% as.data.frame()
 
