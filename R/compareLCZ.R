@@ -62,7 +62,7 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
 
   # store the column names in a way that can be injected in functions A SUPPRIMER ?
 
-  column2Init<-column2 # in case of column1==column2, this will be used to call levCol
+  # column2Init<-column2 in case of column1==column2, this will be used to call levCol
   namesf1<-deparse(substitute(sf1))
   namesf2<-deparse(substitute(sf2))
   message(paste(" The column ",column1, " of the dataset", namesf1,
@@ -236,7 +236,7 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
 
   if(repr=="grouped")
   { ############### This is a temporary feature. Grouping LCZ, showing and comparing grouped LCZ will be re-written in a  cleaner way in a later version
-    args<-list(...)
+    # args<-list(...)
 
     # Call levCol to deal with levels and colors
     levCol1<-levCol(sf1,column1,...)
@@ -319,6 +319,9 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
   # Export of lcz and area for each geom for further analysis
 
         echInt<-echInt %>% mutate(area=st_area(geometry)) %>% drop_units
+    # Drop intersected geometries with area equal to zero
+        echInt<-subset(echInt,area!=0)
+  
         echIntExpo<-echInt %>% mutate(location=location,area=as.numeric(area)) %>%
           st_set_geometry(NULL) %>% as.data.frame()
 
@@ -444,8 +447,6 @@ if (plot == TRUE){
        geom_tile(datatemp,mapping=aes(x=coordRef,y=a,fill=percArea2, height=0.8,width=0.8))+
        ggtitle(titre4,subtitle="Percentage inferior to 0.5 are rounded to 0")
 
-
-
        if (saveG!=""){
          plotName<-paste0(saveG,".png")
          png(filename = plotName,width=1200,height=900)
@@ -458,4 +459,3 @@ if (plot == TRUE){
 
 matConfOut<-matConfOut
 }
-

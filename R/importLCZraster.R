@@ -20,8 +20,7 @@
 #'
 #' @examples
 #' redonBbox<-importLCZgen(dirPath=paste0(system.file("extdata", package = "lczexplore"),
-#' "/bdtopo_2_2/Redon"),#' file="rsu_lcz.geojson",column="LCZ_PRIMARY", geomID="ID_RSU",
-#' confid="LCZ_UNIQUENESS_VALUE",output="bBox")
+#' "/bdtopo_2_2/Redon"), file="rsu_lcz.geojson",column="LCZ_PRIMARY", output="bBox")
 #'
 #' redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
 #' fileName="redonWudapt.tif",bBox=redonBbox)
