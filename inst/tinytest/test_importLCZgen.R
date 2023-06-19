@@ -1,4 +1,4 @@
-#This tests teh function importLCZgen
+#This tests the function importLCZgen
 # library(tinytest)
 #
 library(sf)
@@ -99,4 +99,3 @@ expect_warning(importLCZgen(dirPath=paste0(system.file("extdata", package = "lcz
                        "105"="105","106"="106","101"="11","102"="12","103"="13","104"="14",
                        "105"="15", "106"="16","107"="17"),drop=T),
              "The levels you specified with the typeLevels argument don't cover the LCZ values")
-

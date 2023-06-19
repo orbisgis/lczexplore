@@ -21,8 +21,8 @@ LCZgroup2<-function(sf,column,outCol='grouped',...)
   #require(dplyr)
 
   # ensure all the LCZ levels are present in the imported column
-  uniqueData<-sf[column] |> sf::st_drop_geometry()  |> unique() # Attention unique outputs a list of length 1
-  uniqueData<-levels(uniqueData[,1]) |> as.character() |> as.vector()
+  uniqueData<-sf[column] %>% sf::st_drop_geometry()  %>% unique() # Attention unique outputs a list of length 1
+  uniqueData<-levels(uniqueData[,1]) %>% as.character() %>% as.vector()
 
   # typeLevels<-c(1:10,101:107)
   sf<- sf %>%  mutate(!!column:=factor(st_drop_geometry(subset(sf,select=column,drop=T)) ,levels=uniqueData))
@@ -59,5 +59,3 @@ LCZgroup2<-function(sf,column,outCol='grouped',...)
   sf<- sf %>%  mutate(!!outCol:=temp)
   return(sf)
 }
-
-

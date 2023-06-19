@@ -39,7 +39,8 @@
 #' @param ... allow to pass arguments if representation is grouped.
 #' The expected arguments are the name of each grouped label,
 #' the levels of LCZ they contain, and last a vector of the colors to use to plot them.
-#' @import sf ggplot2 dplyr cowplot forcats units tidyr RColorBrewer utils grDevices
+#' @importFrom ggplot2 geom_sf guides ggtitle aes
+#' @import sf dplyr cowplot forcats units tidyr RColorBrewer utils grDevices rlang
 #' @return returns an object called matConfOut which contains
 #' matConfLong, a confusion matrix in a longer form, which can be written in a file by the compareLCZ function
 #' and is used by the geom_tile function of the ggplot2 package.
@@ -135,11 +136,11 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
 
   if(repr=="standard"){
 
-    uniqueData1<-sf1[column1] |> sf::st_drop_geometry()  |> unique() # Attention unique outputs a list of length 1
-    uniqueData1<-levels(uniqueData1[,1]) |> as.character() |> as.vector()
+    uniqueData1<-sf1[column1] %>% sf::st_drop_geometry()  %>% unique() # Attention unique outputs a list of length 1
+    uniqueData1<-levels(uniqueData1[,1]) %>% as.character() %>% as.vector()
 
-    uniqueData2<-sf2[column2] |> sf::st_drop_geometry()  |> unique() # Attention unique outputs a list of length 1
-    uniqueData2<-levels(uniqueData2[,1]) |> as.character() |> as.vector()
+    uniqueData2<-sf2[column2] %>% sf::st_drop_geometry()  %>% unique() # Attention unique outputs a list of length 1
+    uniqueData2<-levels(uniqueData2[,1]) %>% as.character() %>% as.vector()
 
     LCZlevels<-as.character(c(1:10,101:107))
     if (prod(uniqueData1%in%LCZlevels)==0){
@@ -305,7 +306,7 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
    # # Intersect geometries of both files
   ######################################################
     #intersection of geometries
-  echInt<-st_intersection(x=sf1[,nom1],y=sf2[,nom2])
+  echInt<-st_intersection(x=sf1[,nom1],y=sf2[,nom2]) %>% st_buffer(0)
     # checks if the two LCZ classifications agree
   echInt$agree<-subset(echInt,select=column1,drop=T)==subset(echInt,select=column2,drop=T)
 
@@ -404,12 +405,12 @@ if (plot == TRUE){
   nbgeomInter<-nrow(echInt)
 
   # Plot the first classification
-     l1Plot<- ggplot(boundary)+ # les données
-          geom_sf(data=boundary, fill=NA,lty='blank')+
-     geom_sf(data=sf1,aes(fill=get(column1)), colour=NA)+
-     scale_fill_manual(values=typeLevels,labels=etiquettes1, drop=FALSE)+
-     guides(fill=guide_legend(title=titrou))+
-     ggtitle(titre1, subtitle=paste0("Number of RSU : ",nbgeom1))
+     l1Plot<- ggplot2::ggplot(boundary)+ # les données
+       ggplot2::geom_sf(data=boundary, fill=NA,lty='blank')+
+       ggplot2::geom_sf(data=sf1,aes(fill=get(column1)), colour=NA)+
+       ggplot2::scale_fill_manual(values=typeLevels,labels=etiquettes1, drop=FALSE)+
+       ggplot2::guides(fill=guide_legend(title=titrou))+
+       ggplot2::ggtitle(titre1, subtitle=paste0("Number of RSU : ",nbgeom1))
      #
 
 

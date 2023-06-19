@@ -1,9 +1,9 @@
 # library(tinytest)
-# system.file("extdata/", package = "lczexplore") |> list.files()
-# system.file("extdata/bdtopo_2_2", package = "lczexplore") |> list.files()
+# system.file("extdata/", package = "lczexplore") %>% list.files()
+# system.file("extdata/bdtopo_2_2", package = "lczexplore") %>% list.files()
 # file.exists(system.file("extdata/bdtopo_2_2/Redon", package = "lczexplore"))
 #
-# system.file("extdata/osm/2022", package = "lczexplore") |> list.files()
+# system.file("extdata/osm/2022", package = "lczexplore") %>% list.files()
 #
 #
 # confidSensib
@@ -29,7 +29,3 @@ expect_warning(
   "containing missing values")
 
 expect_equal(confidTest1,confidTest2)
-
-
-
-

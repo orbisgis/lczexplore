@@ -13,7 +13,7 @@
 #' @param verbose if TRUE show the discrepancies between specified levels of LCZ and
 #' levels actually present in column
 #' @param drop : the default is TRUE, which means all the column are dropped excepted those specified in previous parameters
-#' @import dplyr forcats rlang
+#' @import dplyr forcats rlang sf
 #' @importFrom terra crop
 #' @importFrom terra rast
 
@@ -46,7 +46,7 @@ importLCZgen<-function(dirPath, file="rsu_lcz.geojson", output="sfFile", column=
   colErr<-c("It seems that some of the columns you try to import do not exist in the source file,
             are you sure you meant ",
                  paste(badCol)," ?")
-  if (prod(inCol)==0){ stop(colErr) } else { sfFile<-st_read(dsn=fileName)[,colonnes] }
+  if (prod(inCol)==0){ stop(colErr) } else { sfFile<-sf::st_read(dsn=fileName)[,colonnes] }
 
   # if typeLevels is empty
   if (length(typeLevels)==1){
@@ -106,5 +106,3 @@ importLCZgen<-function(dirPath, file="rsu_lcz.geojson", output="sfFile", column=
 
     }
 }
-
-

@@ -24,9 +24,9 @@ levCol<-function(sf,column,drop=FALSE,...){
 
   #
 
-  uniqueData<-sf[column] |> sf::st_drop_geometry()  |> unique() # Attention unique outputs a list of length 1
+  uniqueData<-sf[column] %>% sf::st_drop_geometry()  %>% unique() # Attention unique outputs a list of length 1
   if(drop==TRUE){uniqueData<-droplevels(uniqueData)}
-  uniqueData<-levels(uniqueData[,1]) |> as.character() |> as.vector()
+  uniqueData<-levels(uniqueData[,1]) %>% as.character() %>% as.vector()
 
   if(length(uniqueData)>36){ stop(
     "This package is not suited for classification with more than 36 levels or types.
@@ -345,7 +345,3 @@ return(output)
  #                            cols=c("red","black","green","grey","burlywood","blue"))
 
 #summary(redonBDTgrouped$grouped)
-
-
-
-

@@ -1,9 +1,9 @@
 # library(tinytest)
-# system.file("extdata/", package = "lczexplore") |> list.files()
-# system.file("extdata/bdtopo_2_2", package = "lczexplore") |> list.files()
+# system.file("extdata/", package = "lczexplore") %>% list.files()
+# system.file("extdata/bdtopo_2_2", package = "lczexplore") %>% list.files()
 # file.exists(system.file("extdata/bdtopo_2_2/Redon", package = "lczexplore"))
 #
-# system.file("extdata/osm/2022", package = "lczexplore") |> list.files()
+# system.file("extdata/osm/2022", package = "lczexplore") %>% list.files()
 #
 #
 # fetchLCZ(location="Redon",
@@ -23,5 +23,3 @@ expect_message(fetchLCZ(location="Redon",
 expect_warning(fetchLCZ(location="Clohars-Carnoët",
           outDir=system.file("extdata", package = "lczexplore"),
           wf="bdtopo_2_2"),"The file couldn't be downloaded")
-
-
