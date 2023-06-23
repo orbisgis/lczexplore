@@ -32,7 +32,7 @@ LCZgroup2<-function(sf,column,outCol='grouped',...)
   args<-list(...)
   indSep<-names(args)
   indCol<-grep(x=indSep,pattern="col")
-  # print("indCol"); print(indCol)
+ 
 
      if(length(indCol)==0) {
        args<-append(list(temp),args)

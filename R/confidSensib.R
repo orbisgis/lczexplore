@@ -16,7 +16,7 @@
 #' @param column2 is the name of the column storing the second LCZ classification values
 #' @param confid2 is the name of the column storing the second LCZ classification confidence value
 #' @param sep the separator used if filePath is not empty
-#' @param repr were the levels grouped or do we expect original LCZ values
+#' @param repr is standard when original LCZ values are expected, alter otherwise
 #' @param plot if TRUE the graph is plotted
 #' @param saveG if not an empty string, specifies where to save graphs
 #' @import dplyr ggplot2
@@ -206,6 +206,3 @@ typeLevels<-unique(echIntConf[,column1]) %>% as.vector
  return(sortie)
 
 }
-
-
-

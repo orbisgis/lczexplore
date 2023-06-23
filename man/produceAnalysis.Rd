@@ -38,11 +38,11 @@ It is important for "osm" workflow as the data are updated frequently.}
 
 \item{refYear2}{see refYear1.}
 
-\item{repr}{: "standard" means that original values of LCZ are used, "grouped" means the user wishes to group some of the LCZ levels under a new label.}
+\item{repr}{: "standard" means that original values of LCZ are used, "alter" means the user wishes to group some of the LCZ levels under a new label.}
 
 \item{saveG}{: when an empty character string, "", the plots are not saved. Else, the saveG string is used to produce the name of the saved png file.}
 
-\item{...}{allow to pass arguments if representation is grouped.
+\item{...}{allow to pass arguments if representation is alter.
 The expected arguments are the name of each grouped label,
 the levels of LCZ they contain, and last a vector of the colors to use to plot them.}
 }

@@ -45,7 +45,7 @@ matConfLCZGlob(
 
 \item{sep}{: the seperator used in the csv file}
 
-\item{repr}{: standard or grouped}
+\item{repr}{: standard or alter}
 
 \item{typeLevels}{: by default levels of the LCZ classification are built
 reading the data, but one can input a character string vector of levels,

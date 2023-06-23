@@ -23,8 +23,8 @@
 #' use "bdtopo_2_2". When GeoClimate was used with Open Street Map data as input, use "osm".
 #' When the LCZ come from the wudapt Europe tiff, use "wudapt".
 #' @param ref : If the coordinate reference system (CRS) of sf1 and sf2 differ, ref indicates which CRS to choose for both files (1 or 2)
-#' @param repr "standard" means that original values of LCZ are used,
-#'  "grouped" means the user has groupe some of the LCZ levels under a new label.
+#' @param repr "standard" means that standard values of LCZ are expected,
+#'  "alter" means other values are expected, like grouped values of LCZ or other qualitative variable.
 #'  In the latter case, the ... arguments must contain the groups and a color vector.
 #' @param plot : when FALSE non of the graphics are plotted or saved
 #' @param saveG : when an empty character string, "", the plots are not saved. Else, the saveG string is used to produce the name of the saved png file.
@@ -36,9 +36,9 @@
 #' @param tryGroup : when TRUE, if the specified level names don't match the data, but the specified levels do,
 #' a call to the LCZgroup2 function will be tried, and if it works, the resulting grouping column will be named
 #' "grouped" and the comparison will be done using it.
-#' @param ... allow to pass arguments if representation is grouped.
-#' The expected arguments are the name of each grouped label,
-#' the levels of LCZ they contain, and last a vector of the colors to use to plot them.
+#' @param ... allow to pass arguments if repr is set to alter.
+#' The expected arguments are the name of each level of the variables contained 
+#' in column1 and column2, and last a vector cols of the colors to use to plot them.
 #' @importFrom ggplot2 geom_sf guides ggtitle aes
 #' @import sf dplyr cowplot forcats units tidyr RColorBrewer utils grDevices rlang
 #' @return returns an object called matConfOut which contains
@@ -50,14 +50,27 @@
 #' If saveG is not an empty string, graphics are saved under "saveG.png"
 #' @export
 #' @examples
-#' compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU",
+#' comparisonBDT_OSM<-compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU",
 #' confid1="LCZ_UNIQUENESS_VALUE", wf1="bdtopo_2_2",
 #' sf2=redonOSM, column2="LCZ_PRIMARY", geomID2 = "ID_RSU",
 #' confid2="LCZ_UNIQUENESS_VALUE", wf2="osm",
 #' repr="standard", saveG="", exwrite=TRUE, location="Redon", plot=TRUE)
+#' # To get the summed area of each LCZ levels for both dataset : 
+#' comparisonBDT_OSM$areas
+#' # The plots of each dataset can be produced with the /`showLCZ/` function.
+#' # To get the value of the general percentage of agreement call :
+#' comparisonBDT_OSM$percAgg
+#' # The values of that confusion matrix is available in a wide form:
+#' comparisonBDT_OSM$matConfLarge
+#' # or in a long form :
+#' comparisonBDT_OSM$matConf
+#' 
+#' # Examples for non LCZ variables are available in the importSurfQualVar function examples.
+#' 
 compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
                      sf2,column2,geomID2="",confid2="",wf2="osm",ref=1,
-                     repr="standard",saveG="",exwrite=TRUE,outDir=getwd(),location="Redon", plot=TRUE, tryGroup=FALSE, ...){
+                     repr="standard",saveG="",exwrite=TRUE,outDir=getwd(),
+                     location="Your Place", plot=TRUE, tryGroup=FALSE, ...){
 
 
 
@@ -146,13 +159,13 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
     if (prod(uniqueData1%in%LCZlevels)==0){
       line1<-"The column chosen for the first data set dosen't seem to be a standard LCZ encoding. \n"
       line2<-"Did you import the data with importLCZgen ? \n"
-      line3<-" If the LCZ types are not standard, you can try to set repr to grouped and specify the levels. \n"
+      line3<-" If the LCZ types are not standard, you can try to set repr to alter and specify the levels. \n"
       errorMessage<-paste(line1,line2,line3)
       stop(errorMessage) }
     if (prod(uniqueData2%in%LCZlevels)==0){
       line1<-"The column chosen for the second data set dosen't seem to be a standard LCZ encoding. \n"
       line2<-"Did you import the data with importLCZgen ? \n"
-      line3<-" If the LCZ types are not standard, you can try to set repr to grouped and specify the levels. \n"
+      line3<-" If the LCZ types are not standard, you can try to set repr to alter and specify the levels. \n"
       errorMessage<-paste(line1,line2,line3)
       stop(errorMessage) }
 
@@ -235,10 +248,9 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
 
 
 
-  if(repr=="grouped")
-  { ############### This is a temporary feature. Grouping LCZ, showing and comparing grouped LCZ will be re-written in a  cleaner way in a later version
-    # args<-list(...)
-
+  if(repr=="alter")
+  { 
+    
     # Call levCol to deal with levels and colors
     levCol1<-levCol(sf1,column1,...)
     levCol2<-levCol(sf2,column2,...)
@@ -249,7 +261,7 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
     LCZlevels<-names(typeLevels)
 
     # if there are several parameters to specify grouping levels
-    # and their names don't cover the values in column, and if tryGroup is T
+    # and their names don't cover the values in column, and if tryGroup is TRUE
     # then we try to call LCZgroup2 And procede to grouping accordingly
 
     if (tryGroup==TRUE && (length(grep("14: ",levColCase1))!=0 ||length(grep("15: ",levColCase1))!=0 )){
@@ -292,7 +304,7 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
     sf1<-select(sf1,nom1) %>% drop_na(column1)
     sf2<-select(sf2,nom2) %>% drop_na(column2)
 
-    # this illustrates how silly it was to chose to store levels and colors in the same vector as names and values.
+    # this illustrates how silly it was to store levels and colors in the same vector as names and values.
     # Classification must be encoded as factors
 
      sf1<-sf1 %>% mutate(!!column1:=factor(subset(sf1,select=column1,drop=T),levels=LCZlevels))
@@ -306,7 +318,17 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
    # # Intersect geometries of both files
   ######################################################
     #intersection of geometries
-  echInt<-st_intersection(x=sf1[,nom1],y=sf2[,nom2]) %>% st_buffer(0)
+  echInt<-st_intersection(x=sf1[,nom1],y=sf2[,nom2]) %>% st_buffer(0) %>% 
+    mutate(area=drop_units(st_area(geometry)))
+  nbNoSurf<-nrow(subset(echInt,area==0))
+  if (nbNoSurf>0){
+  message(paste0(
+    "The intersection of the two data set geometries return ",
+    nbNoSurf, " geometries with an null area. They will be discarded."))
+  echInt<-subset(echInt,area!=0)
+  }
+
+  
     # checks if the two LCZ classifications agree
   echInt$agree<-subset(echInt,select=column1,drop=T)==subset(echInt,select=column2,drop=T)
 
@@ -319,7 +341,7 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
 
   # Export of lcz and area for each geom for further analysis
 
-        echInt<-echInt %>% mutate(area=st_area(geometry)) %>% drop_units
+        #echInt<-echInt %>% mutate(area=st_area(geometry)) %>% drop_units
     # Drop intersected geometries with area equal to zero
         echInt<-subset(echInt,area!=0)
   
@@ -358,6 +380,9 @@ matConfOut<-matConfLCZ(sf1=sf1, column1=column1, sf2=sf2, column2=column2,
                        repr=repr, typeLevels=LCZlevels, plot=FALSE)
 matConfOut$data<-echIntExpo
 matConfLong<-matConfOut$matConf
+matConfLarge<-pivot_wider(matConfLong,names_from = column2,values_from = agree)
+matConfOut$matConfLarge<-matConfLarge  
+  
 areas<-matConfOut$areas
 percAgg<-matConfOut$percAgg
 

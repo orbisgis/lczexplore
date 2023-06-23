@@ -32,7 +32,7 @@ levCol<-function(sf,column,drop=FALSE,...){
     "This package is not suited for classification with more than 36 levels or types.
   You can use the function LCZgroup2 to group some levels.") }
 
-  # print("uniqueData") ; print(uniqueData)
+
 
 
   argNames<-names(args)
@@ -40,10 +40,9 @@ levCol<-function(sf,column,drop=FALSE,...){
   if (length(indCol) != 0) {
     if (length(indCol)>1 ) {
       stop(
-        "only one argument can start with cols, and it must contain the colors,
+        "Only one argument can start with cols, and it must contain the colors,
       please rename your arguments and retry.")} else {
       argCol <- args[indCol][[1]]
-      # print("argCol");print(argCol)
       argLev<-args[-indCol]
       if (prod(argCol=="")==1){
           args<-args[-indCol]
@@ -55,10 +54,7 @@ levCol<-function(sf,column,drop=FALSE,...){
           argCol<-NULL
           argLev<-args
   }
-
-
-  # print("prod(unlist(args)==chainevide"); print(prod(unlist(args)==""))
-  # print("length(args)"); print(length(args))
+  
   if(length(argLev)>36){ stop("This package is not suited for classification with more than 36 levels or types.
   You can use the function LCZgroup2 to group some levels.") }
 
@@ -81,7 +77,6 @@ levCol<-function(sf,column,drop=FALSE,...){
         case<-"1: No level vector and no color vector, less than 36 levels,
         levels will be deduced from the data
         and colors will be chosen from a standard palette."
-        # print("length(uniqueData)");print(length(uniqueData))
 
         typeLevels<-standLevCol( levels=uniqueData,
                                  colors=palette.colors(n=length(uniqueData), palette="Polychrome 36"),
@@ -92,10 +87,6 @@ levCol<-function(sf,column,drop=FALSE,...){
 
  # Case (...) contains only one argument (color OR levels)
   if(length(args) == 1) {
-    # print("length(argLev)");print(length(argLev))
-    # print("argLev");print(argLev)
-    # typeLevels<-names(argLev)
-    # print("typeLevels"); print(typeLevels)
 
     if (length(indCol) == 1 && prod(argCol!="")==1 && !is.null(argCol))
     {
@@ -127,8 +118,7 @@ levCol<-function(sf,column,drop=FALSE,...){
     {
      if (prod(areColors(argLev[[1]]))==1)
      {
-       # print("uniqueData");print(uniqueData);print("names(argLev) indcol is null");print(names(argLev[[1]]))
-
+ 
           if(prod(uniqueData%in%names(argLev[[1]]))==1 & length(uniqueData)==length(argLev[[1]]))
       {
         case<-"4: A single vector was provided, whose names cover the levels in the data
@@ -183,12 +173,9 @@ levCol<-function(sf,column,drop=FALSE,...){
 # Case (...) contains 2 argument, hopefully a vector of levels and a vector of colors
   if ( length(args)==2 &&
     !(prod(unlist(args)=="")==1)) {
-
-      # print("length(argLev)");print(length(argLev))
-      # print("argLev");print(argLev)
+     
       typeLevels<-argLev
-      # print("typeLevels"); print(typeLevels)
-
+      
       if(length(indCol==1))
       { if ( length(argLev)<length(uniqueData) || argCol=="" ){
         case<-"14.0: The vector level doesn't cover the levels in the data
@@ -262,11 +249,9 @@ levCol<-function(sf,column,drop=FALSE,...){
 
   if ( length(args) > 2 )
   {
-    # print("length(args)");print(length(args))
-    # print("length(argLev)");print(length(argLev))
-    # print("argLev");print(argLev)
+    
     LCZlevels<-names(argLev)
-    # print("typeLevels"); print(typeLevels)
+    
     ### GERER L'APPEL À LCZgroup2 DANS CE CAS
      if(prod(uniqueData%in%LCZlevels)==0 && length(argCol)<=length(uniqueData)){
        case<-"14: The specified levels don't cover the levels in the data
@@ -314,8 +299,7 @@ levCol<-function(sf,column,drop=FALSE,...){
             typeLevels<-argCol
             names(typeLevels)<-LCZlevels
           } else {
-            # print("length(args)");print(length(args))
-            # print("length(argCol)"); print(length(argCol))
+           
             case<-"18: Several arguments are specified, whose names cover
           the levels in the data but the associated vector of colors
           contains names which are not colors.

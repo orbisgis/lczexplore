@@ -48,7 +48,8 @@ expect_silent(redonOSMgrouped2<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",outCol="
                            cols=c("red","black","green","grey","burlywood","blue"))
 )
 
-expect_message(showLCZ(redonBDTgrouped2,column="groupedLCZ",repr='grouped',
+expect_message(
+  showLCZ(redonBDTgrouped2,column="groupedLCZ",repr="alter",
         LCZlevels=c("urban","industry","vegetation","impervious","pervious","water"),
         cols=c("red","black","green","grey","burlywood","blue")),
                "9: Levels specified in one vector"
@@ -56,7 +57,7 @@ expect_message(showLCZ(redonBDTgrouped2,column="groupedLCZ",repr='grouped',
 )
 
 # compareLCZ(sf1=redonBDTgrouped2, column1="groupedLCZ", wf1="BDT",
-#            sf2=redonOSMgrouped2,column2="otherName",wf2="osm", exwrite=FALSE, repr="grouped", plot=T,
+#            sf2=redonOSMgrouped2,column2="otherName",wf2="osm", exwrite=FALSE, repr="alter", plot=T,
 #            urban="urban",industry="industry",vegetation="vegetation",impervious="impervious",pervious="pervious",water="water",
 #            cols=c("red","black","green","grey","burlywood","blue") )
 

@@ -51,7 +51,7 @@ the average agreement between classifs will be computed}
 
 \item{sep}{the separator used if filePath is not empty}
 
-\item{repr}{were the levels grouped or do we expect original LCZ values}
+\item{repr}{is standard when original LCZ values are expected, alter otherwise}
 
 \item{plot}{if TRUE the graph is plotted}
 

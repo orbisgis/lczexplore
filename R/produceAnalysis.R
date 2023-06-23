@@ -15,9 +15,9 @@
 #' @param refYear1 allows to indicate on which year the analysis was produced.
 #' It is important for "osm" workflow as the data are updated frequently.
 #' @param refYear2 see refYear1.
-#' @param repr : "standard" means that original values of LCZ are used, "grouped" means the user wishes to group some of the LCZ levels under a new label.
+#' @param repr : "standard" means that original values of LCZ are used, "alter" means the user wishes to group some of the LCZ levels under a new label.
 #' @param saveG : when an empty character string, "", the plots are not saved. Else, the saveG string is used to produce the name of the saved png file.
-#' @param ... allow to pass arguments if representation is grouped.
+#' @param ... allow to pass arguments if representation is alter.
 #' The expected arguments are the name of each grouped label,
 #' the levels of LCZ they contain, and last a vector of the colors to use to plot them.
 #' @importFrom magrittr "%>%"
@@ -136,9 +136,9 @@ if(repr=="standard"){
                      saveG=nameG,repr=repr,wf1=wf1,wf2=wf2,exwrite=T,outDir=outDir,location=location,...)
       }
 }
-  if(repr=='grouped'){
+  if(repr=='alter'){
 
-    print("grouped loop")
+    print("alter loop")
 
     nameG<-paste0(location,"_",wf1,"_",wf2,"_",repr)
 
@@ -175,4 +175,3 @@ if(repr=="standard"){
   }
  #  setwd(wd)
 }
-

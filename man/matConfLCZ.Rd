@@ -25,7 +25,7 @@ matConfLCZ(
 \item{column2}{is the column of the second data set containing the lcz to be compared}
 
 \item{typeLevels}{by default the levels of lcz incoded from 1 to 10 and 101 to 107.
-When comparing grouped LCZ, the grouped levels have to be specified.}
+When comparing othe variable, like grouped LCZ, the grouped levels have to be specified.}
 
 \item{plot}{if TRUE the plot of the matrix}
 

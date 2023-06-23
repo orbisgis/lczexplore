@@ -7,7 +7,7 @@ resource_files:
   - vignettes/Redon.png
 vignette: >
  %\VignetteIndexEntry{Raster_vector_comparison}
- %\VignetteEngine{knitr::rmarkdown}
+ %\VignetteEngine{knitr::knitr}
  %\VignetteEncoding{UTF-8}
 ---
 
@@ -161,7 +161,7 @@ impervious="105",pervious="106",water="107", outCol = "Regrouped")
 
 compareLCZ(sf1 = redonWudaptGrouped, column1 = "Regrouped", wf1 = "Wudapt",
            sf2 = redonOSMgrouped, column2 = "Regrouped", wf2 = " GeoClimate on OSM data",
-           exwrite = FALSE, plot=TRUE, repr="grouped", levels=c("urban","industry","vegetation","impervious","pervious","water"),cols=c("red","black","green","grey","burlywood","blue"))
+           exwrite = FALSE, plot=TRUE, repr="alter", levels=c("urban","industry","vegetation","impervious","pervious","water"),cols=c("red","black","green","grey","burlywood","blue"))
 
 
 ```
@@ -169,6 +169,3 @@ One can notice that the two explored algorithms agree rather well about vegetati
 On urban LCZ, while 68% of the surface WUDAPT classifies as urban is also classified as urban by GeoClimate, 19% is classified as vegetation and 12% as impervious by GeoClimate.
 
 The confusion matrix compare percentage of areas, so if the global area concerned is small, one has to be careful about the interpretation. For instance, the very strong agreement about pervious soils or the relative agreement about water should not be over interpreted as they only represent less than 1% of the areas of the WUDAPT generated map.
-
-
-

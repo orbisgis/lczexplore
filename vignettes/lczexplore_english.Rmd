@@ -7,7 +7,7 @@ resource_files:
   - vignettes/Redon.png
 vignette: >
  %\VignetteIndexEntry{lczexplore_english}
- %\VignetteEngine{knitr::rmarkdown}
+ %\VignetteEngine{knitr::knitr}
  %\VignetteEncoding{UTF-8}
 ---
 
@@ -39,7 +39,7 @@ As several workflow can produce these LCZ types, this package allows to represen
 
 Unzip the tar.gz file and install it (see `?install.packages`)
 
-One can also install it from the github repository. This repository will be modified when the source codes will be moved to the official repository of the OrbisGis team. This temporary version can be installed for now from the author's repository : (`devtools::install_github("MGousseff/lczexplore")`).
+One can also install it from the github repository. This repository will be modified when the source codes will be moved to the official repository of the OrbisGis team. This temporary version can be installed for now from the author's repository : (`devtools::install_github("orbisgis/lczexplore", build_vignettes = TRUE)`).
 
 
 Load the package : `library(lczexplore)`.
@@ -82,13 +82,13 @@ For standard LCZ types, one sets the argument `repr="standard"`, and the functio
 showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="standard",LCZlevels="",cols="")
 ```
 
-If one regrouped some LCZ types into more general categories, or if the LCZ don't have a standard encoding, set `repr=grouped` and the pass the vector of possible levels of the variable to the argument `LCZlevels`. Pass the vector of associated colors to the argument `cols`.
+If one regrouped some LCZ types into more general categories, or if the LCZ don't have a standard encoding, set `repr=alter` and the pass the vector of possible levels of the variable to the argument `LCZlevels`. Pass the vector of associated colors to the argument `cols`.
 If no vector of levels or no vector of colors is given, the levels will be deduced from the unique values present in the data, and the colors will be picked from the "Polychrome 36" palette of the `grDevices` package.
 
 For instance : one can first plot the column without knowing the LCZ levels present.
 ```{r, fig.dim = c(8, 6)}
-#showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="grouped")
-showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="grouped")
+#showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter")
+showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter")
 
 ```
 
@@ -97,7 +97,7 @@ Notice one has to explicitly set `drop=TRUE` to discard the unused levels.
 
 ```{R, fig.dim = c(8, 6)}
 LCZlevels<-c(2, 3, 5, 6, 8, 9, 101, 102, 104, 105, 107)
-showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="grouped",drop=TRUE, LCZlevels = LCZlevels)
+showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter",drop=TRUE, LCZlevels = LCZlevels)
 
 ```
 
@@ -108,13 +108,13 @@ The following code shows an example of color choice.
 LCZlevels<-c(2, 3, 5, 6, 8, 9, 101, 102, 104, 105, 107)
 couleurs<-c("red","brown1","orange","coral","grey","darkgreen","chartreuse4","springgreen3",
             "darkolivegreen","black","royalblue2")
-showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="grouped",drop=TRUE,LCZlevels=LCZlevels,cols=couleurs)
+showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter",drop=TRUE,LCZlevels=LCZlevels,cols=couleurs)
 
 ```
 
 ## Group several LCZ types in a category using LCZgroup2
 
-For instance, one may want to illustrate the contour of a city, by grouping the urban LCZ and the vegetation ones. Use the `LCZgroup2` function and set the dataset with the argument `sf` and the column with `column`.Then you pass as many vectors as tehere are grouped category, each of them containing the levels to be grouped together. The newly created categories will be stored in the `outCol` column. If the user doesn't enter them, by default the column is called 'grouped'.
+For instance, one may want to illustrate the contour of a city, by grouping the urban LCZ and the vegetation ones. Use the `LCZgroup2` function and set the dataset with the argument `sf` and the column with `column`.Then you pass as many vectors as there are grouped category, each of them containing the levels to be grouped together. The newly created categories will be stored in the `outCol` column. If the user doesn't enter them, by default the column is called 'grouped'.
 
 The newly created dataset can be mapped with `showLCZ` function.
 
@@ -124,7 +124,7 @@ redonOSMgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",
                            industry="10",
                            vegetation=c("101","102","103","104"),
                            impervious="105",pervious="106",water="107",cols=c("red","black","green","grey","burlywood","blue"))
-showLCZ(redonOSMgrouped, column="grouped",repr="grouped",wf="OSM",
+showLCZ(redonOSMgrouped, column="grouped",repr="alter",wf="OSM",
         LCZlevels = c("urban","industry","vegetation","impervious","pervious","water"),
         cols=c("red","black","green","grey","burlywood","blue"))
 

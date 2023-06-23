@@ -7,7 +7,7 @@ resource_files:
   - vignettes/Redon.png
 vignette: >
  %\VignetteIndexEntry{lczexplore_french}
- %\VignetteEngine{knitr::rmarkdown}
+ %\VignetteEngine{knitr::knitr}
  %\VignetteEncoding{UTF-8}
 ---
 
@@ -38,7 +38,7 @@ En amont de ce paquet, l'utilisateur aura affecté à chacune des unités de ré
 
 Dézipper le tar.gz fourni et l'installer ( voir `?install.packages`)
 
-Il est aussi possible de l'installer depuis le dépôt github. Ce dépôt sera modifié lorsque la première version release sera jointe au dépôt officiel de l'équipe Orbisgis, cette version temporaire peut être téléchargée depuis le github du créateur du paquet (`devtools::install_github("MGousseff/lczexplore")`).
+Il est aussi possible de l'installer depuis le dépôt github. Ce dépôt sera modifié lorsque la première version release sera jointe au dépôt officiel de l'équipe Orbisgis, cette version temporaire peut être téléchargée depuis le github du créateur du paquet (`devtools::install_github("orbisgis/lczexplore", build_vignettes = TRUE)`).
 
 
 Charger avec library(lczexplore).
@@ -51,10 +51,11 @@ library(lczexplore)
 
 ## Importer les fichiers avec la fonction importLCZgen
 
-La fonction `importLCZgen` est la fonction générique d'import du fichier contenant les LCZ. L'import des fichiers geojson et shp a été testés, mais tous les formats acceptés par la fonction `st_read` de `sf` sont normalement importés sans problème.
+La fonction `importLCZgen` est la fonction générique d'import d'un fichier "vecteur" contenant les LCZ (pour les fichiers raster, voir la vignette lcz_explore_raster_vector). L'import des fichiers geojson et shp a été testés, mais tous les formats acceptés par la fonction `st_read` de `sf` sont normalement importés sans problème.
+
 
 L'argument `dirPath` permet d'indiquer le chemin du répertoire où se trouve le fichier et l'argument `file` le nom du fichier.
-L'argument `column`, obligatoire, renseigne le nom de la colonne contenant les types de zones climatiques locales ou LCZ. Les arguments optionnels `geomID` et `confid` permettent de spécifier les colonnes contenant les identifiants des géométries et mesure de la confiance qu'on a en la valeur de LCZ attribuée à une géométrie.
+L'argument `column`, obligatoire, renseigne le nom de la colonne contenant les types de zones climatiques locales ou LCZ. Les arguments optionnels `geomID` et `confid` permettent de spécifier les colonnes contenant les identifiants des géométries et une mesure de la confiance qu'on a en la valeur de LCZ attribuée à une géométrie.
 
 Par défaut, cette fonction ressort un fichier de classe `simple feature`, telle que définie par l'OpenGIS et gérée par le paquet `sf`, paquet de référence pour la gestion des données vecteurs dans R [https://doi.org/10.32614/RJ-2018-009]. On peut également choisir `output="bBox"` pour que la fonction ressorte seulement la bounding box des géométries contenues dans le fichier concerné.
 
@@ -70,20 +71,20 @@ redonBDT<-importLCZgen(dirPath=dirPathBDT,file="rsu_lcz.geojson",column = "LCZ_P
 
 Une fois que le fichier a été chargé dans un objet R de classe `sf`, la fonction `showLCZ` permet de le représenter. On lui spécifie le jeu de données qu'on a chargé par l'argument `sf`, et on lui précise la colonne contenant les valeurs de LCZ par l'argument `column`. L'argument `wf` permet de spécifier le workflow qui a servi à générer les données (il sera repris dans le titre du graphique produit).
 
-Si on représente des LCZ avec des typeLevels de 1 à 10 puis de 101 à 107 selon la convention adoptée dans la chaîne GeoClimate, l'argument `repr=standard` met en forme la carte avec des couleurs standardisées. C'est le choix recommandé.
+L'argument `repr=standard` permet de gérer les niveaux de LCZ les plus usuels pour des cartes mises en forme avec des couleurs standardisées.
 
 
 ```{r, echo=FALSE, fig.dim = c(8, 6)}
 showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="standard",LCZlevels="",cols="")
 ```
 
-Dans le cas où on a procédé à un regroupage de modalités, si les LCZ ont un encodage particulier, ou si on veut utiliser la fonction pour représenter d'autres variables, on précisera `repr="grouped` et on passera le vecteur contenant les valeurs possibles à l'argument `LCZlevels` et les couleurs leur correspondant à l'argument `cols`.
+Dans le cas où on a procédé à un regroupage de modalités, si les LCZ ont un encodage particulier, ou si on veut utiliser la fonction pour représenter d'autres variables, on précisera `repr="alter` et on passera le vecteur contenant les valeurs possibles à l'argument `LCZlevels` et les couleurs leur correspondant à l'argument `cols`.
 
-Si `repr=grouped` et que `LCZlvels` et `cols` ne sont pas renseignés les couleurs sont choisies au sein de la palette "Polychrome 36" du package grDevice, et les niveaux déduits des valeurs présentes.
+Si `repr=alter` et que `LCZlvels` et `cols` ne sont pas renseignés les couleurs sont choisies au sein de la palette "Polychrome 36" du package grDevice, et les niveaux déduits des valeurs présentes.
 
 ```{r, fig.dim = c(8, 6), echo = FALSE}
-#showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="grouped")
-showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="grouped")
+#showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter")
+showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter")
 
 ```
 
@@ -91,14 +92,14 @@ L'argument `LCZlevels` permet de spécifier les niveaux qui se trouvent dans les
 ```{r, fig.dim = c(8, 6), echo = FALSE}
 
 LCZlevels<-c(2, 3, 5, 6, 8, 9, 101, 102, 104, 105, 107)
-showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="grouped", LCZlevels = LCZlevels)
+showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter", LCZlevels = LCZlevels)
 ```
 
 
 ```{r, fig.dim = c(8, 6), echo = FALSE}
 summary(redonOSM$"LCZ_PRIMARY")
 LCZlevels<-c(2, 3, 5, 6, 8, 9, 101, 102, 104, 105, 107)
-showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="grouped",drop=TRUE, LCZlevels = LCZlevels)
+showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter",drop=TRUE, LCZlevels = LCZlevels)
 
 ```
 
@@ -110,7 +111,7 @@ showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="grouped",drop=TRUE, LCZl
 LCZlevels<-c(2, 3, 5, 6, 8, 9, 101, 102, 104, 105, 107)
 couleurs<-c("red","brown1","orange","coral","grey","darkgreen","chartreuse4","springgreen3",
             "darkolivegreen","black","royalblue2")
-showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="grouped",drop=TRUE,LCZlevels=LCZlevels,cols=couleurs)
+showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter",drop=TRUE,LCZlevels=LCZlevels,cols=couleurs)
 
 ```
 
@@ -125,7 +126,7 @@ redonOSMgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",
                            industry="10",
                            vegetation=c("101","102","103","104"),
                            impervious="105",pervious="106",water="107",cols=c("red","black","green","grey","burlywood","blue"))
-showLCZ(redonOSMgrouped, column="grouped",repr="grouped",wf="OSM",
+showLCZ(redonOSMgrouped, column="grouped",repr="alter",wf="OSM",
         LCZlevels = c("urban","industry","vegetation","impervious","pervious","water"),
         cols=c("red","black","green","grey","burlywood","blue"))
 
