@@ -5,31 +5,34 @@
 #' that LCZ were produced by GeoClimate using the BD_TOPO_V2 or the Open Street Map data as input, respectively.
 #' If the LCZ were produced by WUDAPT, use "wudapt".
 #' @param column is the column that contains the LCZ.
-#' @param repr indicates if the sf dataset contains standarde LCZ levels or grouped LCZ.
-#' If "standard" then an optimal set of cols is used to produce the plotted map. Else, colors can be specified with the cols argument.
-#' @param cols is a vector of strings specifying the colors of each levels of \'typeLevels.\'
-#' If cols is an empty string, or if the number of specified color is less than the number of levels in \'typeLevels\',
-#' random colors will be chosen.
-#' @param LCZlevels allows you to set the grouped LCZ types.
+#' @param repr indicates if the sf dataset contains standard LCZ levels, 
+#' or alternative values, like grouped LCZ.
+#' If "standard" then an optimal set of cols is used to produce the plotted map. 
+#' Else, colors can be specified with the cols argument.
+#' 
 #' The values must at least cover the values of the column in the dataset, or it will be ignored.
 #' @param title allows the user to set the title of the plot
 #' @param drop indicates if you want to show the levels present in no geometry.
 #' @param useStandCol is set to TRUE implies that any levels detected as a standard LCZ level will receive the standard associated color
+#' @param ... these dynamic dots allow you to pass arguments to specify levels expected in your dataset and colors associated to these levels
 #' @import sf ggplot2 dplyr cowplot forcats grDevices
 #' @return no object is returned, but plots of the LCZ levels are produced
 #' @export
 #' @examples # On original LCZ levels, use the \'standard\' value for the \'repr\' argument.
 #' showLCZ(redonBDT,column="LCZ_PRIMARY", repr="standard")
-#' # On grouped data, use the grouped value for the repr argument.
+#' # On grouped data, use the alter value for the repr argument.
 #' redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",
 #' urban=c("1","2","3","4","5","6","7","8","9"),
 #' industry="10", vegetation=c("101","102","103","104"),
-#' impervious="105",pervious="106",water="107",
-#' cols=c("red","black","green","grey","burlywood","blue"))
+#' impervious="105",pervious="106",water="107")
+#' showLCZ(redonBDTgrouped,column="grouped",repr="alter",
+#' LCZlevels=c("urban","industry","vegetation","impervious","pervious","water"),
+#' cols=c("red","black","green","grey","burlywood","blue"),wf="BD TOPO")
+#' 
 showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
-                  repr="standard", drop=FALSE, cols="", LCZlevels="",useStandCol=TRUE){
+                  repr="standard", drop=FALSE, useStandCol=TRUE,...){
 
-  datasetName<-print(deparse(substitute(sf)))
+  datasetName<-deparse(substitute(sf))
 
   try(class(sf)[1]=="sf", stop("Input data must be sf object"))
 
@@ -71,17 +74,10 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
                 "LCZ C: Bush,scrub","LCZ D: Low plants",
                 "LCZ E: Bare rock or paved","LCZ F: Bare soil or sand","LCZ G: Water"),": ", areas$area, "%")
 
-
-
-
   if (wf!=""){nomLegende<-paste0("LCZ from ",wf," workflow")} else{nomLegende<-"LCZ"}
 
-  }
-
 ###### Shows the geoms with the original values of LCZ as described by Stewardt & Oke, and produced for instance by the GeoClimate workflow
-  if (repr=="standard"|repr=="both"){
-    # print(datasetName)
-    #print(head(sf[column]))
+
       if(title==""){
         if(wf!=""){wtitre<-paste("LCZ from", wf, "workflow, for ", datasetName,"dataset")} else{
         wtitre<-paste("LCZ from", datasetName,"dataset")
@@ -98,19 +94,24 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
   }
   #
 
-###### Shows LCZ once they are regrouped in more general classes, for instance outputs of the LCZgroup2 function
+###### Shows other qualitative variables, like LCZ once they are regrouped in more general classes, 
+  # for instance outputs of the LCZgroup2 function.
 
-  if (repr=="grouped"|repr=="both"){
+  if (repr=="alter"){
     print(datasetName)
 
-    if(length(LCZlevels)==1 && LCZlevels[1]=="" && length(cols)==1){
-      typeLevels<-levCol(sf,column, drop=drop)$levelsColors
-    } else if (length(LCZlevels)==1 & LCZlevels[1]==""){
-      typeLevels<-levCol(sf,column,cols=cols, drop=drop)$levelsColors}
-    else if (length(cols)==1 & cols[1]==""){
-      typeLevels<-levCol(sf,column,levels=LCZlevels, drop=drop)$levelsColors
-    }
-    else {typeLevels<-levCol(sf,column,levels=LCZlevels, cols=cols, drop=drop)$levelsColors }
+    typeLevels<-levCol(sf=sf,column=column,...)$levelsColors
+    print("output of levCol")
+    print(typeLevels)
+    
+    # if(length(LCZlevels)==1 && LCZlevels[1]=="" && length(cols)==1){
+    #   typeLevels<-levCol(sf,column, drop=drop)$levelsColors
+    # } else if (length(LCZlevels)==1 & LCZlevels[1]==""){
+    #   typeLevels<-levCol(sf,column,cols=cols, drop=drop)$levelsColors}
+    # else if (length(cols)==1 & cols[1]==""){
+    #   typeLevels<-levCol(sf,column,levels=LCZlevels, drop=drop)$levelsColors
+    # }
+    # else {typeLevels<-levCol(sf,column,levels=LCZlevels, cols=cols, drop=drop)$levelsColors }
 
     # IN CAS ESOME STANDARD LEVELS ARE DETECTED, ONE MAY WANT STANDARD COLORS TO BE APPLIED
 
@@ -126,7 +127,7 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
     areas<-LCZareas(sf,column,LCZlevels=names(typeLevels))
     etiquettes<-paste(LCZlevels,": ",areas$area,"%")
 
-   # print("head(sf[column])");print(head(sf[column]))
+    
    if(title=="") {
      if(wf!=""){wtitre<-paste("Grouped LCZ for ", wf, "workflow, applied to ", datasetName,"dataset")} else {
        wtitre<-paste("Grouped LCZ from", datasetName," dataset")
@@ -135,7 +136,7 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
      wtitre<-title
    }
 
-    pgrouped<-
+    palter<-
       ggplot(sf) + # les données
       geom_sf(aes(fill=get(column))) +        # Le type de géométrie : ici un sf, avec fill pour remplir les polygones
       scale_fill_manual(values=typeLevels,
@@ -144,12 +145,10 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
       ggtitle(wtitre)
  }
 
-  if(repr=="both"){plot_grid(pstandard,pgrouped)}
-  else {
-    if (repr=="standard"){print(pstandard)}
+  if (repr=="standard"){print(pstandard)}
     else {
-      if (repr=="grouped"){print(pgrouped)}
-      else {stop("the repr argument must be \"standard\", \"grouped\", or a \"both\" ")}
+      if (repr=="alter"){print(palter)}
+      else {stop("the repr argument must be \"standard\" or \"alter\" ")}
     }
-  }
+  
 }

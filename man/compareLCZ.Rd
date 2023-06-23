@@ -21,7 +21,7 @@ compareLCZ(
   saveG = "",
   exwrite = TRUE,
   outDir = getwd(),
-  location = "Redon",
+  location = "Your Place",
   plot = TRUE,
   tryGroup = FALSE,
   ...
@@ -61,8 +61,8 @@ When the LCZ come from the wudapt Europe tiff, use "wudapt".}
 
 \item{ref}{: If the coordinate reference system (CRS) of sf1 and sf2 differ, ref indicates which CRS to choose for both files (1 or 2)}
 
-\item{repr}{"standard" means that original values of LCZ are used,
-"grouped" means the user has groupe some of the LCZ levels under a new label.
+\item{repr}{"standard" means that standard values of LCZ are expected,
+"alter" means other values are expected, like grouped values of LCZ or other qualitative variable.
 In the latter case, the ... arguments must contain the groups and a color vector.}
 
 \item{saveG}{: when an empty character string, "", the plots are not saved. Else, the saveG string is used to produce the name of the saved png file.}
@@ -81,9 +81,9 @@ If the area you wish to analyse is not uploaded yet, please contact the GeoClima
 a call to the LCZgroup2 function will be tried, and if it works, the resulting grouping column will be named
 "grouped" and the comparison will be done using it.}
 
-\item{...}{allow to pass arguments if representation is grouped.
-The expected arguments are the name of each grouped label,
-the levels of LCZ they contain, and last a vector of the colors to use to plot them.}
+\item{...}{allow to pass arguments if repr is set to alter.
+The expected arguments are the name of each level of the variables contained
+in column1 and column2, and last a vector cols of the colors to use to plot them.}
 }
 \value{
 returns an object called matConfOut which contains
@@ -99,9 +99,21 @@ Compares two LCZ classification on the same zone,
 produces a map for each classification, a map of their agreement and a representation of a confusion matrix between them
 }
 \examples{
-compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU",
+comparisonBDT_OSM<-compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU",
 confid1="LCZ_UNIQUENESS_VALUE", wf1="bdtopo_2_2",
 sf2=redonOSM, column2="LCZ_PRIMARY", geomID2 = "ID_RSU",
 confid2="LCZ_UNIQUENESS_VALUE", wf2="osm",
 repr="standard", saveG="", exwrite=TRUE, location="Redon", plot=TRUE)
+# To get the summed area of each LCZ levels for both dataset : 
+comparisonBDT_OSM$areas
+# The plots of each dataset can be produced with the /`showLCZ/` function.
+# To get the value of the general percentage of agreement call :
+comparisonBDT_OSM$percAgg
+# The values of that confusion matrix is available in a wide form:
+comparisonBDT_OSM$matConfLarge
+# or in a long form :
+comparisonBDT_OSM$matConf
+
+# Examples for non LCZ variables are available in the importQualVar function examples.
+
 }

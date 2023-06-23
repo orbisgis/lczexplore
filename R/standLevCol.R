@@ -13,7 +13,10 @@
 #' @export
 #'
 #' @examples
-#' #standLevCol is not to be used directly by user. It deals with levels and colors provided by the user
+#' # standLevCol is not to be used directly by user. 
+#' # It deals with levels and colors provided by the user and 
+#' # tries to replace user color by standard color 
+#' # when a standard level of LCZ is recognized
 standLevCol<-function(levels,colors="",useStandCol=TRUE){
 
   alienColors<-palette.colors(n=length(levels), palette="Polychrome 36")

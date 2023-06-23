@@ -8,7 +8,7 @@
 #' @param sf2 is the sf dataset containing the second lcz classification
 #' @param column2 is the column of the second data set containing the lcz to be compared
 #' @param typeLevels by default the levels of lcz incoded from 1 to 10 and 101 to 107.
-#' When comparing grouped LCZ, the grouped levels have to be specified.
+#' When comparing othe variable, like grouped LCZ, the grouped levels have to be specified.
 #' @param plot if TRUE the plot of the matrix
 #' @param ... a set of unspecified arguments, for instance when the produceAnalysis function calls other functions
 #'
@@ -193,4 +193,3 @@ matConfLCZ<-function(sf1, column1, sf2, column2, typeLevels=as.character(c(1:10,
   return(matConfOut)
 
 }
-

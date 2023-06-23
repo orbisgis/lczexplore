@@ -29,6 +29,6 @@ LCZareas<-function(sf,column,LCZlevels){
     }
   }
 
-  print(areas)
+  #print(areas)
   areas
 }

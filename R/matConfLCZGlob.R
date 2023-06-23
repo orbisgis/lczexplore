@@ -5,7 +5,7 @@
 #' @param wf1 : a string indicating the origin of the LCZ classification 1
 #' @param wf2 : a string indicating the origin of the LCZ classification 1
 #' @param sep : the seperator used in the csv file
-#' @param repr : standard or grouped
+#' @param repr : standard or alter
 #' @param typeLevels : by default levels of the LCZ classification are built
 #' reading the data, but one can input a character string vector of levels,
 #' for instance to produce several graphs with the same levels or levels in a specific order
@@ -227,4 +227,3 @@ matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, co
   matConfOut<-list(matConf=matConfLong,matConfPlot=matConfPlot,areas=areas,pourcAcc=pourcAcc)
   return(matConfOut)
 }
-
