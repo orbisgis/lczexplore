@@ -65,7 +65,7 @@
 #' # or in a long form :
 #' comparisonBDT_OSM$matConf
 #' 
-#' # Examples for non LCZ variables are available in the importSurfQualVar function examples.
+#' # Examples for non LCZ variables are available in the importQualVar function examples.
 #' 
 compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
                      sf2,column2,geomID2="",confid2="",wf2="osm",ref=1,

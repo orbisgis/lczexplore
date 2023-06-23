@@ -18,11 +18,11 @@
 #' and if specified, columns for the IDs of the geoms and the confidence value of 
 #' thevalues of the variable.
 #' @export
-#' @examples utrfRedonBDT<-importSurfQualVar(dirPath=paste0(
+#' @examples utrfRedonBDT<-importQualVar(dirPath=paste0(
 #' system.file("extdata", package = "lczexplore"), "/bdtopo_2_2/Redon"),
 #' file="rsu_utrf_area.geojson", column="TYPO_MAJ")
 #' showLCZ(sf=utrfRedonBDT, column="TYPO_MAJ",repr="alter")
-#' utrfRedonOSM<-importSurfQualVar(dirPath=
+#' utrfRedonOSM<-importQualVar(dirPath=
 #' paste0(system.file("extdata", package = "lczexplore"),"/osm/2022/Redon"),
 #' file="rsu_utrf_area.geojson", column="TYPO_MAJ",geomID="ID_RSU",confid="UNIQUENESS_VALUE")
 #' # One can now compare these 2 classifications and store the result in an object...
@@ -34,7 +34,7 @@
 # print(utrfComparison$matConfPlot)
 #' 
 #' 
-importSurfQualVar<-function(dirPath, file="rsu_utrf_area.geojson", output="sfFile", column="TYPO_MAJ",
+importQualVar<-function(dirPath, file="rsu_utrf_area.geojson", output="sfFile", column="TYPO_MAJ",
                        geomID="ID_RSU", confid="UNIQUENESS_VALUE",
                        typeLevels="",
                        drop=T, verbose=TRUE){

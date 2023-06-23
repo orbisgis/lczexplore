@@ -114,6 +114,6 @@ comparisonBDT_OSM$matConfLarge
 # or in a long form :
 comparisonBDT_OSM$matConf
 
-# Examples for non LCZ variables are available in the importSurfQualVar function examples.
+# Examples for non LCZ variables are available in the importQualVar function examples.
 
 }
