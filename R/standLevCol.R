@@ -17,7 +17,7 @@
 #' # It deals with levels and colors provided by the user and 
 #' # tries to replace user color by standard color 
 #' # when a standard level of LCZ is recognized
-standLevCol<-function(levels,colors="",useStandCol=TRUE){
+standLevCol<-function(levels,colors="", useStandCol=FALSE){
 
   alienColors<-palette.colors(n=length(levels), palette="Polychrome 36")
 
@@ -47,7 +47,7 @@ standLevCol<-function(levels,colors="",useStandCol=TRUE){
     typeLevels
   }
 
-  if(useStandCol == TRUE){
+  if(useStandCol==TRUE){
     message("As useStandCol is set to TRUE, some of the specified colors may have been over-ridden to use standard colors if standard LCZ values have been detected")
     names(typeLevels)<-levels
     typeLevels[levels%in%standardLevels]<-

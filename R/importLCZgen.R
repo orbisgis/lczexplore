@@ -29,7 +29,7 @@ importLCZgen<-function(dirPath, file="rsu_lcz.geojson", output="sfFile", column=
                                  "101"="101","102"="102","103"="103","104"="104", "105"="105","106"="106","107"="107",
                                  "101"="11","102"="12","103"="13","104"="14", "105"="15", "106"="16","107"="17",
                                   "101"="A","102"="B","103"="C","104"="D","105"="E","106"="F","107"="G"),
-                       drop=T, verbose=F){
+                       drop=T, verbose=FALSE){
   if (!file.exists(dirPath)){stop(message="The directory set in dirPath doesn't seem to exist")}
 
   fileName<-paste0(dirPath,"/",file)
@@ -40,13 +40,13 @@ importLCZgen<-function(dirPath, file="rsu_lcz.geojson", output="sfFile", column=
   # Check if all the desired columns are present in the source file and only loads the file if the columns exist
   nom<-gsub(pattern="(.+?)(\\.[^.]*$|$)",x=file,replacement="\\1")
   query<-paste0("select * from ",nom," limit 0")
-  sourceCol<-st_read(dsn=fileName,query=query) %>% names
+  sourceCol<-st_read(dsn=fileName, query=query, quiet=!verbose) %>% names
   inCol<-colonnes%in%sourceCol
   badCol<-colonnes[!inCol]
   colErr<-c("It seems that some of the columns you try to import do not exist in the source file,
             are you sure you meant ",
                  paste(badCol)," ?")
-  if (prod(inCol)==0){ stop(colErr) } else { sfFile<-sf::st_read(dsn=fileName)[,colonnes] }
+  if (prod(inCol)==0){ stop(colErr) } else { sfFile<-sf::st_read(dsn=fileName,quiet=!verbose)[,colonnes] }
 
   # if typeLevels is empty
   if (length(typeLevels)==1){
@@ -68,7 +68,7 @@ importLCZgen<-function(dirPath, file="rsu_lcz.geojson", output="sfFile", column=
  names(prov)<-prov
 
     if( prod(prov%in%typeLevels)==0 ){
-      if (verbose==T){
+      if (verbose==TRUE){
         print("levels in typeLevels are : ")
         print(typeLevels)
         print("levels in original data set are ")

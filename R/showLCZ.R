@@ -31,7 +31,7 @@
 #' cols=c("red","black","green","grey","burlywood","blue"),wf="BD TOPO")
 #' 
 showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
-                  repr="standard", drop=FALSE, useStandCol=TRUE, cols="", LCZlevels="",...){
+                  repr="standard", drop=FALSE, useStandCol=FALSE, cols="", LCZlevels="",...){
 
   datasetName<-deparse(substitute(sf))
 
@@ -112,27 +112,22 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
   if (repr=="alter"){
     print(datasetName)
 
-    typeLevels<-levCol(sf=sf,column=column,...)$levelsColors
-    print("output of levCol")
-    print(typeLevels)
+    typeLevels<-levCol(sf=sf,column=column, useStandCol=useStandCol, ...)$levelsColors
+    # print("output of levCol")
+    # print(typeLevels)
     
     if(length(LCZlevels)==1 && LCZlevels[1]=="" && length(cols)==1){
-      typeLevels<-levCol(sf,column, drop=drop,...)$levelsColors
+      typeLevels<-levCol(sf,column, drop=drop, ...)$levelsColors
     } else if (length(LCZlevels)==1 & LCZlevels[1]==""){
-      typeLevels<-levCol(sf,column,cols=cols, drop=drop,...)$levelsColors}
+      typeLevels<-levCol(sf,column,cols=cols, drop=drop, ...)$levelsColors}
     else if (length(cols)==1 & cols[1]==""){
-      typeLevels<-levCol(sf,column,levels=LCZlevels, drop=drop,...)$levelsColors
+      typeLevels<-levCol(sf,column,levels=LCZlevels, drop=drop, ...)$levelsColors
     }
-    else {typeLevels<-levCol(sf,column,levels=LCZlevels, cols=cols, drop=drop,...)$levelsColors }
+    else {typeLevels<-levCol(sf,column,levels=LCZlevels, cols=cols, drop=drop, ...)$levelsColors }
 
     # IN CASE SOME STANDARD LEVELS ARE DETECTED, ONE MAY WANT STANDARD COLORS TO BE APPLIED
 
     if(useStandCol==TRUE){typeLevels<-standLevCol(levels=names(typeLevels),colors=typeLevels,useStandCol = TRUE)}
-
-    # if ( length(LCZlevels)<=1){
-    # typeLevels<-levCol(sf,column)$levelsColors
-    # }
-    # if(length(cols)==length(typeLevels)){typeLevels[1:length(typeLevels)]<-cols}
 
     LCZlevels<-names(typeLevels)
     sf<-sf %>% mutate(!!column:=factor(subset(sf,select=column,drop=T),levels=LCZlevels))
