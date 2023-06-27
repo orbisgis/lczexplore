@@ -5,11 +5,12 @@
 #' that LCZ were produced by GeoClimate using the BD_TOPO_V2 or the Open Street Map data as input, respectively.
 #' If the LCZ were produced by WUDAPT, use "wudapt".
 #' @param column is the column that contains the LCZ.
-#' @param repr indicates if the sf dataset contains standard LCZ levels, 
-#' or alternative values, like grouped LCZ.
-#' If "standard" then an optimal set of cols is used to produce the plotted map. 
-#' Else, colors can be specified with the cols argument.
-#' 
+#' @param repr indicates if the sf dataset contains standarde LCZ levels or grouped LCZ.
+#' If "standard" then an optimal set of cols is used to produce the plotted map. Else, colors can be specified with the cols argument.
+#' @param cols is a vector of strings specifying the colors of each levels of \'typeLevels.\'
+#' If cols is an empty string, or if the number of specified color is less than the number of levels in \'typeLevels\',
+#' random colors will be chosen.
+#' @param LCZlevels allows you to set the grouped LCZ types.
 #' The values must at least cover the values of the column in the dataset, or it will be ignored.
 #' @param title allows the user to set the title of the plot
 #' @param drop indicates if you want to show the levels present in no geometry.
@@ -30,7 +31,7 @@
 #' cols=c("red","black","green","grey","burlywood","blue"),wf="BD TOPO")
 #' 
 showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
-                  repr="standard", drop=FALSE, useStandCol=TRUE,...){
+                  repr="standard", drop=FALSE, useStandCol=TRUE, cols="", LCZlevels="",...){
 
   datasetName<-deparse(substitute(sf))
 
@@ -99,7 +100,7 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
     
     pstandard<-ggplot(sf) + # data
       geom_sf(data=sf,aes(fill=get(column)))+
-      scale_fill_manual(values=colorMap,labels=etiquettes)+
+      scale_fill_manual(values=colorMap,labels=etiquettes,drop=FALSE)+
       guides(fill=guide_legend(nomLegende))+
       ggtitle(wtitre)
   }
@@ -115,16 +116,16 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
     print("output of levCol")
     print(typeLevels)
     
-    # if(length(LCZlevels)==1 && LCZlevels[1]=="" && length(cols)==1){
-    #   typeLevels<-levCol(sf,column, drop=drop)$levelsColors
-    # } else if (length(LCZlevels)==1 & LCZlevels[1]==""){
-    #   typeLevels<-levCol(sf,column,cols=cols, drop=drop)$levelsColors}
-    # else if (length(cols)==1 & cols[1]==""){
-    #   typeLevels<-levCol(sf,column,levels=LCZlevels, drop=drop)$levelsColors
-    # }
-    # else {typeLevels<-levCol(sf,column,levels=LCZlevels, cols=cols, drop=drop)$levelsColors }
+    if(length(LCZlevels)==1 && LCZlevels[1]=="" && length(cols)==1){
+      typeLevels<-levCol(sf,column, drop=drop,...)$levelsColors
+    } else if (length(LCZlevels)==1 & LCZlevels[1]==""){
+      typeLevels<-levCol(sf,column,cols=cols, drop=drop,...)$levelsColors}
+    else if (length(cols)==1 & cols[1]==""){
+      typeLevels<-levCol(sf,column,levels=LCZlevels, drop=drop,...)$levelsColors
+    }
+    else {typeLevels<-levCol(sf,column,levels=LCZlevels, cols=cols, drop=drop,...)$levelsColors }
 
-    # IN CAS ESOME STANDARD LEVELS ARE DETECTED, ONE MAY WANT STANDARD COLORS TO BE APPLIED
+    # IN CASE SOME STANDARD LEVELS ARE DETECTED, ONE MAY WANT STANDARD COLORS TO BE APPLIED
 
     if(useStandCol==TRUE){typeLevels<-standLevCol(levels=names(typeLevels),colors=typeLevels,useStandCol = TRUE)}
 

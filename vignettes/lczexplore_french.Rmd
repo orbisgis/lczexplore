@@ -76,7 +76,7 @@ L'argument `repr=standard` permet de gérer les niveaux de LCZ les plus usuels p
 
 
 ```{r, echo=FALSE, fig.dim = c(8, 6)}
-showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="standard",LCZlevels="",cols="")
+showLCZ(sf=redonOSM, wf="OSM", column="LCZ_PRIMARY", repr="standard", LCZlevels="",cols="")
 ```
 
 Dans le cas où on a procédé à un regroupage de modalités, si les LCZ ont un encodage particulier, ou si on veut utiliser la fonction pour représenter d'autres variables, on précisera `repr="alter` et on passera le vecteur contenant les valeurs possibles à l'argument `LCZlevels` et les couleurs leur correspondant à l'argument `cols`.
