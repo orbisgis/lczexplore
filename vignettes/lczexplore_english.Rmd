@@ -26,7 +26,7 @@ if (!require("png")) {
 
 # A package to explore Local Climate Zones : lczexplore
 ## Purpose and origin
-The lczexplore package was developped thanks to the Pændora 2 project, funded by ADEME, a french agency for ecological transition.
+The lczexplore package was developped thanks to the PAENDORA2 (Pour la gestion du confort estival : Données, Outils et Recherche-Action, 2022 -2025, funded by ADEME, a French agency for ecological transition).
 
 Its purpose is to easily compare different local climate zone classifications on the same study territory.
 

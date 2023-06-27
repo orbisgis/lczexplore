@@ -1,0 +1,75 @@
+---
+title: "lczexplore_alter"
+author: "Matthieu Gousseff"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+resource_files:
+  - vignettes/Redon.png
+vignette: >
+ %\VignetteIndexEntry{lczexplore_alter}
+ %\VignetteEngine{knitr::knitr}
+ %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+        collapse = TRUE,
+        comment = "#>"
+)
+if (!require("png")) {
+  install.packages("png")
+  library("png")
+}
+
+```
+The lczexplore package was developed thanks to the Pændora 2 project, funded by ADEME, a French agency for ecological transition.
+
+The package lczexplore allows to group several Local Climate Zone levels (LCZ) into broader categories. The `LCZgroup2` function allows this grouping, and the main functions of the package allow to specify the expected levels and colors to use.  
+the lczexplore also allows the comparison of two sets of qualitative variables on the same territory, with the `importQualSurf` function.
+
+# Group levels and explore the resulting broader categories
+## From original data... 
+Load the package. 
+
+```{r}
+library(lczexplore)
+```
+
+Load the example data of Redon City.
+```{R}
+dirPath<-paste0(system.file("extdata",package="lczexplore"),"/")
+dirPathOSM<-paste0(dirPath,"osm/2022/Redon")
+dirPathBDT<-paste0(dirPath,"bdtopo_2_2/Redon")
+redonOSM<-importLCZgen(dirPath=dirPathOSM,file="rsu_lcz.geojson",column = "LCZ_PRIMARY")
+redonBDT<-importLCZgen(dirPath=dirPathBDT,file="rsu_lcz.geojson",column = "LCZ_PRIMARY")
+#
+```
+Compare the LCZ classifications produced with GeoClimate and OpenStreetMAp and French BDTOPO data. 
+
+```{R, fig.dim = c(8, 6)}
+comparaison<-compareLCZ(sf1=redonBDT,column1="LCZ_PRIMARY", wf1="BD TOPO v2.2",
+                        sf2=redonOSM,column2="LCZ_PRIMARY",wf2="Open Street Map", ref=1,
+                        repr="standard",exwrite=F,location="Redon",saveG="")
+```
+To see if the urban envelopes differ, one may want to group all the urban LCZ. 
+
+
+## ... to grouped levels
+
+For instance, one may want to illustrate the contour of a city, by grouping the urban LCZ and the vegetation ones. Use the `LCZgroup2` function and set the dataset with the argument `sf` and the column with `column`.Then you pass as many vectors as there are grouped category, each of them containing the levels to be grouped together. The newly created categories will be stored in the `outCol` column. If the user doesn't enter them, by default the column is called 'grouped'.
+
+The newly created dataset can be mapped with `showLCZ` function.
+
+```{r, fig.dim = c(8, 6)}
+redonOSMgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",
+                           urban=c("1","2","3","4","5","6","7","8","9"),
+                           industry="10",
+                           vegetation=c("101","102","103","104"),
+                           impervious="105",pervious="106",water="107",cols=c("red","black","green","grey","burlywood","blue"))
+showLCZ(redonOSMgrouped, column="grouped",repr="alter",wf="OSM",
+        LCZlevels = c("urban","industry","vegetation","impervious","pervious","water"),
+        cols=c("red","black","green","grey","burlywood","blue"))
+
+```
+
+# Compare two LCZ classification with the function compareLCZ

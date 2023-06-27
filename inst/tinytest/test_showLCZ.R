@@ -5,7 +5,7 @@
 #showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY", repr="standard", typeLevels="", cols="")
 
 expect_silent(
-  showLCZ(redonBDT, title="Zones climatiques locales à Redon",repr="standard")
+  showLCZ(redonBDT, title="Zones climatiques locales à Redon",repr="standard",drop=TRUE)
 )
 expect_silent(showLCZ(redonBDT))
 

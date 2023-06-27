@@ -43,18 +43,18 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
   temp<-subset(sf,select=column,drop=T) %>% fct_recode("Compact high"="1",
                                                             "Compact mid"="2",
                                                             "Compact low"="3",
-                                                            "Open High"="4",
+                                                            "Open high"="4",
                                                             "Open mid"="5",
                                                             "Open low"="6",
                                                             "Lightweight low"="7",
                                                             "Large low"="8",
-                                                            "Sparsely Built"="9",
+                                                            "Sparsely built"="9",
                                                             "Heavy industry"="10",
                                                             "Dense trees"="101",
                                                             "Scattered trees"="102",
                                                             "Bush scrub"="103",
                                                             "Low plants"="104",
-                                                            "Bare rock paved"="105",
+                                                            "Bare rock or paved"="105",
                                                             "Bare soil sand"="106",
                                                             "Water"="107")
 
@@ -86,9 +86,20 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
         wtitre<-title
       }
 
+    if(drop==TRUE){
+      presentLevels<-levels(droplevels(subset(sf,select=column,drop=T)))
+      temp<-subset(sf,select=column,drop=T) %>% 
+        factor(levels=presentLevels)
+      print(levels(temp))
+      sf<-sf %>% mutate(!!column:=temp)
+      presentIndices<-sapply(presentLevels,grep,x=etiquettes) %>% unlist %>% print
+      colorMap<-colorMap[presentIndices]
+      etiquettes<-etiquettes[presentIndices]
+      }
+    
     pstandard<-ggplot(sf) + # data
       geom_sf(data=sf,aes(fill=get(column)))+
-      scale_fill_manual(values=colorMap,labels=etiquettes,drop=FALSE)+
+      scale_fill_manual(values=colorMap,labels=etiquettes)+
       guides(fill=guide_legend(nomLegende))+
       ggtitle(wtitre)
   }

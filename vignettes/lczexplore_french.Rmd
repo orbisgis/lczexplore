@@ -29,7 +29,7 @@ if (!require("png")) {
 
 # Le paquet lczexplore
 ## Origine et finalité
-Le paquet lczexplore a été développé dans le cadre du projet Pændora 2 financé par l'ADEME.
+Le paquet lczexplore a été développé dans le cadre du projet Pændora 2(Pour la gestion du confort estival : Données, Outils et Recherche-Action, 2022 -2025), de l'ADEME. 
 
 Il a pour objectif de faciliter la comparaison de classifications en zones climatiques locales produites par différents algorithmes sur une même zone.
 En amont de ce paquet, l'utilisateur aura affecté à chacune des unités de référence spatiales (RSU) de la zone d'étude une valeur de Zone Climatique Locale (LCZ). Plusieurs méthodes peuvent aboutir à plusieurs classifications. Ce paquet permet de représenter et de comparer ces classifications.
@@ -57,7 +57,8 @@ La fonction `importLCZgen` est la fonction générique d'import d'un fichier "ve
 L'argument `dirPath` permet d'indiquer le chemin du répertoire où se trouve le fichier et l'argument `file` le nom du fichier.
 L'argument `column`, obligatoire, renseigne le nom de la colonne contenant les types de zones climatiques locales ou LCZ. Les arguments optionnels `geomID` et `confid` permettent de spécifier les colonnes contenant les identifiants des géométries et une mesure de la confiance qu'on a en la valeur de LCZ attribuée à une géométrie.
 
-Par défaut, cette fonction ressort un fichier de classe `simple feature`, telle que définie par l'OpenGIS et gérée par le paquet `sf`, paquet de référence pour la gestion des données vecteurs dans R [https://doi.org/10.32614/RJ-2018-009]. On peut également choisir `output="bBox"` pour que la fonction ressorte seulement la bounding box des géométries contenues dans le fichier concerné.
+Par défaut, cette fonction ressort un fichier de classe `simple feature`, telle que définie par l'OpenGIS et gérée par le paquet `sf`, paquet de référence pour la gestion des données vecteurs dans R [https://doi.org/10.32614/RJ-2018-009]. 
+On peut également choisir `output="bBox"` pour que la fonction ressorte seulement la bounding box des géométries contenues dans le fichier concerné.
 
 ```{r, echo = FALSE}
 dirPath<-paste0(system.file("extdata",package="lczexplore"),"/")
@@ -92,14 +93,14 @@ L'argument `LCZlevels` permet de spécifier les niveaux qui se trouvent dans les
 ```{r, fig.dim = c(8, 6), echo = FALSE}
 
 LCZlevels<-c(2, 3, 5, 6, 8, 9, 101, 102, 104, 105, 107)
-showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter", LCZlevels = LCZlevels)
+showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter", LCZlevels = LCZlevels,drop=TRUE)
 ```
 
 
 ```{r, fig.dim = c(8, 6), echo = FALSE}
 summary(redonOSM$"LCZ_PRIMARY")
 LCZlevels<-c(2, 3, 5, 6, 8, 9, 101, 102, 104, 105, 107)
-showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter",drop=TRUE, LCZlevels = LCZlevels)
+showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="standard",drop=TRUE)
 
 ```
 
