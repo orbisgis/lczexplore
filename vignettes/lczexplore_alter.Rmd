@@ -47,7 +47,8 @@ redonBDT<-importLCZgen(dirPath=dirPathBDT,file="rsu_lcz.geojson",column = "LCZ_P
 Compare the LCZ classifications produced with GeoClimate and OpenStreetMAp and French BDTOPO data. 
 
 ```{R, fig.dim = c(8, 6)}
-comparaison<-compareLCZ(sf1=redonBDT,column1="LCZ_PRIMARY", wf1="BD TOPO v2.2",
+
+comparison<-compareLCZ(sf1=redonBDT,column1="LCZ_PRIMARY", wf1="BD TOPO v2.2",
                         sf2=redonOSM,column2="LCZ_PRIMARY",wf2="Open Street Map", ref=1,
                         repr="standard",exwrite=F,location="Redon",saveG="")
 ```
@@ -73,3 +74,10 @@ showLCZ(redonOSMgrouped, column="grouped",repr="alter",wf="OSM",
 ```
 
 # Compare two LCZ classification with the function compareLCZ
+
+The package intends to make exploring pairs of LCZ maps easy. 
+In the `alter` representation, one can specify levels of the data and colors to be associated with these levels in several ways. 
+The package will also try to cope with errors and display messages to help users to see what actions were taken. 
+
+## Levels specified but no colors
+

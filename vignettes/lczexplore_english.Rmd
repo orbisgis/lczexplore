@@ -186,7 +186,7 @@ redonOSMgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",
                            industry="10",
                            vegetation=c("101","102","103","104"),
                            impervious="105",pervious="106",water="107",cols=c("red","black","green","grey","burlywood","blue"))
-redonBDTgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",
+redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",
                            urban=c("1","2","3","4","5","6","7","8","9"),
                            industry="10",
                            vegetation=c("101","102","103","104"),
@@ -222,6 +222,7 @@ comparisonGrouped<-compareLCZ(sf1=redonBDT,column1="LCZ_PRIMARY", wf1="groupedBD
 - `$matConfLarge` the confusion matrix,
 - `$percAgg` the general agreement of the two classification on the whole area (as a percentage of the global surface of the area),
 - `$areas` the summed area for each LCZ for both classifications. 
+
 
 At last : it `exWrite=TRUE` the data are exported to a .csv file whose name is created from the argument `wf1` and `wf2`. It can then be loaded for further analysis.  
 

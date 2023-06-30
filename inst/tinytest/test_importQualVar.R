@@ -14,7 +14,9 @@ utrfRedonBDT<-importQualVar(dirPath=paste0(
   file="rsu_utrf_area.geojson", column="TYPO_MAJ")
   
 showLCZ(sf=utrfRedonBDT, column="TYPO_MAJ",repr="alter")
-  utrfRedonOSM<-importQualVar(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/osm/2022/Redon"),
+
+utrfRedonOSM<-importQualVar(dirPath=paste0(
+  system.file("extdata", package = "lczexplore"),"/osm/2022/Redon"),
   file="rsu_utrf_area.geojson", column="TYPO_MAJ",geomID="ID_RSU",confid="UNIQUENESS_VALUE")
   
   utrfComparison<-compareLCZ(sf1=utrfRedonBDT, column1="TYPO_MAJ", sf2=utrfRedonOSM, column2="TYPO_MAJ",wf1=" UTRF BDT", wf2 = " UTRF OSM",

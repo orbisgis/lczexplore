@@ -382,7 +382,7 @@ matConfOut<-matConfLCZ(sf1=sf1, column1=column1, sf2=sf2, column2=column2,
 matConfOut$data<-echIntExpo
 matConfLong<-matConfOut$matConf
 matConfLarge<-pivot_wider(matConfLong,names_from = column2,values_from = agree)
-matConfLarge<-compareRedonBDTOSM$matConfLarge %>% as.data.frame()
+matConfLarge<-matConfLarge %>% as.data.frame()
 row.names(matConfLarge)<-matConfLarge[,1] %>% as.character
 matConfLarge<-matConfLarge[,-1]
 matConfLarge<-as.matrix(matConfLarge)  
@@ -390,7 +390,7 @@ matConfLarge<-as.matrix(matConfLarge)
   
 # Add pseudo Kappa Statistic to output to   
 PseudoWeightedCross<-matConfLarge*100
-pseudoK<-DescTools::CohenKappa(x=matConfLarge)  
+pseudoK<-DescTools::CohenKappa(x=PseudoWeightedCross)  
 matConfOut$pseudoK<-pseudoK
   
 areas<-matConfOut$areas
