@@ -1,7 +1,7 @@
 #This tests the function produceAnalysis
-library(tinytest)
-library(lczexplore)
-library(sf)
+#library(tinytest)
+#library(lczexplore)
+#library(sf)
 
 #system.file(package="lczexplore")
 
@@ -17,7 +17,7 @@ expect_message(produceAnalysis(location="Redon",
                   system.file(package="lczexplore"),"/tinytest"),
                 wf1="bdtopo_2_2",
                 wf2="osm",refYear1="2022",refYear2="2022",repr="standard",saveG=location),
- "the unzipped rsu_lcz.geojson file already exists"
+ " but an rsu_lcz.geojson already exists in this directory"
 )
 
 file.remove(paste0(
