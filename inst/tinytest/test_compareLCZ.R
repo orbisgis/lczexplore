@@ -24,7 +24,7 @@ expect_message(compareRedonBDTOSM<-
                             sf2=redonOSM, column2="LCZ_PRIMARY", geomID2 = "ID_RSU", confid2="LCZ_UNIQUENESS_VALUE", wf2="osm",
                             repr="standard", ref=2, saveG="", exwrite=TRUE, location="Redon", plot=F),
                "\\(redonOSM\\)")
-file.remove("bdtopo_2_2_osm.csv")
+
 
 
 expect_message(compareRedonBDTsquare<-

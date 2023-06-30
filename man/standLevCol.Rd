@@ -4,7 +4,7 @@
 \alias{standLevCol}
 \title{Detects standard LCZ levels and associate standard colors to them}
 \usage{
-standLevCol(levels, colors = "", useStandCol = TRUE)
+standLevCol(levels, colors = "", useStandCol = FALSE)
 }
 \arguments{
 \item{levels}{is the vector of the LCZ levels present in a dataset}

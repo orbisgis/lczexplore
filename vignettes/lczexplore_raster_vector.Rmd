@@ -116,6 +116,7 @@ summary(redonOSM$LCZ_PRIMARY)
 The resulting object is an sf object and can therefore also be visualized with the showLCZ function.
 ```{R}
 showLCZ(sf = redonOSM, repr="standard")
+
 ```
 
 # Comparison of the two LCZ classification
@@ -127,6 +128,8 @@ Both maps are plotted and a map of where they agree is produced. A confusion mat
 If the two datasets are not in the same coordinate reference system (CRS), the function will ask which CRS will be kept.
 
 ```{R}
+summary(redonOSM)
+summary(redonWudapt)
 compareLCZ(sf1 = redonWudapt, column1 = "EU_LCZ_map", wf1="WUDAPT",
            sf2 = redonOSM, column2 = "LCZ_PRIMARY", wf2 = "GeoClimate_OSM",
            ref=1 ,exwrite=FALSE)
