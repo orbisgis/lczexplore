@@ -474,7 +474,10 @@ utrfRedonBDT<-importQualVar(dirPath=paste0(
   file="rsu_utrf_area.geojson", column="TYPO_MAJ")
   
 showLCZ(sf=utrfRedonBDT, column="TYPO_MAJ",repr="alter")
+```
+![An example of some qualitative variable : Urban Typology by Random Forest (UTRF)](importQualVarUTRF.png)
 
+```r
 utrfRedonOSM<-importQualVar(dirPath=paste0(
   system.file("extdata", package = "lczexplore"),"/osm/2022/Redon"),
   file="rsu_utrf_area.geojson", column="TYPO_MAJ",geomID="ID_RSU",confid="UNIQUENESS_VALUE")
@@ -482,9 +485,8 @@ utrfRedonOSM<-importQualVar(dirPath=paste0(
   utrfComparison<-compareLCZ(sf1=utrfRedonBDT, column1="TYPO_MAJ", sf2=utrfRedonOSM, column2="TYPO_MAJ",wf1=" UTRF BDT", wf2 = " UTRF OSM",
   location = " Redon",exwrite=FALSE,repr="alter")
   # Plot the confusion matrix of thes two classifications  
-  print(utrfComparison$matConfPlot)
 ```
-
+![Example of comparison on a qualitative variable (UTRF).](compareQualVar.png)
 # Research projects involving GeoClimate
 
 The lczexplore package was developed thanks to the project PAENDORA2 (Pour la gestion du confort estival : Données, Outils et Recherche-Action) (2022 -2025), funded by ADEME.
