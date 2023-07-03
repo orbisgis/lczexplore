@@ -24,19 +24,24 @@ if (!require("png")) {
 ```
 The lczexplore package was developed thanks to the Pændora 2 project, funded by ADEME, a French agency for ecological transition.
 
-The package lczexplore allows to group several Local Climate Zone levels (LCZ) into broader categories. The `LCZgroup2` function allows this grouping, and the main functions of the package allow to specify the expected levels and colors to use.  
-the lczexplore also allows the comparison of two sets of qualitative variables on the same territory, with the `importQualSurf` function.
+# Short introduction to lczexplore
+The lczexplore package was developped thanks to the PAENDORA2 (Pour la gestion du confort estival : Données, Outils et Recherche-Action, 2022 -2025, funded by ADEME, a French agency for ecological transition).
 
-# Group levels and explore the resulting broader categories
+Its purpose is to easily compare different local climate zone classifications on the same study territory. For these LCZ, the `repr="standard"` representation sets proper levels and colors by default. You can read the `lczexplore_english` vignette for an overview. 
+
+This vignette deals with other cases, when `repr="alter"`, that is when one groups different LCZ or even compares maps of other qualitative variables. 
+
+
+# Grouping levels and exploring the resulting broader categories
+
+The package lczexplore allows to group several Local Climate Zone levels (LCZ) into broader categories . 
+The `LCZgroup2` function allows this grouping, and the main functions of the package allow to specify the expected levels and colors to use.  
+
 ## From original data... 
-Load the package. 
 
-```{r}
-library(lczexplore)
-```
-
-Load the example data of Redon City.
+First, let's load the example data of Redon City.
 ```{R}
+library(lczexplore)
 dirPath<-paste0(system.file("extdata",package="lczexplore"),"/")
 dirPathOSM<-paste0(dirPath,"osm/2022/Redon")
 dirPathBDT<-paste0(dirPath,"bdtopo_2_2/Redon")
@@ -44,7 +49,7 @@ redonOSM<-importLCZgen(dirPath=dirPathOSM,file="rsu_lcz.geojson",column = "LCZ_P
 redonBDT<-importLCZgen(dirPath=dirPathBDT,file="rsu_lcz.geojson",column = "LCZ_PRIMARY")
 #
 ```
-Compare the LCZ classifications produced with GeoClimate and OpenStreetMAp and French BDTOPO data. 
+If we compare the LCZ classifications produced with GeoClimate and OpenStreetMAp and French BDTOPO data, we can see they seem to quite disagree. 
 
 ```{R, fig.dim = c(8, 6)}
 
@@ -52,21 +57,27 @@ comparison<-compareLCZ(sf1=redonBDT,column1="LCZ_PRIMARY", wf1="BD TOPO v2.2",
                         sf2=redonOSM,column2="LCZ_PRIMARY",wf2="Open Street Map", ref=1,
                         repr="standard",exwrite=F,location="Redon",saveG="")
 ```
-To see if the urban envelopes differ, one may want to group all the urban LCZ. 
+
+But maybe the disagreement is not as strong as it seems. One may, for example, see if the urban envelopes differ that much. Let(s group all the urban LCZ in a category and all the vegetation in another one, the remaining LCZ being their own categories. 
 
 
 ## ... to grouped levels
 
-For instance, one may want to illustrate the contour of a city, by grouping the urban LCZ and the vegetation ones. Use the `LCZgroup2` function and set the dataset with the argument `sf` and the column with `column`.Then you pass as many vectors as there are grouped category, each of them containing the levels to be grouped together. The newly created categories will be stored in the `outCol` column. If the user doesn't enter them, by default the column is called 'grouped'.
+Use the `LCZgroup2` function and set the dataset with the argument `sf` and the column with `column`.Then you pass as many vectors as there are grouped category, each of them containing the levels to be grouped together. The newly created categories will be stored in the `outCol` column. If the user doesn't enter them, by default the column is called `"grouped"`.
 
-The newly created dataset can be mapped with `showLCZ` function.
+The newly created dataset can be mapped with `showLCZ` function. At this point, we pass the names of the new categories present in the "grouped" column to the `LCZlevels` argument and the colors associated to the `cols` argument.
 
 ```{r, fig.dim = c(8, 6)}
 redonOSMgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",
                            urban=c("1","2","3","4","5","6","7","8","9"),
                            industry="10",
                            vegetation=c("101","102","103","104"),
-                           impervious="105",pervious="106",water="107",cols=c("red","black","green","grey","burlywood","blue"))
+                           impervious="105",pervious="106",water="107", 
+                           cols=c("red","black","green","grey","burlywood","blue"))
+
+levCol(sf=redonOSMgrouped,column="grouped",LCZlevels = c("urban","industry","vegetation","impervious","pervious","water"),
+       cols=c("red","black","green","grey","burlywood","blue"))
+
 showLCZ(redonOSMgrouped, column="grouped",repr="alter",wf="OSM",
         LCZlevels = c("urban","industry","vegetation","impervious","pervious","water"),
         cols=c("red","black","green","grey","burlywood","blue"))
@@ -75,9 +86,34 @@ showLCZ(redonOSMgrouped, column="grouped",repr="alter",wf="OSM",
 
 # Compare two LCZ classification with the function compareLCZ
 
-The package intends to make exploring pairs of LCZ maps easy. 
-In the `alter` representation, one can specify levels of the data and colors to be associated with these levels in several ways. 
-The package will also try to cope with errors and display messages to help users to see what actions were taken. 
+## Most common case 
+As for standard LCZ, we use the `compareLCZ` function. We specify the names of the `sf1` and `sf2` objects containing the data, and the names of the columns where are the grouped categories. 
+
+```{r, fig.dim = c(8, 6)}
+
+redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",
+                           urban=c("1","2","3","4","5","6","7","8","9"),
+                           industry="10",
+                           vegetation=c("101","102","103","104"),
+                           impervious="105",pervious="106",water="107",
+                           cols=c("red","black","green","grey","burlywood","blue"))
+
+comparisonGrouped<-compareLCZ(sf1=redonOSMgrouped,column1="grouped",
+sf2=redonBDTgrouped, column2="grouped",
+repr="alter",
+levels=c("urban","industry","vegetation","impervious","pervious","water"),
+cols=c("red","black","green","grey","burlywood","blue"))
+```
+
+There are many cases when one doesn't necessarily know the levels of the qualitative variables, 
+or the colors one wants to choose. One may also want to pair the levels and column in a way that 
+shows their correspondence. 
+
+The package allows quite a flexibility to the user, thanks to the `levCol` function. This function should be called by other functions, not by the user, but one can use it to see how the levels and colors are dealt with.
+
+Here are some examples. 
 
 ## Levels specified but no colors
+
+
 

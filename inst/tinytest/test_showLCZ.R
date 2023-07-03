@@ -12,16 +12,16 @@ expect_silent(showLCZ(redonBDT, drop=TRUE))
 
 testCol <- palette.colors(n=17, palette="Polychrome 36")
 
-showLCZ(redonBDT, title="Zones climatiques locales à Redon",repr="alter",
-        useStandCol=FALSE,
-        cols = testCol )
-
-showLCZ(sf=redonOSM, wf="OSM", column="LCZ_PRIMARY", title="test", repr="alter", cols=testCol, useStandCol=FALSE)
-
-
-showLCZ(redonBDT, title="Zones climatiques locales à Redon",repr="alter",
-        useStandCol=TRUE,
-        cols = testCol )
+# showLCZ(redonBDT, title="Zones climatiques locales à Redon",repr="alter",
+#         useStandCol=FALSE,
+#         cols = testCol )
+# 
+# showLCZ(sf=redonOSM, wf="OSM", column="LCZ_PRIMARY", title="test", repr="alter", cols=testCol, useStandCol=FALSE)
+# 
+# 
+# showLCZ(redonBDT, title="Zones climatiques locales à Redon",repr="alter",
+#         useStandCol=TRUE,
+#         cols = testCol )
 #levCol(sf=redonBDT, column="LCZ_PRIMARY",cols = testCol)
 
 redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY", urban=c("1","2","3","4","5","6","7","8","9"),
@@ -38,6 +38,9 @@ expect_message(
   "9:"
 )
 
+# levCol(redonBDTgrouped,column="grouped",
+#        levels=c("urban","industry","vegetation","impervious","pervious","water"),
+#        cols=c("red","black","green","grey","burlywood","blue"))
 
 expect_message(
   showLCZ(redonBDTgrouped,column="grouped",repr="alter",

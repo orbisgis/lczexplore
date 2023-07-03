@@ -7,15 +7,12 @@
 #' @param column is the column that contains the LCZ.
 #' @param repr indicates if the sf dataset contains standarde LCZ levels or grouped LCZ.
 #' If "standard" then an optimal set of cols is used to produce the plotted map. Else, colors can be specified with the cols argument.
-#' @param cols is a vector of strings specifying the colors of each levels of \'typeLevels.\'
-#' If cols is an empty string, or if the number of specified color is less than the number of levels in \'typeLevels\',
-#' random colors will be chosen.
-#' @param LCZlevels allows you to set the grouped LCZ types.
-#' The values must at least cover the values of the column in the dataset, or it will be ignored.
 #' @param title allows the user to set the title of the plot
 #' @param drop indicates if you want to show the levels present in no geometry.
 #' @param useStandCol is set to TRUE implies that any levels detected as a standard LCZ level will receive the standard associated color
-#' @param ... these dynamic dots allow you to pass arguments to specify levels expected in your dataset and colors associated to these levels
+#' @param ... these dynamic dots allow you to pass arguments to specify levels expected 
+#' in your dataset and colors associated to these levels when not in the standard representation. You can pas your levels through a vector and you colors through another vector called cols. 
+#' For more details about this, read the "lcz_explore_alter" vignette. 
 #' @import sf ggplot2 dplyr cowplot forcats grDevices
 #' @return no object is returned, but plots of the LCZ levels are produced
 #' @export
@@ -26,12 +23,13 @@
 #' urban=c("1","2","3","4","5","6","7","8","9"),
 #' industry="10", vegetation=c("101","102","103","104"),
 #' impervious="105",pervious="106",water="107")
+#' # For repr="alter", you can specify colors and levels this way :
 #' showLCZ(redonBDTgrouped,column="grouped",repr="alter",
 #' LCZlevels=c("urban","industry","vegetation","impervious","pervious","water"),
 #' cols=c("red","black","green","grey","burlywood","blue"),wf="BD TOPO")
 #' 
 showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
-                  repr="standard", drop=FALSE, useStandCol=FALSE, cols="", LCZlevels="",...){
+                  repr="standard", drop=FALSE, useStandCol=FALSE,...){
 
   datasetName<-deparse(substitute(sf))
 
@@ -112,20 +110,9 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
   if (repr=="alter"){
     print(datasetName)
 
-    typeLevels<-levCol(sf=sf,column=column, useStandCol=useStandCol, ...)$levelsColors
-    # print("output of levCol")
-    # print(typeLevels)
-    
-    if(length(LCZlevels)==1 && LCZlevels[1]=="" && length(cols)==1){
-      typeLevels<-levCol(sf,column, drop=drop, ...)$levelsColors
-    } else if (length(LCZlevels)==1 & LCZlevels[1]==""){
-      typeLevels<-levCol(sf,column,cols=cols, drop=drop, ...)$levelsColors}
-    else if (length(cols)==1 & cols[1]==""){
-      typeLevels<-levCol(sf,column,levels=LCZlevels, drop=drop, ...)$levelsColors
-    }
-    else {typeLevels<-levCol(sf,column,levels=LCZlevels, cols=cols, drop=drop, ...)$levelsColors }
-
-    # IN CASE SOME STANDARD LEVELS ARE DETECTED, ONE MAY WANT STANDARD COLORS TO BE APPLIED
+    typeLevels<-levCol(sf=sf,column=column, drop=drop, ...)$levelsColors
+        
+     # IN CASE SOME STANDARD LEVELS ARE DETECTED, ONE MAY WANT STANDARD COLORS TO BE APPLIED
 
     if(useStandCol==TRUE){typeLevels<-standLevCol(levels=names(typeLevels),colors=typeLevels,useStandCol = TRUE)}
 

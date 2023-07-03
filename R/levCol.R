@@ -32,9 +32,6 @@ levCol<-function(sf,column,drop=FALSE,...){
     "This package is not suited for classification with more than 36 levels or types.
   You can use the function LCZgroup2 to group some levels.") }
 
-
-
-
   argNames<-names(args)
   indCol<-grep(x=argNames, pattern="cols")
   if (length(indCol) != 0) {
@@ -67,7 +64,8 @@ levCol<-function(sf,column,drop=FALSE,...){
   # Case : no arguments at all in (...), or cols and other arguments are NULL
   if (length(args) == 0 ||
     (is.null(args)) ||
-    (prod(unlist(args)=="")==1)){
+    (prod(unlist(args)=="")==1)) 
+  {
       if (length(uniqueData) > 36)
       {
         case<-"Too many levels"
@@ -86,8 +84,8 @@ levCol<-function(sf,column,drop=FALSE,...){
   }
 
  # Case (...) contains only one argument (color OR levels)
-  if(length(args) == 1) {
-
+  if(length(args) == 1) 
+  {
     if (length(indCol) == 1 && prod(argCol!="")==1 && !is.null(argCol))
     {
       if (length(argCol) == length(uniqueData)){
@@ -98,7 +96,7 @@ levCol<-function(sf,column,drop=FALSE,...){
              names(typeLevels)<-uniqueData
       } else {
         case<-"2.1 : No level vector, but a color vector which size covers the number of levels in the data.
-        Some of the specified colors are not recognized as colors and will be replaced by colors from a standard palette."
+        Some or all of the specified colors are not recognized as colors and will be replaced by colors from a standard palette."
         colFalse<-!areColors(argCol)
         typeLevels<-argCol
         typeLevels[colFalse]<-palette.colors(
@@ -116,18 +114,14 @@ levCol<-function(sf,column,drop=FALSE,...){
     }
   if (is.null(argCol))
     {
-     if (prod(areColors(argLev[[1]]))==1)
-     {
- 
-          if(prod(uniqueData%in%names(argLev[[1]]))==1 & length(uniqueData)==length(argLev[[1]]))
-      {
+     if (prod(areColors(argLev[[1]]))==1) {
+        if(prod(uniqueData%in%names(argLev[[1]]))==1 & length(uniqueData)==length(argLev[[1]])) {
         case<-"4: A single vector was provided, whose names cover the levels in the data
         and whose values are colors."
         typeLevels<-argLev[[1]]
         names(typeLevels)<-names(argLev[[1]])
       } else
       {
-
           if(length(uniqueData)<=length(argLev[[1]]))
           {
             case<-case<-"5: A single vector was provided, whose values are colors
@@ -148,10 +142,8 @@ levCol<-function(sf,column,drop=FALSE,...){
           }
       }
      }
-         else
-     {
-       if (prod(uniqueData%in%argLev[[1]])==1)
-       {
+         else { 
+       if (prod(uniqueData%in%argLev[[1]])==1) {
          case<-"7: No color vector but a level vector whose names cover the levels in the data"
          typeLevels<-palette.colors(n=length(argLev[[1]]), palette="Polychrome 36")
          names(typeLevels)<-argLev[[1]]
