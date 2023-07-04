@@ -162,9 +162,10 @@ This figure describes the general workflow of the package.
 Main functions are presented in plain lines, the dashed box represent optionnal steps. These functions are presented
  in next section.
 
-1.  First, the LCZ classifications are imported, from a geojson file or shapefiles.
-2.  Each LCZ classification can then be plotted
-3.  The two LCZ classifications are then compared :
+1. First, the LCZ classifications (or any other qualitative variable) are imported, from a geojson file or shapefiles.
+2. Each LCZ classification can then be visualized
+3. Some levels may be grouped in broader categories
+3.  The two LCZ classifications (or qualitative variable maps) are then compared :
     -  A map of the agreement/disagreement is produced
     -  The general agreement and a pseudo-kappa indicator of agreement are computed. 
     -  The summed surface of each LCZ type is computed for each classification
