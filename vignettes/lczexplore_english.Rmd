@@ -80,7 +80,7 @@ For standard LCZ types, one sets the argument `repr="standard"`, and the functio
 
 
 ```{R, fig.dim = c(8, 6)}
-showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="standard",LCZlevels="",cols="")
+showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="standard",LCZlevels="",colors="")
 ```
 One can note that by default, all the 17 possible types of an LCZ classification are present in the legend. This makes comparison easier when one compares dataset with different present levels. 
 To only represent the present levels, set `drop=TRUE`.
@@ -95,7 +95,7 @@ The non standard representation, triggered with `repr=alter` is useful when :
 - one want's to use custom colors
 - one wants to plot... something different from LCZ
 
-With `repr=alter`, one passes the vector of possible levels to the argument `LCZlevels` and the vector of associated colors to the argument `cols`.
+With `repr=alter`, one passes the vector of possible levels to the argument `LCZlevels` and the vector of associated colors to the argument `colors`.
 
 If no vector of levels or no vector of colors is given, the levels will be deduced from the unique values present in the data, and the colors will be picked from the "Polychrome 36" palette of the `grDevices` package.
 
@@ -103,7 +103,7 @@ For instance : one can first plot the column without knowing the LCZ levels pres
 ```{r, fig.dim = c(8, 6)}
 # Choice of random colors from a palette
 testCol <- palette.colors(n=17, palette="Polychrome 36")
-showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter",cols=testCol, useStandCol = FALSE, drop=TRUE)
+showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter",colors=testCol, useStandCol = FALSE, drop=TRUE)
 
 ```
 
@@ -115,14 +115,14 @@ showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter", LCZlevels = LCZl
 
 ```
 
-The colors one wants to use can be specify either by their name (if a known color name in R) or it's RGB code, and passed to the argument `cols`.
+The colors one wants to use can be specify either by their name (if a known color name in R) or it's RGB code, and passed to the argument `colors`.
 
 ```{r, fig.dim = c(8, 6)}
 
 LCZlevels<-c(2, 3, 5, 6, 8, 9, 101, 102, 104, 105, 107)
 couleurs<-c("red","brown1","orange","coral","grey","darkgreen","chartreuse4","springgreen3",
             "darkolivegreen","black","#6d67fd")
-showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter",drop=TRUE,LCZlevels=LCZlevels,cols=couleurs)
+showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter",drop=TRUE,LCZlevels=LCZlevels,colors=couleurs)
 
 ```
 
@@ -140,10 +140,10 @@ redonOSMgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",
                            urban=c("1","2","3","4","5","6","7","8","9"),
                            industry="10",
                            vegetation=c("101","102","103","104"),
-                           impervious="105",pervious="106",water="107",cols=c("red","black","green","grey","burlywood","blue"))
+                           impervious="105",pervious="106",water="107",colors=c("red","black","green","grey","burlywood","blue"))
 showLCZ(redonOSMgrouped, column="grouped",repr="alter",wf="OSM",
         LCZlevels = c("urban","industry","vegetation","impervious","pervious","water"),
-        cols=c("red","black","green","grey","burlywood","blue"))
+        colors=c("red","black","green","grey","burlywood","blue"))
 
 ```
 
@@ -185,17 +185,17 @@ redonOSMgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",
                            urban=c("1","2","3","4","5","6","7","8","9"),
                            industry="10",
                            vegetation=c("101","102","103","104"),
-                           impervious="105",pervious="106",water="107",cols=c("red","black","green","grey","burlywood","blue"))
+                           impervious="105",pervious="106",water="107",colors=c("red","black","green","grey","burlywood","blue"))
 redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",
                            urban=c("1","2","3","4","5","6","7","8","9"),
                            industry="10",
                            vegetation=c("101","102","103","104"),
-                           impervious="105",pervious="106",water="107",cols=c("red","black","green","grey","burlywood","blue"))
+                           impervious="105",pervious="106",water="107",colors=c("red","black","green","grey","burlywood","blue"))
 comparisonGrouped<-compareLCZ(sf1=redonOSMgrouped,column1="grouped",
            sf2=redonBDTgrouped, column2="grouped",
            repr="alter", 
            levels=c("urban","industry","vegetation","impervious","pervious","water"),
-           cols=c("red","black","green","grey","burlywood","blue"))
+           colors=c("red","black","green","grey","burlywood","blue"))
 
                            
 ```
@@ -210,7 +210,7 @@ comparisonGrouped<-compareLCZ(sf1=redonBDT,column1="LCZ_PRIMARY", wf1="groupedBD
     industry="10",
     vegetation=c("101","102","103","104"),
     impervious="105",pervious="106",water="107",
-    cols=c("red","black","green","grey","burlywood","blue"),tryGroup = TRUE)
+    colors=c("red","black","green","grey","burlywood","blue"),tryGroup = TRUE)
 ```
 
 

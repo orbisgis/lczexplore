@@ -83,7 +83,7 @@ a call to the LCZgroup2 function will be tried, and if it works, the resulting g
 
 \item{...}{allow to pass arguments if repr is set to alter.
 The expected arguments are the name of each level of the variables contained
-in column1 and column2, and last a vector cols of the colors to use to plot them.}
+in column1 and column2, and last a vector colors of the colors to use to plot them.}
 }
 \value{
 returns an object called matConfOut which contains

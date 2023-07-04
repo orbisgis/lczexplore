@@ -164,7 +164,7 @@ impervious="105",pervious="106",water="107", outCol = "Regrouped")
 
 compareLCZ(sf1 = redonWudaptGrouped, column1 = "Regrouped", wf1 = "Wudapt",
            sf2 = redonOSMgrouped, column2 = "Regrouped", wf2 = " GeoClimate on OSM data",
-           exwrite = FALSE, plot=TRUE, repr="alter", levels=c("urban","industry","vegetation","impervious","pervious","water"),cols=c("red","black","green","grey","burlywood","blue"))
+           exwrite = FALSE, plot=TRUE, repr="alter", levels=c("urban","industry","vegetation","impervious","pervious","water"),colors=c("red","black","green","grey","burlywood","blue"))
 
 
 ```

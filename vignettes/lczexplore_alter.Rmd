@@ -65,7 +65,7 @@ But maybe the disagreement is not as strong as it seems. One may, for example, s
 
 Use the `LCZgroup2` function and set the dataset with the argument `sf` and the column with `column`.Then you pass as many vectors as there are grouped category, each of them containing the levels to be grouped together. The newly created categories will be stored in the `outCol` column. If the user doesn't enter them, by default the column is called `"grouped"`.
 
-The newly created dataset can be mapped with `showLCZ` function. At this point, we pass the names of the new categories present in the "grouped" column to the `LCZlevels` argument and the colors associated to the `cols` argument.
+The newly created dataset can be mapped with `showLCZ` function. At this point, we pass the names of the new categories present in the "grouped" column to the `LCZlevels` argument and the colors associated to the `colors` argument.
 
 ```{r, fig.dim = c(8, 6)}
 redonOSMgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",
@@ -73,14 +73,14 @@ redonOSMgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",
                            industry="10",
                            vegetation=c("101","102","103","104"),
                            impervious="105",pervious="106",water="107", 
-                           cols=c("red","black","green","grey","burlywood","blue"))
+                           colors=c("red","black","green","grey","burlywood","blue"))
 
 levCol(sf=redonOSMgrouped,column="grouped",LCZlevels = c("urban","industry","vegetation","impervious","pervious","water"),
-       cols=c("red","black","green","grey","burlywood","blue"))
+       colors=c("red","black","green","grey","burlywood","blue"))
 
 showLCZ(redonOSMgrouped, column="grouped",repr="alter",wf="OSM",
         LCZlevels = c("urban","industry","vegetation","impervious","pervious","water"),
-        cols=c("red","black","green","grey","burlywood","blue"))
+        colors=c("red","black","green","grey","burlywood","blue"))
 
 ```
 
@@ -96,13 +96,13 @@ redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",
                            industry="10",
                            vegetation=c("101","102","103","104"),
                            impervious="105",pervious="106",water="107",
-                           cols=c("red","black","green","grey","burlywood","blue"))
+                           colors=c("red","black","green","grey","burlywood","blue"))
 
 comparisonGrouped<-compareLCZ(sf1=redonOSMgrouped,column1="grouped",
 sf2=redonBDTgrouped, column2="grouped",
 repr="alter",
 levels=c("urban","industry","vegetation","impervious","pervious","water"),
-cols=c("red","black","green","grey","burlywood","blue"))
+colors=c("red","black","green","grey","burlywood","blue"))
 ```
 
 There are many cases when one doesn't necessarily know the levels of the qualitative variables, 

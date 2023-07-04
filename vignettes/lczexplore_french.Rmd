@@ -101,14 +101,14 @@ En utilisant la représentation non standard, soit `repr="alter"`, on peut trait
 - on veut utiliser d'autres couleurs,
 - on veut utiliser la fonction pour représenter d'autres variables. 
  
-On passera le vecteur contenant les valeurs possibles à l'argument `LCZlevels` et les couleurs leur correspondant à l'argument `cols`.
+On passera le vecteur contenant les valeurs possibles à l'argument `LCZlevels` et les couleurs leur correspondant à l'argument `colors`.
 
-Si `repr=alter` et que `LCZlvels` et `cols` ne sont pas renseignés les couleurs sont choisies au sein de la palette "Polychrome 36" du package grDevice, et les niveaux déduits des valeurs présentes.
+Si `repr=alter` et que `LCZlvels` et `colors` ne sont pas renseignés les couleurs sont choisies au sein de la palette "Polychrome 36" du package grDevice, et les niveaux déduits des valeurs présentes.
 
 ```{r, fig.dim = c(8, 6), echo = FALSE}
 # Choix d'un vecteur de couleurs alternatif aléatoire
 testCol <- palette.colors(n=17, palette="Polychrome 36")
-showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter",cols=testCol, useStandCol = FALSE)
+showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter",colors=testCol, useStandCol = FALSE)
 
 ```
 
@@ -121,17 +121,17 @@ LCZlevels<-c(2, 3, 5, 6, 8, 9, 10, 101, 102, 104, 105, 107)
 showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter", LCZlevels = LCZlevels,drop=TRUE)
 ```
 
-On peut également renseigner le vecteur des couleurs qu'on souhaite utiliser en renseignant l'argument`cols`.On peut renseigner les noms de couleurs connues de R ou un code RGB.  
+On peut également renseigner le vecteur des couleurs qu'on souhaite utiliser en renseignant l'argument`colors`.On peut renseigner les noms de couleurs connues de R ou un code RGB.  
 
 ```{r, fig.dim = c(8, 6), echo = FALSE}
 # Choix de couleurs prises au hasard
 
 # Après une première représentation on constate qu'il n'y a que les typeLevels 2, 3, 5, 6, 8, 9, 101, 102, 104, 105, 107.
-# Je spécifie un vecteur de couleur de taille 11 cols
+# Je spécifie un vecteur de couleur de taille 11 colors
 LCZlevels<-c(2, 3, 5, 6, 8, 9, 101, 102, 104, 105, 107)
 couleurs<-c("red","brown1","orange","coral","grey","darkgreen","chartreuse4","springgreen3",
             "darkolivegreen","black","#6d67fd")
-showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter",drop=TRUE,LCZlevels=LCZlevels,cols=couleurs)
+showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter",drop=TRUE,LCZlevels=LCZlevels,colors=couleurs)
 
 ```
 
@@ -152,10 +152,10 @@ redonOSMgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",
                            urban=c("1","2","3","4","5","6","7","8","9"),
                            industry="10",
                            vegetation=c("101","102","103","104"),
-                           impervious="105",pervious="106",water="107",cols=c("red","black","green","grey","burlywood","blue"))
+                           impervious="105",pervious="106",water="107",colors=c("red","black","green","grey","burlywood","blue"))
 showLCZ(redonOSMgrouped, column="grouped",repr="alter",wf="OSM",
         LCZlevels = c("urban","industry","vegetation","impervious","pervious","water"),
-        cols=c("red","black","green","grey","burlywood","blue"))
+        colors=c("red","black","green","grey","burlywood","blue"))
 
 ```
 

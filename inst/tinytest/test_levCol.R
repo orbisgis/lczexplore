@@ -7,7 +7,7 @@
 redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
                            industry="10",
                            vegetation=c("101","102","103","104"),
-                           impervious="105",pervious="106",water="107",cols=c("red","black","green","grey","burlywood","blue"))
+                           impervious="105",pervious="106",water="107",colors=c("red","black","green","grey","burlywood","blue"))
 
 # several vector covering the levels in the data, with colors of the proper size
 
@@ -15,14 +15,14 @@ redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4"
 #               you may want to group some of the levels using LCZgroup2 function
 expect_error(
   levCol(sf=redonBDT, column="LCZ_PRIMARY",1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-       19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38,cols="black"),
+       19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38,colors="black"),
   "more than 36 arguments")
 
 # case 1: No level vector and no color vector, less than 36 levels,
 # levels will be deduced from the data
 # and colors will be chosen from a standard palette. Or there are a level vector and a color vector, but they are empty.
 
-test<-levCol(redonBDTgrouped,column="grouped",levels="",cols="")
+test<-levCol(redonBDTgrouped,column="grouped",levels="",colors="")
 expect_equal(grep("1:",test$case),1)
 
 
@@ -32,14 +32,14 @@ expect_equal(grep("1:",test$case),1)
 # case 2: No levels but a color vector which size covers the number of levels in the data
 
 test<-levCol(sf=redonBDTgrouped,column="grouped",
-             cols=c("red","black","green","grey","burlywood","blue"))
+             colors=c("red","black","green","grey","burlywood","blue"))
 expect_equal(grep("2:",test$case),1)
 
 # case 3: No levels but a color vector which size does not cover the number of levels in the data,
 # colors will be picked from a standard palette..
 
 test<-levCol(sf=redonBDTgrouped,column="grouped",
-             cols=c("red","black","green","grey","burlywood"))
+             colors=c("red","black","green","grey","burlywood"))
 expect_equal(grep("3:",test$case),1)
 
 # case 4:  A single vector was provided, whose names cover the levels in the data
@@ -85,7 +85,7 @@ expect_equal(grep("8:",test$case),1)
 #           colors in another vector, these vectors having the same length
 test<-levCol(redonBDTgrouped, column="grouped",
              levels=c("urban","industry","vegetation","impervious","pervious","water"),
-             cols=c("red","black","green","grey","burlywood","blue"))
+             colors=c("red","black","green","grey","burlywood","blue"))
 
 expect_equal(grep("9:",test$case),1)
 
@@ -96,7 +96,7 @@ expect_equal(grep("9:",test$case),1)
 
 test<-levCol(redonBDTgrouped, column="grouped",
              levels=c("urban","industry","vegetation","impervious","pervious","water"),
-             cols=c("red","black","green","grey","chaussures","blue"))
+             colors=c("red","black","green","grey","chaussures","blue"))
 
 expect_equal(grep("10:",test$case),1)
 
@@ -107,7 +107,7 @@ expect_equal(grep("10:",test$case),1)
 
 test<-levCol(redonBDTgrouped, column="grouped",
              levels=c("urban","industry","vegetation","impervious","pervious","water"),
-             cols=c("red","black","green","grey","blue"))
+             colors=c("red","black","green","grey","blue"))
 
 
 expect_equal(grep("11:",test$case),1)
@@ -119,7 +119,7 @@ expect_equal(grep("11:",test$case),1)
 
 test<-levCol(redonBDTgrouped, column="grouped",
              levels=c("urban","industry","vegetation","impervious","pervious","water"),
-             cols=c("red","black","green","grey","burlywood","blue","purple"))
+             colors=c("red","black","green","grey","burlywood","blue","purple"))
 
 expect_equal(grep("12:",test$case),1)
 
@@ -136,7 +136,7 @@ expect_equal(grep("13:",test$case),1)
 
 test<-levCol(redonBDTgrouped, column="grouped",
        levels=c("urban","industry","vegetation","pervious","water"),
-       cols=c("red","black","green","grey","blue"))
+       colors=c("red","black","green","grey","blue"))
 expect_equal(grep("14.0:",test$case),1)
 
 # case 14: The specified levels don't cover the levels in the data
@@ -147,7 +147,7 @@ test<-levCol(sf=redonBDTgrouped,column="grouped",
        industry="10",
        vegetation=c("101","102","103","104"),
        impervious="105",pervious="106",water="107",
-       cols=c("red","black","green","grey","burlywood","blue"))
+       colors=c("red","black","green","grey","burlywood","blue"))
 expect_equal(grep("14:",test$case),1)
 
 # case 15: The specified levels don't cover the levels in the data
@@ -158,7 +158,7 @@ expect_equal(grep("14:",test$case),1)
 test<-levCol(sf=redonBDTgrouped,column="grouped",urban=c("1","2","3","4","5","6","7","8","9"),
        vegetation=c("101","102","103","104"),
        impervious="105",pervious="106",water="107",
-       cols=c("red","black","green","grey","burlywood","blue","orange"))
+       colors=c("red","black","green","grey","burlywood","blue","orange"))
 expect_equal(grep("15:",test$case),1)
 
 # case 15.1 : The specified levels cover the levels in the data
@@ -169,7 +169,7 @@ test<-levCol(sf=redonBDTgrouped,column="grouped",urban=c("1","2","3","4","5","6"
              industry="10",
              vegetation=c("101","102","103","104"),
              impervious="105",pervious="106",water="107",
-             cols=c("red","black","green","grey","burlywood","blue","orange"))
+             colors=c("red","black","green","grey","burlywood","blue","orange"))
 expect_equal(grep("15.1:",test$case),1)
 
 # case 16: The specified levels cover the levels in the data
@@ -187,7 +187,7 @@ test<-levCol(sf=redonBDTgrouped,column="grouped",urban=c("1","2","3","4","5","6"
        industry="10",
        vegetation=c("101","102","103","104"),
        impervious="105",pervious="106",water="107",
-       cols=c("red","black","green","grey","burlywood","blue"))
+       colors=c("red","black","green","grey","burlywood","blue"))
 expect_equal(grep("17:",test$case),1)
 
 # case 18 : Several arguments are specified, whose names cover
@@ -199,17 +199,17 @@ test<-levCol(sf=redonBDTgrouped,column="grouped",urban=c("1","2","3","4","5","6"
        industry="10",
        vegetation=c("101","102","103","104"),
        impervious="105",pervious="106",water="107",
-       cols=c("red","black","green","grey","DJ Shadow","blue"))
+       colors=c("red","black","green","grey","DJ Shadow","blue"))
 expect_equal(grep("18:",test$case),1)
 
 redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
                            industry="10",
                            vegetation=c("101","102","103","104"),
-                           impervious="105",pervious="106",water="107",cols=c("red","black","green","grey","burlywood","blue"))
+                           impervious="105",pervious="106",water="107",colors=c("red","black","green","grey","burlywood","blue"))
 
 # levCol(sf=redonBDTgrouped,
 #        column="grouped",
-#        LCZlevels=c("urban","industry","vegetation","impervious","pervious","water"),cols="")
+#        LCZlevels=c("urban","industry","vegetation","impervious","pervious","water"),colors="")
 
 
 rm(test)
@@ -219,4 +219,4 @@ rm(redonBDTgrouped)
 #        industry="10",
 #        vegetation=c("101","102","103","104"),
 #        impervious="105",pervious="106",water="107",
-#        cols=c("red","black","green","grey","chaussure","blue"))
+#        colors=c("red","black","green","grey","chaussure","blue"))

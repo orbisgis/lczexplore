@@ -14,7 +14,7 @@ levCol(sf, column, drop = FALSE, ...)
 \item{drop}{is set to TRUE if one wants to drop unused levels, in case column is a factor with unused levels}
 
 \item{...}{other parameters specified, expected a vector of levels and a vector of colors
-whose name must begin with cols. Other cases are handled to enhance usability.}
+whose name must begin with colors. Other cases are handled to enhance usability.}
 }
 \value{
 output is a list containing levelColors, a named vector, which names are the levels

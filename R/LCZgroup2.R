@@ -14,7 +14,7 @@
 #' urban=c("1","2","3","4","5","6","7","8","9"),
 #' industry="10", vegetation=c("101","102","103","104"),
 #' impervious="105",pervious="106",water="107",
-#' cols=c("red","black","green","grey","burlywood","blue"))
+#' colors=c("red","black","green","grey","burlywood","blue"))
 LCZgroup2<-function(sf,column,outCol='grouped',...)
 {
   #require(forcats)

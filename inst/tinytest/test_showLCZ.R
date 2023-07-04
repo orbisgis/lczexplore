@@ -2,11 +2,11 @@
 # library(tinytest)
 #
 # library(sf)
-#showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY", repr="standard", typeLevels="", cols="")
+#showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY", repr="standard", typeLevels="", colors="")
 
 expect_silent(
   showLCZ(redonOSM, title="Zones climatiques locales à Redon",
-          repr="standard", drop=FALSE, cols="", LCZlevels="")
+          repr="standard", drop=FALSE, colors="", LCZlevels="")
 )
 expect_silent(showLCZ(redonBDT, drop=TRUE))
 
@@ -14,38 +14,38 @@ testCol <- palette.colors(n=17, palette="Polychrome 36")
 
 # showLCZ(redonBDT, title="Zones climatiques locales à Redon",repr="alter",
 #         useStandCol=FALSE,
-#         cols = testCol )
+#         colors = testCol )
 # 
-# showLCZ(sf=redonOSM, wf="OSM", column="LCZ_PRIMARY", title="test", repr="alter", cols=testCol, useStandCol=FALSE)
+# showLCZ(sf=redonOSM, wf="OSM", column="LCZ_PRIMARY", title="test", repr="alter", colors=testCol, useStandCol=FALSE)
 # 
 # 
 # showLCZ(redonBDT, title="Zones climatiques locales à Redon",repr="alter",
 #         useStandCol=TRUE,
-#         cols = testCol )
-#levCol(sf=redonBDT, column="LCZ_PRIMARY",cols = testCol)
+#         colors = testCol )
+#levCol(sf=redonBDT, column="LCZ_PRIMARY",colors = testCol)
 
 redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY", urban=c("1","2","3","4","5","6","7","8","9"),
                            industry="10",
                            vegetation=c("101","102","103","104"),
                            impervious="105",pervious="106",water="107",
-                           cols=c("red","black","green","grey","burlywood","blue"))
+                           colors=c("red","black","green","grey","burlywood","blue"))
 
 expect_message(
   showLCZ(redonBDTgrouped,column="grouped",repr="alter",
           wf="BD TOPO",useStandCol=FALSE,
         levels=c("urban","industry","vegetation","impervious","pervious","water"),
-         cols=c("red","black","green","grey","burlywood","blue")),
+         colors=c("red","black","green","grey","burlywood","blue")),
   "9:"
 )
 
 # levCol(redonBDTgrouped,column="grouped",
 #        levels=c("urban","industry","vegetation","impervious","pervious","water"),
-#        cols=c("red","black","green","grey","burlywood","blue"))
+#        colors=c("red","black","green","grey","burlywood","blue"))
 
 expect_message(
   showLCZ(redonBDTgrouped,column="grouped",repr="alter",
                        LCZlevels=c("urban","industry","vegetation","impervious","pervious","water"),
-        cols=c("red","black","green","grey","blue"),
+        colors=c("red","black","green","grey","blue"),
           title="LCZ regroupées à Redon"),
   "For a better rendition specify as many colors as levels."
 )
@@ -72,7 +72,7 @@ showLCZ(redonBDTgrouped,column="grouped",repr="alter"),
   "No level vector and no color vector"
 )
 
-#levCol(redonBDTgrouped,column="grouped",levels=NULL,cols=NULL)
+#levCol(redonBDTgrouped,column="grouped",levels=NULL,colors=NULL)
 
 expect_message(
 showLCZ(redonBDTgrouped,column="grouped",repr="alter",

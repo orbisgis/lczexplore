@@ -4,7 +4,7 @@
 #' @param column is the column that contains the data
 #' @param drop is set to TRUE if one wants to drop unused levels, in case column is a factor with unused levels
 #' @param ... other parameters specified, expected a vector of levels and a vector of colors
-#' whose name must begin with cols. Other cases are handled to enhance usability.
+#' whose name must begin with colors. Other cases are handled to enhance usability.
 #' @import dplyr sf
 #' @importFrom grDevices palette.colors
 #'
@@ -33,11 +33,11 @@ levCol<-function(sf,column,drop=FALSE,...){
   You can use the function LCZgroup2 to group some levels.") }
 
   argNames<-names(args)
-  indCol<-grep(x=argNames, pattern="cols")
+  indCol<-grep(x=argNames, pattern="colors")
   if (length(indCol) != 0) {
     if (length(indCol)>1 ) {
       stop(
-        "Only one argument can start with cols, and it must contain the colors,
+        "Only one argument can start with colors, and it must contain the colors,
       please rename your arguments and retry.")} else {
       argCol <- args[indCol][[1]]
       argLev<-args[-indCol]
@@ -61,7 +61,7 @@ levCol<-function(sf,column,drop=FALSE,...){
 # if each level has an argument.
 
   # Define cases
-  # Case : no arguments at all in (...), or cols and other arguments are NULL
+  # Case : no arguments at all in (...), or colors and other arguments are NULL
   if (length(args) == 0 ||
     (is.null(args)) ||
     (prod(unlist(args)=="")==1)) 
@@ -318,6 +318,6 @@ return(output)
  #                           industry="10",
  #                           vegetation=c("101","102","103","104"),
  #                           impervious="105",pervious="106",water="107",
- #                            cols=c("red","black","green","grey","burlywood","blue"))
+ #                            colors=c("red","black","green","grey","burlywood","blue"))
 
 #summary(redonBDTgrouped$grouped)

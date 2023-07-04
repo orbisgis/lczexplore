@@ -38,7 +38,7 @@
 #' "grouped" and the comparison will be done using it.
 #' @param ... allow to pass arguments if repr is set to alter.
 #' The expected arguments are the name of each level of the variables contained 
-#' in column1 and column2, and last a vector cols of the colors to use to plot them.
+#' in column1 and column2, and last a vector colors of the colors to use to plot them.
 #' @importFrom ggplot2 geom_sf guides ggtitle aes
 #' @importFrom DescTools CohenKappa
 #' @import sf dplyr cowplot forcats units tidyr RColorBrewer utils grDevices rlang

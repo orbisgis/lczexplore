@@ -27,14 +27,14 @@ If the LCZ were produced by WUDAPT, use "wudapt".}
 \item{column}{is the column that contains the LCZ.}
 
 \item{repr}{indicates if the sf dataset contains standarde LCZ levels or grouped LCZ.
-If "standard" then an optimal set of cols is used to produce the plotted map. Else, colors can be specified with the cols argument.}
+If "standard" then an optimal set of colors is used to produce the plotted map. Else, colors can be specified with the colors argument.}
 
 \item{drop}{indicates if you want to show the levels present in no geometry.}
 
 \item{useStandCol}{is set to TRUE implies that any levels detected as a standard LCZ level will receive the standard associated color}
 
 \item{...}{these dynamic dots allow you to pass arguments to specify levels expected
-in your dataset and colors associated to these levels when not in the standard representation. You can pas your levels through a vector and you colors through another vector called cols.
+in your dataset and colors associated to these levels when not in the standard representation. You can pas your levels through a vector and you colors through another vector called colors.
 For more details about this, read the "lcz_explore_alter" vignette.}
 }
 \value{
@@ -54,6 +54,6 @@ impervious="105",pervious="106",water="107")
 # For repr="alter", you can specify colors and levels this way :
 showLCZ(redonBDTgrouped,column="grouped",repr="alter",
 LCZlevels=c("urban","industry","vegetation","impervious","pervious","water"),
-cols=c("red","black","green","grey","burlywood","blue"),wf="BD TOPO")
+colors=c("red","black","green","grey","burlywood","blue"),wf="BD TOPO")
 
 }

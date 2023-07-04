@@ -72,19 +72,19 @@ redonBDTgrouped<-LCZgroup2(
                            industry="10",
                            vegetation=c("101","102","103","104"),
                            impervious="105",pervious="106",water="107",
-                           cols=c("red","black","green","grey","burlywood","blue"))
+                           colors=c("red","black","green","grey","burlywood","blue"))
 
 redonOSMgrouped<-LCZgroup2(
   redonOSM,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
   industry="10",
   vegetation=c("101","102","103","104"),
-  impervious="105",pervious="106",water="107",cols=c("red","black","green","grey","burlywood","blue"))
+  impervious="105",pervious="106",water="107",colors=c("red","black","green","grey","burlywood","blue"))
 
 # levCol(redonOSMgrouped,"LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
 #        industry="10",
 #        vegetation=c("101","102","103","104"),
 #        impervious="105",pervious="106",water="107",
-#        cols=c("red","black","green","grey","burlywood","blue"))
+#        colors=c("red","black","green","grey","burlywood","blue"))
 
 
 
@@ -97,35 +97,35 @@ expect_warning(compareRedonBDTOSMgrouped<-
              industry="10",
              vegetation=c("101","102","103","104"),
              impervious="105",pervious="106",water="107",
-             cols=c("red","black","green","grey","burlywood","blue"),tryGroup = TRUE),
+             colors=c("red","black","green","grey","burlywood","blue"),tryGroup = TRUE),
                "attribute variables are assumed to be spatially constant throughout all geometries")
 
 
 redonBDTgrouped2<-
   LCZgroup2(redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),outCol="groupedLCZ",
   industry="10",vegetation=c("101","102","103","104"),impervious="105",pervious="106",water="107",
-            cols=c("red","black","green","grey","burlywood","blue"))
+            colors=c("red","black","green","grey","burlywood","blue"))
 redonOSMgrouped2<-
   LCZgroup2(redonOSM,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),outCol="otherName",
             industry="10",vegetation=c("101","102","103","104"),impervious="105",pervious="106",water="107",
-            cols=c("red","black","green","grey","burlywood","blue"))
+            colors=c("red","black","green","grey","burlywood","blue"))
 redonWudaptGrouped<-  
   LCZgroup2(redonWudapt,column="EU_LCZ_map",urban=c("1","2","3","4","5","6","7","8","9"),outCol="otherName",
                                 industry="10",vegetation=c("101","102","103","104"),impervious="105",pervious="106",water="107",
-                                cols=c("red","black","green","grey","burlywood","blue"))
+                                colors=c("red","black","green","grey","burlywood","blue"))
 
 
 expect_message(compareLCZ(sf1=redonBDTgrouped2, column1="groupedLCZ", wf1="BDT",
                           sf2=redonWudaptGrouped, column2="otherName", wf2="osm", exwrite=FALSE, repr="alter", plot=T,
                           urban="urban",industry="industry",vegetation="vegetation",impervious="impervious",pervious="pervious",water="water",
-                          cols=c("red","black","green","grey","burlywood","blue")),
+                          colors=c("red","black","green","grey","burlywood","blue")),
                "they will be coerced to the specified reference \\(redonBDTgrouped2\\)"
 )
 
 expect_message(compareLCZ(sf1=redonBDTgrouped2, column1="groupedLCZ", wf1="BDT",
            sf2=redonOSMgrouped2, column2="otherName", wf2="osm", exwrite=FALSE, repr="alter", plot=T,
            urban="urban",industry="industry",vegetation="vegetation",impervious="impervious",pervious="pervious",water="water",
-           cols=c("red","black","green","grey","burlywood","blue")),
+           colors=c("red","black","green","grey","burlywood","blue")),
                "they will be coerced to the specified reference \\(redonBDTgrouped2\\)"
 )
 
@@ -139,7 +139,7 @@ expect_warning(compareRedonBDTOSMgrouped<-
                             industry="10",
                             vegetation=c("101","102","103","104"),
                             impervious="105",pervious="106",water="107",
-                            cols=c("red","black","green","grey","burlywood","blue"),tryGroup = TRUE),
+                            colors=c("red","black","green","grey","burlywood","blue"),tryGroup = TRUE),
                "attribute variables are assumed to be spatially constant throughout all geometries")
 
 expect_warning(compareRedonBDTOSMgrouped<-
@@ -152,5 +152,5 @@ expect_warning(compareRedonBDTOSMgrouped<-
                             industry="10",
                             vegetation=c("101","102","103","104"),
                             impervious="105",pervious="106",water="107",
-                            cols=c("red","black","green","grey","burlywood","blue"),tryGroup = TRUE),
+                            colors=c("red","black","green","grey","burlywood","blue"),tryGroup = TRUE),
                "attribute variables are assumed to be spatially constant throughout all geometries")

@@ -433,7 +433,7 @@ redonOSMgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",
                            impervious="105",
                            pervious="106", 
                            water="107",
-                           cols=c("red","black","green","grey","burlywood","blue"))
+                           colors=c("red","black","green","grey","burlywood","blue"))
                            
 redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY", 
                            urban=c("1","2","3","4","5","6","7","8","9"),
@@ -442,7 +442,7 @@ redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",
                            impervious="105",
                            pervious="106", 
                            water="107",
-                           cols=c("red","black","green","grey","burlywood","blue"))   
+                           colors=c("red","black","green","grey","burlywood","blue"))   
 
 ```
 
@@ -453,7 +453,7 @@ You can then perform the same analysis, as showed in the following example :
 ```r
 showLCZ(redonOSMgrouped, column="grouped",repr="alter",wf="OSM",  
         LCZlevels = c("urban","industry","vegetation","impervious","pervious","water"),  
-        cols=c("red","black","green","grey","burlywood","blue"))
+        colors=c("red","black","green","grey","burlywood","blue"))
 compareLCZ(sf1=redonOSMgrouped, column1="grouped", wf1="OSM",
             sf2=redonBDTgrouped, column2="grouped", wf2="BDT",ref=1,
            repr="alter",exwrite=F,location="Redon",saveG="")
@@ -486,7 +486,7 @@ utrfRedonOSM<-importQualVar(dirPath=paste0(
   location = " Redon",exwrite=FALSE,repr="alter")
   # Plot the confusion matrix of thes two classifications  
 ```
-![Example of comparison on a qualitative variable (UTRF).](compareQualVar.png)
+![Example of comparison on a qualitative variable (UTRF)](compareQualVar.png)
 # Research projects involving GeoClimate
 
 The lczexplore package was developed thanks to the project PAENDORA2 (Pour la gestion du confort estival : Données, Outils et Recherche-Action) (2022 -2025), funded by ADEME.
