@@ -380,7 +380,7 @@ The value `pseudoK` corresponds to a coefficient of agreement, where the cells o
 weighted by the percentage of the concerned surface.   
 
 On can see in a quick glance, that the BDTOPO workflow leads to more and smaller Spatial Reference Units (1553 RSU) 
-than the OpenStreetMap workflow (521 RSU). Th third map shows that wide both classification tend to 
+than the OpenStreetMap workflow (521 RSU). The third map shows that wide both classification tend to 
 agree on wide vegetation areas. The last graphics helps to refine this analysis : One can notice that 
 both workflows quite agree for "compact mid" and "low plants" LCZ (89 and 88 % of the concerned areas). 
 On the contrary, only 48% of the areas set to "dense trees" by BDTOPO workflow are also set to 
@@ -440,7 +440,7 @@ the greater the confidence, the lesser the agreement!
 
 This paradoxical result is explained by the fact that in this specific case, the method is characterized 
 by the confidence value, not the data. And in this comparison, in the OSM dataset which is compared, 
-the building height are mostly estimated using a statistical method (cf. Bernard et al.). 
+the building height are mostly estimated using a statistical method [@bernardEstimationMissingBuilding2022]. 
 Thus, in this case, the confidence interval is not necessarily relevant.
 
 ## Group some levels and perform the same analysis
@@ -510,7 +510,8 @@ utrfRedonOSM<-importQualVar(dirPath=paste0(
   # Plot the confusion matrix of thes two classifications  
 ```
 ![Example of comparison on a qualitative variable (UTRF)](compareQualVar.png)
-# Research projects involving GeoClimate
+
+# Research projects involving lczexplore
 
 The lczexplore package was developed thanks to the project PAENDORA2 (Pour la gestion du confort estival : Données, Outils et Recherche-Action) (2022 -2025), funded by ADEME.
 
