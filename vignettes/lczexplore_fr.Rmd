@@ -1,12 +1,12 @@
 ---
-title: "lczexplore_french"
+title: "lczexplore_fr"
 author: "Matthieu Gousseff"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 resource_files:
   - vignettes/Redon.png
 vignette: >
- %\VignetteIndexEntry{lczexplore_french}
+ %\VignetteIndexEntry{lczexplore_fr}
  %\VignetteEngine{knitr::knitr}
  %\VignetteEncoding{UTF-8}
 ---
@@ -49,9 +49,9 @@ library(lczexplore)
 
 # Cas général : charger un fichier contenant des geométries et les LCZ associées
 
-## Importer les fichiers contenant les LCZ avec la fonction importLCZgen
+## Importer les fichiers contenant les LCZ avec la fonction importLCZvect
 
-La fonction `importLCZgen` est la fonction générique d'import d'un fichier "vecteur" contenant les LCZ (pour les fichiers raster, voir la vignette lcz_explore_raster_vector). L'import des fichiers geojson et shp a été testés, mais tous les formats acceptés par la fonction `st_read` de `sf` sont normalement importés sans problème.
+La fonction `importLCZvect` est la fonction générique d'import d'un fichier "vecteur" contenant les LCZ (pour les fichiers raster, voir la vignette lcz_explore_raster_vector). L'import des fichiers geojson et shp a été testés, mais tous les formats acceptés par la fonction `st_read` de `sf` sont normalement importés sans problème.
 
 
 L'argument `dirPath` permet d'indiquer le chemin du répertoire où se trouve le fichier et l'argument `file` le nom du fichier.
@@ -67,8 +67,8 @@ On peut également choisir `output="bBox"` pour que la fonction ressorte seuleme
 dirPath<-paste0(system.file("extdata",package="lczexplore"),"/")
 dirPathOSM<-paste0(dirPath,"osm/2022/Redon")
 dirPathBDT<-paste0(dirPath,"bdtopo_2_2/Redon")
-redonOSM<-importLCZgen(dirPath=dirPathOSM,file="rsu_lcz.geojson",column = "LCZ_PRIMARY", verbose=FALSE)
-redonBDT<-importLCZgen(dirPath=dirPathBDT,file="rsu_lcz.geojson",column = "LCZ_PRIMARY", verbose = FALSE)
+redonOSM<-importLCZvect(dirPath=dirPathOSM,file="rsu_lcz.geojson",column = "LCZ_PRIMARY", verbose=FALSE)
+redonBDT<-importLCZvect(dirPath=dirPathBDT,file="rsu_lcz.geojson",column = "LCZ_PRIMARY", verbose = FALSE)
 #
 ```
 ## Représenter les LCZ avec la fonction showLCZ
@@ -135,11 +135,11 @@ showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter",drop=TRUE,LCZleve
 
 ```
 
-## Regrouper des types de LCZ avec la fonction LCZgroup2
+## Regrouper des types de LCZ avec la fonction groupLCZ
 
 Il peut être intéressant de regrouper des niveaux en catégories plus vastes pour une analyse plus générale. On peut, par exemple,
 choisir de regrouper les LCZ urbaines et les LCZ de végétation.  
-La fonction `LCZgroup2` prend en argument le jeu de données à regrouper, `sf`, et la colonne où se trouvent les LCZ à regrouper, `column`.  
+La fonction `groupLCZ` prend en argument le jeu de données à regrouper, `sf`, et la colonne où se trouvent les LCZ à regrouper, `column`.  
 
 On renseigne ensuite des vecteurs dont le nom correspond à la catégorie regroupée et qui contient les niveaux à regrouper dans cette catégorie.   
 
@@ -148,7 +148,7 @@ Les catégories créées sont ajoutées au jeu de données dans une colonne dont
 On peut alors passer le nouveau jeu de données dans la fonction `LCZshow`.
 
 ```{r, fig.dim = c(8, 6), echo = FALSE}
-redonOSMgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",
+redonOSMgrouped<-groupLCZ(redonOSM,column="LCZ_PRIMARY",
                            urban=c("1","2","3","4","5","6","7","8","9"),
                            industry="10",
                            vegetation=c("101","102","103","104"),
@@ -215,7 +215,7 @@ Par exemple, GeoClimate, pour une géométrie donnée, peut lui avoir attribué 
 
 ## Prise en compte des géométries et des valeurs de confiance lors de l'import des fichiers.
 
-La fonction `importLCZgen` permet d'indiquer quelles colonnes du geojson contiennent l'identifiant de la géométrie (`geomID`) et l'indicateur de confiance associé (`confid`).
+La fonction `importLCZvect` permet d'indiquer quelles colonnes du geojson contiennent l'identifiant de la géométrie (`geomID`) et l'indicateur de confiance associé (`confid`).
 ```{r}
 dirPath<-paste0(system.file("extdata",package="lczexplore"),"/")
 dirPathOSM<-paste0(dirPath,"osm/2022/Redon")
@@ -223,12 +223,12 @@ dirPathBDT<-paste0(dirPath,"bdtopo_2_2/Redon")
 ## La fonction d'import fonctionne en réalité aussi avec les fichiers shape
 ## Notez que les noms des colonnes sont différents pour le fichier shape, dans tous les cas
 ## c'est le nom des colonnes de votre fichier que vous rentrerez.
-redonBDT<-importLCZgen(dirPath=dirPathBDT,file="rsu_lcz_bdt_redon.shp",
+redonBDT<-importLCZvect(dirPath=dirPathBDT,file="rsu_lcz_bdt_redon.shp",
                        column ="LCZ_PRIMAR",geomID = "ID_RSU",confid="LCZ_UNIQUE" )
 
-redonOSM<-importLCZgen(dirPath=dirPathOSM,file="rsu_lcz.geojson",column = "LCZ_PRIMARY",geomID = "ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
+redonOSM<-importLCZvect(dirPath=dirPathOSM,file="rsu_lcz.geojson",column = "LCZ_PRIMARY",geomID = "ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
 # Afin de conserver les mêmes noms, on réimporte avec le geojson
-redonBDT<-importLCZgen(dirPath=dirPathBDT,file="rsu_lcz.geojson",column = "LCZ_PRIMARY",geomID = "ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
+redonBDT<-importLCZvect(dirPath=dirPathBDT,file="rsu_lcz.geojson",column = "LCZ_PRIMARY",geomID = "ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
 
 ```
 L'analyse de sensibilité demande qu'on exporte l'accord entre les géométries en conservant les indicateurs de confiance accordée à la valeur de chaque classification.  

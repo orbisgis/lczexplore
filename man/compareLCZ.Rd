@@ -78,7 +78,7 @@ If the area you wish to analyse is not uploaded yet, please contact the GeoClima
 \item{plot}{: when FALSE non of the graphics are plotted or saved}
 
 \item{tryGroup}{: when TRUE, if the specified level names don't match the data, but the specified levels do,
-a call to the LCZgroup2 function will be tried, and if it works, the resulting grouping column will be named
+a call to the groupLCZ function will be tried, and if it works, the resulting grouping column will be named
 "grouped" and the comparison will be done using it.}
 
 \item{...}{allow to pass arguments if repr is set to alter.

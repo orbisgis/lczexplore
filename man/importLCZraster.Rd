@@ -25,7 +25,7 @@ importLCZraster(
 \item{zone}{set to europe by default, may include world once a strategy is defined}
 
 \item{bBox}{bBox is the bounding box needed to crop the wudapt tiff file.
-It can be produced bu the importLCZgen function}
+It can be produced bu the importLCZvect function}
 
 \item{fileName}{is by default \'EU_LCZ_map.tif\' but can be changed for test prurposes. Will be useful when other zones will be added}
 
@@ -44,7 +44,7 @@ at the following url : https://figshare.com/articles/dataset/European_LCZ_map/13
 A future version may include the world data once a strategy is defined to deal with CRS.
 }
 \examples{
-redonBbox<-importLCZgen(dirPath=paste0(system.file("extdata", package = "lczexplore"),
+redonBbox<-importLCZvect(dirPath=paste0(system.file("extdata", package = "lczexplore"),
 "/bdtopo_2_2/Redon"), file="rsu_lcz.geojson",column="LCZ_PRIMARY", output="bBox")
 
 redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),

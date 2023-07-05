@@ -51,7 +51,7 @@ if (wf1=="bdtopo_2_2"){
   fetchLCZ(location=location,outDir=outDir,wf=wf1)
   inDir<-paste0(outDir,"/",wf1,"/",location,"/")
   print("inDir");print(inDir)
-  df1<-importLCZgen(dirPath=inDir,file="rsu_lcz.geojson",column="LCZ_PRIMARY",
+  df1<-importLCZvect(dirPath=inDir,file="rsu_lcz.geojson",column="LCZ_PRIMARY",
                     geomID="ID_RSU", confid="LCZ_UNIQUENESS_VALUE",output="sfFile")
   print("df1");print(df1)
   }
@@ -59,7 +59,7 @@ if (wf1=="bdtopo_2_2"){
 if (wf1=="osm"){
   fetchLCZ(location=location,outDir=outDir,wf=wf1,refYear=refYear1)
   inDir<-paste0(outDir,"/",wf1,"/",refYear1,"/",location,"/")
-  df1<-importLCZgen(dirPath=inDir,file="rsu_lcz.geojson",column="LCZ_PRIMARY",
+  df1<-importLCZvect(dirPath=inDir,file="rsu_lcz.geojson",column="LCZ_PRIMARY",
                     geomID="ID_RSU", confid="LCZ_UNIQUENESS_VALUE",output="sfFile")
 }
 
@@ -77,7 +77,7 @@ if (wf1=="wudapt"){
   if (wf2=="bdtopo_2_2"){
     fetchLCZ(location=location,outDir=outDir,wf=wf2)
     inDir<-paste0(outDir,"/",wf2,"/",location,"/")
-    df2<-importLCZgen(dirPath=inDir,file="rsu_lcz.geojson",column="LCZ_PRIMARY",
+    df2<-importLCZvect(dirPath=inDir,file="rsu_lcz.geojson",column="LCZ_PRIMARY",
                       geomID="ID_RSU", confid="LCZ_UNIQUENESS_VALUE",output="sfFile")
   }
 
@@ -85,7 +85,7 @@ if (wf1=="wudapt"){
     fetchLCZ(location=location,outDir=outDir,
              wf=wf2,refYear = refYear2)
     inDir<-paste0(outDir,"/",wf2,"/",refYear2,"/",location,"/")
-    df2<-importLCZgen(dirPath=inDir,file="rsu_lcz.geojson",column="LCZ_PRIMARY",
+    df2<-importLCZvect(dirPath=inDir,file="rsu_lcz.geojson",column="LCZ_PRIMARY",
                       geomID="ID_RSU", confid="LCZ_UNIQUENESS_VALUE",output="sfFile")
   }
 
@@ -144,8 +144,8 @@ if(repr=="standard"){
 
     if((wf1=="osm"& wf2=="bdtopo_2_2")|(wf2=="osm" & wf1=="bdtopo_2_2")){
 
-      df1<-LCZgroup2(df1,column="LCZ_PRIMARY",...)
-      df2<-LCZgroup2(df2,column="LCZ_PRIMARY",...)
+      df1<-groupLCZ(df1,column="LCZ_PRIMARY",...)
+      df2<-groupLCZ(df2,column="LCZ_PRIMARY",...)
       compareLCZ(sf1=df1,
                  column1='grouped',
                  sf2=df2,
@@ -154,8 +154,8 @@ if(repr=="standard"){
       }
 
     if(wf1=="wudapt"&(wf2=="osm"|wf2=="bdtopo_2_2")){
-      df1<-LCZgroup2(df1,column="EU_LCZ_map",...)
-      df2<-LCZgroup2(df2,column="LCZ_PRIMARY",...)
+      df1<-groupLCZ(df1,column="EU_LCZ_map",...)
+      df2<-groupLCZ(df2,column="LCZ_PRIMARY",...)
       compareLCZ(sf1=df1,
                  column1='grouped',
                  sf2=df2,
@@ -163,8 +163,8 @@ if(repr=="standard"){
                  saveG=nameG,repr=repr,wf1=wf1,wf2=wf2,location=location,exwrite=T,outDir=outDir,...)
     }
     if(wf2=="wudapt"&(wf1=="osm"|wf1=="bdtopo_2_2")){
-      df1<-LCZgroup2(df1,column="LCZ_PRIMARY",...)
-      df2<-LCZgroup2(df2,column="EU_LCZ_map",...)
+      df1<-groupLCZ(df1,column="LCZ_PRIMARY",...)
+      df2<-groupLCZ(df2,column="EU_LCZ_map",...)
       compareLCZ(sf1=df1,
                  column1='grouped',
                  sf2=df2,

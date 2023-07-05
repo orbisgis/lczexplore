@@ -25,7 +25,7 @@ fetchLCZ(
 \item{baseURL}{is the adress of the server where the function fetches the data. The data must be organised in a bdtopo_2_2 and an osm/year directories.
 This function is intended to be used by Paendora project members, so the default is the Geomanum Foundation cloud.}
 
-\item{...}{allows to pass arguments from the produce analysis function to the LCZgroup2 and compareLCZ functions}
+\item{...}{allows to pass arguments from the produce analysis function to the groupLCZ and compareLCZ functions}
 }
 \value{
 returns no R object. The data are uploaded from the GeoClimate cloud and locally unpacked in the outDir directory

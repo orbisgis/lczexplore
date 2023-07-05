@@ -4,7 +4,7 @@
 #
 # library(sf)
 
-redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
+redonBDTgrouped<-groupLCZ(redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
                            industry="10",
                            vegetation=c("101","102","103","104"),
                            impervious="105",pervious="106",water="107",colors=c("red","black","green","grey","burlywood","blue"))
@@ -12,7 +12,7 @@ redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4"
 # several vector covering the levels in the data, with colors of the proper size
 
 # case 0: The number of levels must be less than 37 for the map to be readable,
-#               you may want to group some of the levels using LCZgroup2 function
+#               you may want to group some of the levels using groupLCZ function
 expect_error(
   levCol(sf=redonBDT, column="LCZ_PRIMARY",1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
        19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38,colors="black"),
@@ -202,7 +202,7 @@ test<-levCol(sf=redonBDTgrouped,column="grouped",urban=c("1","2","3","4","5","6"
        colors=c("red","black","green","grey","DJ Shadow","blue"))
 expect_equal(grep("18:",test$case),1)
 
-redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
+redonBDTgrouped<-groupLCZ(redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
                            industry="10",
                            vegetation=c("101","102","103","104"),
                            impervious="105",pervious="106",water="107",colors=c("red","black","green","grey","burlywood","blue"))

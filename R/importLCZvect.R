@@ -19,10 +19,10 @@
 
 #' @return returns an sf object containing at least the geoms and the LCZ values, and if specified, columns for the IDs of the geoms and the confidence value of the LCZ levels.
 #' @export
-#' @examples importLCZgen(dirPath=paste0(system.file("extdata", package = "lczexplore"),
+#' @examples importLCZvect(dirPath=paste0(system.file("extdata", package = "lczexplore"),
 #' "/bdtopo_2_2/Redon"), file="rsu_lcz.geojson", column="LCZ_PRIMARY",
 #' geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
-importLCZgen<-function(dirPath, file="rsu_lcz.geojson", output="sfFile", column="LCZ_PRIMARY",
+importLCZvect<-function(dirPath, file="rsu_lcz.geojson", output="sfFile", column="LCZ_PRIMARY",
                        geomID="", confid="",
                        typeLevels=c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",
                                  "9"="9","10"="10",

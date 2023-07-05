@@ -35,7 +35,7 @@ This vignette deals with other cases, when `repr="alter"`, that is when one grou
 # Grouping levels and exploring the resulting broader categories
 
 The package lczexplore allows to group several Local Climate Zone levels (LCZ) into broader categories . 
-The `LCZgroup2` function allows this grouping, and the main functions of the package allow to specify the expected levels and colors to use.  
+The `groupLCZ` function allows this grouping, and the main functions of the package allow to specify the expected levels and colors to use.  
 
 ## From original data... 
 
@@ -45,8 +45,8 @@ library(lczexplore)
 dirPath<-paste0(system.file("extdata",package="lczexplore"),"/")
 dirPathOSM<-paste0(dirPath,"osm/2022/Redon")
 dirPathBDT<-paste0(dirPath,"bdtopo_2_2/Redon")
-redonOSM<-importLCZgen(dirPath=dirPathOSM,file="rsu_lcz.geojson",column = "LCZ_PRIMARY")
-redonBDT<-importLCZgen(dirPath=dirPathBDT,file="rsu_lcz.geojson",column = "LCZ_PRIMARY")
+redonOSM<-importLCZvect(dirPath=dirPathOSM,file="rsu_lcz.geojson",column = "LCZ_PRIMARY")
+redonBDT<-importLCZvect(dirPath=dirPathBDT,file="rsu_lcz.geojson",column = "LCZ_PRIMARY")
 #
 ```
 If we compare the LCZ classifications produced with GeoClimate and OpenStreetMAp and French BDTOPO data, we can see they seem to quite disagree. 
@@ -63,12 +63,12 @@ But maybe the disagreement is not as strong as it seems. One may, for example, s
 
 ## ... to grouped levels
 
-Use the `LCZgroup2` function and set the dataset with the argument `sf` and the column with `column`.Then you pass as many vectors as there are grouped category, each of them containing the levels to be grouped together. The newly created categories will be stored in the `outCol` column. If the user doesn't enter them, by default the column is called `"grouped"`.
+Use the `groupLCZ` function and set the dataset with the argument `sf` and the column with `column`.Then you pass as many vectors as there are grouped category, each of them containing the levels to be grouped together. The newly created categories will be stored in the `outCol` column. If the user doesn't enter them, by default the column is called `"grouped"`.
 
 The newly created dataset can be mapped with `showLCZ` function. At this point, we pass the names of the new categories present in the "grouped" column to the `LCZlevels` argument and the colors associated to the `colors` argument.
 
 ```{r, fig.dim = c(8, 6)}
-redonOSMgrouped<-LCZgroup2(redonOSM,column="LCZ_PRIMARY",
+redonOSMgrouped<-groupLCZ(redonOSM,column="LCZ_PRIMARY",
                            urban=c("1","2","3","4","5","6","7","8","9"),
                            industry="10",
                            vegetation=c("101","102","103","104"),
@@ -91,7 +91,7 @@ As for standard LCZ, we use the `compareLCZ` function. We specify the names of t
 
 ```{r, fig.dim = c(8, 6)}
 
-redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",
+redonBDTgrouped<-groupLCZ(redonBDT,column="LCZ_PRIMARY",
                            urban=c("1","2","3","4","5","6","7","8","9"),
                            industry="10",
                            vegetation=c("101","102","103","104"),

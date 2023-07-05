@@ -44,7 +44,7 @@ expect_equal(class(compareRedonBDTOSM$matConfPlot),"ggplot_built")
 #compareRedonBDTOSMPlot$matConfPlot %>% class
 
 
-redonBbox<-importLCZgen(dirPath=paste0(
+redonBbox<-importLCZvect(dirPath=paste0(
   system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),file="rsu_lcz.geojson",column="LCZ_PRIMARY",
   geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE",output="bBox")
 
@@ -67,14 +67,14 @@ compareRedonBDTwudaptPlot<-compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", wf1="
 ########################################
 
 
-redonBDTgrouped<-LCZgroup2(
+redonBDTgrouped<-groupLCZ(
   redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
                            industry="10",
                            vegetation=c("101","102","103","104"),
                            impervious="105",pervious="106",water="107",
                            colors=c("red","black","green","grey","burlywood","blue"))
 
-redonOSMgrouped<-LCZgroup2(
+redonOSMgrouped<-groupLCZ(
   redonOSM,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
   industry="10",
   vegetation=c("101","102","103","104"),
@@ -102,15 +102,15 @@ expect_warning(compareRedonBDTOSMgrouped<-
 
 
 redonBDTgrouped2<-
-  LCZgroup2(redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),outCol="groupedLCZ",
+  groupLCZ(redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),outCol="groupedLCZ",
   industry="10",vegetation=c("101","102","103","104"),impervious="105",pervious="106",water="107",
             colors=c("red","black","green","grey","burlywood","blue"))
 redonOSMgrouped2<-
-  LCZgroup2(redonOSM,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),outCol="otherName",
+  groupLCZ(redonOSM,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),outCol="otherName",
             industry="10",vegetation=c("101","102","103","104"),impervious="105",pervious="106",water="107",
             colors=c("red","black","green","grey","burlywood","blue"))
 redonWudaptGrouped<-  
-  LCZgroup2(redonWudapt,column="EU_LCZ_map",urban=c("1","2","3","4","5","6","7","8","9"),outCol="otherName",
+  groupLCZ(redonWudapt,column="EU_LCZ_map",urban=c("1","2","3","4","5","6","7","8","9"),outCol="otherName",
                                 industry="10",vegetation=c("101","102","103","104"),impervious="105",pervious="106",water="107",
                                 colors=c("red","black","green","grey","burlywood","blue"))
 

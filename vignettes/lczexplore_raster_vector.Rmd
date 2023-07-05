@@ -47,11 +47,11 @@ As this method is one of the most used we included the map tif in the embedded d
 ## Load a territory from a raster map and a bounding box
 
 The first step is to define a bounding box of the territory of interest. The lczexplore comes with vector data for the Redon Territory, a rural town of Brittany, France.
-The importLCZgen is a generic import function for vector data, and when the `ouput` argument is set to `bBox`, it returns the bounding box of the input layer.
+The importLCZvect is a generic import function for vector data, and when the `ouput` argument is set to `bBox`, it returns the bounding box of the input layer.
 Any bounding box of the bounding box class of the package `sf` can be used to crop the raster map.
 
 ```{r}
-redonBbox<-importLCZgen(dirPath=paste0(system.file("extdata", package = "lczexplore"),
+redonBbox<-importLCZvect(dirPath=paste0(system.file("extdata", package = "lczexplore"),
 "/bdtopo_2_2/Redon"), file="rsu_lcz.geojson",column="LCZ_PRIMARY",output="bBox")
 ```
 
@@ -99,7 +99,7 @@ The following code shows an example of color choice.
 # Import and visualize a vector layer map of LCZ
 
 ## Data : LCZ on the Redon territory produced by the GeoClimate workflow using OpenStreetMap as input.
-These data are embedded in `lczexplore`. On can import them using the `importLCZgen` function.
+These data are embedded in `lczexplore`. On can import them using the `importLCZvect` function.
 This function allows to load geojson or shp files, and one must specify the name of the column containing the LCZ types.
 
 ```{R}
@@ -108,7 +108,7 @@ dirPath<-paste0(system.file("extdata",package="lczexplore"),"/")
 # Path to OSM data specifically
 dirPathOSM<-paste0(dirPath,"osm/2022/Redon")
 # loading Redon Data produced with GeoClimate on OSM input Data
-redonOSM<-importLCZgen(dirPath=dirPathOSM,file="rsu_lcz.geojson",column = "LCZ_PRIMARY", drop=TRUE)
+redonOSM<-importLCZvect(dirPath=dirPathOSM,file="rsu_lcz.geojson",column = "LCZ_PRIMARY", drop=TRUE)
 summary(redonOSM$LCZ_PRIMARY)
 
 ```
@@ -145,16 +145,16 @@ For instance, 51% of the areas of Redon that Wudapt classifies as compact low ar
 on OpenStreet map input data. And 34% of what Wudapt classifies as open low are seen as sparsely built by GeoClimate.
 
 But how do Wudapt and GeoClimate agree on broader categories, as built LCZ versus vegetation LCZ ? One could group these LCZs
-to explore this, using the `LCZgroup2` function.
+to explore this, using the `groupLCZ` function.
 ```{R}
 # Regroup levels of the WUDAPT sf file.
-redonWudaptGrouped<-LCZgroup2(redonWudapt,column="EU_LCZ_map",
+redonWudaptGrouped<-groupLCZ(redonWudapt,column="EU_LCZ_map",
                               urban=c("1","2","3","4","5","6","7","8","9"),
                               industry="10", vegetation=c("101","102","103","104"),
                               impervious="105",pervious="106",water="107", outCol = "Regrouped")
 
 # Regroup levels of the GeoClimate sf file
-redonOSMgrouped<-LCZgroup2(redonOSM, column="LCZ_PRIMARY",
+redonOSMgrouped<-groupLCZ(redonOSM, column="LCZ_PRIMARY",
 urban=c("1","2","3","4","5","6","7","8","9"),
 industry="10", vegetation=c("101","102","103","104"),
 impervious="105",pervious="106",water="107", outCol = "Regrouped")

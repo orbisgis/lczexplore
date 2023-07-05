@@ -6,7 +6,7 @@
 #' @param refYear this parameters is integrated in the name given to the data, in order to allow to re-run the function according to the reference year. At the moment only 2022 data have been tried
 #' @param baseURL is the adress of the server where the function fetches the data. The data must be organised in a bdtopo_2_2 and an osm/year directories.
 #' This function is intended to be used by Paendora project members, so the default is the Geomanum Foundation cloud.
-#' @param ... allows to pass arguments from the produce analysis function to the LCZgroup2 and compareLCZ functions
+#' @param ... allows to pass arguments from the produce analysis function to the groupLCZ and compareLCZ functions
 #' @import utils methods
 
 

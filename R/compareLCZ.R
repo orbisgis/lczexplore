@@ -34,7 +34,7 @@
 #' @param outDir : when exwrite equals TRUE, outDir is the path to the folder where one wants to write
 #' the csv file containing the values of the LCZ on the intersected geoms
 #' @param tryGroup : when TRUE, if the specified level names don't match the data, but the specified levels do,
-#' a call to the LCZgroup2 function will be tried, and if it works, the resulting grouping column will be named
+#' a call to the groupLCZ function will be tried, and if it works, the resulting grouping column will be named
 #' "grouped" and the comparison will be done using it.
 #' @param ... allow to pass arguments if repr is set to alter.
 #' The expected arguments are the name of each level of the variables contained 
@@ -159,13 +159,13 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
     LCZlevels<-as.character(c(1:10,101:107))
     if (prod(uniqueData1%in%LCZlevels)==0){
       line1<-"The column chosen for the first data set dosen't seem to be a standard LCZ encoding. \n"
-      line2<-"Did you import the data with importLCZgen ? \n"
+      line2<-"Did you import the data with importLCZvect ? \n"
       line3<-" If the LCZ types are not standard, you can try to set repr to alter and specify the levels. \n"
       errorMessage<-paste(line1,line2,line3)
       stop(errorMessage) }
     if (prod(uniqueData2%in%LCZlevels)==0){
       line1<-"The column chosen for the second data set dosen't seem to be a standard LCZ encoding. \n"
-      line2<-"Did you import the data with importLCZgen ? \n"
+      line2<-"Did you import the data with importLCZvect ? \n"
       line3<-" If the LCZ types are not standard, you can try to set repr to alter and specify the levels. \n"
       errorMessage<-paste(line1,line2,line3)
       stop(errorMessage) }
@@ -263,13 +263,13 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
 
     # if there are several parameters to specify grouping levels
     # and their names don't cover the values in column, and if tryGroup is TRUE
-    # then we try to call LCZgroup2 And procede to grouping accordingly
+    # then we try to call groupLCZ And procede to grouping accordingly
 
     if (tryGroup==TRUE && (length(grep("14: ",levColCase1))!=0 ||length(grep("15: ",levColCase1))!=0 )){
       message("Level names in your 1st dataset didn't match original data.
-      As tryGroup=TRUE, the function LCZgroup2 will try to create a \"grouped\" column with level names and levels specified in (...).
+      As tryGroup=TRUE, the function groupLCZ will try to create a \"grouped\" column with level names and levels specified in (...).
       If this doesn't work, compareLCZ function may fail.")
-      sfNew1<-LCZgroup2(sf1,column = column1,...)
+      sfNew1<-groupLCZ(sf1,column = column1,...)
       #sf1[column1]<-sfNew1["grouped"]
       sf1<-sfNew1 %>% mutate(!!column1:=subset(sfNew1,select="grouped",drop=TRUE))
       # print(summary(sf1))
@@ -279,9 +279,9 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
     }
 
     if (tryGroup==TRUE && (length(grep("14: ",levColCase2))!=0 ||length(grep("15: ",levColCase2))!=0 )){
-      message("As tryGroup=TRUE, the function LCZgroup2 will try to create a \"grouped\" column with level names and levels specified in (...).
+      message("As tryGroup=TRUE, the function groupLCZ will try to create a \"grouped\" column with level names and levels specified in (...).
       If this doesn't work, compareLCZ function may fail.")
-      sfNew2<-LCZgroup2(sf2,column = column2,...)
+      sfNew2<-groupLCZ(sf2,column = column2,...)
       #sf2[column2]<-sfNew2["grouped"]
       sf2<-sfNew2 %>% mutate(!!column2:=subset(sfNew2,select="grouped",drop=TRUE))
       # print(summary(sf2))
@@ -407,7 +407,7 @@ percAgg<-matConfOut$percAgg
 #  GRAPHICS
 ################################################
 if (plot == TRUE){
-  if (repr=='standard'){titrou<-"LCZ"} else {titrou<-"Grouped LCZs"}
+  if (repr=='standard'){titrou<-"LCZ"} else {titrou<-"Levels"}
 
   if (wf1=="bdtopo_2_2"){adtitre1<-" BDTOPO V2.2"} else
     if(wf1=="osm"){adtitre1<-" OSM "} else
@@ -422,7 +422,7 @@ if (plot == TRUE){
   titre1<-paste(titrou,"from ", adtitre1)
   titre2<-paste(titrou,"from", adtitre2)
   titre3<-"Agreement between classifications"
-  titre4<-paste(" Repartition of", adtitre1, " LCZs into LCZs of", adtitre2)
+  titre4<-paste(" Distribution of", adtitre1, " levels \n into levels of", adtitre2)
 
 
   # ypos<-if (repr=="standard"){ypos=5} else {ypos=2}
