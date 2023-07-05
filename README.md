@@ -81,8 +81,8 @@ The lczexplore package allows to see how this confidence value impacts the gener
 
 # Main functions
 The following functions are the core of this package : 
-`importLCZgen` : imports the LCZ layer from a GIS (tested with geojson and shapefile files)
-`importLCZwudapt` : imports LCZ from the wudapt Europe Tiff. You'll have to use `importLCZgen` first to create the Bounding box of your zone of interest
+`importLCZvect` : imports the LCZ layer from a GIS (tested with geojson and shapefile files)
+`importLCZwudapt` : imports LCZ from the wudapt Europe Tiff. You'll have to use `importLCZvect` first to create the Bounding box of your zone of interest
 `showLCZ` : plots the map of your LCZ
 `compareLCZ` : compares two LCZ classifications of the same areas, output plots and data if this comparison
 `confidSensib` : explores how the agreement between two LCZ varies according to a confidence indicator associated for the LCZ value of each geom (sensibility analysis)
@@ -90,7 +90,7 @@ The following functions are the core of this package :
 
 # Other (experimental) functions
 These functions are used in the PAENDORA 2 project but may not be generic enough or robust enough for other uses. 
-`LCZgroup2` : allows to group some LCZ levels into a level named by the user (for instance to group all compact LCZ, or all vegetation LCZ...)
+`groupLCZ` : allows to group some LCZ levels into a level named by the user (for instance to group all compact LCZ, or all vegetation LCZ...)
 `fetchLCZ` : allows the download and unzip of LCZ files. The user can specify the URL where the function should seek the data. 
 
 

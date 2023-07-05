@@ -20,7 +20,7 @@ levCol<-function(sf,column,drop=FALSE,...){
   # Note : case_match will be use in future version to ease readability of this function
 
   if (length(args)>=37){ stop("This function can not deal with more than 36 arguments.
-  You can use the function LCZgroup2 to group some levels.")}
+  You can use the function groupLCZ to group some levels.")}
 
   #
 
@@ -30,7 +30,7 @@ levCol<-function(sf,column,drop=FALSE,...){
 
   if(length(uniqueData)>36){ stop(
     "This package is not suited for classification with more than 36 levels or types.
-  You can use the function LCZgroup2 to group some levels.") }
+  You can use the function groupLCZ to group some levels.") }
 
   argNames<-names(args)
   indCol<-grep(x=argNames, pattern="colors")
@@ -53,7 +53,7 @@ levCol<-function(sf,column,drop=FALSE,...){
   }
   
   if(length(argLev)>36){ stop("This package is not suited for classification with more than 36 levels or types.
-  You can use the function LCZgroup2 to group some levels.") }
+  You can use the function groupLCZ to group some levels.") }
 
 
 
@@ -70,7 +70,7 @@ levCol<-function(sf,column,drop=FALSE,...){
       {
         case<-"Too many levels"
         stop("0: The number of levels must be less than 37 for the map to be readable,
-              you may want to group some of the levels using LCZgroup2 function ")
+              you may want to group some of the levels using groupLCZ function ")
       } else {
         case<-"1: No level vector and no color vector, less than 36 levels,
         levels will be deduced from the data
@@ -244,7 +244,7 @@ levCol<-function(sf,column,drop=FALSE,...){
     
     LCZlevels<-names(argLev)
     
-    ### GERER L'APPEL À LCZgroup2 DANS CE CAS
+    ### GERER L'APPEL À groupLCZ DANS CE CAS
      if(prod(uniqueData%in%LCZlevels)==0 && length(argCol)<=length(uniqueData)){
        case<-"14: The specified levels don't cover the levels in the data
        and the number of specified colors is zero or less than the number of levels present,
@@ -314,7 +314,7 @@ return(output)
 
 #library(lczexplore)
 #library(tinytest)
- # redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",outCol = "grouped",urban=c("1","2","3","4","5","6","7","8","9"),
+ # redonBDTgrouped<-groupLCZ(redonBDT,column="LCZ_PRIMARY",outCol = "grouped",urban=c("1","2","3","4","5","6","7","8","9"),
  #                           industry="10",
  #                           vegetation=c("101","102","103","104"),
  #                           impervious="105",pervious="106",water="107",

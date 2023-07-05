@@ -24,7 +24,7 @@ testCol <- palette.colors(n=17, palette="Polychrome 36")
 #         colors = testCol )
 #levCol(sf=redonBDT, column="LCZ_PRIMARY",colors = testCol)
 
-redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY", urban=c("1","2","3","4","5","6","7","8","9"),
+redonBDTgrouped<-groupLCZ(redonBDT,column="LCZ_PRIMARY", urban=c("1","2","3","4","5","6","7","8","9"),
                            industry="10",
                            vegetation=c("101","102","103","104"),
                            impervious="105",pervious="106",water="107",

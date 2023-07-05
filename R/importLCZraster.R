@@ -10,7 +10,7 @@
 #' @param typeLevels indicates a named vector of the unique values contained in column,
 #' @param zone set to europe by default, may include world once a strategy is defined
 #' @param bBox bBox is the bounding box needed to crop the wudapt tiff file.
-#' It can be produced bu the importLCZgen function
+#' It can be produced bu the importLCZvect function
 #' @return an sf file containing the geom and LCZ levels from the WUDAPT Europe tiff within the bBox bounding box
 #' @import sf dplyr forcats
 #' @importFrom terra crop
@@ -19,7 +19,7 @@
 #' @export
 #'
 #' @examples
-#' redonBbox<-importLCZgen(dirPath=paste0(system.file("extdata", package = "lczexplore"),
+#' redonBbox<-importLCZvect(dirPath=paste0(system.file("extdata", package = "lczexplore"),
 #' "/bdtopo_2_2/Redon"), file="rsu_lcz.geojson",column="LCZ_PRIMARY", output="bBox")
 #'
 #' redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),

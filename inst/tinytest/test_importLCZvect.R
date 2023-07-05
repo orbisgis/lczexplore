@@ -1,4 +1,4 @@
-#This tests the function importLCZgen
+#This tests the function importLCZvect
 # library(tinytest)
 #
 library(sf)
@@ -11,16 +11,16 @@ library(sf)
 
 
 
-expect_silent(importLCZgen(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),
+expect_silent(importLCZvect(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),
                           column="LCZ_PRIMARY",geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE",verbose=T))
 
-expect_silent(importLCZgen(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon")
+expect_silent(importLCZvect(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon")
                            ,file="rsu_lcz.geojson",
                            column="LCZ_PRIMARY",geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE"))
 
 
 # Tests if the imported version of Redon test data matches the Redon test data in the package
-redonBDT2<-importLCZgen(dirPath=paste0(
+redonBDT2<-importLCZvect(dirPath=paste0(
   system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),
   column="LCZ_PRIMARY",geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
 st_crs(redonBDT2)$wkt<-gsub("é","e",st_crs(redonBDT2)$wkt)
@@ -29,14 +29,14 @@ expect_identical(redonBDT,redonBDT2)
 
 # Error if file doesn't exist in location
 
-expect_error(importLCZgen(dirPath=paste0(
+expect_error(importLCZvect(dirPath=paste0(
   system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),file="chaussure.geojson",
   column="LCZ_PRIMARY",geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE"),"The file doesn't seem to exist.")
 
 ## Error if directory doesn't exist
 
 
-expect_error(importLCZgen(dirPath=paste0(
+expect_error(importLCZvect(dirPath=paste0(
   system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redono"),file="rsu_lcz.geojson",
   column="LCZ_PRIMARY",geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE"),
   "The directory set in dirPath doesn't seem to exist")
@@ -44,54 +44,54 @@ expect_error(importLCZgen(dirPath=paste0(
 # test if one column doesn't exist
 
 expect_error(
-importLCZgen(dirPath=paste0(
+importLCZvect(dirPath=paste0(
   system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),file="rsu_lcz.geojson",
   column="LCZ_PRIMAR",geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE"),
   "It seems that some of the columns you try to import do not exist in the source file")
 
 expect_error(
-  importLCZgen(dirPath=paste0(
+  importLCZvect(dirPath=paste0(
     system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),file="rsu_lcz.geojson",
     column="LCZ_PRIMARY",geomID="ID_RSY",confid="LCZ_UNIQUENESS_VALUE"),
   "It seems that some of the columns you try to import do not exist in the source file")
 
 expect_error(
-  importLCZgen(dirPath=paste0(
+  importLCZvect(dirPath=paste0(
     system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),file="rsu_lcz.geojson",
     column="LCZ_PRIMARY",geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALU"),
   "It seems that some of the columns you try to import do not exist in the source file")
 
 # test if the column argument is missing
 expect_error(
-  importLCZgen(dirPath=paste0(
+  importLCZvect(dirPath=paste0(
     system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),file="rsu_lcz.geojson",column="",
     geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE"),
   "You must specify the column containing the LCZ")
 
 # test if the output is a bounding box or a sfFile and if none other output is asked for
 #
-# test<-class(importLCZgen(dirPath=paste0(
+# test<-class(importLCZvect(dirPath=paste0(
 #   system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),file="rsu_lcz.geojson",column="LCZ_PRIMARY",
 #   geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE",output="bBox"))
 
-expect_equal(class(importLCZgen(dirPath=paste0(
+expect_equal(class(importLCZvect(dirPath=paste0(
   system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),file="rsu_lcz.geojson",column="LCZ_PRIMARY",
   geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE",output="sfFile")),
   c("sf","data.frame"))
 
-expect_equal(class(importLCZgen(dirPath=paste0(
+expect_equal(class(importLCZvect(dirPath=paste0(
   system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),file="rsu_lcz.geojson",column="LCZ_PRIMARY",
   geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE",output="bBox")),
   c("sfc_POLYGON","sfc"))
 
-expect_error(importLCZgen(dirPath=paste0(
+expect_error(importLCZvect(dirPath=paste0(
   system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),file="rsu_lcz.geojson",column="LCZ_PRIMARY",
   geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE",output="chaussure de ski"),
 "Output must be sfFile to return geoms and LCZ or bBox to return the bounding box")
 
 
 # test what happens if the levels of LCZ are not coherent ?
-expect_warning(importLCZgen(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),
+expect_warning(importLCZvect(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),
              file="rsu_lcz.geojson", output="sfFile", column="LCZ_PRIMARY",
              geomID="", confid="",
              typeLevels=c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",
