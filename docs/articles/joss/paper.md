@@ -82,8 +82,7 @@ LCZ have gained popularity in the past decade as they sum up relevant informatio
 apprehend the intensity of the Urban Heat Island [@kotharkar2018evaluating].
 
 Several methods aim to classify a territory into LCZ, but only few workflows allow an automatic classification for any given area.  
-[@quan2021systematic] distinguishes two main streams of production of these LCZ:   
-
+[@quan2021systematic] distinguishes two main streams of production of these LCZ:      
 - the raster stream processes remotely sensed information, and applies machine learning 
 algorithms trained using local experts' knowledge. For instance, the WUDAPT platform produced 
 LCZ maps of Europe and North-America this way [@chingWUDAPTUrbanWeather2018a].   
@@ -93,7 +92,7 @@ For instance, the GeoClimate geospatial toolbox produces LCZ classifications
 from OpenStreetMap or french BDTopo data [@bocher2021geoclimate].   
 
 The existence of several methods to produce LCZ classifications, or the use of a method with different input data,
-raises the need for a tool to quickly get :
+raises the need for a tool to quickly get:
 
 1.  Statistics measuring the general agreement between two classifications
 2.  A spatial representation to allow a fast visual assessment of the zones 
@@ -121,8 +120,8 @@ proposed the use of Cohen's kappa coefficient of agreement for nominal scales [@
 Each pixel is seen as an individual to which each map assigns a value of a categorical variable 
 (each map is seen as a "rater").  
 
-The comprehensive Map Comparison kit which was released in 2001 by the 
-Netherlands Environmental Assessment Agency [@visser2006map]. It is an example of tool  
+The comprehensive Map Comparison kit, which was released in 2001 by the 
+Netherlands Environmental Assessment Agency [@visser2006map], is an example of tool  
 that allows multiple methods to compare raster maps. It includes a fuzzy algorithm which allows to tackle small 
 shifts of one map from another. It only works on raster maps, only on Windows OS and 
 doesn't allow automation for several pairs of maps.  
@@ -139,25 +138,25 @@ compares some model output variables using the data of the map.
 
 As Local Climate Zones emerged as a new standard for characterizing urban landscapes [@demuzereLCZGeneratorWeb2021], 
 specific tools are needed to allow easy automation of LCZ maps. As a matter of fact, "ground truth" is hard to 
-define in matters of LCZ, and one may want to compare LCZ produced by experts and by different algorithms. 
+define in matters of LCZs, and one may want to compare LCZs produced by experts and by different algorithms. 
 
-The very definition of LCZ by [@stewart2012local] relies on ranges of values for several indicators, and  sometimes
-several LCZ types could be assigned to the corresponding geometries. Therefore, some algorithms associate a confidence 
-value to the LCZ type and one may want to check if filtering pixels (for raster data) or geometries (for vector data) accordingly to a confidence threshold
-has an impact on the way maps agree or disagree.   
+The very definition of LCZs by [@stewart2012local] relies on ranges of values for several indicators, and  sometimes
+several LCZ types could be assigned to the corresponding geometries. Therefore, one may associate a confidence 
+value to the LCZ type and check if filtering pixels (for raster data) or geometries (for vector data) 
+accordingly to a confidence threshold has an impact on the way maps agree or disagree.   
 
 A comparison of a raster stream result and a GIS vector stream approach was proposed by [@muhammad2022inference].
 This comparison relies on rasterising vector data. It uses several tools: QGIS, python scripts and SAGA GIS. As far as we know, 
 the scripts and the automation of the method are not publicly available.
 
-The need for automation of vector comparison, and specific features (like standard colors or legends for standard LCZ) 
-justified the development of `lczexplore`.
+The need for automation of vector comparison, and specific features (like standard colors or legends 
+for LCZs and sensitivity analaysis) justified the development of `lczexplore`.
 
 ## Features
 
 ### General workflow and processing steps
 
-The `lczexplore` package is a set of `R` functions  to load, show, group and compare LCZ classifications,
+The `lczexplore` package is a set of `R` functions  to import, visualize, group and compare LCZ classifications,
 even when they don't use the same spatial units to classify the area. 
 These LCZ classifications can come from vector layers or raster layers (the latter will be vectorized 
 by the dedicated import function) 
@@ -167,22 +166,21 @@ by the dedicated import function)
 Figure 1 describes the general workflow of the package.
 
 Main functions are presented in plain lines, the dashed boxes and arrows represent optional steps. 
-These functions are presented in next section.
+These functions are presented in detail in the next section, and they allow the following steps of exploration.
 
-1. The LCZ classifications (or any other qualitative variable) are imported 
+1. The LCZ classifications (or any other qualitative variables) are imported 
 from a file (geojson or shapefile format)
 2. Each LCZ classification can then be visualized
 3. Some LCZ levels may be grouped in broader categories
-3.  The two LCZ classifications (or qualitative variable maps) are then compared :
-    -  A map of agreement/disagreement is produced
-    -  The general agreement and a pseudo-kappa indicator of agreement are computed. 
-    -  The summed surface of each LCZ type is computed for each classification
-    -  A confusion matrix shows how the levels of one LCZ classification break up into the levels of the other.
+4. A pair of LCZ classifications (or qualitative variable maps) can then be compared :
+    -  a map of agreement/disagreement is produced,
+    -  the general agreement and a pseudo-kappa indicator of agreement are computed, 
+    -  the summed surface of each LCZ type is computed for each classification,
+    -  a confusion matrix shows how the levels of one LCZ classification break up into the levels of the other
 5.  Influence of the level of confidence on the agreement between classifications is performed 
 (sensitivity analysis)   
 
-All the steps of the analysis (except the production of the LCZ classification themselves) can be easily automated,
-for instance on several cities at a time.
+All the steps of the analysis can be easily automated in R, for instance on several cities at a time.
 
 ## Description of the main functions
 
@@ -212,15 +210,15 @@ Next, the function computes:
 
 - the area of each LCZ type for each classification,  
 - the percentage of area on which the two classifications agree, and a map of this agreement,  
-- a pseudo kappa statistics which evaluates agreement beyond how two random maps may agree,  
+- a pseudo kappa statistics which evaluates agreement beyond how two random maps may agree,
 - a confusion matrix of how the types of one LCZ classification break up in the types of the other,
-and a graphic of this, with an indicator of the general area of the LCZ type (useful 
+and a graphic of this, with an indicator of the summed area for each LCZ type (useful 
 if the two classifications disagree on a type almost absent of the area).  
 
 The output of these functions are shown in the minimal example section.
 
-With the `standard` representation comparing LCZ is made easy by a default setting of legends and colors. 
-The `alter` representation allows the user to deal with regrouped LCZ categories or any type of qualitative variable.  
+With the `standard` representation, comparing LCZ is made easy by a default setting of legends and colors. 
+The `alter` representation allows the user to deal with regrouped LCZ categories or any type of qualitative variables.  
 Levels can either be specified by the user or deduced from the data, 
 colors can either be defined by the user or chosen from a random palette. 
 
@@ -232,12 +230,12 @@ or to group the levels with similar estimated impact on an urban heat island int
 
 The `groupLCZ` function allows the user to specify the LCZ types one wants to group together, 
 the names of the new resulting categories and their corresponding colors.
-One can then feed `compareLCZ` these new groups,  setting `repr="alter"`, and specify desired levels and colors. 
+One can then feed `compareLCZ` function these new groups,  setting `repr="alter"`, and specify desired levels and colors. 
 
 ![Grouping of LCZ types into larger categories \label{fig: Grouping of LCZ types into larger categories}](fromBrutToGrouped.png)
 
 
-### Import and explore categorical variable (other than LCZ)
+### Import and explore categorical variable (other than LCZ classifications)
 
 The workflow of comparison of LCZ maps can be used for any pair of maps of categorical variables, 
 under certain limitations :   
@@ -248,14 +246,14 @@ under certain limitations :
 
 The `importQualVar` function allows the import of such variables on (multi-) polygons maps.
 It outputs an sf object that can be fed to the other main functions 
-of the package (`showLCZ`, `compareLCZ`, `groupLCZ`, `confidSensib`...).
+of the package (`showLCZ`, `compareLCZ`, `groupLCZ`...).
 
 ### Sensitivity analysis
 
 The Geoclimate algorithm adds a uniqueness value to the LCZ type it assigns to a spatial unit. 
 It measures if another LCZ levels could have been assigned to this unit. Thus, it can be seen 
 as a confidence value of the LCZ type.  
-The `lczexplore `package allows a sensitivity analysis according to this level of confidence, 
+The `lczexplore ` package allows a sensitivity analysis according to this level of confidence, 
 in order to answer the question : 
 **does keeping only geometries with a higher confidence value 
 make the degree of agreement between two classifications higher?** 
@@ -266,9 +264,10 @@ This sensitivity analysis is performed considering all LCZ types and within each
 
 The agreement between classifications for the geometries with a confidence level higher than the threshold, 
 and their numbers, are plotted in blue.
-The agreement and the numbers of geometries under the threshold are plotted in magenta. On this example, 
+The agreement and the numbers of geometries under the threshold are plotted in magenta.   
+On this example, 
 one can see that ditching geometries that have a confidence level lower than 0.5 leads to an increase of the agreement
-up to more than 90%. The curve then tends to flatten, and the number of kept geometries  a lot (from 602 to 122).
+up to more than 90%. The curve then tends to flatten, and the number of kept geometries decreases a lot (from 602 to 122).
 One also needs to notice that on this example, most geometries didn't have a confidence value 
 (7476 with a general agreement of 59.21%)
 
@@ -276,13 +275,14 @@ One also needs to notice that on this example, most geometries didn't have a con
 
 `lczexplore` is an R package, all its specific functions are coded in R language.
 It relies on state-of-the art packages :   
-- geographical computation requires the `sf` package for vector data and the `terra` package for raster data,   
-- data management mainly requires the following packages : `dplyr, tidyr, forcats, rlang` 
-and `methods` packages,   
-- graphical production uses `ggplot2, grDevices, cowplot` and `RColorBrewer`,   
-- tests need the `tinytest` package.   
+- geographical computation requires the **`sf`** package for vector data and the **`terra`** package for raster data,   
+- data management mainly requires the following packages : **`dplyr, tidyr, forcats, rlang`** 
+and **`methods`** packages,   
+- graphical production uses **`ggplot2, grDevices, cowplot`** and **`RColorBrewer`**,   
+- tests need the **`tinytest`** package.   
 
-Every step corresponds to an R function (see the workflow on figure 1 for the name of the main functions).
+Every step corresponds to an R function (see the workflow on figure 1 for the name of the main functions).   
+
 Every function has an associated file for unitary testing.  
 
 # A minimal example
@@ -325,15 +325,17 @@ dirPathBDT<-paste0(dirPath,"bdtopo_2_2/Redon")
 
 # Import into an sf object the data produced with GeoClimate and
 # the OpenStreetMap data (city of Redon)
-redonOSM<-importLCZvect(dirPath=dirPathOSM, 
-                        file="rsu_lcz.geojson", column = "LCZ_PRIMARY", geomID="ID_RSU",
-confid="LCZ_UNIQUENESS_VALUE")
+redonOSM<-importLCZvect(
+  dirPath=dirPathOSM, 
+  file="rsu_lcz.geojson", column = "LCZ_PRIMARY", geomID="ID_RSU",
+  confid="LCZ_UNIQUENESS_VALUE")
 
 # Import into an sf object the data produced with GeoClimate and 
-# the french BD TOPO data (city of Redon) 
-redonBDT<-importLCZvect(dirPath=dirPathBDT, 
-                        file="rsu_lcz.geojson", column = "LCZ_PRIMARY",geomID="ID_RSU",
-                        confid="LCZ_UNIQUENESS_VALUE")
+# the french BDTopo V2.2 data (city of Redon) 
+redonBDT<-importLCZvect(
+  dirPath=dirPathBDT,
+  file="rsu_lcz.geojson", column = "LCZ_PRIMARY",geomID="ID_RSU",
+  confid="LCZ_UNIQUENESS_VALUE")
 ```
 
 ## Visualize the data
@@ -341,11 +343,14 @@ redonBDT<-importLCZvect(dirPath=dirPathBDT,
 To visualize a LCZ classification, use the `showLCZ` function. Setting `repr` to `"standard"` directly 
 deals with standard values of LCZ levels and colors.
 
-``` r
+```r
+
 # Plot the LCZ levels on the Redon Area using the default color set
 # from the sf object produced by importLCZvect function
+showLCZ(
+  sf=redonOSM, column="LCZ_PRIMARY", repr="standard",
+  title="LCZ Classification on the French City of Redon")
 
-showLCZ(sf=redonOSM, wf="OSM", column="LCZ_PRIMARY", repr="standard")
 ```
 
 
@@ -357,15 +362,16 @@ The result is a map of the Local Climate Zones on the area :
 
 To compare the two loaded LCZ classifications, use the `compareLCZ` function. 
 
-- The `sf1` and `column1` arguments allow to specify the sf dataset of the first map, and the column in which 
-the LCZ levels are stored (same for `sf2` and `column2`),
-- the `wf1` and `wf2` arguments take strings to specify the workflows used to produce the input data. The `location`
-argument allows to name the area of interest covered by input datasets. These arguments will be parsed in 
-the legends of the graphics and the name of potential csv output files,  
+- the `sf1` and `column1` arguments allow to specify the sf dataset of the first map, and the column in which 
+the LCZ levels are stored (same for `sf2` and `column2`),  
+- the `wf1` and `wf2` arguments take strings to specify the workflows used to produce the input data.    
+- The `location` argument allows to name the area of interest covered by input datasets. The 3 previous
+arguments will be parsed in 
+the legends of the graphics (except if `title` is specified) and the name of potential csv output files,  
 - when `exWrite=TRUE`, the data computed to create the confusion matrix will be written 
 in a csv file in the working directory,  
 - if `saveG=TRUE`, the four plots created by the function will be written in a png file in the working directory.
-
+  
 ```r
 # Compare how the BDTopo and the OpenStreetMap Data produce different classifications. 
 # The outputs are stored in a list.
@@ -375,34 +381,35 @@ comparison<-compareLCZ(sf1=redonBDT,column1="LCZ_PRIMARY", wf1="BDTopo v2.2",
            ref=1, repr="standard", exwrite=F, location="Redon")
 
 ```
-   
-   
+
 All graphics are concatenated for a quick glance.
 
-![Local Climate Zones comparison for Redon city based on the GeoClimate workflow applied to OSM and BDTopo data \label{fig:LCZ comparison on Redon spatial units}](compareRedon.png){width="100%"}
+![Local Climate Zones comparison for the French city of Redon based on the GeoClimate workflow applied to OpenStreetMap and BDTopo data \label{fig:LCZ comparison on Redon spatial units}](compareRedon.png){width="100%"}
 
-The first and second maps show the spatial repartition of the first and second LCZ classifications levels, respectively.  
+The first and second maps show the spatial distribution of the first and second LCZ classifications levels, respectively.  
 The third map shows where the two classifications agree or disagree.  
-The last graphic is a confusion matrix: how do the LCZ types of the first classification break-up in those 
+The last graphic is a confusion matrix: how the LCZ types of the first classification break-up in those 
 of the second, in percentage of the surface.  
 
 `CompareLCZ ` outputs a list called `matConfOut` which contains:
 
-- `$data`, intersected geometries, their identifier (if `geomID` was not empty), their LCZ type and their area,  
+- `$data`, intersected geometries, their identifiers and associated confidence value 
+(if fed to the fonction), their LCZ type and their area,   
 - `$areas`, the summed area for each LCZ for both classifications,  
-- `$matConfLarge`, the confusion matrix,  
+- `$matConfLarge`, the confusion matrix,   
 - `$percAgg`, the general agreement of the two classification on the whole area
-(as a percentage of the global surface of the area),  
+(as a percentage of the global surface of the area),   
 - `$pseudoK`, the value of a heuristic pseudo Cohen's Kappa coefficient of agreement.  
 
-The value `pseudoK` corresponds to a coefficient of agreement, 
+The value `pseudoK` corresponds to a Kappa, 
 where the cells of the cross tabulation would be 
 weighted by the percentage of the concerned surface.   
 
-On can see in a quick glance, that the BDTopo workflow leads to more and smaller Spatial Reference Units (1553 RSU) 
-than the OpenStreetMap workflow (521 RSU). The third map shows that wide both classification tend to 
-agree on wide vegetation areas. The last graphics helps to refine this analysis : One can notice that 
-both workflows quite agree for "compact mid" and "low plants" LCZ (89 and 88 % of the concerned areas). 
+One can see in a quick glance, that the BDTopo workflow leads to more and smaller Spatial Reference Units (1553 RSU) 
+than the OpenStreetMap workflow (521 RSU). The third map shows that while the classifications tend to 
+agree on wide vegetation areas, there seem to be more some discrepancies in the urban areas. 
+The last graphics helps to refine this analysis: one can notice that 
+both workflows quite agree for "compact mid" and "low plants" LCZ levels (89% and 88 % of the concerned areas). 
 On the contrary, only 48% of the areas set to "dense trees" by BDTopo workflow are also set to 
 "dense trees" by OpenStreetMap workflow, while 37% of these areas are set as "low plants."
 
@@ -410,72 +417,72 @@ In the same way, 73% of the areas set to "compact low" by
 BDTopo workflow are set to "compact mid" by OpenStreetMap workflow. This is coherent with the fact that building heights
 are often missing on OpenStreetMap and that the algorithm that GeoClimate uses to predict them is less precise than
 the available information of BDTopo. One may read more in [@bernardGenericAlgorithmAutomatically2023] 
-(preprint at the date of submission of the present article?) about differences between these workflows. 
+ about differences between these workflows. 
 
 
 ## Study the impact of confidence on agreement
 
 The `confidSensib` function makes a sensitivity analysis of the agreement
-according to the threshold of confidence above which one keeps the geometries of the maps.
+according to the threshold of confidence above which one keeps the geometries of the compared maps.
 To perform this analysis, the confidence value and the identifier of each geometry must be fed to the comparison 
-function. The `$data` slot is the passed to `confidSensib`. 
-The `saveG` allows to set the path to a folder where to save the resulting graphics. 
+function. The `$data` slot is then passed to `confidSensib`. 
+The `saveG` allows to set the path to a folder where resulting graphics will be saved.  
 
 The values of confidence for which the agreement will be computed are determined by the range of 
 confidence values present in the data and by the number of points, set by the `nPoints` argument.
 
 
 ```r
- # Set the path to the folder where compareLCZ stored output data file
+ # Path to the folder where compareLCZ stored output data file
 mainPath<-system.file("extdata", package = "lczexplore")
 
  
- # Include geomID and confid columns for both dataset, 
-# confidSensib needs them in the next step
+# Specification of geomID and confid columns for both dataset, 
+# as confidSensib needs them in the next step
 
-comparison<-compareLCZ(sf1=redonBDT,column1="LCZ_PRIMARY", wf1="BDTopo v2.2",
-                       geomID1="ID_RSU", confid1="LCZ_UNIQUENESS_VALUE",
-                       sf2=redonOSM, column2="LCZ_PRIMARY", wf2="OpenStreetMap",
-                       geomID2="ID_RSU", confid2="LCZ_UNIQUENESS_VALUE",ref=1,
-                       repr="standard", exwrite=F, location="Redon")
+comparison<-compareLCZ(
+  sf1=redonBDT,column1="LCZ_PRIMARY", wf1="BDTopo v2.2",
+  geomID1="ID_RSU", confid1="LCZ_UNIQUENESS_VALUE",
+  sf2=redonOSM, column2="LCZ_PRIMARY", wf2="OpenStreetMap",
+  geomID2="ID_RSU", confid2="LCZ_UNIQUENESS_VALUE",ref=1,
+  repr="standard", exwrite=F, location="Redon")
 
 testSourceFact<-comparison$data
 
-# Perform the sensitivityanalysis on this file
-# To do so leave inputDf argument empty but set the filePath argument.   
+# Sensitivityanalysis on this compareLCZ output
 
- sensitAnalysis<-confidSensib(inputDf=comparison$data, filePath="",
- nPoints=5, wf1="bdtopo_2_2", wf2="osm",
- geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
- geomID2="ID_RSU.1",column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1",
- plot=TRUE, saveG=mainPath)
+sensitAnalysis<-confidSensib(inputDf=comparison$data, filePath="",
+   nPoints=5, wf1="bdtopo_2_2", wf2="osm",
+   geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
+   geomID2="ID_RSU.1",column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1",
+   plot=TRUE, saveG=mainPath)
 
 ```
 
-It results in the following graphic, for the agreement per LCZ type (types not present in the dataset are excluded).
+Figure 7 shows the resulting graphics for the agreement per LCZ type (types not present in the dataset are excluded).
 
 ![Sensitivity analysis according to confidence by LCZ levels ](confidSensibByLCZ.png) 
 
-For each LCZ type, the x-axis shows the minimum confidence threshold.  Note that in this particular example, 
-the confidence information is given based on an evaluation of the method confidence, not the input data confidence.
-The y-axis shows the agreement levels.  
+For each LCZ type, the x-axis shows the minimum confidence threshold. The y-axis shows the agreement levels.  
 Each cyan point shows the average agreement between classifications for spatial units where 
 the minimum confidence value is greater than the x-axis value.    
 
 As one wants to be sure the dropped units 
 didn't have a greater agreement, they are showed as magenta triangles.
 For this particular example, it seems that for the "Open Low" LCZ type, 
-the greater the confidence, the lesser the agreement!
+the greater the confidence, the smaller the agreement!
 
-This paradoxical result is explained by the fact that in our case, the confidence qualifies the method, not the data. 
+This unexpected result is explained by the fact that in our case, the confidence qualifies the method, not the data. 
 In this example, in the OSM dataset which is compared,
-the building height are mostly estimated using a statistical method [@bernardEstimationMissingBuilding2022]. 
+the building height are mostly estimated using a statistical method [@bernardEstimationMissingBuilding2022] as stated above. 
+
 
 
 ## Group some levels and perform the same analysis
 
-The `groupLCZ` function group chosen levels into broader categories.
-Pass the name of a category and the vector of the levels it shall aggregate, as seen in the following code. 
+The `groupLCZ` function aggregates chosen levels into broader categories. For each category, a vector is needed, 
+which name is the name of the broader category to create and which values 
+are the levels to be grouped in this new category.  
 
 ```r 
 redonOSMgrouped<-groupLCZ(redonOSM,column="LCZ_PRIMARY", 
@@ -498,10 +505,12 @@ redonBDTgrouped<-groupLCZ(redonBDT,column="LCZ_PRIMARY",
 
 ```
 
-By default, the column of the new categories is named "grouped", 
-but you can set it with the argument `outCol`.
+By default, the column where the new categories are stored is named `"grouped"`, 
+but it can be set with the argument `outCol`.
 
-You can then perform the same analysis, as shown in the following example :
+It is the possible to perform the same analysis as on standard LCZ classifications,
+as shown in the following example :   
+
 ```r
 showLCZ(redonOSMgrouped, column="grouped",repr="alter",
         title="Regrouped Categories for the city of Redon",
@@ -516,13 +525,15 @@ compareLCZ(sf1=redonOSMgrouped, column1="grouped", wf1="OpenStreetMap data",
 
 ![Map of grouped levels on the city of Redon \label{fig: Grouped LCZ on the city of Redon}](redonGrouped.png)
 
-You can also map any qualitative variable using this grouped representation, as long as you specify the expected levels the same way.
+You can also map any qualitative variable using this grouped representation, 
+as long as you specify the expected levels the same way.
 
 ## An example of qualitative variables
 
 The function `importQualVar` allows you to import maps of qualitative variables on (multi)polygons. 
-For instance, we will import a classification of urban tissue called 
-Urban Typolgy by Random Forest [@bocherGeoprocessingFrameworkCompute2018].
+For instance, classifications of urban tissue called 
+Urban Typolgy by Random Forest [@bocherGeoprocessingFrameworkCompute2018] are available as examples in this package.
+
 After the import, the usual functions can be used, as shown in the following code :
 
 ```r
@@ -531,16 +542,24 @@ utrfRedonBDT<-importQualVar(dirPath=paste0(
   file="rsu_utrf_area.geojson", column="TYPO_MAJ")
   
 showLCZ(sf=utrfRedonBDT, column="TYPO_MAJ",repr="alter", 
-        title = " UTRF classification of the french city of Redon")
+        title = " UTRF classification of the French city of Redon")
 ```
 ![An example of some qualitative variable : Urban Typology by Random Forest (UTRF)](importQualVarUTRF.png)
 
+Figure 9 represents the UTRF classification of the French city of Redon, 
+as computed by the GeoClimate workflow on BDTopo v2.2 data. The colors were not specified and therefoer were
+randomly picked from a palette. 
+
 ```r
-utrfRedonOSM<-importQualVar(dirPath=paste0(
-  system.file("extdata", package = "lczexplore"),"/osm/2022/Redon"),
-  file="rsu_utrf_area.geojson", column="TYPO_MAJ",geomID="ID_RSU",confid="UNIQUENESS_VALUE")
+utrfRedonOSM<-
+  importQualVar(
+    dirPath=paste0(
+      system.file("extdata", package = "lczexplore"),
+      "/osm/2022/Redon"),
+    file="rsu_utrf_area.geojson", column="TYPO_MAJ",
+    geomID="ID_RSU", confid="UNIQUENESS_VALUE")
   
-  utrfComparison<-
+utrfComparison<-
     compareLCZ(sf1=utrfRedonBDT, column1="TYPO_MAJ",wf1=" UTRF BDTopo",
                sf2=utrfRedonOSM, column2="TYPO_MAJ", wf2 = " UTRF OpenStreetMap",
   location = " Redon",exwrite=FALSE,repr="alter")
@@ -550,9 +569,9 @@ utrfRedonOSM<-importQualVar(dirPath=paste0(
 ![Example of comparison on a qualitative variable (UTRF)](compareQualVar.png)
 
 
-
 # Research projects involving lczexplore
 
-The lczexplore package was developed thanks to the project PAENDORA2 (Pour la gestion du confort estival : Données, Outils et Recherche-Action) (2022 -2025), funded by ADEME.
+The lczexplore package was developed thanks to the project PÆNDORA2 
+(Pour la gestion du confort estival : Données, Outils et Recherche-Action) (2022 -2025), funded by ADEME.
 
 # References
