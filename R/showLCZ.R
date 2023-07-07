@@ -109,9 +109,27 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
 
   if (repr=="alter"){
     print(datasetName)
-
-    typeLevels<-levCol(sf=sf,column=column, drop=drop, ...)$levelsColors
-        
+    levColShow<-levCol(sf=sf,column=column, drop=drop, ...)
+    typeLevels<-levColShow$levelsColors
+    levColCase<-levColShow$case
+########## Multiple vectors of levels and tryGroup=TRUE, let's try to group on the fly
+   
+    if (tryGroup==TRUE && 
+      (length(grep("14: ",levColCase))!=0 ||length(grep("15: ",levColCase))!=0 )){
+      message("Level names in your 1st dataset didn't match original data.
+      As tryGroup=TRUE, the function groupLCZ will try to create a \"grouped\" column with level names and levels specified in (...).
+      If this doesn't work, compareLCZ function may fail.")
+      sfNew<-groupLCZ(sf,column = column,...)
+      sf<-sfNew %>% mutate(!!column:=subset(sfNew,select="grouped",drop=TRUE))
+      # print(summary(sf1))
+      levColShow<-levCol(sf,column,...)
+      typeLevels<-levColShow$levelsColors
+      
+      rm(sfNew1)
+    }
+    
+    
+    
      # IN CASE SOME STANDARD LEVELS ARE DETECTED, ONE MAY WANT STANDARD COLORS TO BE APPLIED
 
     if(useStandCol==TRUE){typeLevels<-standLevCol(levels=names(typeLevels),colors=typeLevels,useStandCol = TRUE)}

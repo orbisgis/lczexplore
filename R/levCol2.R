@@ -135,18 +135,21 @@ if (length(args) == 0 ||
   ## Name is expected to be a level, value is expected to be a color.
   #############################################################################################   
   if (is.null(argCol) && length(args)==1 && !is.null(names(argLev[[1]]))) {
-    ########### Case where the level names not cover the levels of unique Data
+    ########### Case where the level names do not cover the levels of unique Data
     if(prod(uniqueData%in%names(argLev[[1]]))==1) { 
-      case<-"4 & 5: A single vector was provided, whose names cover the levels in the data (values are expected to be colors)."
-      typeLevels=argLev[[1]]
+      case<-"4: & 5: A single vector was provided, whose names cover the levels in the data (values are expected to be colors)."
+      typeLevels<-argLev[[1]]
     } else if (prod(uniqueData%in%names(argLev[[1]]))==0) {
-      case<-"6: A single vector was provided, whose names don't cover the levels in the data, missing levels were assigned random colors."
-      
+      case<-"6: A single vector was provided, whose names don't cover the levels in the data, 
+      missing levels were assigned random colors."
+                 
       indMiss<-!uniqueData%in%names(argLev[[1]])
       nMiss<-sum(indMiss)
       miss<-palette.colors(n=nMiss, palette="Polychrome 36")
       names(miss)<-uniqueData[indMiss]
       typeLevels<-c(argLev[[1]],miss)
+     
+     
       
     }
   }
@@ -155,51 +158,88 @@ if (length(args) == 0 ||
   ## Case when two vectors are passed. One is expected to be levels, the other to be colors
   #############################################################################################   
   
-  ########### Case where no levels of color is passed, two levels of vector 
+  ########### Case where no vector of color is passed, two vectors of levels 
 
-   if ( length(args)==2 && !(prod(unlist(args)=="")==1) && length(indCol)==0) {
+   if ( length(args)==2 && prod(unlist(args)=="")==0 && length(indCol)==0) {
 
     case<-"13: No color vector is specified, there seems to be two ambiguous level vectors,
-        they will pasted and fed to the function again. Colors chosen from a standard palette."
+        they will pasted and fed to the function again, and reduced to the following case. "
     recall<-levCol(sf=sf,column=column,drop=drop,levels=c(argLev[[1]],argLev[[2]]))
     typeLevels<-recall$levelsColors
     case<-c(case,recall$case)      
   }
 
-  ########### Case where no levels of color is passed, two levels of vector 
+  ########### Case where one vector of color is passed, one vector of levels 
 
-  if ( length(args)==2 && !(prod(unlist(args)=="")==1) && length(indCol==1)) {
+  if ( length(args) == 2 && !(prod(unlist(args) == "") == 1) && length(indCol == 1)) {
     
-    ########### Case where the vectors are of the same size
-    if (length(argLev[[1]])<=length(argCol)){
+    ########### Case where the vectors are of the same size or if the levels vector 
+    # is shorter than the color vector
+    if (length(argLev[[1]]) <= length(argCol)){
       
       typeLevels<-argCol
       names(typeLevels)<-argLev[[1]]
-      typeLevels<-levCol(sf=sf,column=column,drop=drop,levels=typeLevels)$levelsColors
-      case<-paste("Case 2 vectors of the same size reduced to ",levCol(sf=sf,column=column,drop=drop,levels=typeLevels)$case)
-    } else { ## case when vectors not of the same size and more levels than colors
-      
+      recall<-levCol(sf=sf, column=column, drop=drop, levels=typeLevels)
+      typeLevels<-recall$levelsColors
+      typeLevels<-typeLevels[!is.na(names(typeLevels))]
+      case<-paste(
+        "Case one vector of levels, one vector of colors, either the same length (case 9: and 10:), or colors longer (case 12:, unused colors were dropped),
+         reduced to ",
+                  recall$case)
+    } else  if (length(argLev[[1]]) > length(argCol)) {
+
+      ######## case when vectors not of the same size and more levels than colors
       complement<-length(argLev[[1]])-length(argCol)
       typeLevels<-c(argCol,palette.colors(n=complement, palette="Polychrome 36"))
       names(typeLevels)<-argLev[[1]]
-      typeLevels<-levCol(sf=sf,column=column,drop=drop,levels=typeLevels)$levelsColors
-      case<-paste("Case 2 vectors of differents sizes reduced to ",levCol(sf=sf,column=column,drop=drop,levels=typeLevels)$case)
+      recall<-levCol(sf=sf, column=column, drop=drop, levels=typeLevels)
+      typeLevels<-recall$levelsColors
+      case<-paste("Case one vector of levels, one of colors, the vector of colors being shorter, some colors were picked, case 11:, reduced to ",
+                  recall$case, "your may want to check your vector of colors")
       
     }
     
     
     
-  } 
-  
-  
-  
-  
+  }
+
+  #############################################################################################
+  ## Case when more than two vectors are passed. 
+  ## Hopefully an argument for each level and zero or one vector of colors
+  #############################################################################################
+
+  if ( length(args) > 2  && length(indCol)==1){
+    ######## Case when several vectors of levels and a vector of colors
+    LCZlevels<-unique(c(names(argLev),uniqueData))
+    
+    recall<-levCol(sf=sf, column=column, drop=drop, levels=LCZlevels, colors=argCol)
+    
+    
+    case<-paste("Case 14: with at least a color or 15:, or 17: or 18:, then reduced to ",
+                recall$case)
+    typeLevels<-recall$levelsColors
+  }
+
+  if ( length(args) > 2  && length(indCol)==0){
+    ######## Case when several vectors of levels and a level of colors
+    LCZlevels<-names(argLev)
+    
+    recall<-levCol(sf=sf, column=column, drop=drop, levels=LCZlevels)
+    case<-paste("Case 16: then reduced to ",
+                recall$case)
+    typeLevels<-recall$levelsColors
+
+  }
+
+
   
   #############################################################################################
   ## Check if colors value are recognized, if not, assign a color
   #############################################################################################
   if(prod(areColors(typeLevels))!=1){
-    case<-paste(case," Some of the specified colors are unknown to R and were replaced by colors picked from a Polychrome Palette")
+    case<-paste(
+      case,
+      " Some of the specified colors are unknown to R and were replaced by colors picked from a Polychrome Palette")
     colFalse<-!areColors(typeLevels)
     typeLevels[colFalse]<-palette.colors(
     n=sum(as.numeric(colFalse)), palette="Polychrome 36")
@@ -213,7 +253,9 @@ if (length(args) == 0 ||
   if(drop==TRUE ){
     indKeep<-names(typeLevels)%in%uniqueData
     if(prod(names(typeLevels)%in%uniqueData)==0) {
-      case<-paste(case,"Drop=TRUE, some of the specified levels were not found in the data and were dropped")
+      case<-paste(
+        case,
+        "Drop=TRUE, some of the specified levels were not found in the data and were dropped")
       typeLevels<-typeLevels[indKeep]
     }
   }
