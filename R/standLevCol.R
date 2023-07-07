@@ -18,7 +18,8 @@
 #' # tries to replace user color by standard color 
 #' # when a standard level of LCZ is recognized
 standLevCol<-function(levels,colors="", useStandCol=FALSE){
-
+# alienColors is a standard palette, chosen for its readibility : Polychrome 36
+  # It will be used if no colors are specified and if levels are not known standard levels 
   alienColors<-palette.colors(n=length(levels), palette="Polychrome 36")
 
   standardLevels<-c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",

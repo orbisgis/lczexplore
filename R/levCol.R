@@ -169,11 +169,16 @@ levCol<-function(sf,column,drop=FALSE,...){
       typeLevels<-argLev
       
       if(length(indCol==1))
-      { if ( length(argLev)<length(uniqueData) || argCol=="" ){
+      { if ( length(argLev)<length(uniqueData) || length(argCol)<length(uniqueData)){
         case<-"14.0: The vector level doesn't cover the levels in the data
-       and the number of specified colors is zero or less than the number of levels present,
-       levels will be deduced from the data and colors will be chosen from a standard palette."
-        typeLevels<-palette.colors(n=length(uniqueData), palette="Polychrome 36")
+       or the number of specified colors is less than the number of levels present,
+       levels will be deduced from the data and missing colors will be chosen from a standard palette.
+       Association of colors and levels is unreliable."
+
+        lengthDiff<-length(uniqueData)-length(argCol)
+        argCol<-c(argCol,palette.colors(n=lengthDiff, palette="Polychrome 36"))
+        
+        typeLevels<-argCol
         names(typeLevels)<-uniqueData
         }
         if(length(argCol)==length(argLev[[1]]))
@@ -207,14 +212,15 @@ levCol<-function(sf,column,drop=FALSE,...){
              case<-"11: One vector seems to be a vector of levels,
           which covers the values of the data, the other a vector of colors,
            who is empty or whose length is shorter than the specified levels.
-          Missing colors will be picked from a standard palette.
+          Missing colors will be picked from a standard palette. Association between levels and colors is unreliable.
           For a better rendition specify as many colors as levels."
 
 
              LCZlevels<-argLev[[1]]
-             typeLevels<-palette.colors(n=length(LCZlevels), palette="Polychrome 36")
-             indOK<-match(uniqueData,LCZlevels)[!is.na(match(uniqueData,LCZlevels))]
-             typeLevels[indOK]<-argCol[indOK]
+             # typeLevels<-palette.colors(n=length(LCZlevels), palette="Polychrome 36")
+             lengthDiff<-length(LCZlevels)-length(argCol)
+             argCol<-c(argCol,palette.colors(n=lengthDiff, palette="Polychrome 36"))
+             typeLevels<-argCol
              names(typeLevels)<-LCZlevels
              } else if (length(uniqueData)<=length(argCol)){
              case<-"12: One vector seems to be a vector of levels,

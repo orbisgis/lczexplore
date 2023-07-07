@@ -84,7 +84,7 @@ showLCZ(redonOSMgrouped, column="grouped",repr="alter",wf="OSM",
 
 ```
 
-# Compare two LCZ classification with the function compareLCZ
+# Compare two LCZ classification with the function compareLCZ and the `alter` representation
 
 ## Most common case 
 As for standard LCZ, we use the `compareLCZ` function. We specify the names of the `sf1` and `sf2` objects containing the data, and the names of the columns where are the grouped categories. 
@@ -109,11 +109,113 @@ There are many cases when one doesn't necessarily know the levels of the qualita
 or the colors one wants to choose. One may also want to pair the levels and column in a way that 
 shows their correspondence. 
 
-The package allows quite a flexibility to the user, thanks to the `levCol` function. This function should be called by other functions, not by the user, but one can use it to see how the levels and colors are dealt with.
+The package allows quite a flexibility to the user, thanks to the `levCol` function. 
+This function is designed to be called by `showLCZ` and `compareLCZ` functions, not by the user, 
+but one can use it to see how the levels and colors are dealt with. It outputs a vector of levels and associated colors, 
+as well as a message, explaingin the case it dealt with. 
 
 Here are some examples. 
 
 ## Levels specified but no colors
 
+When levels don't have a particular meaning, using random colors may be enough. 
+One can specify a single vector of levels and no vector of colors. 
 
+```{R, fig.dim = c(8, 6), echo = TRUE}
+levCol(sf=redonOSMgrouped,column="grouped",
+       levels=c("urban","industry","vegetation","impervious","pervious","water"))
+
+compareLCZ(sf1=redonOSMgrouped,column1="grouped",
+sf2=redonBDTgrouped, column2="grouped",
+repr="alter",
+levels=c("urban","industry","vegetation","impervious","pervious","water")
+)
+```
+
+
+## Colors specified, but not levels
+
+If one know the number of levels of a qualitative variable but not their names,
+in an exploratory approach, one can simply specify a vector of prefered colors. 
+
+
+```{R, fig.dim = c(8, 6), echo = TRUE}
+utrfRedonBDT<-importQualVar(dirPath=paste0(
+  system.file("extdata", package = "lczexplore"), "/bdtopo_2_2/Redon"),
+                            file="rsu_utrf_area.geojson", column="TYPO_MAJ")
+summary(utrfRedonBDT)
+summary(utrfRedonBDT$TYPO_MAJ)
+
+showLCZ(sf=utrfRedonBDT, column="TYPO_MAJ",repr="alter",
+        title = " UTRF classification of the French city of Redon",
+        colors=c("red","black","green","grey","burlywood","blue","orange","lightgreen","brown"))
+```
+
+## Case when some of the specified colors are not actually colors
+
+One may specify a color wrong, or use a name which is known in a certain environment but not known in R. 
+The `levCol` funbction will then replace it with a color chosen from a standard palette. 
+
+```{R}
+levCol(sf=utrfRedonBDT, column="TYPO_MAJ",
+        colors=c("red","black","green","grey","burlywood","blue","orange","lightgreen","brown"))
+
+levCol(sf=utrfRedonBDT, column="TYPO_MAJ",
+       colors=c("red","black","green","grey","burlywood","blue","orange","lightgreen","NOT_COLOR"))
+
+```
+
+## Case when provided vectors of levels and colors don't cover the levels of the data
+
+Sometimes, the data can include unexpected levels, and the user might not specify them within the level vectors passed to the functions. In those cases, a message is produced to alert the user.  
+
+For instance, if the user forgets to specify the level "water" of the `redonOSMgrouped` dataset. 
+The levels are then deduced from the data and a random color is added. 
+
+
+```{R}
+levCol(sf=redonOSMgrouped,column="grouped",
+       levels=c("urban","industry","vegetation","impervious","pervious"),
+       colors=c("red","black","green","grey","burlywood")
+)
+
+```
+Sometimes, the vector of levels covers the levels of the data, but the vector of colors doesn't. 
+A random color is then assigned to the last level of vector. 
+
+```{R}
+levCol(sf=redonOSMgrouped,column="grouped",
+       levels=c("urban","industry","vegetation","impervious","pervious","water"),
+       colors=c("red","black","green","grey","burlywood")
+)
+
+```
+
+```{R}
+levCol(sf=redonOSMgrouped,column="grouped",
+           levels=c("urban","industry","vegetation","impervious","pervious"),
+           colors=c("red","black","green","grey","burlywood","blue")
+)
+```
+All the cases are not listed in this vignette as the message are hopefully explicit enough. 
+
+# A trick to group and compare all at once
+
+Sometimes, one wants to compare different grouping of levels from the same original pair of datasets. 
+In this case, one can do the grouping and the comparing in one step. One needs to pas sthe original column names, 
+the grouping vectors and set the argument`tryGroup=TRUE`.
+If the values of the grouping vectors cover the original values of the datasets, the function will perform grouping before comparing. 
+
+```{R, fig.dim = c(8, 6), echo = TRUE}
+
+compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", 
+sf2=redonOSM, column2="LCZ_PRIMARY",
+repr="alter", ref=2, saveG="", exwrite=FALSE, location="Redon", plot=TRUE,
+urban=c("1","2","3","4","5","6","7","8","9"),
+industry="10",
+vegetation=c("101","102","103","104"),
+impervious="105",pervious="106",water="107",
+colors=c("red","black","green","grey","burlywood","blue"),tryGroup = TRUE)
+```
+This is meant as an exploratopry tool, as the resulting grouped columns are not actually kept after the analysis. 
 

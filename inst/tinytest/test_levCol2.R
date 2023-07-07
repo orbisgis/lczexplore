@@ -42,6 +42,14 @@ test<-levCol(sf=redonBDTgrouped,column="grouped",
              colors=c("red","black","green","grey","burlywood"))
 expect_equal(grep("3:",test$case),1)
 
+test<-test<-levCol(sf=redonBDTgrouped,column="grouped",
+                   colors=c("red","black","green","grey","burlywood","blue","purple"))
+
+
+
+
+
+
 # case 4:  A single vector was provided, whose names cover the levels in the data
 # and whose values are colors.
 test<-levCol(redonBDTgrouped, column="grouped", levels=c("urban"="red","industry"="black",
@@ -54,10 +62,10 @@ expect_equal(grep("4:",test$case),1)
 #         but whose names don't cover the levels in the data.
 #         Specified colors will be associated to levels deduced from the data,
 #          in order of appearence.
-test<-levCol(redonBDTgrouped, column="grouped", levels=c("urban"="red","industry"="black",
+test<-levCol(redonBDTgrouped, column="grouped", drop=TRUE, levels=c("urban"="red","industry"="black",
                                                          "vegetation"="green",
                                                          "impervious"="grey",
-                                                         "not present in the data"="white",
+                                                         "not in data"="white",
                                                          "pervious"="burlywood","water"="blue"))
 expect_equal(grep("5:",test$case),1)
 
@@ -80,6 +88,15 @@ expect_equal(grep("7:",test$case),1)
 test<-levCol(redonBDTgrouped, column="grouped",
              levels=c("urban","industry","John Scofield","impervious","pervious","water"))
 expect_equal(grep("8:",test$case),1)
+
+test<-levCol(redonBDTgrouped, column="grouped",
+             levels=c("industry","John Scofield","impervious","pervious","water"))
+expect_equal(grep("8:",test$case),1)
+
+test<-levCol(redonBDTgrouped, column="grouped", drop=TRUE,
+             levels=c("industry","John Scofield","impervious","pervious","water"))
+expect_equal(grep("8:",test$case),1)
+
 
 # case 9: Levels specified in one vector, whose values cover the levels in the data,
 #           colors in another vector, these vectors having the same length
@@ -105,9 +122,9 @@ expect_equal(grep("10:",test$case),1)
 #           the other a vector of colors, whose length is shorter than the specified levels.
 #           Missing colors will be picked from a standard palette.
 
-# test<-levCol(redonBDTgrouped, column="grouped",
-#              levels=c("urban","industry","vegetation","impervious","pervious","water"),
-#              colors=c("red","black","green","grey","blue"))
+test<-levCol(redonBDTgrouped, column="grouped",
+             levels=c("urban","industry","vegetation","impervious","pervious","water"),
+             colors=c("red",  "black",   "green",     "grey",       "blue"))
 
 
 # expect_equal(grep("11:",test$case),1)
