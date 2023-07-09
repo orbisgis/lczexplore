@@ -15,13 +15,13 @@ testCol <- palette.colors(n=17, palette="Polychrome 36")
 # showLCZ(redonBDT, title="Zones climatiques locales à Redon",repr="alter",
 #         useStandCol=FALSE,
 #         colors = testCol )
-# 
-# showLCZ(sf=redonOSM, wf="OSM", column="LCZ_PRIMARY", title="test", repr="alter", colors=testCol, useStandCol=FALSE)
-# 
-# 
-# showLCZ(redonBDT, title="Zones climatiques locales à Redon",repr="alter",
-#         useStandCol=TRUE,
-#         colors = testCol )
+
+#  showLCZ(sf=redonOSM, wf="OSM", column="LCZ_PRIMARY", title="test", repr="alter", colors=testCol, useStandCol=FALSE)
+# # 
+# # 
+#  showLCZ(redonBDT, title="Zones climatiques locales à Redon",repr="alter",
+#          useStandCol=TRUE,
+#          colors = testCol )
 #levCol(sf=redonBDT, column="LCZ_PRIMARY",colors = testCol)
 
 redonBDTgrouped<-groupLCZ(redonBDT,column="LCZ_PRIMARY", urban=c("1","2","3","4","5","6","7","8","9"),
@@ -45,9 +45,8 @@ expect_message(
 expect_message(
   showLCZ(redonBDTgrouped,column="grouped",repr="alter",
                        LCZlevels=c("urban","industry","vegetation","impervious","pervious","water"),
-        colors=c("red","black","green","grey","blue"),
-          title="LCZ regroupées à Redon"),
-  "For a better rendition specify as many colors as levels."
+        colors=c("red","black","green","grey"),
+          title="LCZ regroupées à Redon"),"case 11:"
 )
 
 
@@ -67,9 +66,8 @@ expect_message(
   "6:"
 )
 
-expect_message(
-showLCZ(redonBDTgrouped,column="grouped",repr="alter"),
-  "No level vector and no color vector"
+expect_silent(
+showLCZ(redonBDTgrouped,column="grouped",repr="alter")
 )
 
 #levCol(redonBDTgrouped,column="grouped",levels=NULL,colors=NULL)
@@ -79,3 +77,14 @@ showLCZ(redonBDTgrouped,column="grouped",repr="alter",
         LCZlevels=c("urban","industry","vegetation","impervious","pervious","water")),
   "7: No color vector but a level vector whose names cover the levels in the data"
 )
+
+
+
+expect_message(
+showLCZ(sf=redonBDTgrouped, column="LCZ_PRIMARY",repr="alter",
+       urban=c("1","2","3","4","5","6","7","8","9"),
+industry="10",
+vegetation=c("101","102","103","104"),
+impervious="105",pervious="106",water="107",
+        colors=c("red","black","green","grey","burlywood","blue"),tryGroup = TRUE),
+"the function groupLCZ will try to create ")

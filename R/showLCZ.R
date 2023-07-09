@@ -10,6 +10,7 @@
 #' @param title allows the user to set the title of the plot
 #' @param drop indicates if you want to show the levels present in no geometry.
 #' @param useStandCol is set to TRUE implies that any levels detected as a standard LCZ level will receive the standard associated color
+#' @param tryGroup is set to TRUE when one wants to group and plot on the fly 
 #' @param ... these dynamic dots allow you to pass arguments to specify levels expected 
 #' in your dataset and colors associated to these levels when not in the standard representation. You can pas your levels through a vector and you colors through another vector called colors. 
 #' For more details about this, read the "lcz_explore_alter" vignette. 
@@ -29,7 +30,7 @@
 #' colors=c("red","black","green","grey","burlywood","blue"),wf="BD TOPO")
 #' 
 showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
-                  repr="standard", drop=FALSE, useStandCol=FALSE,...){
+                  repr="standard", drop=FALSE, useStandCol=FALSE, tryGroup=TRUE,...){
 
   datasetName<-deparse(substitute(sf))
 
@@ -125,10 +126,10 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
       levColShow<-levCol(sf,column,...)
       typeLevels<-levColShow$levelsColors
       
-      rm(sfNew1)
+      rm(sfNew)
     }
     
-    
+    message(levColCase)
     
      # IN CASE SOME STANDARD LEVELS ARE DETECTED, ONE MAY WANT STANDARD COLORS TO BE APPLIED
 
