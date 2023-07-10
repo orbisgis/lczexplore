@@ -20,17 +20,18 @@ importQualVar(
 \arguments{
 \item{dirPath}{is the path of the directory of the file}
 
-\item{file}{is the name of the file from which the LCZ are imported}
+\item{file}{is the name of the file from which the variable is imported}
 
 \item{output}{: if sfFile, the function returns an sfFile with the qualitative variable,
 if bBox, returns a bounding box one can use to crop a raster file or to intersect another sf file}
 
-\item{column}{indicates the name of the column containing the qualitative variable to be imported}
+\item{column}{indicates the name of the column containing the qualitative variable is imported}
 
-\item{geomID}{is the name of the column containing the ID of each geom to load. If an empty string, no column is loaded.}
+\item{geomID}{is the name of the column containing the ID of each geom to load.
+If an empty string, no column is loaded.}
 
-\item{confid}{is the name of the column containing a confidence indicator to filter geoms,
-for instance the uniqueness of the LCZ level of each geom}
+\item{confid}{is the name of the column containing a confidence indicator,
+for instance the uniqueness of the LCZ level of each geom, in order to filter geoms,}
 
 \item{typeLevels}{the levels of the imported qualitative variable}
 

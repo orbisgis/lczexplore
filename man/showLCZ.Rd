@@ -48,7 +48,7 @@ Produces a simple representation of the LCZ contained in an sf file.
 }
 \examples{
 # On original LCZ levels, use the \'standard\' value for the \'repr\' argument.
-showLCZ(redonBDT,column="LCZ_PRIMARY", repr="standard")
+showLCZ(redonBDT, column="LCZ_PRIMARY", repr="standard")
 # On grouped data, use the alter value for the repr argument.
 redonBDTgrouped<-groupLCZ(redonBDT,column="LCZ_PRIMARY",
 urban=c("1","2","3","4","5","6","7","8","9"),

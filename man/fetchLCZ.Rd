@@ -2,7 +2,7 @@
 % Please edit documentation in R/fetchLCZ.R
 \name{fetchLCZ}
 \alias{fetchLCZ}
-\title{Fetches the data from the Geomanum cloud, for locations already uploaded there by the Geoclimate team}
+\title{Fetches LCZ classification data, by default from the Geomanum cloud, for locations already uploaded there by the Geoclimate team}
 \usage{
 fetchLCZ(
   location,
@@ -31,7 +31,7 @@ This function is intended to be used by Paendora project members, so the default
 returns no R object. The data are uploaded from the GeoClimate cloud and locally unpacked in the outDir directory
 }
 \description{
-Fetches the data from the Geomanum cloud, for locations already uploaded there by the Geoclimate team
+Fetches LCZ classification data, by default from the Geomanum cloud, for locations already uploaded there by the Geoclimate team
 }
 \examples{
 fetchLCZ(location="Allaire",

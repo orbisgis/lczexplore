@@ -2,7 +2,7 @@
 % Please edit documentation in R/areColors.R
 \name{areColors}
 \alias{areColors}
-\title{Check if a string or a vector of string define colors in R}
+\title{Checks if a string or a vector of strings define colors in R}
 \usage{
 areColors(x)
 }
@@ -13,7 +13,7 @@ areColors(x)
 a vector of booleans indicting if the elements of x define a color in R (TRUE) or don't (FALSE)
 }
 \description{
-Check if a string or a vector of string define colors in R
+Checks if a string or a vector of strings define colors in R
 }
 \examples{
 areColors(c(NA, "black", "blackk", "1", "#00", "#000000"))
