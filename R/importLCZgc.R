@@ -1,4 +1,5 @@
-#' Imports the rsu_lcz geojson file produced by GeoClimate.
+#' Imports the rsu_lcz geojson file produced by GeoClimate. 
+#' Use the more generic /`importLCZvect/` function
 #'
 #' @param dirPath : the path where the rsu_lcz.geojson file is.
 #' @param output : if sfFile the rsu_lcz.geojson is imported as an sf file, if bBox, a bounding box of the area is returned
@@ -29,11 +30,11 @@ importLCZgc<-function(dirPath,output="sfFile"){
 
 
   if(output=="sfFile"){return(sfFile)} else {
-    if(output=="bBox"){bBox=st_bbox(sfFile,crs=st_crs(sfFile)) %>% st_as_sfc
+    if(output=="bBox"){bBox<-st_bbox(sfFile,crs=st_crs(sfFile)) %>% st_as_sfc
 
     return(bBox)} else {
       if(output=="contour"){
-        fileName2<-paste0(dirPath,"zones.geojson")
+        # fileName2<-paste0(dirPath,"zones.geojson")
         sfContour<-st_read(dsn=fileName) %>% st_geometry %>% st_union()
         return(sfContour)
       }

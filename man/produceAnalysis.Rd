@@ -4,8 +4,9 @@
 \alias{produceAnalysis}
 \title{Calls functions of the package to produce an analysis of two set of LCZ
 produced exclusively by GeoClimate.
-Typically one will compare the LCZ produced by GeoClimate using the OSM data as input
-to the LCZ produced by GeoClimate using the french BD_TOPO as input.
+Typically one will compare the LCZ produced by GeoClimate using the OpenStreetMap
+data as input to
+the LCZ produced by GeoClimate using the french BDTopo v2.2 as input.
 Same analysis are reproducible using all the generic functions of the package.}
 \usage{
 produceAnalysis(
@@ -54,8 +55,9 @@ are exported either in csv (both LCZ by geoms by town) either in png
 \description{
 Calls functions of the package to produce an analysis of two set of LCZ
 produced exclusively by GeoClimate.
-Typically one will compare the LCZ produced by GeoClimate using the OSM data as input
-to the LCZ produced by GeoClimate using the french BD_TOPO as input.
+Typically one will compare the LCZ produced by GeoClimate using the OpenStreetMap
+data as input to
+the LCZ produced by GeoClimate using the french BDTopo v2.2 as input.
 Same analysis are reproducible using all the generic functions of the package.
 }
 \examples{

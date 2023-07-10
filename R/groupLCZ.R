@@ -1,4 +1,5 @@
-#' Allows to group local climate zones to improve the analysis.
+#' Allows to group (Local Climate Zone) geographical classification levels into broader categories 
+#' to explore classification agreements
 #'
 #' @param sf is the input files. It must be an sf file and contain an LCZ column (levels 1 to 10 and 101 to 107). It must contain the geom column.
 #' @param column is the name of the column containing the LCZ to be grouped
@@ -15,6 +16,11 @@
 #' industry="10", vegetation=c("101","102","103","104"),
 #' impervious="105",pervious="106",water="107",
 #' colors=c("red","black","green","grey","burlywood","blue"))
+#' 
+#' showLCZ(redonBDT,column="LCZ_PRIMARY", repr="standard")
+#' showLCZ(redonBDTgrouped,column="grouped",repr="alter",
+#' LCZlevels=c("urban","industry","vegetation","impervious","pervious","water"),
+#' colors=c("red","black","green","grey","burlywood","blue"),wf="BD TOPO")
 groupLCZ<-function(sf,column,outCol='grouped',...)
 {
   #require(forcats)

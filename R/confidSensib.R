@@ -1,12 +1,14 @@
-#' Computes the agreement between LCZ classification on a range of values of
-#' an indicator of confidence granted to each LCZ classification. The input file or dataset must have been produced by compareLCZ function, or at least the columns must be in the same order.
+#' Computes the agreement between geographical (LCZ) classifications on a range of values of
+#' an indicator of confidence granted to each LCZ classification. 
+#' The input file or dataset must have been produced by compareLCZ function, 
+#' or at least the columns must be in the same order.
 #'
-#' @param inputDf is an R file with geom IDs, LCZ classifications and
-#' a confidence value granted for the LCZ value of each geom. Ignored if filePath is not empty.
+#' @param inputDf is an R file with geom IDs, (LCZ) classifications and
+#' a confidence value granted for the (LCZ) classifications values of each geom. Ignored if filePath is not empty.
 #' @param filePath is the path to a csv file containing geom IDs, LCZ classifications and
 #' a confidence value granted for the LCZ value of each geom.
 #' @param nPoints is the number of points (quantiles) of confidence for which
-#' the average agreement between classifs will be computed
+#' the average agreement between classifications will be computed
 #' @param wf1 is the name of the workflow used to produce the first LCZ
 #' @param wf2 is the name of the workflow used to produce the second LCZ
 #' @param geomID1 is the name of the column that contains the geom ID associated to the first workflow
@@ -20,7 +22,7 @@
 #' @param plot if TRUE the graph is plotted
 #' @param saveG if not an empty string, specifies where to save graphs
 #' @import dplyr ggplot2
-#' @return returns an object called sortie, which contains the values of the thresholds
+#' @return returns an object called output, which contains the values of the thresholds
 #' for the confidence value and the agreement between classifications for the LCZ levels presents in the dataset
 #' @export
 #'
@@ -173,13 +175,13 @@ typeLevels<-unique(echIntConf[,column1]) %>% as.vector
  # sortieParLCZ<-aggregate(echIntConf,by=echIntConf[[column1]],internFunction2,nPoints=nPoints)
  sortieParLCZ<-lapply(echIntConfSplit,internFunction2,nPoints=nPoints)
  nivList<-names(sortieParLCZ)
- sortie<-data.frame(Confidence=numeric(0), Agreement=numeric(0), Kept=character(0),
+ output<-data.frame(Confidence=numeric(0), Agreement=numeric(0), Kept=character(0),
                     nbGeom=numeric(0), LCZ=character(0))
  for (i in names(sortieParLCZ)){
-    sortie<-rbind(sortie,cbind(sortieParLCZ[[i]],LCZ=rep(i,nrow(sortieParLCZ[[i]]))))
+    output<-rbind(output,cbind(sortieParLCZ[[i]],LCZ=rep(i,nrow(sortieParLCZ[[i]]))))
  }
 
- byLCZPLot<-ggplot(data=sortie, aes(x=Confidence, y=Agreement, color=Kept, shape=Kept))+
+ byLCZPLot<-ggplot(data=output, aes(x=Confidence, y=Agreement, color=Kept, shape=Kept))+
    labs(x="Confidence threshold", color = "Geom set", shape="Geom set")+
    scale_fill_discrete(breaks=c("confidence >= threshold","confidence < threshold"),)+
    scale_color_manual(values =
@@ -203,6 +205,6 @@ typeLevels<-unique(echIntConf[,column1]) %>% as.vector
  }
 
 
- return(sortie)
+ return(output)
 
 }

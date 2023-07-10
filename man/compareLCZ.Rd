@@ -2,8 +2,9 @@
 % Please edit documentation in R/compareLCZ.R
 \name{compareLCZ}
 \alias{compareLCZ}
-\title{Compares two LCZ classification on the same zone,
-produces a map for each classification, a map of their agreement and a representation of a confusion matrix between them}
+\title{Compares two set of geographical classifications, especially Local Climate Zones classifications. It
+produces a map for each classification, a map of their agreement (and a pseudo Kappa coefficent),
+and a confusion matrix between them. All are stored in a list, easily reusable.}
 \usage{
 compareLCZ(
   sf1,
@@ -19,7 +20,7 @@ compareLCZ(
   ref = 1,
   repr = "standard",
   saveG = "",
-  exwrite = TRUE,
+  exwrite = FALSE,
   outDir = getwd(),
   location = "Your Place",
   plot = TRUE,
@@ -28,42 +29,38 @@ compareLCZ(
 )
 }
 \arguments{
-\item{sf1}{is the sf object that contains the first LCZ classification}
+\item{sf1}{is the sf object that contains the first (LCZ) classification}
 
-\item{geomID1}{is the name of the column storing the ID of the geoms in sf1}
-
-\item{column1}{is the column of sf1 that contains the LCZ classification for each geom of sf1.
+\item{geomID1}{is the name of the optionnal column storing the ID of the geoms in sf1
 By defautl it is set to an empty string and no ID is loaded.}
 
-\item{confid1}{is a column that contains an indicator of confidence
-of the level of the LCZ in column 1, e.g. a uniqueness value, or a probability of belonging to the class...
+\item{column1}{is the column of sf1 that contains the LCZ classification for each geom of sf1.}
+
+\item{confid1}{is an optionnal column that contains an indicator of confidence
+of the values in column1, e.g. a uniqueness value, or a probability of belonging to the class...
 By defautl it is set to an empty string and no confidence indicator is loaded.}
 
 \item{wf1}{is the workflow used to produce the first LCZ classification.
+It is used ti create titles or legends.
 When GeoClimate was used with BD_TOPO V2 data as input,
 use "bdtopo_2_2". When GeoClimate was used with Open Street Map data as input, use "osm".
 When the LCZ come from the wudapt Europe tiff, use "wudapt".}
 
-\item{sf2}{is the sf object that contains the second LCZ classification}
+\item{sf2}{is the sf object that contains the second (LCZ) classification}
 
 \item{column2}{is the column of sf2 that contains the LCZ classification for each geom of sf2}
 
 \item{geomID2}{is the name of the column storing the ID of the geoms in sf2}
 
-\item{confid2}{is a column that contains an indicator of confidence
-of the level of the LCZ in column 2, e.g. a uniqueness value, or a probability of belonging to the class...
-By defautl it is set to an empty string and no confidence indicator is loaded.}
+\item{confid2}{is a column that contains an indicator of confidence}
 
-\item{wf2}{is the workflow used to produce the second LCZ classification.
-When GeoClimate was used with BD_TOPO V2 data as input,
-use "bdtopo_2_2". When GeoClimate was used with Open Street Map data as input, use "osm".
-When the LCZ come from the wudapt Europe tiff, use "wudapt".}
+\item{wf2}{is the workflow used to produce the second LCZ classification.}
 
-\item{ref}{: If the coordinate reference system (CRS) of sf1 and sf2 differ, ref indicates which CRS to choose for both files (1 or 2)}
+\item{ref}{: If the coordinate reference systems (CRS) of sf1 and sf2 differ, ref indicates which CRS to choose for both files (1 or 2)}
 
 \item{repr}{"standard" means that standard values of LCZ are expected,
 "alter" means other values are expected, like grouped values of LCZ or other qualitative variable.
-In the latter case, the ... arguments must contain the groups and a color vector.}
+In the latter case, the ... arguments can contain the expected levels and a color vector.}
 
 \item{saveG}{: when an empty character string, "", the plots are not saved. Else, the saveG string is used to produce the name of the saved png file.}
 
@@ -75,35 +72,35 @@ the csv file containing the values of the LCZ on the intersected geoms}
 \item{location}{: the name of the study area, as chosen as the name of the directory on the GeoClimate team cloud.
 If the area you wish to analyse is not uploaded yet, please contact the GeoClimate Team.}
 
-\item{plot}{: when FALSE non of the graphics are plotted or saved}
+\item{plot}{: when FALSE none of the graphics are plotted or saved}
 
-\item{tryGroup}{: when TRUE, if the specified level names don't match the data, but the specified levels do,
-a call to the groupLCZ function will be tried, and if it works, the resulting grouping column will be named
-"grouped" and the comparison will be done using it.}
+\item{tryGroup}{: when TRUE, one can group and compare on-the-fly : if the specified level names
+don't match the data, but the specified levels do, a call to the groupLCZ function will be tried,
+and if it works, the resulting grouping columns wille be compared}
 
-\item{...}{allow to pass arguments if repr is set to alter.
+\item{...}{allow to pass optionnal arguments if repr is set to alter.
 The expected arguments are the name of each level of the variables contained
-in column1 and column2, and last a vector colors of the colors to use to plot them.}
+in column1 and column2, and also a vector called colors.}
 }
 \value{
-returns an object called matConfOut which contains
-matConfLong, a confusion matrix in a longer form, which can be written in a file by the compareLCZ function
-and is used by the geom_tile function of the ggplot2 package.
-matConfPlot is a ggplot2 object showing the confusion matrix. If plot=T, it is also directly plotted
-areas contains the sums of each LCZ area
+returns graphics of comparison and an object called matConfOut which contains :
+matConfLong, a confusion matrix in a longer form,
+matConfPlot is a ggplot2 object showing the confusion matrix.
 percAgg is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
+pseudoK is a heuristic estimate of a Cohen's kappa coefficient of agreement between classifications
 If saveG is not an empty string, graphics are saved under "saveG.png"
 }
 \description{
-Compares two LCZ classification on the same zone,
-produces a map for each classification, a map of their agreement and a representation of a confusion matrix between them
+Compares two set of geographical classifications, especially Local Climate Zones classifications. It
+produces a map for each classification, a map of their agreement (and a pseudo Kappa coefficent),
+and a confusion matrix between them. All are stored in a list, easily reusable.
 }
 \examples{
 comparisonBDT_OSM<-compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU",
 confid1="LCZ_UNIQUENESS_VALUE", wf1="bdtopo_2_2",
 sf2=redonOSM, column2="LCZ_PRIMARY", geomID2 = "ID_RSU",
 confid2="LCZ_UNIQUENESS_VALUE", wf2="osm",
-repr="standard", saveG="", exwrite=TRUE, location="Redon", plot=TRUE)
+repr="standard", saveG="", exwrite=FALSE, location="Redon", plot=TRUE)
 # To get the summed area of each LCZ levels for both dataset : 
 comparisonBDT_OSM$areas
 # The plots of each dataset can be produced with the /`showLCZ/` function.

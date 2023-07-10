@@ -1,6 +1,6 @@
-#' Imports the LCZ produced by the WUDAPT algorithm.
-#' For now, the function only allows import from the european tiff
-#' produced by WUDAPT. Users MSUT DOWNLOAD the WUDAPT tiff file
+#' Imports the LCZ classifications produced on raster maps, mainly by the WUDAPT algorithm.
+#' For now, the function  import from the european tiff
+#' produced by WUDAPT. Users can DOWNLOAD the WUDAPT tiff file
 #' at the following url : https://figshare.com/articles/dataset/European_LCZ_map/13322450
 #' A future version may include the world data once a strategy is defined to deal with CRS.
 #'
@@ -10,7 +10,7 @@
 #' @param typeLevels indicates a named vector of the unique values contained in column,
 #' @param zone set to europe by default, may include world once a strategy is defined
 #' @param bBox bBox is the bounding box needed to crop the wudapt tiff file.
-#' It can be produced bu the importLCZvect function
+#' It can be produced bu the importLCZvect function. It can either be of class bBox or of class sfc
 #' @return an sf file containing the geom and LCZ levels from the WUDAPT Europe tiff within the bBox bounding box
 #' @import sf dplyr forcats
 #' @importFrom terra crop
@@ -24,7 +24,20 @@
 #'
 #' redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
 #' fileName="redonWudapt.tif",bBox=redonBbox)
-#'
+#' 
+#' # the following example can only be executed when user has downloaded 
+#' # CONUS-wide LCZ map and Training Areas on WUDAPT website
+#' # sanDiegobBoxCoord<-st_sf(a=1:2, geom=st_sfc(
+#' #st_point(c(-117.175198,32.707289)),
+#' #st_point(c(-117.112198,32.750900)),crs = 4326
+#' #))
+#' #sanDiegoBbox<-st_bbox(sanDiegobBoxCoord)
+#' #sanDiegoWudapt<-importLCZraster(
+#' #dirPath="path_of_the_tiff",
+#' #fileName="CONUS_LCZ_map_NLCD_v1.0_epsg4326.tif",
+#' #column="CONUS_LCZ_map_NLCD_v1.0_epsg4326"
+#' #  ,bBox=sanDiegoBbox)
+#' #showLCZ(sanDiegoWudapt,column="CONUS_LCZ_map_NLCD_v1.0_epsg4326")
 importLCZraster<-function(dirPath,zone="europe",bBox,fileName="EU_LCZ_map.tif", column='EU_LCZ_map',
                           typeLevels=c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",
                            "9"="9","10"="10","101"="11","102"="12","103"="13","104"="14",
@@ -32,7 +45,11 @@ importLCZraster<-function(dirPath,zone="europe",bBox,fileName="EU_LCZ_map.tif", 
 # internal import function used in two loops
   effectiveImport<-function(fileName,bBox){
     sfFile<-rast(fileName)
+    if (sum(class(bBox)%in%c("sfc_POLYGON","sfc" ))==0) {
+      bBox<-st_as_sfc(bBox)
+    }
     bBox<-st_transform(bBox,st_crs(sfFile,proj=T))
+    
 
     cropTry<-try(sfFile %>% crop(bBox))
     if(is(cropTry,"try-error")){stop("The bounding box doesn't intersect with the Wudapt tiff : \n
@@ -52,7 +69,7 @@ importLCZraster<-function(dirPath,zone="europe",bBox,fileName="EU_LCZ_map.tif", 
                                     !!!typeLevels)) %>%
         drop_na(column)
 
-    cat(levels(subset(sfFile,select='EU_LCZ_map',drop=T)))
+    cat(levels(subset(sfFile,select=column,drop=T)))
     #plot(sfFile)
     sfFile
     }

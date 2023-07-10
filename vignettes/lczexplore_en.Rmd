@@ -26,20 +26,25 @@ if (!require("png")) {
 
 # A package to explore Local Climate Zones : lczexplore
 ## Purpose and origin
-The lczexplore package was developped thanks to the PAENDORA2 (Pour la gestion du confort estival : Données, Outils et Recherche-Action, 2022 -2025, funded by ADEME, a French agency for ecological transition).
+The lczexplore package was developed thanks to the PAENDORA2 (Pour la gestion du confort estival : Données, Outils et Recherche-Action, 2022 -2025, funded by ADEME, a French agency for ecological transition).
 
-Its purpose is to easily compare different local climate zone classifications on the same study territory.
+Its purpose is to easily compare different Local Climate Zone (LCZ) classifications on the same study territory.
 
-Before using this package, one must assign a local climate zone (LCZ) type to each Spatial Reference Units of a territory.
-These units can be topological units or geometries derived from pixels of a rester approach after a simple conversion.
-As several workflow can produce these LCZ types, this package allows to represent them and to compare the results of these classifications (pairwise).
+Before using this package, one must assign a local climate zone (LCZ) type 
+to each Spatial Reference Units of a territory.
+These units can be topological units or geometries derived from pixels of a raster approach 
+the package deals with the conversion). Fo a detailed example of the raster approach, 
+please read the "lczexplore_raster_vector" vignette (`vignette("lczexplore_raster_vector"`).
+As several workflows can produce these LCZ types, this package allows to represent them and to compare 
+pairs of these classifications (pairwise).
+It has been extended to compare any pair of qualitative variable set on valid geographical units. 
 
 
 ## Installation
 
-Unzip the tar.gz file and install it (see `?install.packages`)
+The following allows the installation from the github repository : (`devtools::install_github("orbisgis/lczexplore", build_vignettes = TRUE)`).
 
-One can also install it from the github repository : (`devtools::install_github("orbisgis/lczexplore", build_vignettes = TRUE)`).
+On can also install from the tar.gz file and install it (see `?install.packages`).
 
 
 Load the package : `library(lczexplore)`.
@@ -52,13 +57,24 @@ library(lczexplore)
 
 ## Import files with importLCZvect function
 
-The function `importLCZvect` is the generic import function for the file containing geometries, or Reference Spatial Units (RSU) and the associated Local Climate Zone Type (LCZ). Import of .geojson and .shp files was tested, but any format accepted by the function `st_read` of the `sf` package should work.
+The function `importLCZvect` is the generic import function for the file containing geometries, 
+or Reference Spatial Units (RSU), and the associated Local Climate Zone Type (LCZ). 
+Imports of .geojson and .shp files were tested, but any format accepted by the function `st_read` 
+of the `sf` package should work.
 
-The `dirPath` and the `file` arguments set the path to the folder and the filename to be loaded. The compulsary argument  `column` is the name of the column in which are the LCZ types. The optional arguments `geomID` and `confid` allow the user to load column of geometry identifiers and a column containing a measure of the confidence associated to the LCZ type of a geometry.
+The `dirPath` and the `file` arguments set the path to the folder and the filename to be loaded. 
+The compulsory argument  `column` is the name of the column in which are the LCZ types.
+The optional arguments `geomID` and `confid` allow the user to load column of geometry identifiers 
+and a column containing a measure of the confidence associated to the LCZ type of a given geometry 
+(these are needed for the sensitivity analysis described below). 
 
-The default output of `importLCZvect` is an object of class `simple feature` as defined by the openGIS consortium and as handled by the `sf` package, an R reference library for Geographical Information System vector Data [https://doi.org/10.32614/RJ-2018-009].
+The default output of `importLCZvect` is an object of class `simple feature` 
+as defined by the openGIS consortium and as handled by the `sf` package, an R reference 
+library for Geographical Information System vector Data [https://doi.org/10.32614/RJ-2018-009].
 
-If one sets the argument `output="bBox"`, importLCZvect will output only the bounding box of the geometrie of the input file. It is useful, for instance, when you want to use it to crop another file and study the same area.
+If one sets the argument `output="bBox"`, importLCZvect will output only the bounding 
+box of the geometries of the input file. It is useful, for instance, when you want to use it to 
+crop another file and study the same area.
 
 
 ```{R}
@@ -71,12 +87,17 @@ redonBDT<-importLCZvect(dirPath=dirPathBDT,file="rsu_lcz.geojson",column = "LCZ_
 ```
 ## Map the LCZ types with the function showLCZ
 
-Once the dataset has been loaded into an R object of class `sf`, the function `showLCZ` produces the map of it's repartition. The argument`sf` sets the input dataset, the column of the LCZ types is passed to the argument `column`. The argument `wf` is just a string that will be used to produce the title of the plot: it allows the user to specify which workflow produced the input data.
+Once the dataset has been loaded into an R object of class `sf`, the function `showLCZ` 
+produces the map of it's repartition. The argument`sf` sets the input dataset, 
+the column of the LCZ types is passed to the argument `column`. The argument `wf` is simply a string  
+to specify which workflow produced the input data (it is used to produce the title).
 
 ## Standard representation
 
-For standard LCZ types, one sets the argument `repr="standard"`, and the function will recognize levels from 1 to 10 and from 101 to 107. It is the recommended choice. But `standard` representation will also accept levels from 11 to 17 and from A to G.
-
+For standard LCZ types, one sets the argument `repr="standard"`, and the function will recognize 
+levels from 1 to 10 and from 101 to 107. 
+It is the recommended choice. But `standard` representation will also accept levels from 11 to 17 and from A to G.
+(for other conventions, see the `alter` representation).
 
 
 ```{R, fig.dim = c(8, 6)}
@@ -89,10 +110,11 @@ To only represent the present levels, set `drop=TRUE`.
 showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="standard",drop=TRUE)
 ```
 ### Alternative visualization
-The non standard representation, triggered with `repr=alter` is useful when : 
-- one wants to regroup some LCZ types into more general categories,
-- the LCZ don't have a standard encoding
-- one want's to use custom colors
+
+The non-standard representation, triggered with `repr=alter` is useful when : 
+- one wants to **regroup** some LCZ types into more general categories,
+- the LCZ **don't have a standard encoding**
+- one want's to use **custom colors**
 - one wants to plot... something different from LCZ
 
 With `repr=alter`, one passes the vector of possible levels to the argument `LCZlevels` and the vector of associated colors to the argument `colors`.
@@ -107,15 +129,8 @@ showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter",colors=testCol, u
 
 ```
 
-The argument LCZlevels allows to specify which levels should be present in the legend. Even though no geometry is associated with the level 10, I can keep it in the legend, and despite `drop=TRUE` it will show in the legend.
 
-```{R, fig.dim = c(8, 6)}
-LCZlevels<-c(2, 3, 5, 6, 8, 9, 10, 101, 102, 104, 105, 107)
-showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter", LCZlevels = LCZlevels,drop=TRUE)
-
-```
-
-The colors one wants to use can be specify either by their name (if a known color name in R) or it's RGB code, and passed to the argument `colors`.
+The colors one wants to use can be specified either by their name (if a known color name in R) or it's RGB code, and passed to the argument `colors`.
 
 ```{r, fig.dim = c(8, 6)}
 
@@ -128,10 +143,11 @@ showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter",drop=TRUE,LCZleve
 
 ## Group several LCZ types in a category using groupLCZ
 
-One may want to illustrate the contour of a city, by grouping the urban LCZs and the vegetation ones.   
-Use the `groupLCZ` function and set the dataset with the argument `sf` and the column with `column`. Then you pass as many vectors as there are grouped category, 
-each of them containing the levels to be grouped together. 
-The newly created categories will be stored in the `outCol` column. If the user doesn't enter them (by default `outCol="grouped"`).
+For instance, one may want to illustrate the contour of a city, by grouping the urban LCZs and the vegetation ones.   
+Use the `groupLCZ` function and set the dataset with the argument `sf` and the column with `column`. 
+Then pass as many vectors as there are grouped category, each of them containing the levels to be grouped together. 
+The newly created categories will be stored in the `outCol` column. 
+If the user doesn't enter them (by default `outCol="grouped"`).
 
 The newly created dataset can be mapped with `showLCZ` function.
 
@@ -150,20 +166,27 @@ showLCZ(redonOSMgrouped, column="grouped",repr="alter",wf="OSM",
 # Compare two LCZ classification with the function compareLCZ
 
 **The purpose of this package is to easily compare local climate zone classifications produced by different algorithms on the same study area.**
-In our example, the GeoClimate workflow was used with two different input data to produce two LCZ classifications : the BD TOPO® v2.2, produced by the French National Institute of Geographic and Forest Information, and OpenStreetMap. 
+In our example, the GeoClimate workflow was used with two different input data to produce two LCZ classifications : 
+the BD TOPO® v2.2, produced by the French National Institute of Geographic and Forest Information, and OpenStreetMap. 
 
-NOTE : The vignette "Raster_vector_comparison" explores in detail another example with WUDAPT raster data. 
+NOTE : The vignette "lczexplore_raster_vector" explores in detail another example with WUDAPT raster data. 
 
-## Maps of original data.
 
-One has to call `compareLCZ` and feed it, for each dataset, at least the name of the sf object and the name of the colum of the LCZ.
-As the two input data set can have different coordinate reference system (CRS), you need to tell which dataset is the reference 
-(by default `ref=1`, that is the second data set will be retransformed into the CRS of the first data set). 
+One has to call `compareLCZ` and feed it, for each dataset, 
+at least the name of the `sf` object and the name of the `columns` where the LCZ types are stored. 
+As the two input data set can have different coordinate reference system (CRS), 
+you need to tell which dataset is the reference 
+(by default `ref=1`, that is the second data set will be re-transformed into the CRS of the first data set). 
 
 - A map of each LCZ classification is plotted.  
 - The function then intersects the geometries of both sf objects in order to get geometries where the **two classification either totally agree either totally disagree.** This agreement is plotted on a third graphics.  
-- At last, a confusion matrix (or agreement matrix) is computed : the area of each intersected geometry and the values of the two LCZ classification are used to show how one type of the first classification is split-up between the levels of the second classification. The matrix is shown in the fourth and last graphics.  
-- 
+- At last, a confusion matrix (or agreement matrix) is computed : 
+the area of each intersected geometry and the values of the two LCZ classifications
+are used to show how one type of the first classification breaks up into the levels of the second classification. 
+- The matrix is shown in the fourth and last graphics.
+
+NOTE : if the two data sets to compare have the same column names,
+the compareLCZ function will concatenate a ".1" string to the column names of the second file
 
 *The graphical output includes 4 graphs and is easier to read after zooming or exporting.*
 
@@ -218,13 +241,14 @@ comparisonGrouped<-compareLCZ(sf1=redonBDT,column1="LCZ_PRIMARY", wf1="groupedBD
 
 `CompareLCZ `outputs a list called `matConfOut` which contains :
 
-- `$data` the intersected geometries, their identifiers (if `geomID` was not empty), their LCZ type and their area,
+- `$data` the intersected geometries, their identifiers (if `geomID` was not empty), their LCZ types and their areas,
 - `$matConfLarge` the confusion matrix,
-- `$percAgg` the general agreement of the two classification on the whole area (as a percentage of the global surface of the area),
-- `$areas` the summed area for each LCZ for both classifications. 
+- `$percAgg` the general agreement of the two classifications on the whole area (as a percentage of the global surface of the area),
+- `$areas` the summed area for each LCZ of both classifications. 
 
 
-At last : it `exWrite=TRUE` the data are exported to a .csv file whose name is created from the argument `wf1` and `wf2`. It can then be loaded for further analysis.  
+At last : it `exWrite=TRUE` the data are exported to a .csv file whose name 
+is created from the argument `wf1` and `wf2`. It can then be loaded for further analysis.  
 
 ```{r}
 comparison$percAgg
@@ -235,12 +259,17 @@ comparisonGrouped$areas
 # Sensitivity of the agreement to the confidence value
 
 Some algorithm may provide a **confidence value** associated to the LCZ type.
-For instance, GeoClimate, for a given geometry, chooses the LCZ type according to a distance to a hypercube defining each LCZ type (in a space defined by the urban canopy parameters)?. Therefore, GeoClimate assigns the geometry to the closes type, but another type may have been quite close too. GeoClimate supplies a **uniqueness value**, betwwen 0 and 1. The closer it is to 1, the less the second LCZ type was a good candidate. This uniqueness can be seen as a confidence value.
+For instance, GeoClimate, for a given geometry, chooses the LCZ type according to a 
+distance to a hypercube defining each LCZ type (in a space defined by the urban canopy parameters)?. 
+Therefore, GeoClimate assigns the geometry to the closest type, but another type may have been quite close too. 
+GeoClimate supplies a **uniqueness value**, between 0 and 1. The closer it is to 1, the less the second 
+LCZ type was a good candidate. So this uniqueness can be seen as a confidence value.
 
 
 ## Import the necessary data : LCZ type, but also confidence.
 
-When using the `importLCZvect` function one needs to specify the confidence value associated to the LCZ (`confid` argument). On can also set the name of the geometry identifier (`geomID` argument ).
+When using the `importLCZvect` function one needs to specify the confidence value associated 
+to the LCZ (`confid` argument). On can also set the name of the geometry identifier (`geomID` argument ).
 
 ```{r}
 dirPath<-paste0(system.file("extdata",package="lczexplore"),"/")
@@ -250,17 +279,18 @@ dirPathBDT<-paste0(dirPath,"bdtopo_2_2/Redon")
 redonOSM<-importLCZvect(dirPath=dirPathOSM,file="rsu_lcz.geojson",column = "LCZ_PRIMARY",geomID = "ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
 
 redonBDT<-importLCZvect(dirPath=dirPathBDT,file="rsu_lcz.geojson",column = "LCZ_PRIMARY",geomID = "ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
-```
 
-
-The function `confidSensib` performs the sensitivity analysis from the output of `compareLCZ`. One can choose to export the data in a csv file and reimport them, or one can simply store the output in an r file and feed it to `confidSensib.`
-```{r, fig.dim = c(8, 6)}
 redonCompare<-compareLCZ(sf1=redonBDT,wf1="bdt", geomID1 = "ID_RSU",column1 ="LCZ_PRIMARY",
                          confid1 = "LCZ_UNIQUENESS_VALUE",
-                         sf2=redonOSM,wf2="osm",geomID2 = "ID_RSU",column2="LCZ_PRIMARY",confid2 ="LCZ_UNIQUENESS_VALUE",exwrite=T,plot=FALSE)
+                         sf2=redonOSM,wf2="osm",geomID2 = "ID_RSU",column2="LCZ_PRIMARY",confid2 ="LCZ_UNIQUENESS_VALUE",exwrite=FALSE,plot=FALSE)
 ```
 
-NOTE : if the two data sets we compare have the same column names, the compareLCZ function will concatenate a ".1" string to the column names of the second file, and thes enriched names will be the ones to feed `confidSensib`.
+
+The function `confidSensib` performs the sensitivity analysis from the output of `compareLCZ`.
+
+NOTE : if the two data sets to compare have the same column names, 
+the compareLCZ function will concatenate a ".1" string to the column names of the second file, 
+so the enriched names will be the ones to feed `confidSensib`.
 
 The question we want to answer is : **Does the agreement between the two classification gets bigger if we keep only the geometries for which the LCZ value is associated to a confidence value bigger than a thershold?**
 

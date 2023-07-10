@@ -1,4 +1,4 @@
-#' Fetches the data from the Geomanum cloud, for locations already uploaded there by the Geoclimate team
+#' Fetches LCZ classification data, by default from the Geomanum cloud, for locations already uploaded there by the Geoclimate team
 #'
 #' @param location is the name of the place for which you want to get the GeoClimate data
 #' @param outDir is the path to the directory in which fetchLCZ will unpack the data

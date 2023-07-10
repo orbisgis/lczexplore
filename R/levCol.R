@@ -9,9 +9,9 @@
 #' @import dplyr sf
 #' @importFrom grDevices palette.colors
 #'
-#' @return output is a list containing levelColors, a named vector, which names are the levels
+#' @return output is a list containing levelsColors, a named vector, which names are the levels
 #' present in the data and which values are the associated colors,
-#' and case, a string spcifying what case was encountered when producing the levels and colors.
+#' and case, a string specifying what case was encountered when producing the levels and colors.
 #' @export
 #'
 #' @examples
@@ -103,7 +103,7 @@ if (length(args) == 0 ||
        names(typeLevels)<-uniqueData
       }
       else if (length(argCol) > length(uniqueData)) {
-        case<-"3.1 : No levels but a color vector which size is greater than the number of levels in the data, some colors were dropped. "
+        case<-"3.1 : No levels but a color vector which size is greater than the number of levels in the data, unused colors were dropped. "
         typeLevels<-argCol[1:length(uniqueData)]
         names(typeLevels)<-uniqueData
       }
@@ -122,8 +122,8 @@ if (length(args) == 0 ||
         names(typeLevels)<-argLev[[1]]
       } else if ( prod(uniqueData%in%argLev[[1]])==0 ){
         ########### Case where the levels do not cover the levels of unique Data
-        case<-"8: No color vector but a level vector whose names don't cover the levels in the data
-         Levels will be deduced from data and colors will be chosen from a standard palette."
+        case<-"8: No color vector but a level vector whose names don't cover the levels in the data.
+         Missing levels will be deduced from the data and colors will be chosen from a standard palette."
         temp<-unique(c(uniqueData,argLev[[1]]))
         typeLevels<-palette.colors(n=length(temp),palette="Polychrome 36")
         names(typeLevels)<-temp
@@ -162,8 +162,8 @@ if (length(args) == 0 ||
 
    if ( length(args)==2 && prod(unlist(args)=="")==0 && length(indCol)==0) {
 
-    case<-"13: No color vector is specified, there seems to be two ambiguous level vectors,
-        they will pasted and fed to the function again, and reduced to the following case. "
+    case<-"13: No color vector is specified and there seems to be two ambiguous level vectors,
+        they will pasted and fed to the function again, and reduced to the following case : "
     recall<-levCol(sf=sf,column=column,drop=drop,levels=c(argLev[[1]],argLev[[2]]))
     typeLevels<-recall$levelsColors
     case<-c(case,recall$case)      
@@ -183,7 +183,7 @@ if (length(args) == 0 ||
       typeLevels<-recall$levelsColors
       typeLevels<-typeLevels[!is.na(names(typeLevels))]
       case<-paste(
-        "Case one vector of levels, one vector of colors, either the same length (case 9: and 10:), or colors longer (case 12:, unused colors were dropped),
+        "One vector of levels, one vector of colors, either the same length (case 9: and 10:), or colors longer (case 12:, unused colors were dropped),
          reduced to ",
                   recall$case)
     } else  if (length(argLev[[1]]) > length(argCol)) {

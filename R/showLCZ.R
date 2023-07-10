@@ -17,8 +17,9 @@
 #' @import sf ggplot2 dplyr cowplot forcats grDevices
 #' @return no object is returned, but plots of the LCZ levels are produced
 #' @export
-#' @examples # On original LCZ levels, use the \'standard\' value for the \'repr\' argument.
-#' showLCZ(redonBDT,column="LCZ_PRIMARY", repr="standard")
+#' @examples 
+#' # On original LCZ levels, use the \'standard\' value for the \'repr\' argument.
+#' showLCZ(redonBDT, column="LCZ_PRIMARY", repr="standard")
 #' # On grouped data, use the alter value for the repr argument.
 #' redonBDTgrouped<-groupLCZ(redonBDT,column="LCZ_PRIMARY",
 #' urban=c("1","2","3","4","5","6","7","8","9"),

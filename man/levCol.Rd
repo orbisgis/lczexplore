@@ -19,9 +19,9 @@ levCol(sf, column, drop = FALSE, useStandCol = FALSE, ...)
 whose name must begin with colors. Other cases are handled to enhance usability.}
 }
 \value{
-output is a list containing levelColors, a named vector, which names are the levels
+output is a list containing levelsColors, a named vector, which names are the levels
 present in the data and which values are the associated colors,
-and case, a string spcifying what case was encountered when producing the levels and colors.
+and case, a string specifying what case was encountered when producing the levels and colors.
 }
 \description{
 Manages the levels and the colors of the LCZ columns

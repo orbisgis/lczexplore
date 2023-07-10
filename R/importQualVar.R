@@ -2,11 +2,12 @@
 #' from a geographical dataset (tested : geojson, shp, more to come)
 #'
 #' @param dirPath is the path of the directory of the file
-#' @param file is the name of the file from which the LCZ are imported
-#' @param column indicates the name of the column containing the qualitative variable to be imported
-#' @param geomID is the name of the column containing the ID of each geom to load. If an empty string, no column is loaded.
-#' @param confid is the name of the column containing a confidence indicator to filter geoms,
-#' for instance the uniqueness of the LCZ level of each geom
+#' @param file is the name of the file from which the variable is imported
+#' @param column indicates the name of the column containing the qualitative variable is imported
+#' @param geomID is the name of the column containing the ID of each geom to load. 
+#' If an empty string, no column is loaded.
+#' @param confid is the name of the column containing a confidence indicator, 
+#' for instance the uniqueness of the LCZ level of each geom, in order to filter geoms,
 #' @param output : if sfFile, the function returns an sfFile with the qualitative variable,
 #' if bBox, returns a bounding box one can use to crop a raster file or to intersect another sf file
 #' @param typeLevels the levels of the imported qualitative variable
