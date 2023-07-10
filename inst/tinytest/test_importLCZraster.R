@@ -1,11 +1,11 @@
-#This tests teh function importLCZgen
+#This tests teh function importLCZvect
 # library(tinytest)
 #
 # library(sf)
 
 # Test functionnal import
 
-redonBbox<-importLCZgen(dirPath=paste0(
+redonBbox<-importLCZvect(dirPath=paste0(
   system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),file="rsu_lcz.geojson",column="LCZ_PRIMARY",
   geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE",output="bBox")
 

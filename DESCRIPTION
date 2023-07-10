@@ -3,9 +3,9 @@ Title: lczexplore
 Version: 0.0.1.0002
 Authors@R: c(
     person("Matthieu", "Gousseff", , "matthieu.gousseff@univ-ubs.fr", role = c("aut", "cre")),
-    person(, "Centre National de la Recherche Scientifique, Lab-Sticc", role = "cph")
+    person(, "Centre National de la Recherche Scientifique, Lab-Sticc", role = "cph", comment = c(ORCID = "0000-0002-7106-2677"))
   )
-Description: This lczexplore package automatize the comparison of sets of local climate zone classifications.It was developped thanks to the project PAENDORA2 (Pour la gestion du confort estival : Données, Outils et Recherche-Action) (2022 -2025), funded by ADEME.
+Description: This lczexplore package automatize the comparison of sets of local climate zone classifications. It was developed thanks to the project PAENDORA2 (Pour la gestion du confort estival : Données, Outils et Recherche-Action) (2022 -2025), funded by ADEME.
 License: LGPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -22,6 +22,7 @@ Imports: RColorBrewer,
           units,
           rlang,
           grDevices,
+          DescTools,
           methods
 Suggests: 
     tinytest,

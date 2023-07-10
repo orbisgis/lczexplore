@@ -4,3 +4,8 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^docs$
+^\\.github$
+.github$
+^CITATION\.cff$
+^\\.gitignore$
+.gitignore$

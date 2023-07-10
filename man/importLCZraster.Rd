@@ -2,9 +2,9 @@
 % Please edit documentation in R/importLCZraster.R
 \name{importLCZraster}
 \alias{importLCZraster}
-\title{Imports the LCZ produced by the WUDAPT algorithm.
-For now, the function only allows import from the european tiff
-produced by WUDAPT. Users MSUT DOWNLOAD the WUDAPT tiff file
+\title{Imports the LCZ classifications produced on raster maps, mainly by the WUDAPT algorithm.
+For now, the function  import from the european tiff
+produced by WUDAPT. Users can DOWNLOAD the WUDAPT tiff file
 at the following url : https://figshare.com/articles/dataset/European_LCZ_map/13322450
 A future version may include the world data once a strategy is defined to deal with CRS.}
 \usage{
@@ -25,7 +25,7 @@ importLCZraster(
 \item{zone}{set to europe by default, may include world once a strategy is defined}
 
 \item{bBox}{bBox is the bounding box needed to crop the wudapt tiff file.
-It can be produced bu the importLCZgen function}
+It can be produced bu the importLCZvect function. It can either be of class bBox or of class sfc}
 
 \item{fileName}{is by default \'EU_LCZ_map.tif\' but can be changed for test prurposes. Will be useful when other zones will be added}
 
@@ -37,17 +37,30 @@ It can be produced bu the importLCZgen function}
 an sf file containing the geom and LCZ levels from the WUDAPT Europe tiff within the bBox bounding box
 }
 \description{
-Imports the LCZ produced by the WUDAPT algorithm.
-For now, the function only allows import from the european tiff
-produced by WUDAPT. Users MSUT DOWNLOAD the WUDAPT tiff file
+Imports the LCZ classifications produced on raster maps, mainly by the WUDAPT algorithm.
+For now, the function  import from the european tiff
+produced by WUDAPT. Users can DOWNLOAD the WUDAPT tiff file
 at the following url : https://figshare.com/articles/dataset/European_LCZ_map/13322450
 A future version may include the world data once a strategy is defined to deal with CRS.
 }
 \examples{
-redonBbox<-importLCZgen(dirPath=paste0(system.file("extdata", package = "lczexplore"),
+redonBbox<-importLCZvect(dirPath=paste0(system.file("extdata", package = "lczexplore"),
 "/bdtopo_2_2/Redon"), file="rsu_lcz.geojson",column="LCZ_PRIMARY", output="bBox")
 
 redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
 fileName="redonWudapt.tif",bBox=redonBbox)
 
+# the following example can only be executed when user has downloaded 
+# CONUS-wide LCZ map and Training Areas on WUDAPT website
+# sanDiegobBoxCoord<-st_sf(a=1:2, geom=st_sfc(
+#st_point(c(-117.175198,32.707289)),
+#st_point(c(-117.112198,32.750900)),crs = 4326
+#))
+#sanDiegoBbox<-st_bbox(sanDiegobBoxCoord)
+#sanDiegoWudapt<-importLCZraster(
+#dirPath="path_of_the_tiff",
+#fileName="CONUS_LCZ_map_NLCD_v1.0_epsg4326.tif",
+#column="CONUS_LCZ_map_NLCD_v1.0_epsg4326"
+#  ,bBox=sanDiegoBbox)
+#showLCZ(sanDiegoWudapt,column="CONUS_LCZ_map_NLCD_v1.0_epsg4326")
 }

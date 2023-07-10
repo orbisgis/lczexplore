@@ -11,7 +11,8 @@ showLCZ(
   column = "LCZ_PRIMARY",
   repr = "standard",
   drop = FALSE,
-  useStandCol = TRUE,
+  useStandCol = FALSE,
+  tryGroup = TRUE,
   ...
 )
 }
@@ -26,18 +27,18 @@ If the LCZ were produced by WUDAPT, use "wudapt".}
 
 \item{column}{is the column that contains the LCZ.}
 
-\item{repr}{indicates if the sf dataset contains standard LCZ levels,
-or alternative values, like grouped LCZ.
-If "standard" then an optimal set of cols is used to produce the plotted map.
-Else, colors can be specified with the cols argument.
-
-The values must at least cover the values of the column in the dataset, or it will be ignored.}
+\item{repr}{indicates if the sf dataset contains standarde LCZ levels or grouped LCZ.
+If "standard" then an optimal set of colors is used to produce the plotted map. Else, colors can be specified with the colors argument.}
 
 \item{drop}{indicates if you want to show the levels present in no geometry.}
 
 \item{useStandCol}{is set to TRUE implies that any levels detected as a standard LCZ level will receive the standard associated color}
 
-\item{...}{these dynamic dots allow you to pass arguments to specify levels expected in your dataset and colors associated to these levels}
+\item{tryGroup}{is set to TRUE when one wants to group and plot on the fly}
+
+\item{...}{these dynamic dots allow you to pass arguments to specify levels expected
+in your dataset and colors associated to these levels when not in the standard representation. You can pas your levels through a vector and you colors through another vector called colors.
+For more details about this, read the "lcz_explore_alter" vignette.}
 }
 \value{
 no object is returned, but plots of the LCZ levels are produced
@@ -47,14 +48,15 @@ Produces a simple representation of the LCZ contained in an sf file.
 }
 \examples{
 # On original LCZ levels, use the \'standard\' value for the \'repr\' argument.
-showLCZ(redonBDT,column="LCZ_PRIMARY", repr="standard")
+showLCZ(redonBDT, column="LCZ_PRIMARY", repr="standard")
 # On grouped data, use the alter value for the repr argument.
-redonBDTgrouped<-LCZgroup2(redonBDT,column="LCZ_PRIMARY",
+redonBDTgrouped<-groupLCZ(redonBDT,column="LCZ_PRIMARY",
 urban=c("1","2","3","4","5","6","7","8","9"),
 industry="10", vegetation=c("101","102","103","104"),
 impervious="105",pervious="106",water="107")
+# For repr="alter", you can specify colors and levels this way :
 showLCZ(redonBDTgrouped,column="grouped",repr="alter",
 LCZlevels=c("urban","industry","vegetation","impervious","pervious","water"),
-cols=c("red","black","green","grey","burlywood","blue"),wf="BD TOPO")
+colors=c("red","black","green","grey","burlywood","blue"),wf="BD TOPO")
 
 }

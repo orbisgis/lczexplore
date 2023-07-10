@@ -2,8 +2,10 @@
 % Please edit documentation in R/confidSensib.R
 \name{confidSensib}
 \alias{confidSensib}
-\title{Computes the agreement between LCZ classification on a range of values of
-an indicator of confidence granted to each LCZ classification. The input file or dataset must have been produced by compareLCZ function, or at least the columns must be in the same order.}
+\title{Computes the agreement between geographical (LCZ) classifications on a range of values of
+an indicator of confidence granted to each LCZ classification.
+The input file or dataset must have been produced by compareLCZ function,
+or at least the columns must be in the same order.}
 \usage{
 confidSensib(
   inputDf = "",
@@ -24,14 +26,14 @@ confidSensib(
 )
 }
 \arguments{
-\item{inputDf}{is an R file with geom IDs, LCZ classifications and
-a confidence value granted for the LCZ value of each geom. Ignored if filePath is not empty.}
+\item{inputDf}{is an R file with geom IDs, (LCZ) classifications and
+a confidence value granted for the (LCZ) classifications values of each geom. Ignored if filePath is not empty.}
 
 \item{filePath}{is the path to a csv file containing geom IDs, LCZ classifications and
 a confidence value granted for the LCZ value of each geom.}
 
 \item{nPoints}{is the number of points (quantiles) of confidence for which
-the average agreement between classifs will be computed}
+the average agreement between classifications will be computed}
 
 \item{wf1}{is the name of the workflow used to produce the first LCZ}
 
@@ -58,12 +60,14 @@ the average agreement between classifs will be computed}
 \item{saveG}{if not an empty string, specifies where to save graphs}
 }
 \value{
-returns an object called sortie, which contains the values of the thresholds
+returns an object called output, which contains the values of the thresholds
 for the confidence value and the agreement between classifications for the LCZ levels presents in the dataset
 }
 \description{
-Computes the agreement between LCZ classification on a range of values of
-an indicator of confidence granted to each LCZ classification. The input file or dataset must have been produced by compareLCZ function, or at least the columns must be in the same order.
+Computes the agreement between geographical (LCZ) classifications on a range of values of
+an indicator of confidence granted to each LCZ classification.
+The input file or dataset must have been produced by compareLCZ function,
+or at least the columns must be in the same order.
 }
 \examples{
 mainPath<-system.file("extdata", package = "lczexplore")

@@ -4,7 +4,7 @@
 \alias{levCol}
 \title{Manages the levels and the colors of the LCZ columns}
 \usage{
-levCol(sf, column, drop = FALSE, ...)
+levCol(sf, column, drop = FALSE, useStandCol = FALSE, ...)
 }
 \arguments{
 \item{sf}{is the input sf file}
@@ -13,17 +13,19 @@ levCol(sf, column, drop = FALSE, ...)
 
 \item{drop}{is set to TRUE if one wants to drop unused levels, in case column is a factor with unused levels}
 
+\item{useStandCol}{is set to TRUE if one wants recognized standard levels to be associated with standard colors. Default is FALSE}
+
 \item{...}{other parameters specified, expected a vector of levels and a vector of colors
-whose name must begin with cols. Other cases are handled to enhance usability.}
+whose name must begin with colors. Other cases are handled to enhance usability.}
 }
 \value{
-output is a list containing levelColors, a named vector, which names are the levels
+output is a list containing levelsColors, a named vector, which names are the levels
 present in the data and which values are the associated colors,
-and case, a string spcifying what case was encountered when producing the levels and colors.
+and case, a string specifying what case was encountered when producing the levels and colors.
 }
 \description{
 Manages the levels and the colors of the LCZ columns
 }
 \examples{
-#levCol is not to be used directly by user. It deals with levels and colors provided by the user
+#levCol2 is not to be used directly by user. It deals with levels and colors provided by the user
 }

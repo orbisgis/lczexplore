@@ -1,4 +1,4 @@
-#' Fetches the data from the Geomanum cloud, for locations already uploaded there by the Geoclimate team
+#' Fetches LCZ classification data, by default from the Geomanum cloud, for locations already uploaded there by the Geoclimate team
 #'
 #' @param location is the name of the place for which you want to get the GeoClimate data
 #' @param outDir is the path to the directory in which fetchLCZ will unpack the data
@@ -6,7 +6,7 @@
 #' @param refYear this parameters is integrated in the name given to the data, in order to allow to re-run the function according to the reference year. At the moment only 2022 data have been tried
 #' @param baseURL is the adress of the server where the function fetches the data. The data must be organised in a bdtopo_2_2 and an osm/year directories.
 #' This function is intended to be used by Paendora project members, so the default is the Geomanum Foundation cloud.
-#' @param ... allows to pass arguments from the produce analysis function to the LCZgroup2 and compareLCZ functions
+#' @param ... allows to pass arguments from the produce analysis function to the groupLCZ and compareLCZ functions
 #' @import utils methods
 
 
