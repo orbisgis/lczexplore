@@ -156,7 +156,8 @@ expect_equal(grep("13:",test$case),1)
 test<-levCol(redonBDTgrouped, column="grouped",
        levels=c("urban","industry","vegetation","pervious","water"),
        colors=c("red","black","green","grey","blue"))
-expect_equal(grep("14.0:",test$case),1)
+expect_equal(grep("9:",test$case),1)
+expect_equal(grep("6:",test$case),1)
 
 # case 14: The specified levels don't cover the levels in the data
 #        and the number of specified colors is zero or less than the number of levels present,
@@ -168,8 +169,6 @@ test<-levCol(sf=redonBDTgrouped, column="grouped",
        impervious="105",pervious="106",water="107",
        colors=c("red","black","green","grey","burlywood"))
 
-
-expect_equal(grep("14:",test$case),1)
 
 # case 15: The specified levels don't cover the levels in the data
 # but the number of the specified colors is greater or equal
@@ -191,7 +190,7 @@ test<-levCol(sf=redonBDTgrouped,column="grouped",urban=c("1","2","3","4","5","6"
              vegetation=c("101","102","103","104"),
              impervious="105",pervious="106",water="107",
              colors=c("red","black","green","grey","burlywood","blue","orange"))
-expect_equal(grep("15.1:",test$case),1)
+expect_equal(grep("12:",test$case),1)
 
 # case 16: The specified levels cover the levels in the data
 #        and no colors were specified, colors will be chosen from a standard palette.

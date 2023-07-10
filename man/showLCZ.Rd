@@ -12,6 +12,7 @@ showLCZ(
   repr = "standard",
   drop = FALSE,
   useStandCol = FALSE,
+  tryGroup = TRUE,
   ...
 )
 }
@@ -32,6 +33,8 @@ If "standard" then an optimal set of colors is used to produce the plotted map. 
 \item{drop}{indicates if you want to show the levels present in no geometry.}
 
 \item{useStandCol}{is set to TRUE implies that any levels detected as a standard LCZ level will receive the standard associated color}
+
+\item{tryGroup}{is set to TRUE when one wants to group and plot on the fly}
 
 \item{...}{these dynamic dots allow you to pass arguments to specify levels expected
 in your dataset and colors associated to these levels when not in the standard representation. You can pas your levels through a vector and you colors through another vector called colors.

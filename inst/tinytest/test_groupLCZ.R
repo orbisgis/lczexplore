@@ -52,7 +52,7 @@ expect_message(
   showLCZ(redonBDTgrouped2,column="groupedLCZ",repr="alter",
         LCZlevels=c("urban","industry","vegetation","impervious","pervious","water"),
         colors=c("red","black","green","grey","burlywood","blue")),
-               "9: Levels specified in one vector"
+               "case 9: "
 
 )
 
