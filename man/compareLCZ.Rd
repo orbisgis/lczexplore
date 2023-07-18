@@ -20,7 +20,7 @@ compareLCZ(
   ref = 1,
   repr = "standard",
   saveG = "",
-  exwrite = TRUE,
+  exwrite = FALSE,
   outDir = getwd(),
   location = "Your Place",
   plot = TRUE,

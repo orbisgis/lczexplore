@@ -66,7 +66,7 @@
 #' 
 compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
                      sf2,column2,geomID2="",confid2="",wf2="osm",ref=1,
-                     repr="standard",saveG="",exwrite=TRUE,outDir=getwd(),
+                     repr="standard",saveG="",exwrite=FALSE,outDir=getwd(),
                      location="Your Place", plot=TRUE, tryGroup=FALSE, ...){
 
 
