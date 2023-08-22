@@ -46,7 +46,7 @@ fetchLCZ<-function(location,outDir,wf="bdtopo_2_2",refYear="2022",
       folderToken<-1
     }
 
-  if (file.exists(destLCZfile)){message(' but an rsu_lcz.geojson already exists in this directory. \n If you think it is not the proper file
+  if (file.exists(destLCZfile)){message(' An rsu_lcz.geojson already exists in this directory. \n If you think it is not the proper file
               try deleting it and re-running the fetchLCZ function.')} else
   { if(file.exists(destFile)) {
       message('The zip file already exists and will be unzipped now.')
