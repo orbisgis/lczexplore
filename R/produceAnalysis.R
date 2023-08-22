@@ -46,6 +46,7 @@ produceAnalysis<-function(location="Redon",
   str(typeLevels)
  if(length(args2)!=length(typeLevels)) stop("You must specify as many colors as there are groups")
 
+  output<-list()
 
 # Download and import the first/reference dataset
 if (wf1=="bdtopo_2_2"){
@@ -108,20 +109,20 @@ if(repr=="standard"){
       condition<-((wf1=="osm" | wf1=="bdtopo_2_2") & (wf2=="bdtopo_2_2" | wf2=="osm"))
       if((wf1=="osm" | wf1=="bdtopo_2_2") & (wf2=="bdtopo_2_2" | wf2=="osm")){
         print("compareLCZ called")
-        return(
-          compareLCZ(sf1=df1, geomID1="ID_RSU", confid1="LCZ_UNIQUENESS_VALUE",
+        
+          output$compare<-compareLCZ(sf1=df1, geomID1="ID_RSU", confid1="LCZ_UNIQUENESS_VALUE",
                      column1="LCZ_PRIMARY", wf1=wf1,
                      sf2=df2,
                      column2="LCZ_PRIMARY", geomID2="ID_RSU", confid2="LCZ_UNIQUENESS_VALUE",wf2=wf2,
                      ref=1,
                      repr="standard", saveG=nameG, exwrite=TRUE,outDir=outDir,location=location)
-               )
+               
 
       }
 
       if(wf1=="wudapt"&& (wf2=="osm"|wf2=="bdtopo_v2")){
 
-        compareLCZ(sf1=df1,
+        output$compare<-compareLCZ(sf1=df1,
                    column1="EU_LCZ_map",
                    sf2=df2,
                    column2='LCZ_PRIMARY',
@@ -130,7 +131,7 @@ if(repr=="standard"){
 
       if(wf2=="wudapt"&& (wf1=="osm"|wf1=="bdtopo_v2")){
 
-          compareLCZ(sf1=df1,
+        output$compare<-compareLCZ(sf1=df1,
                      column1='LCZ_PRIMARY',
                      sf2=df2,
                      column2="EU_LCZ_map",
@@ -147,7 +148,7 @@ if(repr=="standard"){
 
       df1<-groupLCZ(df1,column="LCZ_PRIMARY",...)
       df2<-groupLCZ(df2,column="LCZ_PRIMARY",...)
-      compareLCZ(sf1=df1,
+      output$compare<-compareLCZ(sf1=df1,
                  column1='grouped',
                  sf2=df2,
                  column2='grouped',
@@ -157,7 +158,7 @@ if(repr=="standard"){
     if(wf1=="wudapt"&(wf2=="osm"|wf2=="bdtopo_2_2")){
       df1<-groupLCZ(df1,column="EU_LCZ_map",...)
       df2<-groupLCZ(df2,column="LCZ_PRIMARY",...)
-      compareLCZ(sf1=df1,
+      output$compare<-compareLCZ(sf1=df1,
                  column1='grouped',
                  sf2=df2,
                  column2='grouped',
@@ -166,7 +167,7 @@ if(repr=="standard"){
     if(wf2=="wudapt"&(wf1=="osm"|wf1=="bdtopo_2_2")){
       df1<-groupLCZ(df1,column="LCZ_PRIMARY",...)
       df2<-groupLCZ(df2,column="EU_LCZ_map",...)
-      compareLCZ(sf1=df1,
+      output$compare<-compareLCZ(sf1=df1,
                  column1='grouped',
                  sf2=df2,
                  column2='grouped',
@@ -175,4 +176,7 @@ if(repr=="standard"){
 
   }
  #  setwd(wd)
+  output$df1<-df1
+  output$df2<-df2
+  return(output)
 }
