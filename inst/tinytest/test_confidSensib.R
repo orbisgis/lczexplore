@@ -20,7 +20,10 @@ confidTest1<-confidSensib(inputDf=testSourceFact, filePath="", nPoints=5,
 "containing missing values")
 
 expect_warning(
-  confidTest2<-confidSensib(filePath=paste0(system.file("extdata", package = "lczexplore"),"/bdtopo_2_2_osm.csv"), nPoints=5,
+  confidTest2<-confidSensib(filePath=paste0(
+    system.file("extdata", package = "lczexplore"),
+    "/bdtopo_2_2_osm.csv"), 
+                           nPoints=5,
                            wf1="bdtopo_2_2", wf2="osm",
                            geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
                            geomID2="ID_RSU.1",column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1",

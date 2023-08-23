@@ -128,20 +128,30 @@ confidSensib<-function(inputDf="", filePath="", nPoints=5,
     data$Kept<-factor(data$Kept,levels=c("confidence >= threshold","confidence < threshold"))
     # graphics
 
-    etiquette<-paste0("average agreement percentage for LCZ with no confidence value : ",
-                      NAPercAgr," \n (these ",nbOutCasted," geoms are excluded from computing other points)")
-
+    etiquette<-paste0("average agreement percentage for \n LCZ with no confidence value : ",
+                      NAPercAgr,
+                      " \n (these ",
+                      nbOutCasted," geoms are excluded from computing other points)")
+    pointSize<-20/sqrt(nPoints)
     confThreshPlot<-ggplot(data=data, aes(x=Confidence, y=Agreement, color=Kept, shape=Kept))+
-      labs(x="Confidence threshold", color = "Geom set", shape="Geom set")+
-      scale_fill_discrete(breaks=c("confidence >= threshold","confidence < threshold"),)+
+      labs(color = "Kept Geometries", shape="Kept Geometries")+
+      #scale_fill_discrete(breaks=c("confidence >= threshold","confidence < threshold"),)+
       scale_color_manual(values =
                            c("confidence >= threshold" = "#00BFC4", "confidence < threshold" = "#F8766D"))+
-      geom_point() +
-      geom_text(aes(x=Confidence,y=Agreement,label=nbGeoms), nudge_y=-2)+
+      geom_point(size=rel(pointSize)) +
+      geom_text(aes(x=Confidence,y=Agreement,label=nbGeoms), nudge_y=-2,size=rel(pointSize),show.legend=FALSE)+
       geom_hline(yintercept=NAPercAgr,linetype='dashed',color='grey')+
-      geom_text(aes(x=0.50,y=NAPercAgr,label=etiquette,vjust=1.5),inherit.aes=F,color='darkgrey',size=4)+
+      geom_text(aes(x=0.50,y=NAPercAgr,label=etiquette,vjust=1.5,),
+                inherit.aes=F,color='darkgrey',size=rel(6))+
       ggtitle(label="Agreement according to the minimum confidence granted to LCZ level",
-              subtitle="Number of geoms used to compute agreement written under each point")
+              subtitle="Number of geoms used to compute agreement written under each point")+
+      theme(axis.title.x=element_text(size=rel(1.8)),
+            axis.title.y=element_text(size=rel(1.8)),
+            axis.text=element_text(size=rel(2)),
+            plot.title = element_text(size=rel(2)),
+            plot.subtitle = element_text(size=rel(2)),
+            legend.title=element_text(size=rel(1.8)),
+            legend.text = element_text(size=rel(1.5)) )
 
     ctOut<-list(ctPlot=confThreshPlot,ctData=data)
     return(ctOut)
@@ -180,17 +190,25 @@ typeLevels<-unique(echIntConf[,column1]) %>% as.vector
  for (i in names(sortieParLCZ)){
     output<-rbind(output,cbind(sortieParLCZ[[i]],LCZ=rep(i,nrow(sortieParLCZ[[i]]))))
  }
-
+  
+ pointSize<-13/sqrt(nPoints)
  byLCZPLot<-ggplot(data=output, aes(x=Confidence, y=Agreement, color=Kept, shape=Kept))+
-   labs(x="Confidence threshold", color = "Geom set", shape="Geom set")+
+   labs(x="Confidence threshold", color = "Geom set", shape="Geom set",size=rel(1.3))+
    scale_fill_discrete(breaks=c("confidence >= threshold","confidence < threshold"),)+
    scale_color_manual(values =
                         c("confidence >= threshold" = "#00BFC4", "confidence < threshold" = "#F8766D"))+
-   geom_point() +
-   geom_text(aes(x=Confidence,y=Agreement,label=nbGeoms), nudge_y=-4.3)+
+   geom_point(size=rel(pointSize)) +
+   geom_text(aes(x=Confidence,y=Agreement,label=nbGeoms), nudge_y=-6.3,show.legend=FALSE,size=rel(pointSize))+
    ggtitle(label="Agreement by minimum confidence within LCZ level",
            subtitle="Number of geoms used to compute agreement written under each point")+
-   facet_wrap(~LCZ, drop=TRUE)
+   facet_wrap(~LCZ, drop=TRUE)+
+   theme(axis.title.x=element_text(size=rel(1.8)),
+         axis.title.y=element_text(size=rel(1.8)),
+         axis.text=element_text(size=rel(1.6)),
+         plot.title = element_text(size=rel(2)),
+         plot.subtitle = element_text(size=rel(1.8)),
+         legend.title=element_text(size=rel(1.8)),
+          legend.text = element_text(size=rel(1.5)))
 
 
  if (plot==TRUE){
