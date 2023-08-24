@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 )
 
 if (!require("png")) {
-  install.packages("png")
+  install.packages("png",repos = "http://cran.us.r-project.org")
   library("png")
 }
 
