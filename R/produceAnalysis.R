@@ -35,8 +35,7 @@ produceAnalysis<-function(location="Redon",
                           wf1="bdtopo_2_2",
                           wf2="osm",refYear1="2022",refYear2="2022",repr="standard",saveG=location,...)
 {
- wd<-getwd()
-#setwd(outDir)
+ 
   args<-list(...)
   indSep<-names(args)
   indCol<-grep(x=indSep,pattern="colors")
@@ -106,7 +105,7 @@ if(repr=="standard"){
           nameG<-paste0(location,"_",wf1,"_",wf2,"_",repr)
 
       # Compare LCZ
-      condition<-((wf1=="osm" | wf1=="bdtopo_2_2") & (wf2=="bdtopo_2_2" | wf2=="osm"))
+      
       if((wf1=="osm" | wf1=="bdtopo_2_2") & (wf2=="bdtopo_2_2" | wf2=="osm")){
         print("compareLCZ called")
         
