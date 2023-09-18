@@ -568,6 +568,12 @@ utrfComparison<-
 
 ![Example of comparison on a qualitative variable (UTRF)](compareQualVar.png)
 
+# Licensing, availability and contribution
+lczexplore is licensed under the GNU Lesser General Public License (v3.0), with all source
+code stored at GitHub. In the spirit of honest and open science, requests and suggestions
+for fixes, feature updates, as well as general questions and concerns are encouraged via direct
+interaction with contributors and developers by filing an issue while respecting Contribution
+Guidelines.
 
 # Research projects involving lczexplore
 
