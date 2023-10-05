@@ -99,3 +99,10 @@ expect_warning(importLCZvect(dirPath=paste0(system.file("extdata", package = "lc
                        "105"="105","106"="106","101"="11","102"="12","103"="13","104"="14",
                        "105"="15", "106"="16","107"="17"),drop=T),
              "The levels you specified with the typeLevels argument don't cover the LCZ values")
+
+
+# test if the drop argument allows to keep or drop comun other than specified
+test<-importLCZvect(dirPath=paste0(
+  system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),file="rsu_lcz.geojson",
+              column="LCZ_PRIMARY",geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE",drop=FALSE)
+expect_equal("LCZ_SECONDARY"%in%names(test),TRUE)
