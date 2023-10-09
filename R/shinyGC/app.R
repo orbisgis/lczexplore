@@ -4,16 +4,16 @@ library(shiny)
 ui <- fluidPage(
 
   # App title ----
-  titlePanel("Run Geoclimate with OSM Data on a location"),
+  titlePanel("Run Geoclimate on OSM Data"),
 
   # Sidebar layout with input and output definitions ----
   sidebarLayout(
 
     # Sidebar panel for inputs ----
     sidebarPanel(
-
-      # Input: Slider for the number of bins ----
-      
+      textInput(inputId="location",label="Enter your locations here",
+                value="Redon",placeholder="A town name or some coordinates")
+     
 
     ),
 
@@ -21,7 +21,10 @@ ui <- fluidPage(
     mainPanel(
 
       # Output: Histogram ----
-      plotOutput(outputId = "distPlot")
+      renderText(
+         
+        
+      )
 
     )
   )
@@ -29,25 +32,19 @@ ui <- fluidPage(
 
 # Define server logic required to draw a histogram ----
 server <- function(input, output) {
-
-  # Histogram of the Old Faithful Geyser Data ----
-  # with requested number of bins
-  # This expression that generates a histogram is wrapped in a call
-  # to renderPlot to indicate that:
-  #
-  # 1. It is "reactive" and therefore should be automatically
-  #    re-executed when inputs (input$bins) change
-  # 2. Its output type is a plot
-  output$distPlot <- renderPlot({
-
-    x    <- faithful$waiting
-    bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-    hist(x, breaks = bins, col = "#007bc2", border = "white",
-         xlab = "Waiting time to next eruption (in mins)",
-         main = "Histogram of waiting times")
-
-  })
+ 
+  output$configFile<-geoClimateConfigFile(outFile="", wf="osm",outFolder="/tmp",locations=input$location,
+                                          rsuIndics = c("LCZ","TEB","UTRF"),
+                                          gridIndics = c("BUILDING_FRACTION",
+                                                         "BUILDING_HEIGHT",
+                                                         "WATER_FRACTION",
+                                                         "VEGETATION_FRACTION",
+                                                         "ROAD_FRACTION",
+                                                         "IMPERVIOUS_FRACTION",
+                                                         "LCZ_PRIMARY",
+                                                         "LCZ_FRACTION",
+                                                         "UTRF"))
+ 
 
 }
 
