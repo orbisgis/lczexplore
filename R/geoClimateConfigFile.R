@@ -89,9 +89,9 @@ return(output)
   
 }
 
- test<-geoClimateConfigFile(outFile="", wf="osm",outFolder="/tmp",locations="Redon",
- rsuIndics = c("LCZ","TEB","UTRF"),
- gridIndics = c("BUILDING_FRACTION","BUILDING_HEIGHT","WATER_FRACTION","VEGETATION_FRACTION","ROAD_FRACTION",
- "IMPERVIOUS_FRACTION","LCZ_PRIMARY","LCZ_FRACTION","UTRF"))
- test
+ # test<-geoClimateConfigFile(outFile="", wf="osm",outFolder="/tmp",locations="Allaire",
+ # rsuIndics = c("LCZ","TEB","UTRF"),
+ # gridIndics = c("BUILDING_FRACTION","BUILDING_HEIGHT","WATER_FRACTION","VEGETATION_FRACTION","ROAD_FRACTION",
+ # "IMPERVIOUS_FRACTION","LCZ_PRIMARY","LCZ_FRACTION","UTRF"))
+ # test
 
