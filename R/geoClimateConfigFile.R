@@ -97,7 +97,7 @@ outFolder<-list(folder=unbox(outFolder))
 )    
 
     
-listJSON = list(input=input,output=outFolder,parameters=parameters) #description=unbox(description),    
+listJSON <- list(input=input,output=outFolder,parameters=parameters) #description=unbox(description),    
     
 output<-toJSON(x=listJSON,
                pretty=TRUE)
@@ -110,11 +110,4 @@ write(output,file=paste0(outDir,"/",outFile,".json"))
 return(output)
   
 }
-
-# library(jsonlite) 
-# test<-geoClimateConfigFile(outFile="", wf="BDTOPO_V2.2",outFolder="/tmp",locations="Allaire",
-#  rsuIndics = c("LCZ","TEB","UTRF"),
-#  gridIndics = c("BUILDING_FRACTION","BUILDING_HEIGHT","WATER_FRACTION","VEGETATION_FRACTION","ROAD_FRACTION",
-#  "IMPERVIOUS_FRACTION","LCZ_PRIMARY","LCZ_FRACTION","UTRF"))
-#  test
 
