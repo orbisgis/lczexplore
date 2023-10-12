@@ -51,17 +51,39 @@ geoClimateConfigFile<-function(locations, wf,
                                             "LCZ_FRACTION",
                                             "UTRF"),
                                outDir = "/tmp",
-                               outFile="") {
-if (wf=="osm"){description<-"Processing OSM data"} else {
-    if (wf=="bdt2") {description<-"Processing BDTopo v2 data"}
-}
+                               outFile="",
+                               BDTinFolder="",BDTinseeCode=29301) {
+  print(wf)
 
+  description<-"Test de description unique"
+  
+    # if (wf=="OSM"){description<-"Processing OSM data"} else {
+    # if (wf=="BDTOPO_V2.2") {description<-"Processing BDTopo v2 data"} else {
+    # if (wf=="BDTOPO_V3") {
+    #   description<-"Processing BDTopo v2 data"}
+    #  else { description<-paste0("Processing on an unrecognized workflow: ", wf)
+    # }
+    # }
+    # }
+
+
+  
 # description<-list(description = description)
 # input<-list(input=list(locations=locations))
-  
+
 outFolder<-list(folder=unbox(outFolder))
   
-parameters<-list(
+      
+# if (wf == "osm"){
+  input=list(locations=locations)
+#   } else {if (grep("BDT",wf)) {
+#   input=list(folder=BDTinFolder,locations=BDTinseeCode)
+# }
+# }
+
+
+
+  parameters<-list(
   rsu_indicators = list(
     indicatorUse = rsuIndics,
     svSimplified = unbox(svSimplified),
@@ -75,7 +97,7 @@ parameters<-list(
 )    
 
     
-listJSON = list(description=description,input=list(locations=locations),output=outFolder,parameters=parameters)    
+listJSON = list(input=input,output=outFolder,parameters=parameters) #description=unbox(description),    
     
 output<-toJSON(x=listJSON,
                pretty=TRUE)
@@ -89,9 +111,10 @@ return(output)
   
 }
 
- # test<-geoClimateConfigFile(outFile="", wf="osm",outFolder="/tmp",locations="Allaire",
- # rsuIndics = c("LCZ","TEB","UTRF"),
- # gridIndics = c("BUILDING_FRACTION","BUILDING_HEIGHT","WATER_FRACTION","VEGETATION_FRACTION","ROAD_FRACTION",
- # "IMPERVIOUS_FRACTION","LCZ_PRIMARY","LCZ_FRACTION","UTRF"))
- # test
+# library(jsonlite) 
+# test<-geoClimateConfigFile(outFile="", wf="BDTOPO_V2.2",outFolder="/tmp",locations="Allaire",
+#  rsuIndics = c("LCZ","TEB","UTRF"),
+#  gridIndics = c("BUILDING_FRACTION","BUILDING_HEIGHT","WATER_FRACTION","VEGETATION_FRACTION","ROAD_FRACTION",
+#  "IMPERVIOUS_FRACTION","LCZ_PRIMARY","LCZ_FRACTION","UTRF"))
+#  test
 
