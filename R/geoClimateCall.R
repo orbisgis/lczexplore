@@ -26,19 +26,19 @@ geoClimateCall<-function(jarFilePath,configFilePath,wf="OSM") {
  
 }
 
-test<-geoClimateConfigFile(outFile="", wf="osm",outFolder="/tmp",locations="Allaire",
-                           rsuIndics = c("LCZ","TEB","UTRF"),
-                           gridIndics = c("BUILDING_FRACTION",
-                                          "BUILDING_HEIGHT",
-                                          "WATER_FRACTION",
-                                          "VEGETATION_FRACTION",
-                                          "ROAD_FRACTION",
-                                          "IMPERVIOUS_FRACTION",
-                                          "LCZ_PRIMARY",
-                                          "LCZ_FRACTION",
-                                          "UTRF"))
-
- geoClimateCall(
- jarFilePath= "/home/gousseff/Documents/2_CodesSources/GeoClimate/GeoClimateDefaultCaseV2/geoclimate-0.0.2-SNAPSHOT.jar",
- configFilePath="/tmp/Redonosm.json",w="osm")
- test
+# test<-geoClimateConfigFile(outFile="", wf="osm",outFolder="/tmp",locations="Allaire",
+#                            rsuIndics = c("LCZ","TEB","UTRF"),
+#                            gridIndics = c("BUILDING_FRACTION",
+#                                           "BUILDING_HEIGHT",
+#                                           "WATER_FRACTION",
+#                                           "VEGETATION_FRACTION",
+#                                           "ROAD_FRACTION",
+#                                           "IMPERVIOUS_FRACTION",
+#                                           "LCZ_PRIMARY",
+#                                           "LCZ_FRACTION",
+#                                           "UTRF"))
+# 
+#  geoClimateCall(
+#  jarFilePath= "/home/gousseff/Documents/2_CodesSources/GeoClimate/GeoClimateDefaultCaseV2/geoclimate-0.0.2-SNAPSHOT.jar",
+#  configFilePath="/tmp/Redonosm.json",w="osm")
+#  test
