@@ -15,7 +15,7 @@
 #' in your dataset and colors associated to these levels when not in the standard representation. You can pas your levels through a vector and you colors through another vector called colors. 
 #' For more details about this, read the "lcz_explore_alter" vignette. 
 #' @import sf ggplot2 dplyr cowplot forcats grDevices
-#' @return no object is returned, but plots of the LCZ levels are produced
+#' @return return the plot of the LCZ levels
 #' @export
 #' @examples 
 #' # On original LCZ levels, use the \'standard\' value for the \'repr\' argument.
@@ -159,9 +159,15 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
       ggtitle(wtitre)
  }
 
-  if (repr=="standard"){print(pstandard)}
+  if (repr=="standard"){
+    print(pstandard)
+    return(pstandard)
+  }
     else {
-      if (repr=="alter"){print(palter)}
+      if (repr=="alter"){
+        print(palter)
+      return(palter)
+      }
       else {stop("the repr argument must be \"standard\" or \"alter\" ")}
     }
   

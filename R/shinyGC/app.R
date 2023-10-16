@@ -5,9 +5,17 @@ library(magrittr)
 
 # Define UI for app that draws a histogram ----
 ui <- fluidPage(
+  h1(" This application helps build a configuration file to feed to geoclimate"),
+  h2(" The OSM workflow allows to run GeoClimate on any given city."), 
+  h2("For BD TOPO workflows, the user has to provide a path to the input data"),
+  h2(" It is not possible to build a configuration files using bounding box coordinates yet."),
   
   tabsetPanel(
-  
+  ############################################
+  ##
+  ## Tab to create the config file
+  ##
+  ############################################
     tabPanel("Create your  GeoClimate configuration JSON file",
 
   # Sidebar layout with input and output definitions ----
@@ -27,7 +35,7 @@ ui <- fluidPage(
             condition='input.wf!="OSM"',
           shinyDirButton("BDTinFolder",
                        label = "BD_TOPO folder",
-                       title = "Choose in which folder are the BD_TOPO files",FALSE),
+                       title = "Choose in which folder are the BD_TOPO files"),
             checkboxInput("forceSRID",label="Force SRID of BD TOPO inputs to 2154",value=FALSE),
             textInput(inputId="inseeCode", label="Enter Insee code of your location (town)", value = "29031")
           ),
@@ -40,6 +48,12 @@ ui <- fluidPage(
 
         checkboxGroupInput(inputId="rsuIndics",label = "Choose the indicators to compute at RSU scale",
              choices=c("LCZ","TEB","UTRF"),selected=c("LCZ")),
+        fluidRow(
+          column( width = 4, checkboxInput(inputId = "svfSimple", 
+                         label = "Use simplified algorithm for sky view factor",
+                         value = TRUE)),
+          column(width = 4, checkboxInput(inputId = "EstimateHeight", label = "Estimate missing building heights", value = TRUE))
+        ),
         
         checkboxGroupInput(inputId="gridIndics",label = "Choose the indicators to compute at grid scale",
              choices=c("BUILDING_FRACTION",
@@ -51,9 +65,11 @@ ui <- fluidPage(
                        "LCZ_FRACTION"),
              selected=c("BUILDING_FRACTION"
                         )),
+        numericInput(inputId="xGridSize", label="Choose the x size for the grid", value = 100, min = 10, max = 1000, step = 10),
+        numericInput(inputId="yGridSize", label="Choose the y size for the grid", value = 100, min = 10, max = 1000, step = 10),
         shinyDirButton("configDirOut",
                          label = "Folder to export config File",
-                         title = "Choose in which folder to export the config file",FALSE),
+                         title = "Choose in which folder to export the config file"),
           textInput(inputId="configOutFile",
                     label="Name your configuration file (without extension)",
                     value=""),
@@ -63,25 +79,39 @@ ui <- fluidPage(
     
       ,
 
-      # Main panel for displaying outputs ----
+      # Main panel for displaying config file ----
       mainPanel(
         titlePanel(title="Here is the content of the JSON configuration file you are building"),
       
-        verbatimTextOutput("configJSON"),
+        verbatimTextOutput("configJSON")
+        
         
       )
       )
     ),
     
+  ############################################
+  ##
+  ## tab to call geoclimate and show results
+  ##
+  ############################################
     tabPanel("Call the system to launch Geoclimate with your configuration file and parameters",
-             
+             sidebarLayout(
+               sidebarPanel(
              shinyFilesButton(id="jarFile",title="Path to geoclimate jarfile", 
                               label="Path to geoclimate jarfile",
                               multiple=FALSE,filters=list("jar files"=c("jar"))),
              
-             actionButton(inputId="runGC",label="run GeoClimate with these parameters"),
-             verbatimTextOutput("outMessage", placeholder = TRUE)
+             actionButton(inputId = "runGC",label = "Run GeoClimate with these parameters"),
+             verbatimTextOutput("outMessage", placeholder = TRUE),
+             actionButton(inputId = "showPlot", label = "View the outputs once GeoClimate executed successfully ")),
+             mainPanel(
+               verbatimTextOutput("folderImport"),
+               plotOutput("LCZplot")
+             )
+             
     )
+  )
   )
 )
 
@@ -92,7 +122,9 @@ server <- function(input, output,session) {
   shinyFiles::shinyDirChoose(input, 'outFolder', roots=getVolumes()(),
                                  defaultPath = "", allowDirCreate = TRUE )
   outFolder<-reactive({
-        parseDirPath(roots=getVolumes()(), selection=input$outFolder) })
+    gsub(
+      "//","/",
+        parseDirPath(roots=getVolumes()(), selection=input$outFolder)) })
   
   shinyFiles::shinyDirChoose(input, id="BDTinFolder", roots=getVolumes()(), defaultPath = "" )
   
@@ -123,6 +155,10 @@ server <- function(input, output,session) {
             outFolder = gsub("//","/",outFolder()) ,
             locations = input$location,
             forceSRID=input$forceSRID,
+            svfSimplified = input$svfSimple,
+            estimatedHeight = input$EstimateHeight,
+            grid_x_size = input$xGridSize,
+            grid_y_size = input$yGridSize,
             rsuIndics = input$rsuIndics,
             gridIndics = input$gridIndics,
             BDTinseeCode = input$inseeCode, 
@@ -140,6 +176,8 @@ observeEvent(
     locations = input$location,
     forceSRID=input$forceSRID,
     rsuIndics = input$rsuIndics,
+    grid_x_size = input$xGridSize,
+    grid_y_size = input$yGridSize,
     gridIndics = input$gridIndics,
     BDTinseeCode = input$inseeCode,
     BDTinFolder= BDTinFolder(),
@@ -169,8 +207,32 @@ observeEvent(
                    wf=input$wf)
   }
 )
+
+  ############################################
+  ##
+  ## Visualize GC outputs
+  ##
+  ############################################
+
+  wf<- reactive({input$wf})
   
+  LCZpath<-reactive({if ( wf() == "OSM"){ paste0(outFolder(),"/osm_",input$location,"/") }  else
+    if (wf() == "BDTOPO_V2") {paste0(outFolder(),"/bdtopo_2_",input$inseeCode,"/") }})
   
+  output$folderImport<-renderText({
+    LCZpath()
+  })
+
+observeEvent(
+  input$showPlot,{
+  sf1<-importLCZvect(dirPath=LCZpath())
+  print(summary(sf1))
+  LCZplot<-showLCZ(sf1)
+  output$LCZplot<-renderPlot({
+    LCZplot
+  })
+})
+
 }
 
 shinyApp(ui = ui, server = server)

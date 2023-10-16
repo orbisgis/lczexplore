@@ -5,7 +5,7 @@
 #' BD TOPO of IGN should be added when an online database is available. 
 #' @param outFolder indicates where the results of GeoClimate will be put
 #' @param rsuIndics is a vector with the indicators one wants to compute at the RSU scale. The default is c("LCZ","TEB","UTRF"),
-#' @param svSimplified uses the simplified method to calculate skyview factor, default = TRUE
+#' @param svfSimplified uses the simplified method to calculate skyview factor, default = TRUE
 #' @param estimatedHeight uses an algorithm to esitmate the missing building height, default = TRUE
 #' @param grid_x_size is the x size for the grid if some grid indicators are to be computed, default=100
 #' @param grid_y_size is the x size for the grid if some grid indicators are to be computed, default=100
@@ -36,13 +36,13 @@
 geoClimateConfigFile<-function(wf,locations,forceSRID=FALSE, 
                                outFolder="/tmp",
                                rsuIndics=c("LCZ","TEB","UTRF"),
-                               svSimplified = TRUE,
-                               estimatedHeight=TRUE,
-                               grid_x_size=100,
-                               grid_y_size=100,
-                               rowCol=FALSE,
-                               outputType="geojson",
-                               gridIndics=c("BUILDING_FRACTION",
+                               svfSimplified = TRUE,
+                               estimatedHeight = TRUE,
+                               grid_x_size = 100,
+                               grid_y_size = 100,
+                               rowCol = FALSE,
+                               outputType = "geojson",
+                               gridIndics = c("BUILDING_FRACTION",
                                             "BUILDING_HEIGHT",
                                             "WATER_FRACTION",
                                             "VEGETATION_FRACTION",
@@ -52,10 +52,10 @@ geoClimateConfigFile<-function(wf,locations,forceSRID=FALSE,
                                             "LCZ_FRACTION",
                                             "UTRF"),
                                outConfigDir = "/tmp",
-                               outConfigFile="configFile",
-                               BDTinFolder="",BDTinseeCode=29301,
-                               writeNow=FALSE) {
-  description<-"Test de description unique"
+                               outConfigFile = "configFile",
+                               BDTinFolder = "",BDTinseeCode=29301,
+                               writeNow = FALSE) {
+  # description<-"Test de description unique"
   
     if (wf=="OSM"){description<-"Processing OSM data"} else {
     if (wf=="BDTOPO_V2.2") {description<-"Processing BDTopo v2 data"} else {
@@ -107,7 +107,7 @@ if (wf == "OSM"){
   parameters<-list(
   rsu_indicators = list(
     indicatorUse = rsuIndics,
-    svSimplified = unbox(svSimplified),
+    svSimplified = unbox(svfSimplified),
     estimatedHeight = unbox(estimatedHeight)),
   grid_indicators = list(
     x_size = unbox(grid_x_size), y_size = unbox(grid_y_size),
