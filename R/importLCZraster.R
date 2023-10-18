@@ -20,10 +20,20 @@
 #'
 #' @examples
 #' redonBbox<-importLCZvect(dirPath=paste0(system.file("extdata", package = "lczexplore"),
-#' "/bdtopo_2_2/Redon"), file="rsu_lcz.geojson",column="LCZ_PRIMARY", output="bBox")
+#' "/bdtopo_2_2/Redon"), file="rsu_lcz.geojson", column="LCZ_PRIMARY", output="bBox")
 #'
 #' redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
 #' fileName="redonWudapt.tif",bBox=redonBbox)
+#' 
+#' # another way to get the bounding box when one explores a given city would be the use of the 
+#' # getbb() function from the osmdata package. 
+#' # This exaample requires the osmdata package and therefore is not executed here
+#' # redonBbox<-osmdata::getbb("Redon")
+#' # redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
+#' # fileName="redonWudapt.tif",bBox=redonBbox)
+#' 
+#' # another way to get the bounding box when one doesn't want to compare to a vector map is to enter it's coordinates 
+#' # and feed them to st_bbox() of the sf package. 
 #' 
 #' # the following example can only be executed when user has downloaded 
 #' # CONUS-wide LCZ map and Training Areas on WUDAPT website
@@ -37,7 +47,7 @@
 #' #fileName="CONUS_LCZ_map_NLCD_v1.0_epsg4326.tif",
 #' #column="CONUS_LCZ_map_NLCD_v1.0_epsg4326"
 #' #  ,bBox=sanDiegoBbox)
-#' #showLCZ(sanDiegoWudapt,column="CONUS_LCZ_map_NLCD_v1.0_epsg4326")
+#' #showLCZ(sanDiegoWudapt, column="CONUS_LCZ_map_NLCD_v1.0_epsg4326")
 importLCZraster<-function(dirPath,zone="europe",bBox,fileName="EU_LCZ_map.tif", column='EU_LCZ_map',
                           typeLevels=c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",
                            "9"="9","10"="10","101"="11","102"="12","103"="13","104"="14",
