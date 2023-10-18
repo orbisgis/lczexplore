@@ -1,7 +1,13 @@
 library(shiny)
 library(shinyFiles)
+library(ggplot2)
 library(lczexplore)
 library(magrittr)
+library(osmdata)
+library(sf)
+#devtools::install_github("elipousson/getdata")
+library(getdata)
+
 
 # Define UI for app that draws a histogram ----
 ui <- fluidPage(
@@ -37,7 +43,7 @@ ui <- fluidPage(
                        label = "BD_TOPO folder",
                        title = "Choose in which folder are the BD_TOPO files"),
             checkboxInput("forceSRID",label="Force SRID of BD TOPO inputs to 2154",value=FALSE),
-            textInput(inputId="inseeCode", label="Enter Insee code of your location (town)", value = "29031")
+            textInput(inputId="inseeCode", label="Enter Insee code of your location (town)", value = "29162")
           ),
       
           conditionalPanel(
@@ -104,10 +110,13 @@ ui <- fluidPage(
              
              actionButton(inputId = "runGC",label = "Run GeoClimate with these parameters"),
              verbatimTextOutput("outMessage", placeholder = TRUE),
-             actionButton(inputId = "showPlot", label = "View the outputs once GeoClimate executed successfully ")),
+             actionButton(inputId = "showPlot", label = "View the outputs once GeoClimate executed successfully "),
+             actionButton(inputId = "showSourceData", label = "View the source data used to compute the LCZ ")),
+               
              mainPanel(
                verbatimTextOutput("folderImport"),
-               plotOutput("LCZplot")
+               plotOutput("LCZplot"),
+               plotOutput("sourceDataPlot")
              )
              
     )
@@ -233,6 +242,31 @@ observeEvent(
   })
 })
 
+observeEvent(
+  input$showSourceData,{
+  zone<-read_sf(paste0(LCZpath(),"zone.geojson"))
+  buildings<-read_sf(paste0(LCZpath(),"/building.geojson"))  %>% st_intersection(zone)
+  roads<-read_sf(paste0(LCZpath(),"/road.geojson")) %>% st_intersection(zone)
+  vegetation<-read_sf(paste0(LCZpath(),"/vegetation.geojson")) %>% st_intersection(zone)
+  water<-read_sf(paste0(LCZpath(),"/water.geojson")) %>% st_intersection(zone)
+  
+  
+
+  sourceDataPlot<-ggplot()+
+    geom_sf(data=vegetation,aes(),fill="#bbdb7a")+
+    geom_sf(data=water,aes(),fill="blue")+
+    geom_sf(data=roads,aes(),fill="black")+
+     geom_sf(data=buildings,aes(),fill="grey")
+       
+  
+  output$sourceDataPlot<-renderPlot({
+    sourceDataPlot
+  })
+  
+
+  })
+ 
+  
 }
 
 shinyApp(ui = ui, server = server)
