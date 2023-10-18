@@ -27,9 +27,10 @@ importLCZraster(
 \item{bBox}{bBox is the bounding box needed to crop the wudapt tiff file.
 It can be produced bu the importLCZvect function. It can either be of class bBox or of class sfc}
 
-\item{fileName}{is by default \'EU_LCZ_map.tif\' but can be changed for test prurposes. Will be useful when other zones will be added}
+\item{fileName}{is the name of the raster file (tif or geotif), by default \'EU_LCZ_map.tif\' .
+Will be useful when other zones will be added}
 
-\item{column}{indicates the name of the column which will contain the LCZ read from the raster file (tif or geo tif)}
+\item{column}{indicates the name of the column which will contain the LCZ in the output file}
 
 \item{typeLevels}{indicates a named vector of the unique values contained in column,}
 }
@@ -57,7 +58,8 @@ fileName="redonWudapt.tif",bBox=redonBbox)
 # redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
 # fileName="redonWudapt.tif",bBox=redonBbox)
 
-# another way to get the bounding box when one doesn't want to compare to a vector map is to enter it's coordinates 
+# another way to get the bounding box when one doesn't want 
+#to compare to a vector map is to enter it's coordinates 
 # and feed them to st_bbox() of the sf package. 
 
 # the following example can only be executed when user has downloaded 
