@@ -24,7 +24,7 @@
 #'
 #' redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
 #' fileName="redonWudapt.tif",bBox=redonBbox)
-#' 
+#' showLCZ(redonWudapt, column="EU_LCZ_map")
 #' # the following example can only be executed when user has downloaded 
 #' # CONUS-wide LCZ map and Training Areas on WUDAPT website
 #' # sanDiegobBoxCoord<-st_sf(a=1:2, geom=st_sfc(
@@ -35,8 +35,7 @@
 #' #sanDiegoWudapt<-importLCZraster(
 #' #dirPath="path_of_the_tiff",
 #' #fileName="CONUS_LCZ_map_NLCD_v1.0_epsg4326.tif",
-#' #column="CONUS_LCZ_map_NLCD_v1.0_epsg4326"
-#' #  ,bBox=sanDiegoBbox)
+#' #,bBox=sanDiegoBbox)
 #' #showLCZ(sanDiegoWudapt,column="CONUS_LCZ_map_NLCD_v1.0_epsg4326")
 importLCZraster<-function(dirPath,zone="europe",bBox,fileName="EU_LCZ_map.tif", column='EU_LCZ_map',
                           typeLevels=c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",
