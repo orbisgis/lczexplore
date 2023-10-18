@@ -45,7 +45,7 @@ A future version may include the world data once a strategy is defined to deal w
 }
 \examples{
 redonBbox<-importLCZvect(dirPath=paste0(system.file("extdata", package = "lczexplore"),
-"/bdtopo_2_2/Redon"), file="rsu_lcz.geojson",column="LCZ_PRIMARY", output="bBox")
+"/bdtopo_2_2/Redon"), file="rsu_lcz.geojson", column="LCZ_PRIMARY", output="bBox")
 
 redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
 fileName="redonWudapt.tif",bBox=redonBbox)
@@ -62,5 +62,5 @@ fileName="redonWudapt.tif",bBox=redonBbox)
 #fileName="CONUS_LCZ_map_NLCD_v1.0_epsg4326.tif",
 #column="CONUS_LCZ_map_NLCD_v1.0_epsg4326"
 #  ,bBox=sanDiegoBbox)
-#showLCZ(sanDiegoWudapt,column="CONUS_LCZ_map_NLCD_v1.0_epsg4326")
+#showLCZ(sanDiegoWudapt, column="CONUS_LCZ_map_NLCD_v1.0_epsg4326")
 }

@@ -24,7 +24,7 @@ if (!require("png")) {
 ```
 
 
-# A package to explore Local Climate Zones : lczexplore
+# A package to explore Local Climate Zones: lczexplore
 ## Purpose and origin
 The lczexplore package was developed thanks to the PAENDORA2 (Pour la gestion du confort estival : Données, Outils et Recherche-Action, 2022 -2025, funded by ADEME, a French agency for ecological transition).
 
@@ -42,18 +42,18 @@ It has been extended to compare any pair of qualitative variable set on valid ge
 
 ## Installation
 
-The following allows the installation from the github repository : (`devtools::install_github("orbisgis/lczexplore", build_vignettes = TRUE)`).
+The following allows the installation from the github repository: (`devtools::install_github("orbisgis/lczexplore", build_vignettes = TRUE)`).
 
 On can also install from the tar.gz file and install it (see `?install.packages`).
 
 
-Load the package : `library(lczexplore)`.
+Load the package: `library(lczexplore)`.
 ```{r}
 library(lczexplore)
 ```
 
 
-# First use-case : load a file with geometries and standard LCZ
+# First use-case: load a file with geometries and standard LCZ
 
 ## Import files with importLCZvect function
 
@@ -111,7 +111,7 @@ showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="standard",drop=TRUE)
 ```
 ### Alternative visualization
 
-The non-standard representation, triggered with `repr=alter` is useful when : 
+The non-standard representation, triggered with `repr=alter` is useful when: 
 - one wants to **regroup** some LCZ types into more general categories,
 - the LCZ **don't have a standard encoding**
 - one want's to use **custom colors**
@@ -121,7 +121,7 @@ With `repr=alter`, one passes the vector of possible levels to the argument `LCZ
 
 If no vector of levels or no vector of colors is given, the levels will be deduced from the unique values present in the data, and the colors will be picked from the "Polychrome 36" palette of the `grDevices` package.
 
-For instance : one can first plot the column without knowing the LCZ levels present.
+For instance: one can first plot the column without knowing the LCZ levels present.
 ```{r, fig.dim = c(8, 6)}
 # Choice of random colors from a palette
 testCol <- palette.colors(n=17, palette="Polychrome 36")
@@ -166,10 +166,10 @@ showLCZ(redonOSMgrouped, column="grouped",repr="alter",wf="OSM",
 # Compare two LCZ classification with the function compareLCZ
 
 **The purpose of this package is to easily compare local climate zone classifications produced by different algorithms on the same study area.**
-In our example, the GeoClimate workflow was used with two different input data to produce two LCZ classifications : 
+In our example, the GeoClimate workflow was used with two different input data to produce two LCZ classifications: 
 the BD TOPO® v2.2, produced by the French National Institute of Geographic and Forest Information, and OpenStreetMap. 
 
-NOTE : The vignette "lczexplore_raster_vector" explores in detail another example with WUDAPT raster data. 
+NOTE: The vignette "lczexplore_raster_vector" explores in detail another example with WUDAPT raster data. 
 
 
 One has to call `compareLCZ` and feed it, for each dataset, 
@@ -180,12 +180,12 @@ you need to tell which dataset is the reference
 
 - A map of each LCZ classification is plotted.  
 - The function then intersects the geometries of both sf objects in order to get geometries where the **two classification either totally agree either totally disagree.** This agreement is plotted on a third graphics.  
-- At last, a confusion matrix (or agreement matrix) is computed : 
+- At last, a confusion matrix (or agreement matrix) is computed: 
 the area of each intersected geometry and the values of the two LCZ classifications
 are used to show how one type of the first classification breaks up into the levels of the second classification. 
 - The matrix is shown in the fourth and last graphics.
 
-NOTE : if the two data sets to compare have the same column names,
+NOTE: if the two data sets to compare have the same column names,
 the compareLCZ function will concatenate a ".1" string to the column names of the second file
 
 *The graphical output includes 4 graphs and is easier to read after zooming or exporting.*
@@ -239,7 +239,7 @@ comparisonGrouped<-compareLCZ(sf1=redonBDT,column1="LCZ_PRIMARY", wf1="groupedBD
 
 ## Output data for further analysis
 
-`CompareLCZ `outputs a list called `matConfOut` which contains :
+`CompareLCZ `outputs a list called `matConfOut` which contains:
 
 - `$data` the intersected geometries, their identifiers (if `geomID` was not empty), their LCZ types and their areas,
 - `$matConfLarge` the confusion matrix,
@@ -247,7 +247,7 @@ comparisonGrouped<-compareLCZ(sf1=redonBDT,column1="LCZ_PRIMARY", wf1="groupedBD
 - `$areas` the summed area for each LCZ of both classifications. 
 
 
-At last : it `exWrite=TRUE` the data are exported to a .csv file whose name 
+At last: it `exWrite=TRUE` the data are exported to a .csv file whose name 
 is created from the argument `wf1` and `wf2`. It can then be loaded for further analysis.  
 
 ```{r}
@@ -266,7 +266,7 @@ GeoClimate supplies a **uniqueness value**, between 0 and 1. The closer it is to
 LCZ type was a good candidate. So this uniqueness can be seen as a confidence value.
 
 
-## Import the necessary data : LCZ type, but also confidence.
+## Import the necessary data: LCZ type, but also confidence.
 
 When using the `importLCZvect` function one needs to specify the confidence value associated 
 to the LCZ (`confid` argument). On can also set the name of the geometry identifier (`geomID` argument ).
@@ -288,11 +288,11 @@ redonCompare<-compareLCZ(sf1=redonBDT,wf1="bdt", geomID1 = "ID_RSU",column1 ="LC
 
 The function `confidSensib` performs the sensitivity analysis from the output of `compareLCZ`.
 
-NOTE : if the two data sets to compare have the same column names, 
+NOTE: if the two data sets to compare have the same column names, 
 the compareLCZ function will concatenate a ".1" string to the column names of the second file, 
 so the enriched names will be the ones to feed `confidSensib`.
 
-The question we want to answer is : **Does the agreement between the two classification gets bigger if we keep only the geometries for which the LCZ value is associated to a confidence value bigger than a thershold?**
+The question we want to answer is: **Does the agreement between the two classification gets bigger if we keep only the geometries for which the LCZ value is associated to a confidence value bigger than a thershold?**
 
 The span of the confidence values is divided on as many points as the user chooses with the argument `nPoints`
 
