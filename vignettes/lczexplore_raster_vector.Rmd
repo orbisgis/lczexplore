@@ -23,23 +23,23 @@ if (!require("png")) {
 
 ```
 
-To install and discover the package, please read the lczexplore_english vignette. To load it simply type :
+To install and discover the package, please read the lczexplore_english vignette. To load it simply type:
 ```{r}
 library(lczexplore)
 ```
 
-Usecase : comparing the LCZ available on the WUDAPT european LCZ map and the Geoclimate approach using OpenStreetMap input data
+Usecase: comparing the LCZ available on the WUDAPT european LCZ map and the Geoclimate approach using OpenStreetMap input data
 
 This vignette illustrates the use of the package to compare maps produced with different approaches, it does not aim at drawing conclusion on the relevance of these methods, nor does it aim at describing them in details.
 
 # Import and visualize a raster map of LCZ
 
-## Data : the Redon territory from the european LCZ map produced by the WUDAPT project
+## Data: the Redon territory from the european LCZ map produced by the WUDAPT project
 
 The World Urban Database and Access Portal Tools is a project which aims at creating LCZ with earth observation data.
-The details of the project and the related papers can be found on the website of the project : https://www.wudapt.org/
+The details of the project and the related papers can be found on the website of the project: https://www.wudapt.org/
 
-The map we are going to use in this vignette is the European LCZ map, as described in the paper available at the following url :
+The map we are going to use in this vignette is the European LCZ map, as described in the paper available at the following url:
 https://doi.org/10.1371/journal.pone.0214474
 
 As this method is one of the most used we included the map tif in the embedded data of the package.
@@ -56,7 +56,7 @@ redonBbox<-importLCZvect(dirPath=paste0(system.file("extdata", package = "lczexp
 ```
 
 The second step is to import the raster map and use the previous bounding box to crop the territory of interest.
-The importLCZraster function performs this in a simple call :
+The importLCZraster function performs this in a simple call:
 ```{r}
 redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
 fileName="redonWudapt.tif",bBox=redonBbox)
@@ -77,7 +77,7 @@ One can then use standard R functions to explore the data.
 summary(redonWudapt)
 summary(redonWudapt$EU_LCZ_map)
 ```
-One can see, for instance that no pixel of the imported territory set to one of the following levels : 1, 2, 4, 5, 7, 10, 103 or 105,
+One can see, for instance that no pixel of the imported territory set to one of the following levels: 1, 2, 4, 5, 7, 10, 103 or 105,
 or that the most present LCZ type is 104, with 1116 pixels.
 
 
@@ -98,7 +98,7 @@ The following code shows an example of color choice.
 
 # Import and visualize a vector layer map of LCZ
 
-## Data : LCZ on the Redon territory produced by the GeoClimate workflow using OpenStreetMap as input.
+## Data: LCZ on the Redon territory produced by the GeoClimate workflow using OpenStreetMap as input.
 These data are embedded in `lczexplore`. On can import them using the `importLCZvect` function.
 This function allows to load geojson or shp files, and one must specify the name of the column containing the LCZ types.
 

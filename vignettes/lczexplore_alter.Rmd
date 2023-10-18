@@ -31,7 +31,7 @@ The purpose of this package is to easily compare different local climate zone (L
 on the same study territory. For these LCZ, the `repr="standard"` representation sets proper 
 levels and colors by default. You can read the `lczexplore_english` vignette for an overview. 
 
-This vignette deals with other cases, when `repr="alter"`, that is :   
+This vignette deals with other cases, when `repr="alter"`, that is:   
 - when one groups LCZ levels into broader categories,   
 - when LCZ levels are expressed in an unexpected format,   
 - or even compares maps of other qualitative variables.   
