@@ -28,7 +28,7 @@
 #' 
 #' # another way to get the bounding box when one explores a given city would be the use of the 
 #' # getbb() function from the osmdata package. 
-#' # This exaample requires the osmdata package and therefore is not executed here
+#' # This example requires the osmdata package and therefore is not executed here
 #' # redonBbox<-osmdata::getbb("Redon")
 #' # redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
 #' # fileName="redonWudapt.tif",bBox=redonBbox)
