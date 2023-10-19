@@ -10,9 +10,10 @@
 #' @param column indicates the name of the column which will contain the LCZ in the output file
 #' @param typeLevels indicates a named vector of the unique values contained in column,
 #' @param zone set to europe by default, may include world once a strategy is defined
-#' @param bBox bBox is the bounding box needed to crop the wudapt tiff file.
-#' It can be produced bu the importLCZvect function. It can either be of class bBox or of class sfc
-#' @return an sf file containing the geom and LCZ levels from the WUDAPT Europe tiff within the bBox bounding box
+#' @param bBox bBox is the bounding box needed to crop the raster tiff file.
+#' It can be produced by the importLCZvect function if one has a vect map o the same zone, 
+#' it can be a set of coordinates. It can either be of class bBox or of class sfc.
+#' @return an sf file containing the geom and LCZ levels from the raster within the bBox bounding box
 #' @import sf dplyr forcats
 #' @importFrom terra crop
 #' @importFrom terra rast
@@ -26,7 +27,7 @@
 #' redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
 #' fileName="redonWudapt.tif",bBox=redonBbox)
 #' 
-#' # another way to get the bounding box when one explores a given city would be the use of the 
+#' # Another way to get the bounding box when one explores a given city would be the use of the 
 #' # getbb() function from the osmdata package. 
 #' # This example requires the osmdata package and therefore is not executed here
 #' # redonBbox<-osmdata::getbb("Redon")
@@ -34,14 +35,14 @@
 #' # fileName="redonWudapt.tif",bBox=redonBbox)
 #' 
 #' # another way to get the bounding box when one doesn't want 
-#' #to compare to a vector map is to enter it's coordinates 
+#' # to compare to a vector map is to enter it's coordinates 
 #' # and feed them to st_bbox() of the sf package. 
 #' 
 #' # the following example can only be executed when user has downloaded 
 #' # CONUS-wide LCZ map and Training Areas on WUDAPT website
 #' # sanDiegobBoxCoord<-st_sf(a=1:2, geom=st_sfc(
-#' #st_point(c(-117.175198,32.707289)),
-#' #st_point(c(-117.112198,32.750900)),crs = 4326
+#' #    st_point(c(-117.175198,32.707289)),
+#' #    st_point(c(-117.112198,32.750900)),crs = 4326
 #' #))
 #' #sanDiegoBbox<-st_bbox(sanDiegobBoxCoord)
 #' #sanDiegoWudapt<-importLCZraster(
