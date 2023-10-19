@@ -6,7 +6,7 @@
 #'
 #' @param dirPath is the path to the directory where the
 #' @param fileName is by default \'EU_LCZ_map.tif\' but can be changed for test prurposes. Will be useful when other zones will be added
-#' @param column indicates the name of the column containing LCZ values, all other
+#' @param column indicates the name of the column which will contain the LCZ read from the raster file (tif or geo tif)
 #' @param typeLevels indicates a named vector of the unique values contained in column,
 #' @param zone set to europe by default, may include world once a strategy is defined
 #' @param bBox bBox is the bounding box needed to crop the wudapt tiff file.
