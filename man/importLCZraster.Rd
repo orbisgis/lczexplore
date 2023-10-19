@@ -29,7 +29,7 @@ It can be produced bu the importLCZvect function. It can either be of class bBox
 
 \item{fileName}{is by default \'EU_LCZ_map.tif\' but can be changed for test prurposes. Will be useful when other zones will be added}
 
-\item{column}{indicates the name of the column containing LCZ values, all other}
+\item{column}{indicates the name of the column which will contain the LCZ read from the raster file (tif or geo tif)}
 
 \item{typeLevels}{indicates a named vector of the unique values contained in column,}
 }
@@ -49,6 +49,16 @@ redonBbox<-importLCZvect(dirPath=paste0(system.file("extdata", package = "lczexp
 
 redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
 fileName="redonWudapt.tif",bBox=redonBbox)
+
+# another way to get the bounding box when one explores a given city would be the use of the 
+# getbb() function from the osmdata package. 
+# This exaample requires the osmdata package and therefore is not executed here
+# redonBbox<-osmdata::getbb("Redon")
+# redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
+# fileName="redonWudapt.tif",bBox=redonBbox)
+
+# another way to get the bounding box when one doesn't want to compare to a vector map is to enter it's coordinates 
+# and feed them to st_bbox() of the sf package. 
 
 # the following example can only be executed when user has downloaded 
 # CONUS-wide LCZ map and Training Areas on WUDAPT website

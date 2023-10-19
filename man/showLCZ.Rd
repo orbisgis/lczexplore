@@ -41,7 +41,7 @@ in your dataset and colors associated to these levels when not in the standard r
 For more details about this, read the "lcz_explore_alter" vignette.}
 }
 \value{
-no object is returned, but plots of the LCZ levels are produced
+return the plot of the LCZ levels
 }
 \description{
 Produces a simple representation of the LCZ contained in an sf file.

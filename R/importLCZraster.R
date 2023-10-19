@@ -5,8 +5,9 @@
 #' A future version may include the world data once a strategy is defined to deal with CRS.
 #'
 #' @param dirPath is the path to the directory where the
-#' @param fileName is by default \'EU_LCZ_map.tif\' but can be changed for test prurposes. Will be useful when other zones will be added
-#' @param column indicates the name of the column which will contain the LCZ read from the raster file (tif or geo tif)
+#' @param fileName is the name of the raster file (tif or geotif), by default \'EU_LCZ_map.tif\' . 
+#' Will be useful when other zones will be added
+#' @param column indicates the name of the column which will contain the LCZ in the output file
 #' @param typeLevels indicates a named vector of the unique values contained in column,
 #' @param zone set to europe by default, may include world once a strategy is defined
 #' @param bBox bBox is the bounding box needed to crop the wudapt tiff file.
@@ -32,7 +33,8 @@
 #' # redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
 #' # fileName="redonWudapt.tif",bBox=redonBbox)
 #' 
-#' # another way to get the bounding box when one doesn't want to compare to a vector map is to enter it's coordinates 
+#' # another way to get the bounding box when one doesn't want 
+#' #to compare to a vector map is to enter it's coordinates 
 #' # and feed them to st_bbox() of the sf package. 
 #' 
 #' # the following example can only be executed when user has downloaded 
