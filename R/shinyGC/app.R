@@ -89,7 +89,8 @@ ui <- fluidPage(
       mainPanel(
         titlePanel(title="Here is the content of the JSON configuration file you are building"),
       
-        verbatimTextOutput("configJSON")
+        verbatimTextOutput("configJSON"),
+        verbatimTextOutput("messagesWarning")
         
         
       )
@@ -149,6 +150,7 @@ server <- function(input, output,session) {
   shinyFiles::shinyDirChoose(input, 'configDirOut', roots=getVolumes()(),
                              defaultPath = "", allowDirCreate = TRUE )
   configOutFolder<-reactive({
+    
     gsub(
       "//","/",
     parseDirPath(roots=getVolumes()(), selection=input$configDirOut)
@@ -179,6 +181,7 @@ server <- function(input, output,session) {
 
 observeEvent(
   input$writeConfigFile, {
+  tryCatch(
     geoClimateConfigFile(
     wf = input$wf,
     outFolder = gsub("//","/",outFolder()) ,
@@ -192,9 +195,26 @@ observeEvent(
     BDTinFolder= BDTinFolder(),
     outConfigDir=configOutFolder(),
     outConfigFile = input$configOutFile,
-    writeNow=TRUE) 
+    writeNow=TRUE),
+  error = function(e) {
+    print("No folder was specified for the configuration file, it will be put in /tmp")
+    geoClimateConfigFile(
+      wf = input$wf,
+      outFolder = gsub("//","/",outFolder()) ,
+      locations = input$location,
+      forceSRID=input$forceSRID,
+      rsuIndics = input$rsuIndics,
+      grid_x_size = input$xGridSize,
+      grid_y_size = input$yGridSize,
+      gridIndics = input$gridIndics,
+      BDTinseeCode = input$inseeCode,
+      BDTinFolder= BDTinFolder(),
+      outConfigDir="/tmp",
+      outConfigFile = input$configOutFile,
+      writeNow=TRUE)
   }
-)
+  )
+})
 
 
 shinyFiles::shinyFileChoose(input, 'jarFile', roots=getVolumes()(),

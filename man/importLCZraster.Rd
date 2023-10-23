@@ -2,18 +2,21 @@
 % Please edit documentation in R/importLCZraster.R
 \name{importLCZraster}
 \alias{importLCZraster}
-\title{Imports the LCZ classifications produced on raster maps, mainly by the WUDAPT algorithm.
-For now, the function  import from the european tiff
-produced by WUDAPT. Users can DOWNLOAD the WUDAPT tiff file
-at the following url : https://figshare.com/articles/dataset/European_LCZ_map/13322450
-A future version may include the world data once a strategy is defined to deal with CRS.}
+\title{Imports the LCZ classifications produced on raster maps.
+For now, the european tif map produced by WUDAP is used as a reference example.
+Users can DOWNLOAD the WUDAPT tiff file at the following url :
+https://figshare.com/articles/dataset/European_LCZ_map/13322450
+A future version may include examples with the world data once a strategy is defined to deal with CRS.}
 \usage{
 importLCZraster(
   dirPath,
   zone = "europe",
   bBox,
   fileName = "EU_LCZ_map.tif",
-  column = "EU_LCZ_map",
+  LCZband = 1,
+  LCZcolumn = "EU_LCZ_map",
+  confidenceBand = "",
+  confidenceColumn = "confidence",
   typeLevels = c(`1` = "1", `2` = "2", `3` = "3", `4` = "4", `5` = "5", `6` = "6", `7` =
     "7", `8` = "8", `9` = "9", `10` = "10", `101` = "11", `102` = "12", `103` = "13",
     `104` = "14", `105` = "15", `106` = "16", `107` = "17")
@@ -24,25 +27,34 @@ importLCZraster(
 
 \item{zone}{set to europe by default, may include world once a strategy is defined}
 
-\item{bBox}{bBox is the bounding box needed to crop the wudapt tiff file.
+\item{bBox}{bBox is the bounding box needed to crop the raster file.
 It can be produced bu the importLCZvect function. It can either be of class bBox or of class sfc}
 
-\item{fileName}{is the name of the raster file (tif or geotif), by default \'EU_LCZ_map.tif\' .
+\item{fileName}{is the name of the raster file (tif or geotif), by default \'EU_LCZ_map.tif\'.
 Will be useful when other zones will be added}
 
-\item{column}{indicates the name of the column which will contain the LCZ in the output file}
+\item{LCZband}{the band of the raster files contains the LCZ types. Can be a number or a band name (default = 1)}
 
-\item{typeLevels}{indicates a named vector of the unique values contained in column,}
+\item{LCZcolumn}{the name of the column of the output sf File in which the LCZ types will be stored
+(default = "LCZ")}
+
+\item{confidenceBand}{the band of the raster files contains a measure of confidence.
+Can be a number or a band name (default = "", that is no measure of confidence provided)}
+
+\item{confidenceColumn}{the name of the column of the output sf File in which the confidences values will be stored
+(default = "", no confidence value specified)}
+
+\item{typeLevels}{indicates a named vector of the unique values contained in LCZcolumn,}
 }
 \value{
-an sf file containing the geom and LCZ levels from the WUDAPT Europe tiff within the bBox bounding box
+an sf file containing the geom and LCZ levels from theraster tiff within the bBox bounding box
 }
 \description{
-Imports the LCZ classifications produced on raster maps, mainly by the WUDAPT algorithm.
-For now, the function  import from the european tiff
-produced by WUDAPT. Users can DOWNLOAD the WUDAPT tiff file
-at the following url : https://figshare.com/articles/dataset/European_LCZ_map/13322450
-A future version may include the world data once a strategy is defined to deal with CRS.
+Imports the LCZ classifications produced on raster maps.
+For now, the european tif map produced by WUDAP is used as a reference example.
+Users can DOWNLOAD the WUDAPT tiff file at the following url :
+https://figshare.com/articles/dataset/European_LCZ_map/13322450
+A future version may include examples with the world data once a strategy is defined to deal with CRS.
 }
 \examples{
 redonBbox<-importLCZvect(dirPath=paste0(system.file("extdata", package = "lczexplore"),
@@ -72,7 +84,7 @@ fileName="redonWudapt.tif",bBox=redonBbox)
 #sanDiegoWudapt<-importLCZraster(
 #dirPath="path_of_the_tiff",
 #fileName="CONUS_LCZ_map_NLCD_v1.0_epsg4326.tif",
-#column="CONUS_LCZ_map_NLCD_v1.0_epsg4326"
+#LCZcolumn="CONUS_LCZ_map_NLCD_v1.0_epsg4326"
 #  ,bBox=sanDiegoBbox)
-#showLCZ(sanDiegoWudapt, column="CONUS_LCZ_map_NLCD_v1.0_epsg4326")
+#showLCZ(sanDiegoWudapt, LCZcolumn="CONUS_LCZ_map_NLCD_v1.0_epsg4326")
 }
