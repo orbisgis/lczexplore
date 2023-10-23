@@ -29,9 +29,13 @@ outBbox<-st_sfc(lowCorner,upCorner,crs=4326)
 #importLCZraster("/home/gousseff/Documents/2_CodesSources/Wudapt/WudaptEurope/",bBox=outBbox)
 
 
-expect_error(current = test<-importLCZraster("/home/gousseff/Documents/2_CodesSources/Wudapt/WudaptEurope/",bBox=outBbox),
-             "The bounding box doesn\'t intersect with the Wudapt tiff :"
-               )
-expect_error(current = test<-importLCZraster("/home/gousseff/Documents/2_CodesSources/Wudapt/WudaptEurope/",bBox=outBbox),
-             "maybe it\'s out of the Europe zone.")
+expect_error(current = test<-importLCZraster(dirPath = system.file("extdata", package = "lczexplore"),fileName="redonWudapt.tif",bBox=outBbox),
+             "The bounding box doesn\'t intersect ")
+
+
+redonWudapt2<-importLCZraster(  
+  system.file("extdata", package = "lczexplore"),
+  fileName="redonWudapt.tif",bBox=redonBbox,
+LCZband=1, LCZcolumn="LCZ")
+ str(redonWudapt2)
 
