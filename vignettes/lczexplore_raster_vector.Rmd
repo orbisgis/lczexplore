@@ -48,18 +48,23 @@ As this method is one of the most used we included the map tif in the embedded d
 
 The first step is to define a bounding box of the territory of interest. The lczexplore comes with vector data for the Redon Territory, a rural town of Brittany, France.
 The importLCZvect is a generic import function for vector data, and when the `ouput` argument is set to `bBox`, it returns the bounding box of the input layer.
-Any bounding box of the bounding box class of the package `sf` can be used to crop the raster map.
+Any bounding box of the bounding box class of the package `sf` can be used to crop the raster map. We can use a bounding box created from a vector file. Or create a bounding box from its coordinates. The package osmdata also offers the getbb() function which allow to get the bounding box from a location if it is named in openStreetMap. 
 
 ```{r}
 redonBbox<-importLCZvect(dirPath=paste0(system.file("extdata", package = "lczexplore"),
 "/bdtopo_2_2/Redon"), file="rsu_lcz.geojson",column="LCZ_PRIMARY",output="bBox")
+
+
+# Example with osmdata function getbb, not run, to avoid installation of the package
+# library(osmdata)
+# redonBbox<-getbb("Redon", format_out = "sf_polygon")
 ```
 
 The second step is to import the raster map and use the previous bounding box to crop the territory of interest.
 The importLCZraster function performs this in a simple call:
 ```{r}
 redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
-fileName="redonWudapt.tif",bBox=redonBbox)
+fileName="redonWudapt.tif", bBox=redonBbox)
 
 ```
 The resulting object is an sf file, the pixels of the geotiff have been transformed into geometries. The input file must be a geotiff, whose CRS will be read by the function.
@@ -73,7 +78,7 @@ st_crs(redonWudapt)
 The LCZ are expressed with several conventions. We chose to use 1 to 10 for the urban and 101 to 107 for the land-use types.
 
 One can then use standard R functions to explore the data.
-```{r}
+```{r, fig.dim = c(8, 6)}
 summary(redonWudapt)
 summary(redonWudapt$EU_LCZ_map)
 ```
@@ -114,7 +119,7 @@ summary(redonOSM$LCZ_PRIMARY)
 ```
 ## Visualize the resulting LCZ types with the function showLCZ
 The resulting object is an sf object and can therefore also be visualized with the showLCZ function.
-```{R}
+```{r, echo = TRUE }
 showLCZ(sf = redonOSM, repr="standard")
 
 ```
@@ -170,7 +175,7 @@ impervious="105",pervious="106",water="107", outCol = "Regrouped")
 
 compareLCZ(sf1 = redonWudaptGrouped, column1 = "Regrouped", wf1 = "Wudapt",
            sf2 = redonOSMgrouped, column2 = "Regrouped", wf2 = " GeoClimate on OSM data",
-           exwrite = FALSE, plot=TRUE, repr="alter", levels=c("urban","industry","vegetation","impervious","pervious","water"),colors=c("red","black","green","grey","burlywood","blue"), saveG="ComparisonGroupedR")
+           exwrite = FALSE, plot=TRUE, repr="alter", levels=c("urban","industry","vegetation","impervious","pervious","water"),colors=c("red","black","green","grey","burlywood","blue"), saveG="comparisonGroupedR")
 
 
 ```
@@ -192,10 +197,12 @@ For more details on the package, browse other vignettes.
 
 In some case, the source file is a raster with several bands (also called layers).
 the function `importLCZraster` allows to choose the layer which contains the LCZ values, and when useful 
-a layer of confidence value. This allows to also perform a confidence analysis on the agreement between two maps according to the level of confidence one allows to the LCZ value for each pixel. 
+a layer of confidence value. Notice one band was selected by its order in the raster stack, the other by its name, as the function allows both ways.  
 
 
-```{r, echo=TRUE}
+This allows to also perform a confidence analysis on the agreement between two maps according to the level of confidence one allows to the LCZ value for each pixel. 
+
+```{r, echo=TRUE, fig.show="hide"}
 # Dedicated files were integrated to demonstrate the whole workflow on an area of Sidney
 
 # importation of LCZ map prduced using GeoClimate with OpenStreetMap data
@@ -215,16 +222,34 @@ sidneyWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
 fileName="rasterMD.tif", LCZband=1,  LCZcolumn = "LCZraster",
                               confidenceBand = 3, confidenceColumn = "confidence",
                               bBox = sidneyBbox )
+# Make raster confidence value between 0 and 1  
 
-comparisonSidney<-compareLCZ(sf1=sidneyOSM,column1="LCZ_PRIMARY", wf1="BD TOPO v2.2",
-                             sf2=sidneyWudapt,column2="LCZraster",wf2="Open Street Map", ref=1,
-                             repr="standard",exwrite=F, location="Redon")
+sidneyWudapt$confidence<-sidneyWudapt$confidence/100
 
-confidRedon<-confidSensib(inputDf=comparaisonSidney$data,filePath="", nPoints=5,
+sidneyComparison<-compareLCZ(
+  sf1=sidneyOSM, geomID1="ID_RSU", column1="LCZ_PRIMARY", wf1="BD TOPO v2.2", confid1 = "LCZ_UNIQUENESS_VALUE",
+  sf2=sidneyWudapt, geomID2="geomID", column2="LCZraster", wf2="Open Street Map", confid2="confidence",
+  ref=1,repr="standard",exwrite=F, location="Part of Sidney")
+
+confidSidney<-confidSensib(inputDf=sidneyComparison$data, nPoints=5,
                           wf1="GC on OSM", wf2="WUDAPT",
                           geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
                           geomID2="geomID",column2="LCZraster", confid2="confidence",
                           sep=";", repr="standard",
                           plot=TRUE, saveG = ".")
+
+```
+
+```{r, out.width = "680px"}
+
+knitr::include_graphics("GeneralUniquenessSensib.jpg", error=FALSE)
+
+```
+
+One can also explore the evolution of this agreement according to the confidence LCZ type by LCZ type. 
+
+```{r, out.width = "680px"}
+
+knitr::include_graphics("byLCZUniquenessSensib.jpg", error=FALSE)
 
 ```

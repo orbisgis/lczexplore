@@ -100,7 +100,7 @@ It is the recommended choice. But `standard` representation will also accept lev
 (for other conventions, see the `alter` representation).
 
 
-```{R, fig.dim = c(8, 6)}
+```{r, fig.dim = c(8, 6)}
 showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="standard",LCZlevels="",colors="")
 ```
 One can note that by default, all the 17 possible types of an LCZ classification are present in the legend. This makes comparison easier when one compares dataset with different present levels. 

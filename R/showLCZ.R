@@ -32,7 +32,7 @@
 #' 
 showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
                   repr="standard", drop=FALSE, useStandCol=FALSE, tryGroup=TRUE,...){
-
+  
   datasetName<-deparse(substitute(sf))
 
   try(class(sf)[1]=="sf", stop("Input data must be sf object"))
@@ -161,14 +161,14 @@ showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
 
   if (repr=="standard"){
     print(pstandard)
-    return(pstandard)
+    outplot<-pstandard
   }
     else {
       if (repr=="alter"){
         print(palter)
-      return(palter)
+      outplot<-palter
       }
       else {stop("the repr argument must be \"standard\" or \"alter\" ")}
     }
-  
+  return(outplot)
 }
