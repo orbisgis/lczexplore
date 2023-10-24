@@ -64,7 +64,7 @@ fileName="redonWudapt.tif",bBox=redonBbox)
 ```
 The resulting object is an sf file, the pixels of the geotiff have been transformed into geometries. The input file must be a geotiff, whose CRS will be read by the function.
 
-```{R}
+```{r, echo=FALSE}
 library(sf)
 st_crs(redonWudapt)
 ```
@@ -73,7 +73,7 @@ st_crs(redonWudapt)
 The LCZ are expressed with several conventions. We chose to use 1 to 10 for the urban and 101 to 107 for the land-use types.
 
 One can then use standard R functions to explore the data.
-```{R}
+```{r}
 summary(redonWudapt)
 summary(redonWudapt$EU_LCZ_map)
 ```
@@ -89,7 +89,7 @@ For standard LCZ types, one sets the argument `repr="standard"`, and the functio
 
 
 
-```{R, fig.dim = c(8, 6)}
+```{r, fig.dim = c(8, 6)}
 showLCZ(sf = redonWudapt,column = 'EU_LCZ_map', repr= "standard")
 ```
 
@@ -102,7 +102,7 @@ The following code shows an example of color choice.
 These data are embedded in `lczexplore`. On can import them using the `importLCZvect` function.
 This function allows to load geojson or shp files, and one must specify the name of the column containing the LCZ types.
 
-```{R}
+```{r}
 # Path to embedded Data
 dirPath<-paste0(system.file("extdata",package="lczexplore"),"/")
 # Path to OSM data specifically
@@ -127,14 +127,19 @@ The `compareLCZ` function intersects the geometries of both input sf files. The 
 Both maps are plotted and a map of where they agree is produced. A confusion matrix is also plotted, revealing how each LCZ type of the first dataset break up into the LCZ types of the second dataset.
 If the two datasets are not in the same coordinate reference system (CRS), the function will ask which CRS will be kept.
 
-```{R}
+```{r,  echo = TRUE, fig.show="hide"}
 summary(redonOSM)
 summary(redonWudapt)
 compareLCZ(sf1 = redonWudapt, column1 = "EU_LCZ_map", wf1="WUDAPT",
            sf2 = redonOSM, column2 = "LCZ_PRIMARY", wf2 = "GeoClimate_OSM",
-           ref=1 ,exwrite=FALSE)
+           ref=1 ,exwrite=FALSE,saveG = "comparisonR" )
 ```
 
+```{r, out.width = "680px"}
+
+knitr::include_graphics("comparisonR.png", error=FALSE)
+
+```
 
 # Grouping some levels and comparing the grouped categories
 
@@ -146,7 +151,8 @@ on OpenStreet map input data. And 34% of what Wudapt classifies as open low are 
 
 But how do Wudapt and GeoClimate agree on broader categories, as built LCZ versus vegetation LCZ ? One could group these LCZs
 to explore this, using the `groupLCZ` function.
-```{R}
+```{r, echo=TRUE, , fig.show="hide"}
+
 # Regroup levels of the WUDAPT sf file.
 redonWudaptGrouped<-groupLCZ(redonWudapt,column="EU_LCZ_map",
                               urban=c("1","2","3","4","5","6","7","8","9"),
@@ -164,13 +170,61 @@ impervious="105",pervious="106",water="107", outCol = "Regrouped")
 
 compareLCZ(sf1 = redonWudaptGrouped, column1 = "Regrouped", wf1 = "Wudapt",
            sf2 = redonOSMgrouped, column2 = "Regrouped", wf2 = " GeoClimate on OSM data",
-           exwrite = FALSE, plot=TRUE, repr="alter", levels=c("urban","industry","vegetation","impervious","pervious","water"),colors=c("red","black","green","grey","burlywood","blue"))
+           exwrite = FALSE, plot=TRUE, repr="alter", levels=c("urban","industry","vegetation","impervious","pervious","water"),colors=c("red","black","green","grey","burlywood","blue"), saveG="ComparisonGroupedR")
 
 
 ```
+
+```{r, out.width = "680px"}
+
+knitr::include_graphics("comparisonGroupedR.png", error=FALSE)
+
+```
+
 One can notice that the two explored algorithms agree rather well about vegetation, as 87% of the surface WUDAPT classifies as vegetation is classified as vegetation by Geoclimate.
 On urban LCZ, while 68% of the surface WUDAPT classifies as urban is also classified as urban by GeoClimate, 19% is classified as vegetation and 12% as impervious by GeoClimate.
 
 The confusion matrix compare percentage of areas, so if the global area concerned is small, one has to be careful about the interpretation. For instance, the very strong agreement about pervious soils or the relative agreement about water should not be over interpreted as they only represent less than 1% of the areas of the WUDAPT generated map.
 
 For more details on the package, browse other vignettes. 
+
+# Several bands in a raster source file
+
+In some case, the source file is a raster with several bands (also called layers).
+the function `importLCZraster` allows to choose the layer which contains the LCZ values, and when useful 
+a layer of confidence value. This allows to also perform a confidence analysis on the agreement between two maps according to the level of confidence one allows to the LCZ value for each pixel. 
+
+
+```{r, echo=TRUE}
+# Dedicated files were integrated to demonstrate the whole workflow on an area of Sidney
+
+# importation of LCZ map prduced using GeoClimate with OpenStreetMap data
+sidneyOSM<-importLCZvect(
+dirPath = system.file("extdata/osm/2022/Sidney", package = "lczexplore"), file="sidney_rsu_lcz.geojson",
+column="LCZ_PRIMARY",
+confid="LCZ_UNIQUENESS_VALUE",
+geomID="ID_RSU")
+
+# Creation of the bounding box of this area to crop the raster file produced using the WUDAPT platform
+sidneyBbox<-importLCZvect(
+system.file("extdata/osm/2022/Sidney", package = "lczexplore"), file="sidney_rsu_lcz.geojson",
+,output = "bBox")
+
+# Import of the raster filed, cropped to the bounbding box of the area of interest. 
+sidneyWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
+fileName="rasterMD.tif", LCZband=1,  LCZcolumn = "LCZraster",
+                              confidenceBand = 3, confidenceColumn = "confidence",
+                              bBox = sidneyBbox )
+
+comparisonSidney<-compareLCZ(sf1=sidneyOSM,column1="LCZ_PRIMARY", wf1="BD TOPO v2.2",
+                             sf2=sidneyWudapt,column2="LCZraster",wf2="Open Street Map", ref=1,
+                             repr="standard",exwrite=F, location="Redon")
+
+confidRedon<-confidSensib(inputDf=comparaisonSidney$data,filePath="", nPoints=5,
+                          wf1="GC on OSM", wf2="WUDAPT",
+                          geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
+                          geomID2="geomID",column2="LCZraster", confid2="confidence",
+                          sep=";", repr="standard",
+                          plot=TRUE, saveG = ".")
+
+```

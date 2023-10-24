@@ -39,21 +39,11 @@
 #' 
 #' # another way to get the bounding box when one doesn't want 
 #' #to compare to a vector map is to enter it's coordinates 
-#' # and feed them to st_bbox() of the sf package. 
+#' # and feed them to st_bbox() of the sf package.
 #' 
-#' # the following example can only be executed when user has downloaded 
-#' # CONUS-wide LCZ map and Training Areas on WUDAPT website
-#' # sanDiegobBoxCoord<-st_sf(a=1:2, geom=st_sfc(
-#' #st_point(c(-117.175198,32.707289)),
-#' #st_point(c(-117.112198,32.750900)),crs = 4326
-#' #))
-#' #sanDiegoBbox<-st_bbox(sanDiegobBoxCoord)
-#' #sanDiegoWudapt<-importLCZraster(
-#' #dirPath="path_of_the_tiff",
-#' #fileName="CONUS_LCZ_map_NLCD_v1.0_epsg4326.tif",
-#' #LCZcolumn="CONUS_LCZ_map_NLCD_v1.0_epsg4326"
-#' #  ,bBox=sanDiegoBbox)
-#' #showLCZ(sanDiegoWudapt, LCZcolumn="CONUS_LCZ_map_NLCD_v1.0_epsg4326")
+#' # imporLCZraster also allows to choose which band of a raster file to import
+#' redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
+#' fileName="redonWudapt.tif",bBox=redonBbox, LCZband=1, LCZcolumn='EU_LCZ_map')
 importLCZraster<-function(dirPath, bBox, fileName="EU_LCZ_map.tif", LCZband=1, LCZcolumn='EU_LCZ_map',
                           confidenceBand = "", confidenceColumn = "confidence",
                           typeLevels=c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",

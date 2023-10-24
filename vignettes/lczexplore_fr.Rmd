@@ -209,7 +209,7 @@ Le dernier graphique représente cette information.
 ```{r, fig.dim = c(16,12 ), echo = FALSE}
 comparaison<-compareLCZ(sf1=redonBDT,column1="LCZ_PRIMARY", wf1="BD TOPO v2.2",
                         sf2=redonOSM,column2="LCZ_PRIMARY",wf2="Open Street Map", ref=1,
-                        repr="standard",exwrite=F,location="Redon",saveG="")
+                        repr="standard",exwrite=F,location="Redon",saveG="comparison")
 dirPath<-paste0(system.file("extdata",package="lczexplore"),"/")
 
 ```
@@ -274,13 +274,17 @@ redonBDT<-importLCZvect(dirPath=dirPathBDT,file="rsu_lcz.geojson",column = "LCZ_
 
 À chaque unité de référence spatiale (RSU, une géométrie) est maintenant associé un type de LCZ et un niveau de confiance. 
 
-```{r, fig.dim = c(8, 6)}
+```{r, echo = TRUE, fig.show="hide"}
 redonCompare<-compareLCZ(sf1=redonBDT,wf1="bdt", geomID1 = "ID_RSU",column1 ="LCZ_PRIMARY",
                          confid1 = "LCZ_UNIQUENESS_VALUE",
-                         sf2=redonOSM,wf2="osm",geomID2 = "ID_RSU",column2="LCZ_PRIMARY",confid2 ="LCZ_UNIQUENESS_VALUE",exwrite=FALSE,plot=FALSE)
+                         sf2=redonOSM,wf2="osm",geomID2 = "ID_RSU",column2="LCZ_PRIMARY",confid2 ="LCZ_UNIQUENESS_VALUE",exwrite=FALSE, saveG="comparaison")
 # redonInputSensib<-read.csv()
 ```
+```{r, out.width = "680px"}
 
+knitr::include_graphics("comparaison.png", error=FALSE)
+
+```
 Il est important de noter que si les colonnes des deux fichiers ont le même nom `compareLCZ` 
 renomme les colonnes du deuxième fichier en leur concaténant '.1'
 
@@ -298,15 +302,26 @@ et le représente en bleu sur le graphique final.
 On représente aussi, en magenta, l'accord entre les géométries dont la valeur de confiance était inférieure au seuil.
 
 
-```{r, fig.dim = c(12,9)}
+```{r, fig.dim = c(12,9), fig.show="hide"}
 names(redonCompare$data)
 confidRedon<-confidSensib(inputDf=redonCompare$data,filePath="", nPoints=10,
              wf1="bdtopo_2_2", wf2="osm",
              geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
              geomID2="ID_RSU.1",column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1",
              sep=";", repr="standard",
-             plot=TRUE)
+             plot=TRUE, saveG = ".")
 
 ```
+```{r, out.width = "680px"}
 
+knitr::include_graphics("GeneralUniquenessSensib.jpg", error=FALSE)
+
+```
+La fonction `confidSensib` propose également cette analyse par type de LCZ. 
+
+```{r, out.width = "680px"}
+
+knitr::include_graphics("byLCZUniquenessSensib.jpg", error=FALSE)
+
+```
 Les principales fonctions ont été évoquées ici, pour plus d'information consulter les fichiers d'aide de chacune des fonctions.

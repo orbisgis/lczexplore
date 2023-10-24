@@ -4,13 +4,11 @@
 \alias{importLCZraster}
 \title{Imports the LCZ classifications produced on raster maps.
 For now, the european tif map produced by WUDAP is used as a reference example.
-Users can DOWNLOAD the WUDAPT tiff file at the following url :
-https://figshare.com/articles/dataset/European_LCZ_map/13322450
-A future version may include examples with the world data once a strategy is defined to deal with CRS.}
+Users can DOWNLOAD the WUDAPT tif file at the following url :
+https://figshare.com/articles/dataset/European_LCZ_map/13322450}
 \usage{
 importLCZraster(
   dirPath,
-  zone = "europe",
   bBox,
   fileName = "EU_LCZ_map.tif",
   LCZband = 1,
@@ -25,23 +23,21 @@ importLCZraster(
 \arguments{
 \item{dirPath}{is the path to the directory where the}
 
-\item{zone}{set to europe by default, may include world once a strategy is defined}
-
 \item{bBox}{bBox is the bounding box needed to crop the raster file.
 It can be produced bu the importLCZvect function. It can either be of class bBox or of class sfc}
 
-\item{fileName}{is the name of the raster file (tif or geotif), by default \'EU_LCZ_map.tif\'.
-Will be useful when other zones will be added}
+\item{fileName}{is the name of the raster file (tif or geotif), by default \'EU_LCZ_map.tif\'.}
 
-\item{LCZband}{the band of the raster files contains the LCZ types. Can be a number or a band name (default = 1)}
+\item{LCZband}{defines the band of the raster file which contains the LCZ types.
+It can be a number or a band name (default = 1)}
 
 \item{LCZcolumn}{the name of the column of the output sf File in which the LCZ types will be stored
 (default = "LCZ")}
 
-\item{confidenceBand}{the band of the raster files contains a measure of confidence.
+\item{confidenceBand}{the band of the raster files which contains a measure of confidence.
 Can be a number or a band name (default = "", that is no measure of confidence provided)}
 
-\item{confidenceColumn}{the name of the column of the output sf File in which the confidences values will be stored
+\item{confidenceColumn}{the name of the column of the output sf File in which the confidence values will be stored
 (default = "", no confidence value specified)}
 
 \item{typeLevels}{indicates a named vector of the unique values contained in LCZcolumn,}
@@ -52,9 +48,8 @@ an sf file containing the geom and LCZ levels from theraster tiff within the bBo
 \description{
 Imports the LCZ classifications produced on raster maps.
 For now, the european tif map produced by WUDAP is used as a reference example.
-Users can DOWNLOAD the WUDAPT tiff file at the following url :
+Users can DOWNLOAD the WUDAPT tif file at the following url :
 https://figshare.com/articles/dataset/European_LCZ_map/13322450
-A future version may include examples with the world data once a strategy is defined to deal with CRS.
 }
 \examples{
 redonBbox<-importLCZvect(dirPath=paste0(system.file("extdata", package = "lczexplore"),
@@ -72,19 +67,9 @@ fileName="redonWudapt.tif",bBox=redonBbox)
 
 # another way to get the bounding box when one doesn't want 
 #to compare to a vector map is to enter it's coordinates 
-# and feed them to st_bbox() of the sf package. 
+# and feed them to st_bbox() of the sf package.
 
-# the following example can only be executed when user has downloaded 
-# CONUS-wide LCZ map and Training Areas on WUDAPT website
-# sanDiegobBoxCoord<-st_sf(a=1:2, geom=st_sfc(
-#st_point(c(-117.175198,32.707289)),
-#st_point(c(-117.112198,32.750900)),crs = 4326
-#))
-#sanDiegoBbox<-st_bbox(sanDiegobBoxCoord)
-#sanDiegoWudapt<-importLCZraster(
-#dirPath="path_of_the_tiff",
-#fileName="CONUS_LCZ_map_NLCD_v1.0_epsg4326.tif",
-#LCZcolumn="CONUS_LCZ_map_NLCD_v1.0_epsg4326"
-#  ,bBox=sanDiegoBbox)
-#showLCZ(sanDiegoWudapt, LCZcolumn="CONUS_LCZ_map_NLCD_v1.0_epsg4326")
+# imporLCZraster also allows to choose which band of a raster file to import
+redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
+fileName="redonWudapt.tif",bBox=redonBbox, LCZband=1, LCZcolumn='EU_LCZ_map')
 }
