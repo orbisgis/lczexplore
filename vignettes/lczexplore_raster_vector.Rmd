@@ -95,7 +95,7 @@ For standard LCZ types, one sets the argument `repr="standard"`, and the functio
 
 
 ```{r, fig.dim = c(8, 6)}
-showLCZ(sf = redonWudapt,column = 'EU_LCZ_map', repr= "standard")
+map1<-showLCZ(sf = redonWudapt,column = 'EU_LCZ_map', repr= "standard")
 ```
 
 
@@ -119,8 +119,8 @@ summary(redonOSM$LCZ_PRIMARY)
 ```
 ## Visualize the resulting LCZ types with the function showLCZ
 The resulting object is an sf object and can therefore also be visualized with the showLCZ function.
-```{r, echo = TRUE }
-showLCZ(sf = redonOSM, repr="standard")
+```{r, fig.dim = c(8, 6), echo = TRUE }
+map2<-showLCZ(sf = redonOSM, repr="standard")
 
 ```
 

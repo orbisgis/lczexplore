@@ -244,6 +244,8 @@ One can then feed `compareLCZ` function these new groups,  setting `repr="alter"
 
 ### Import and explore categorical variable (other than LCZ classifications)
 
+This package focuses on LCZ maps comparison, but more often than not, people working on LCZ maps also 
+describe their area of interest with other categorical indicators. 
 The workflow of comparison of LCZ maps can be used for any pair of maps of categorical variables,
 under certain limitations:
 - there must not be more than 36 levels for the categorical variable to explore
@@ -354,7 +356,7 @@ deals with standard values of LCZ levels and colors.
 
 # Plot the LCZ levels on the Redon Area using the default color set
 # from the sf object produced by importLCZvect function
-showLCZ(
+map1<-showLCZ(
   sf=redonOSM, column="LCZ_PRIMARY", repr="standard",
   title="LCZ Classification on the French City of Redon")
 
@@ -519,7 +521,7 @@ It is the possible to perform the same analysis as on standard LCZ classificatio
 as shown in the following example:
 
 ```r
-showLCZ(redonOSMgrouped, column="grouped",repr="alter",
+map2<-showLCZ(redonOSMgrouped, column="grouped",repr="alter",
         title="Regrouped Categories for the city of Redon",
         LCZlevels = c("urban","industry","vegetation","impervious","pervious","water"),  
         colors=c("red","black","green","grey","burlywood","blue"))
@@ -548,7 +550,7 @@ utrfRedonBDT<-importQualVar(dirPath=paste0(
   system.file("extdata", package = "lczexplore"), "/bdtopo_2_2/Redon"),
   file="rsu_utrf_area.geojson", column="TYPO_MAJ")
   
-showLCZ(sf=utrfRedonBDT, column="TYPO_MAJ",repr="alter", 
+map3<-showLCZ(sf=utrfRedonBDT, column="TYPO_MAJ",repr="alter", 
         title = " UTRF classification of the French city of Redon")
 ```
 ![An example of some qualitative variable: Urban Typology by Random Forest (UTRF)](importQualVarUTRF.png)

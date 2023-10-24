@@ -95,7 +95,7 @@ redonOSMgrouped<-groupLCZ(redonOSM,column="LCZ_PRIMARY",
 levCol(sf=redonOSMgrouped,column="grouped",LCZlevels = c("urban","industry","vegetation","impervious","pervious","water"),
        colors=c("red","black","green","grey","burlywood","blue"))
 
-showLCZ(redonOSMgrouped, column="grouped",repr="alter",wf="OSM",
+map1<-showLCZ(redonOSMgrouped, column="grouped",repr="alter",wf="OSM",
         LCZlevels = c("urban","industry","vegetation","impervious","pervious","water"),
         colors=c("red","black","green","grey","burlywood","blue"))
 
@@ -168,7 +168,7 @@ utrfRedonBDT<-importQualVar(dirPath=paste0(
 summary(utrfRedonBDT)
 summary(utrfRedonBDT$TYPO_MAJ)
 
-showLCZ(sf=utrfRedonBDT, column="TYPO_MAJ",repr="alter",
+map3<-showLCZ(sf=utrfRedonBDT, column="TYPO_MAJ",repr="alter",
         title = " UTRF classification of the French city of Redon",
         colors=c("red","black","green","grey","burlywood","blue","orange","lightgreen","brown"))
 ```
@@ -231,7 +231,7 @@ If the values of the grouping vectors cover the original values of the datasets,
 
 ```{R, fig.dim = c(8, 6), echo = TRUE}
 
-showLCZ(sf=redonBDT, column="LCZ_PRIMARY", repr="alter",
+map4<-showLCZ(sf=redonBDT, column="LCZ_PRIMARY", repr="alter",
         urban=c("1","2","3","4","5","6","7","8","9"),
         industry="10",
         vegetation=c("101","102","103","104"),
@@ -250,5 +250,5 @@ compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY",
 ```
 This is meant as an exploratory tool, as the resulting grouped columns are not actually kept after the analysis. 
 
-Please feel free to contact us if some case are not handled by the package. 
+Please feel free to contact us if some cases are not handled by the package. 
 
