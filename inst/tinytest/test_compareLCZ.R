@@ -19,6 +19,7 @@ expect_message(compareRedonBDTOSM<-
                "\\(redonBDT\\)")
 file.remove("bdtopo_2_2_osm.csv")
 
+
 expect_message(compareRedonBDTOSM<-
                  compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU", confid1="LCZ_UNIQUENESS_VALUE", wf1="bdtopo_2_2",
                             sf2=redonOSM, column2="LCZ_PRIMARY", geomID2 = "ID_RSU", confid2="LCZ_UNIQUENESS_VALUE", wf2="osm",
@@ -117,7 +118,8 @@ redonWudaptGrouped<-
 
 expect_message(compareLCZ(sf1=redonBDTgrouped2, column1="groupedLCZ", wf1="BDT",
                           sf2=redonWudaptGrouped, column2="otherName", wf2="osm", exwrite=FALSE, repr="alter", plot=T,
-                          urban="urban",industry="industry",vegetation="vegetation",impervious="impervious",pervious="pervious",water="water",
+                          urban="urban",industry="industry",vegetation="vegetation",
+                          impervious="impervious",pervious="pervious",water="water",
                           colors=c("red","black","green","grey","burlywood","blue")),
                "they will be coerced to the specified reference \\(redonBDTgrouped2\\)"
 )

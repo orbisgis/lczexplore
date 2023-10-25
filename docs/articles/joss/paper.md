@@ -23,7 +23,7 @@ authors:
     corresponding: true # (This is how to denote the corresponding author)
     affiliation: "1, 2, 4"
   - name: Elisabeth Le Saux Wiederhold
-    orcid:
+    orcid: 0000-0002-2079-8633
     corresponding: true
     affiliation: 3
 affiliations:
@@ -46,7 +46,7 @@ editor_options:
 # Summary
 
 Climate change is a growing concern for city planners as Urban Heat Islands have an impact on
-mortality [@clarke1972some], health in general [@lowe2016energy] and consumption of energy
+mortality @clarke1972some, health in general [@lowe2016energy] and consumption of energy
 for building cooling [@malys2012microclimate] among other effects.
 A first step towards large scale study of urban climate is to define classes
 based on logical division of the landscape,
@@ -76,15 +76,16 @@ The four main reasons to compare categorical variables on geographical units are
 Climate change is a growing concern for city planners with a special focus on Urban Heat Island phenomenons.
 The terms *rural* and *urban* lack of a clear definition and different classifications
 of urban and rural landscapes were proposed.
-Stewart and Oke [@stewart2012local] defined an approach that complies with [@grigg1965logic] criteria of geographical classification.
+@stewart2012local defined an approach that complies with criteria of geographical classification defined in [@grigg1965logic].
 Their Local Climate Zones (LCZ) are based on a logical segmentation of land-use and urban canopy parameters
 and define 10 urban types and 7 land cover types.
 
 LCZ have gained popularity in the past decade as they sum up relevant information and can help, for instance,
 apprehend the intensity of the Urban Heat Island [@kotharkar2018evaluating].
 
-Several methods aim to classify a territory into LCZ, but only few workflows allow an automatic classification for any given area.  
-[@quan2021systematic] distinguishes two main streams of production of these LCZ:
+Several methods aim to classify a territory into LCZ, but only few workflows allow an automatic classification 
+for any given area.  
+@quan2021systematic distinguishes two main streams of production of these LCZ:
 - the raster stream processes remotely sensed information, and applies machine learning
   algorithms trained using local experts' knowledge. In this way, the WUDAPT community [@chingWUDAPTUrbanWeather2018a]
   produced thousands of city-based LCZ maps (accessible via the LCZ Generator ([@demuzereLCZGeneratorWeb2021]))
@@ -119,7 +120,7 @@ maps, but it has two main drawbacks:
 - only raster maps where pixels match perfectly (same size, not translated) can be treated, or
   some pre-treatment are needed (like nearest neighbour interpolation for instance).
 
-To prevent the first drawback, [@monserudComparingGlobalVegetation1992]
+To prevent the first drawback, @monserudComparingGlobalVegetation1992
 proposed the use of Cohen's kappa coefficient of agreement for nominal scales [@cohenCoefficientAgreementNominal1960].
 Cohen's Kappa allow to assess how two raters agree or differ in the task of rating individual.
 In our case, each pixel is seen as an individual, each map is seen as a rater and the value of the raster at each pixel
@@ -146,12 +147,12 @@ As Local Climate Zones emerged as a new standard for characterizing urban landsc
 specific tools are needed to allow easy automation of LCZ maps. As a matter of fact, "ground truth" is hard to
 define in matters of LCZs, and one may want to compare LCZs produced by experts and by different algorithms.
 
-The very definition of LCZs by [@stewart2012local] relies on ranges of values for several indicators, and  sometimes
+The very definition of LCZs by @stewart2012local relies on ranges of values for several indicators, and  sometimes
 several LCZ types could be assigned to the corresponding geometries. Therefore, one may associate a confidence
 value to the LCZ type and check if filtering pixels (for raster data) or geometries (for vector data)
 accordingly to a confidence threshold has an impact on the way maps agree or disagree.
 
-A comparison of a raster stream result and a GIS vector stream approach was proposed by [@muhammad2022inference].
+A comparison of a raster stream result and a GIS vector stream approach was proposed by @muhammad2022inference.
 This comparison relies on rasterising vector data. It uses several tools: QGIS, python scripts and SAGA GIS.
 As far as we know, the scripts and the automation of the method are not publicly available.
 
@@ -241,22 +242,6 @@ One can then feed `compareLCZ` function these new groups,  setting `repr="alter"
 
 ![Grouping of LCZ types into larger categories \label{fig: Grouping of LCZ types into larger categories}](fromBrutToGrouped.png)
 
-
-### Import and explore categorical variable (other than LCZ classifications)
-
-This package focuses on LCZ maps comparison, but more often than not, people working on LCZ maps also 
-describe their area of interest with other categorical indicators. 
-The workflow of comparison of LCZ maps can be used for any pair of maps of categorical variables,
-under certain limitations:
-- there must not be more than 36 levels for the categorical variable to explore
-- the associated geometries must be (multi) polygons or easily converted to them
-  (typically, the package would not be suitable to compare road characterization),
-- the geometries must be topographically valid (this is also true for LCZ).
-
-The `importQualVar` function allows the import of such variables on (multi-) polygons maps.
-It outputs an sf object that can be fed to the other main functions
-of the package (`showLCZ`, `compareLCZ`, `groupLCZ`...).
-
 ### Sensitivity analysis
 
 The Geoclimate algorithm adds a uniqueness value to the LCZ type it assigns to a spatial unit.
@@ -279,6 +264,21 @@ one can see that ditching geometries that have a confidence level lower than 0.5
 to more than 90%. The curve then tends to flatten, and the number of kept geometries decreases a lot (from 602 to 122).
 One also needs to notice that on this example, most geometries didn't have a confidence value
 (7476 with a general agreement of 59.21%)
+
+### Import and explore categorical variable (other than LCZ classifications)
+
+This package focuses on LCZ maps comparison, but more often than not, people working on LCZ maps also
+describe their area of interest with other categorical indicators.
+The workflow of comparison of LCZ maps can be used for any pair of maps of categorical variables,
+under certain limitations:
+- there must not be more than 36 levels for the categorical variable to explore
+- the associated geometries must be (multi) polygons or easily converted to them
+  (typically, the package would not be suitable to compare road characterization),
+- the geometries must be topographically valid (this is also true for LCZ).
+
+The `importQualVar` function allows the import of such variables on (multi-) polygons maps.
+It outputs an sf object that can be fed to the other main functions
+of the package (`showLCZ`, `compareLCZ`, `groupLCZ`...).
 
 # Coding implementation
 
@@ -443,7 +443,7 @@ confidence values present in the data and by the number of points, set by the `n
 
 ```r
  # Path to the folder where compareLCZ stored output data file
-mainPath<-system.file("extdata", package = "lczexplore")
+# mainPath<-system.file("extdata", package = "lczexplore") (not executed to avoid useless files in the package)
 
  
 # Specification of geomID and confid columns for both dataset, 
@@ -464,7 +464,7 @@ sensitAnalysis<-confidSensib(inputDf=comparison$data, filePath="",
    nPoints=5, wf1="bdtopo_2_2", wf2="osm",
    geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
    geomID2="ID_RSU.1",column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1",
-   plot=TRUE, saveG=mainPath)
+   plot=TRUE, saveG="") #  one would use saveG = mainPath to write the results in the mainPath folder
 
 ```
 
@@ -556,7 +556,7 @@ map3<-showLCZ(sf=utrfRedonBDT, column="TYPO_MAJ",repr="alter",
 ![An example of some qualitative variable: Urban Typology by Random Forest (UTRF)](importQualVarUTRF.png)
 
 Figure 9 represents the UTRF classification of the French city of Redon,
-as computed by the GeoClimate workflow on BDTopo v2.2 data. The colors were not specified and therefoer were
+as computed by the GeoClimate workflow on BDTopo v2.2 data. The colors were not specified and therefore were
 randomly picked from a palette.
 
 ```r

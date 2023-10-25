@@ -316,7 +316,7 @@ confidRedon<-confidSensib(inputDf=redonCompare$data,filePath="", nPoints=10,
 ```
 ```{r, out.width = "680px"}
 
-knitr::include_graphics("GeneralUniquenessSensib.jpg", error=FALSE)
+knitr::include_graphics("GeneralUniquenessSensib.png", error=FALSE)
 
 ```
 
@@ -324,7 +324,7 @@ One can see that the agreement between classifications using BDTOPO and OpenStre
 
 ```{r, out.width = "680px"}
 
-knitr::include_graphics("byLCZUniquenessSensib.jpg", error=FALSE)
+knitr::include_graphics("byLCZUniquenessSensib.png", error=FALSE)
 
 ```
 

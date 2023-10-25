@@ -6,7 +6,7 @@
 #' @param inputDf is an R file with geom IDs, (LCZ) classifications and
 #' a confidence value granted for the (LCZ) classifications values of each geom. Ignored if filePath is not empty.
 #' @param filePath is the path to a csv file containing geom IDs, LCZ classifications and
-#' a confidence value granted for the LCZ value of each geom.
+#' a confidence value granted for the LCZ value of each geom. Set it to "" if inputDf is specified (recommanded)
 #' @param nPoints is the number of points (quantiles) of confidence for which
 #' the average agreement between classifications will be computed
 #' @param wf1 is the name of the workflow used to produce the first LCZ
@@ -27,14 +27,16 @@
 #' @export
 #'
 #' @examples
-#' mainPath<-system.file("extdata", package = "lczexplore")
-#' testSourceFact<-read.csv(paste0(mainPath,"/bdtopo_2_2_osm.csv"),
-#' sep=";",header=TRUE,stringsAsFactors = TRUE)
-#' confidSensib(inputDf=testSourceFact, filePath="",
+#' # creation of the comparison data on which to perform the analysis
+#' redonCompare<-compareLCZ(sf1=redonBDT,wf1="bdt", geomID1 = "ID_RSU",column1 ="LCZ_PRIMARY",
+#'                         confid1 = "LCZ_UNIQUENESS_VALUE",
+#'                         sf2=redonOSM, wf2="osm",geomID2 = "ID_RSU",column2="LCZ_PRIMARY",
+#'                         confid2 ="LCZ_UNIQUENESS_VALUE",exwrite=FALSE,plot=FALSE)
+#' confidSensib(inputDf=redonCompare$data,
 #' nPoints=5, wf1="bdtopo_2_2", wf2="osm",
 #' geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
 #' geomID2="ID_RSU.1",column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1",
-#' sep=";", repr="standard", plot=TRUE, saveG=mainPath)
+#' sep=";", repr="standard", plot=TRUE, saveG="")
 confidSensib<-function(inputDf="", filePath="", nPoints=5,
                        wf1="bdtopo_2_2", wf2="osm",
                        geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
@@ -163,7 +165,7 @@ confidSensib<-function(inputDf="", filePath="", nPoints=5,
   }
 
   if(saveG!=""){
-        plotName<-paste0(saveG,"/GeneralUniquenessSensib.jpg")
+        plotName<-paste0(saveG,"/GeneralUniquenessSensib.png")
     png(filename = plotName,width=1200,height=900)
     print(allLCZ$ctPlot)
     dev.off()
@@ -216,7 +218,7 @@ typeLevels<-unique(echIntConf[,column1]) %>% as.vector
  }
 
  if(saveG!=""){
-   plotName<-paste0(saveG,"/byLCZUniquenessSensib.jpg")
+   plotName<-paste0(saveG,"/byLCZUniquenessSensib.png")
    png(filename = plotName,width=1200,height=900)
    print(byLCZPLot)
    dev.off()

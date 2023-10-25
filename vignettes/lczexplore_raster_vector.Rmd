@@ -242,7 +242,7 @@ confidSidney<-confidSensib(inputDf=sidneyComparison$data, nPoints=5,
 
 ```{r, out.width = "680px"}
 
-knitr::include_graphics("GeneralUniquenessSensib.jpg", error=FALSE)
+knitr::include_graphics("GeneralUniquenessSensib.png", error=FALSE)
 
 ```
 
@@ -250,6 +250,6 @@ One can also explore the evolution of this agreement according to the confidence
 
 ```{r, out.width = "680px"}
 
-knitr::include_graphics("byLCZUniquenessSensib.jpg", error=FALSE)
+knitr::include_graphics("byLCZUniquenessSensib.png", error=FALSE)
 
 ```

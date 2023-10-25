@@ -314,14 +314,14 @@ confidRedon<-confidSensib(inputDf=redonCompare$data,filePath="", nPoints=10,
 ```
 ```{r, out.width = "680px"}
 
-knitr::include_graphics("GeneralUniquenessSensib.jpg", error=FALSE)
+knitr::include_graphics("GeneralUniquenessSensib.png", error=FALSE)
 
 ```
 La fonction `confidSensib` propose également cette analyse par type de LCZ. 
 
 ```{r, out.width = "680px"}
 
-knitr::include_graphics("byLCZUniquenessSensib.jpg", error=FALSE)
+knitr::include_graphics("byLCZUniquenessSensib.png", error=FALSE)
 
 ```
 Les principales fonctions ont été évoquées ici, pour plus d'information consulter les fichiers d'aide de chacune des fonctions.

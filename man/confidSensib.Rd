@@ -30,7 +30,7 @@ confidSensib(
 a confidence value granted for the (LCZ) classifications values of each geom. Ignored if filePath is not empty.}
 
 \item{filePath}{is the path to a csv file containing geom IDs, LCZ classifications and
-a confidence value granted for the LCZ value of each geom.}
+a confidence value granted for the LCZ value of each geom. Set it to "" if inputDf is specified (recommanded)}
 
 \item{nPoints}{is the number of points (quantiles) of confidence for which
 the average agreement between classifications will be computed}
@@ -70,12 +70,14 @@ The input file or dataset must have been produced by compareLCZ function,
 or at least the columns must be in the same order.
 }
 \examples{
-mainPath<-system.file("extdata", package = "lczexplore")
-testSourceFact<-read.csv(paste0(mainPath,"/bdtopo_2_2_osm.csv"),
-sep=";",header=TRUE,stringsAsFactors = TRUE)
-confidSensib(inputDf=testSourceFact, filePath="",
+# creation of the comparison data on which to perform the analysis
+redonCompare<-compareLCZ(sf1=redonBDT,wf1="bdt", geomID1 = "ID_RSU",column1 ="LCZ_PRIMARY",
+                        confid1 = "LCZ_UNIQUENESS_VALUE",
+                        sf2=redonOSM, wf2="osm",geomID2 = "ID_RSU",column2="LCZ_PRIMARY",
+                        confid2 ="LCZ_UNIQUENESS_VALUE",exwrite=FALSE,plot=FALSE)
+confidSensib(inputDf=redonCompare$data,
 nPoints=5, wf1="bdtopo_2_2", wf2="osm",
 geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
 geomID2="ID_RSU.1",column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1",
-sep=";", repr="standard", plot=TRUE, saveG=mainPath)
+sep=";", repr="standard", plot=TRUE, saveG="")
 }

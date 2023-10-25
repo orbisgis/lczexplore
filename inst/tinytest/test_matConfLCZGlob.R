@@ -11,6 +11,7 @@ expect_message(compareRedonBDTOSM<-
                             sf2=redonOSM, column2="LCZ_PRIMARY", geomID2 = "ID_RSU", confid2="LCZ_UNIQUENESS_VALUE", wf2="osm",
                             repr="standard", saveG="", exwrite=TRUE, location="Redon", plot=FALSE),
                "Both sf datasets need to live in the same crs projection \\(srid / epsg\\),")
+file.remove("bdtopo_2_2_osm.csv")
 
 expect_silent(
   testGlob<-matConfLCZGlob(filePath= paste0(system.file("extdata", package = "lczexplore"),"/bdtopo_2_2_osm.csv"),
