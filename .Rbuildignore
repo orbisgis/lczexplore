@@ -9,3 +9,6 @@
 ^CITATION\.cff$
 ^\\.gitignore$
 .gitignore$
+^CODE_OF_CONDUCT\.md$
+^CONTRIBUTING\.md$
+^bdtopo_2_2_osm\.csv$
