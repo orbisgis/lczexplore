@@ -30,9 +30,9 @@
 #' redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
 #' fileName="redonWudapt.tif",bBox=redonBbox)
 #' 
-#' # another way to get the bounding box when one explores a given city would be the use of the 
+#' # Another way to get the bounding box when one explores a given city would be the use of the 
 #' # getbb() function from the osmdata package. 
-#' # This exaample requires the osmdata package and therefore is not executed here
+#' # This example requires the osmdata package and therefore is not executed here
 #' # redonBbox<-osmdata::getbb("Redon")
 #' # redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
 #' # fileName="redonWudapt.tif",bBox=redonBbox)
@@ -46,6 +46,7 @@
 #' fileName="redonWudapt.tif",bBox=redonBbox, LCZband=1, LCZcolumn='EU_LCZ_map')
 importLCZraster<-function(dirPath, bBox, fileName="EU_LCZ_map.tif", LCZband=1, LCZcolumn='EU_LCZ_map',
                           confidenceBand = "", confidenceColumn = "confidence",
+
                           typeLevels=c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",
                            "9"="9","10"="10","101"="11","102"="12","103"="13","104"="14",
                             "105"="15", "106"="16","107"="17")){
