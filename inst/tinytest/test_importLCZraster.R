@@ -29,7 +29,8 @@ outBbox<-st_sfc(lowCorner,upCorner,crs=4326)
 #importLCZraster("/home/gousseff/Documents/2_CodesSources/Wudapt/WudaptEurope/",bBox=outBbox)
 
 # test bounding box not intersecting with rastet
-expect_error(current = test<-importLCZraster(dirPath = system.file("extdata", package = "lczexplore"),fileName="redonWudapt.tif",bBox=outBbox),
+expect_error(current = test<-importLCZraster(dirPath = system.file("extdata", package = "lczexplore"),
+                                             fileName="redonWudapt.tif",bBox=outBbox),
              "The bounding box doesn\'t intersect ")
 
 

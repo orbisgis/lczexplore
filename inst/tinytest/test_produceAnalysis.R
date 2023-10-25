@@ -60,3 +60,5 @@ file.remove("Redon_bdtopo_2_2_osm_standard.png")
 file.remove("bdtopo_2_2_osm.csv")
 file.remove(paste0(
   system.file(package="lczexplore"),"/tinytest/bdtopo_2_2/Redon/rsu_lcz.geojson"))
+file.remove("Redon_bdtopo_2_2_osm_standard.png")
+file.remove("bdtopo_2_2_osm.csv")

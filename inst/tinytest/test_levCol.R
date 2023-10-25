@@ -44,7 +44,7 @@ test<-levCol(sf=redonBDTgrouped,column="grouped",
              colors=c("red","black","green","grey","burlywood"))
 expect_equal(grep("3:",test$case),1)
 
-test<-test<-levCol(sf=redonBDTgrouped,column="grouped",
+test<-levCol(sf=redonBDTgrouped,column="grouped",
                    colors=c("red","black","green","grey","burlywood","blue","purple"))
 
 
