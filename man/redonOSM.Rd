@@ -20,7 +20,6 @@ An sf object with 3 variables and a geometry :
 redonOSM
 }
 \description{
-Full baby name data provided by the SSA. This includes all names with at
-least 5 uses.
+RedonOSM
 }
 \keyword{datasets}

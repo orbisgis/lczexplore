@@ -201,6 +201,7 @@ a layer of confidence value. Notice one band was selected by its order in the ra
 
 
 This allows to also perform a confidence analysis on the agreement between two maps according to the level of confidence one allows to the LCZ value for each pixel. 
+The data used for this example come from Demuzere, M., Kittner, J., Bechtel, B. (2021). LCZ Generator: a web application to create Local Climate Zone maps. Frontiers in Environmental Science 9:637455. https://doi.org/10.3389/fenvs.2021.637455
 
 ```{r, echo=TRUE, fig.show="hide"}
 # Dedicated files were integrated to demonstrate the whole workflow on an area of Sidney
