@@ -28,10 +28,10 @@
 #'
 #' @examples
 #' # creation of the comparison data on which to perform the analysis
-#' redonCompare<-compareLCZ(sf1=redonBDT,wf1="bdt", geomID1 = "ID_RSU",column1 ="LCZ_PRIMARY",
+#' redonCompare<-compareLCZ(sf1=redonBDT, wf1="bdt", geomID1 = "ID_RSU", column1 ="LCZ_PRIMARY",
 #'                         confid1 = "LCZ_UNIQUENESS_VALUE",
-#'                         sf2=redonOSM, wf2="osm",geomID2 = "ID_RSU",column2="LCZ_PRIMARY",
-#'                         confid2 ="LCZ_UNIQUENESS_VALUE",exwrite=FALSE,plot=FALSE)
+#'                         sf2=redonOSM, wf2="osm",geomID2 = "ID_RSU", column2="LCZ_PRIMARY",
+#'                         confid2 ="LCZ_UNIQUENESS_VALUE", exwrite=FALSE, plot=FALSE, saveG="")
 #' confidSensib(inputDf=redonCompare$data,
 #' nPoints=5, wf1="bdtopo_2_2", wf2="osm",
 #' geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
@@ -76,7 +76,7 @@ confidSensib<-function(inputDf="", filePath="", nPoints=5,
   # between LCZ classifications
 
   echIntConf<-subset(echInt,!is.na(echInt$confidMin))
-  # print("séparation");(print(nrow(echIntNoconf)));(print(nrow(echIntConf)));(print(nrow(echInt)))
+
 
   #############################################################################################
   # All LCZ levels treated together

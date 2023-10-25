@@ -120,14 +120,14 @@ expect_message(compareLCZ(sf1=redonBDTgrouped2, column1="groupedLCZ", wf1="BDT",
                           sf2=redonWudaptGrouped, column2="otherName", wf2="osm", exwrite=FALSE, repr="alter", plot=T,
                           urban="urban",industry="industry",vegetation="vegetation",
                           impervious="impervious",pervious="pervious",water="water",
-                          colors=c("red","black","green","grey","burlywood","blue")),
+                          colors=c("red","black","green","grey","burlywood","blue"), saveG=""),
                "they will be coerced to the specified reference \\(redonBDTgrouped2\\)"
 )
 
 expect_message(compareLCZ(sf1=redonBDTgrouped2, column1="groupedLCZ", wf1="BDT",
            sf2=redonOSMgrouped2, column2="otherName", wf2="osm", exwrite=FALSE, repr="alter", plot=T,
            urban="urban",industry="industry",vegetation="vegetation",impervious="impervious",pervious="pervious",water="water",
-           colors=c("red","black","green","grey","burlywood","blue")),
+           colors=c("red","black","green","grey","burlywood","blue"), saveG=""),
                "they will be coerced to the specified reference \\(redonBDTgrouped2\\)"
 )
 

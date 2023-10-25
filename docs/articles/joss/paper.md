@@ -587,6 +587,6 @@ Guidelines.
 # Research projects involving lczexplore
 
 The lczexplore package was developed thanks to the project PÆNDORA2
-(Pour la gestion du confort estival: Données, Outils et Recherche-Action) (2022 -2025), funded by ADEME.
+(Pour la gestion du confort estival: Donnees, Outils et Recherche-Action) (2022 -2025), funded by ADEME.
 
 # References

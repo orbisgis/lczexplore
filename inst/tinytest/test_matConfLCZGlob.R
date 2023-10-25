@@ -18,7 +18,7 @@ expect_silent(
                                           file="bdtopo_2_2_osm.csv", wf1="bdt", wf2="osm",
                                 geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
                          geomID2="ID_RSU.1", column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1", sep=";", repr="standard",
-                         typeLevels="", plot=T)
+                         typeLevels="", plot=FALSE)
 
   )
 
@@ -29,5 +29,5 @@ matConfLCZGlob(filePath="",
                inputDf = testSource, wf1="bdt", wf2="osm",
                geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
                geomID2="ID_RSU.1", column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1", sep=";", repr="standard",
-               typeLevels="", plot=T)
+               typeLevels="", plot=FALSE)
 )
