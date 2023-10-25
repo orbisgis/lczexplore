@@ -62,5 +62,5 @@ Same analysis are reproducible using all the generic functions of the package.
 }
 \examples{
 produceAnalysis(location="Redon", outDir=paste0(system.file(package="lczexplore"),"/tinytest"),
-wf1="bdtopo_2_2", wf2="osm", refYear1="2022", refYear2="2022", repr="standard", saveG=location)
+wf1="bdtopo_2_2", wf2="osm", refYear1="2022", refYear2="2022", repr="standard", saveG="")
 }

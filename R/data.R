@@ -18,8 +18,7 @@
 
 #' RedonOSM
 #'
-#' Full baby name data provided by the SSA. This includes all names with at
-#' least 5 uses.
+#'
 #'
 #' @format An sf object with 3 variables and a geometry :
 #' \describe{
@@ -33,3 +32,20 @@
 #' @name redonOSM
 #' @source "https://github.com/orbisgis/geoclimate"
 "redonOSM"
+
+
+#' rasterMD.tif
+#'
+#'
+#'
+#' @format A .tif raster used to illustrate the import of several bands from a raster
+#' \describe{
+#' \item{\code{lcz}}{a band with an lcz value for each pixel}
+#' \item{\code{lczFilter}}{a band with a filtered lcz value for each pixel}
+#' \item{\code{classProbability}}{a band which provides the probability associated to the lcz value, from 0 to 100}
+#' }
+#'
+#' @docType tif file
+#' @name rasterMD.tif
+#' @source "https://doi.org/10.3389/fenvs.2021.637455"
+
