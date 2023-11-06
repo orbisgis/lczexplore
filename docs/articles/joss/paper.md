@@ -90,9 +90,9 @@ for any given area.
 
 - the raster stream processes remotely sensed information, and applies machine learning
   algorithms trained using local experts' knowledge. In this way, the WUDAPT community [@chingWUDAPTUrbanWeather2018a]
-  produced thousands of city-based LCZ maps (accessible via the LCZ Generator ([@demuzereLCZGeneratorWeb2021]))
-  but also large-scale maps for Europe, the continental United States and the whole world ([@demuzere2019mapping],
-  [@demuzere2020combining], [@demuzere2022global]).   
+  produced thousands of city-based LCZ maps, accessible via the LCZ Generator [@demuzereLCZGeneratorWeb2021],
+  but also large-scale maps for Europe, the continental United States and the whole world [@demuzere2019mapping],
+  [@demuzere2020combining], [@demuzere2022global].   
 - the vector stream uses Geographic Information System (GIS) layers that represent the main topographic features,
   defines spatial units, computes urban canopy parameters and uses them to classify spatial units into LCZ.
   For instance, the GeoClimate geospatial toolbox produces LCZ classifications
