@@ -50,7 +50,7 @@ mortality [@clarke1972some], health in general [@lowe2016energy] and consumption
 for building cooling [@malys2012microclimate] among other effects.
 A first step towards large scale study of urban climate is to define classes
 based on logical division of the landscape,
-such as Local Climate Zones (LCZ) defined by [@stewart2012local].
+such as Local Climate Zones (LCZ) defined by @stewart2012local.
 
 A spatial comparison is performed by producing agreement maps between classifications, agreement statistics and
 a confusion matrix to help qualify and quantify the misclassifications.
