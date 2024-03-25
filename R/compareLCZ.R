@@ -386,8 +386,9 @@ matConfLarge<-as.matrix(matConfLarge)
   
 # Add pseudo Kappa Statistic to output to   
 PseudoWeightedCross<-matConfLarge*100
-pseudoK<-DescTools::CohenKappa(x=PseudoWeightedCross)  
-matConfOut$pseudoK<-pseudoK
+# pseudoK<-DescTools::CohenKappa(x=PseudoWeightedCross)  
+  pseudoK<-CohenKappa(x=PseudoWeightedCross)
+  matConfOut$pseudoK<-pseudoK
   
 areas<-matConfOut$areas
 percAgg<-matConfOut$percAgg

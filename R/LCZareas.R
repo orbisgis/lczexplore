@@ -12,8 +12,18 @@
 #' #LCZareas is not to be used directly by user.
 LCZareas<-function(sf,column,LCZlevels){
 # Creation of a colum with geometry area
-  sf<-sf %>% mutate(area=st_area(geometry)) %>% drop_units
+  
+    sf<-tryCatch({
+      mutate(sf,area=st_area(geometry)) %>% drop_units
+    },
+                 error=function(e){
+                   message("Some geometries don't seem valid, the function will try to make them valid, it may take a bit longer.")
+                   sf %>% st_make_valid %>% mutate(area=st_area(geometry)) %>% drop_units
+                 }
 
+    )
+  
+  
  # area by LCZ LCZ
   areaLCZ<-sf %>% st_drop_geometry %>% group_by_at(.vars=column) %>%
     summarize(area=sum(area,na.rm=T))%>%

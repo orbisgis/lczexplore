@@ -18,6 +18,7 @@
 #' dropped excepted those specified in previous parameters
 #' @import dplyr forcats rlang sf
 #' @importFrom terra crop
+#' @importFrom tidyr drop_na
 #' @importFrom terra rast
 #' @return returns an sf object containing at least the geoms and the LCZ values, 
 #' and if specified, columns for the IDs of the geoms and the confidence value of the LCZ levels.
@@ -52,12 +53,13 @@ importLCZvect<-function(dirPath, file="rsu_lcz.geojson", output="sfFile", column
             are you sure you meant ",
                  paste(badCol)," ?")
   if (prod(inCol)==0){ stop(colErr) } else { 
-    if (drop== TRUE) {sfFile<-sf::st_read(dsn=fileName,quiet=!verbose)[,colonnes] } else {sfFile<-sf::st_read(dsn=fileName,quiet=!verbose)[,]}
+    if (drop== TRUE) {sfFile<-sf::st_read(dsn=fileName,quiet=!verbose)[,colonnes] } else {
+      sfFile<-sf::st_read(dsn=fileName,quiet=!verbose)[,]}
   }
 
   # if typeLevels is empty
   if (length(typeLevels)==1){
-    typeLevels<-unique(subset(sfFile,select=column,drop=TRUE))
+    typeLevels<-unique(subset(sfFile,select=all_of(column),drop=TRUE))
     names(typeLevels)<-typeLevels
   }
 
@@ -102,7 +104,8 @@ if (column!=""){
 
   if(output=="sfFile"){return(sfFile)} else {
     if(output=="bBox"){ 
-      bBox<-st_bbox(sfFile,crs=st_crs(sfFile)) %>% st_as_sfc
+      bBox<-st_bbox(sfFile,crs=st_crs(sfFile)) %>% st_as_sfc %>% st_make_valid(geos_keep_collapsed = FALSE)
+      
       return(bBox) }
     else {
       stop("Output must be sfFile to return geoms and LCZ or bBox to return the bounding box")}
