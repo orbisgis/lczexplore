@@ -27,7 +27,13 @@ expect_message(compareRedonBDTOSM<-
                "\\(redonOSM\\)")
 file.remove("bdtopo_2_2_osm.csv")
 
-
+compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU", confid1="LCZ_UNIQUENESS_VALUE", wf1="bdtopo_2_2",
+           sf2=redonOSM, column2="LCZ_PRIMARY", geomID2 = "ID_RSU", confid2="LCZ_UNIQUENESS_VALUE", wf2="osm",
+           repr="alter", ref=2, saveG="", exwrite=FALSE, location="Redon", plot=TRUE, urban=c("1","2","3","4","5","6","7","8","9"),
+           tryGroup=TRUE, industry="10",
+           vegetation=c("101","102","103","104"),
+           impervious="105",pervious="106",water="107",
+           colors=c("orange","black","darkGreen","grey","burlywood","blue"))
 
 expect_message(compareRedonBDTsquare<-
   compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU", confid1="LCZ_UNIQUENESS_VALUE", wf1="bdtopo_2_2",

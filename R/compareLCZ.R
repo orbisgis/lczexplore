@@ -37,7 +37,6 @@
 #' The expected arguments are the name of each level of the variables contained 
 #' in column1 and column2, and also a vector called colors.
 #' @importFrom ggplot2 geom_sf guides ggtitle aes
-#' @importFrom DescTools CohenKappa
 #' @import sf dplyr cowplot forcats units tidyr RColorBrewer utils grDevices rlang
 #' @return returns graphics of comparison and an object called matConfOut which contains :
 #' matConfLong, a confusion matrix in a longer form, 
@@ -386,8 +385,9 @@ matConfLarge<-as.matrix(matConfLarge)
   
 # Add pseudo Kappa Statistic to output to   
 PseudoWeightedCross<-matConfLarge*100
-pseudoK<-DescTools::CohenKappa(x=PseudoWeightedCross)  
-matConfOut$pseudoK<-pseudoK
+# pseudoK<-DescTools::CohenKappa(x=PseudoWeightedCross)  
+  pseudoK<-CohenKappa(x=PseudoWeightedCross)
+  matConfOut$pseudoK<-pseudoK
   
 areas<-matConfOut$areas
 percAgg<-matConfOut$percAgg
