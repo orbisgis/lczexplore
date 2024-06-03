@@ -29,7 +29,8 @@ Suggests:
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
-    png
+    png,
+    markdown
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 LazyData: true
