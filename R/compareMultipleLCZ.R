@@ -16,14 +16,21 @@ compareMultipleLCZ<-function(sfList, columns, refCrs=NULL, sfWf=NULL, trimPerc=0
   print(rangeCol)
   # print(names(echIntnogeom[,rangeCol]))
   echIntnogeom$nbAgree<-apply(echIntnogeom[,rangeCol],MARGIN=1,sum)
+  echIntnogeom$maxAgree<-apply(
+    X = echIntnogeom[,1:length(sfList)], MARGIN = 1, function(x) max(table(x) ))
   echInt<-cbind(echIntnogeom,echInt$geometry)  %>% st_as_sf()
   echInt
+  echIntLong<-pivot_longer(st_drop_geometry(echInt),cols=rangeCol, names_to = "whichWfs", values_to = "agree")
+  echIntLong$LCZref<-substr(echIntLong$whichWfs,start = 1, stop=1 )
+  print(head(echIntLong[,c(1,2,9:10)]))
+  whichLCZagree <- names(echIntLong)[as.numeric(echIntLong$LCZref)]
+  indRow<- seq_len(nrow(echIntLong))
+  z<-data.frame(indRow, whichLCZagree)
+  echIntLong$LCZvalue<-apply(z, 1, function(x) unlist(st_drop_geometry(echIntLong)[x[1], x[2]]))
+  print(head(echIntLong[,c(1,2,9:11)]))
   
-  return(echInt)
-  # print(length(listSfs)+2:(ncol(echInt)-1))
-  # echInt
+  output<-list(echInt=echInt, echIntLong=echIntLong)
 }
-
 
 
 # sfBDT_11_78030<-importLCZvect(dirPath="/home/gousseff/Documents/0_DocBiblioTutosPublis/0_ArticlesScientEtThèses/ArticleComparaisonLCZGCWUDAPTEXPERTS/BDT/2011/bdtopo_2_78030",
@@ -56,9 +63,20 @@ multicompare_test<-compareMultipleLCZ(sfList = sfList, columns = c(rep("LCZ_PRIM
                                       sfWf = c("BDT11","BDT22","OSM11","OSM22","WUDAPT"),trimPerc = 0.5)
 multicompare_test
 
-plot1<-showLCZ(sf = multicompare_test, column="LCZBDT22", wf="22")
-plot2<-showLCZ(sf = multicompare_test, column="LCZBDT11", wf="11")
+test<-multicompare_test$echIntLong
+test2<-test %>% subset(agree==TRUE) %>% group_by(LCZvalue) %>% summarize(agreementArea=sum(area)) %>% mutate(percAgreementArea=agreementArea/sum(agreementArea))
 
-ggplot(data=multicompare_test) +
-  geom_sf(aes(fill=as.factor(nbAgree), color=after_scale(fill)))
+test<-multicompare_test$echInt[,1:5] %>% st_drop_geometry()
+prov1<-apply(X = test, MARGIN = 1, table )
+prov2<-apply(X = test, MARGIN = 1, function(x) max(table(x)) )
+
+head(prov1)
+head(prov2)
+
+plot1<-showLCZ(sf = multicompare_test$echInt, column="LCZBDT22", wf="22")
+plot2<-showLCZ(sf = multicompare_test$echInt, column="LCZBDT11", wf="11")
+
+ggplot(data=multicompare_test$echInt) +
+  geom_sf(aes(fill=maxAgree, color=after_scale(fill)))+
+  scale_fill_gradient(low = "red" , high = "green", na.value = NA)
 
