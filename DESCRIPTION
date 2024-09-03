@@ -1,6 +1,6 @@
 Package: lczexplore
 Title: lczexplore
-Version: 0.0.1.0003
+Version: 0.0.1.0029
 Authors@R: c(
     person("Matthieu", "Gousseff", , "matthieu.gousseff@univ-ubs.fr", role = c("aut", "cre")),
     person(, "Centre National de la Recherche Scientifique, Lab-Sticc", role = "cph", comment = c(ORCID = "0000-0002-7106-2677"))
@@ -22,7 +22,6 @@ Imports: RColorBrewer,
           units,
           rlang,
           grDevices,
-          DescTools,
           methods
 Suggests: 
     tinytest,
