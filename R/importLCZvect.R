@@ -37,8 +37,11 @@ importLCZvect<-function(dirPath, file="rsu_lcz.geojson", output="sfFile", column
                                   "101"="A","102"="B","103"="C","104"="D","105"="E","106"="F","107"="G"),
                        drop=T, verbose=FALSE){
   if (!file.exists(dirPath)){stop(message="The directory set in dirPath doesn't seem to exist")}
-
-  fileName<-paste0(dirPath,"/",file)
+  if ( substr(dirPath, start=nchar(dirPath), stop = nchar(dirPath)) == "/") { 
+    fileName<-paste0(dirPath,file)} else {
+      fileName<-paste0(dirPath,"/",file)
+  }
+  
   # select only the needed column, that is the unempty strings among column, geomID and confid
   colonnes<-c(geomID,column,confid)
   colonnes<-colonnes[sapply(colonnes,nchar)!=0]
