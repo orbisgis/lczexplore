@@ -12,9 +12,7 @@ expect_silent(showLCZ(redonBDT, drop=TRUE))
 
 testCol <- palette.colors(n=17, palette="Polychrome 36")
 
-# showLCZ(redonBDT, title="Zones climatiques locales à Redon",repr="alter",
-#         useStandCol=FALSE,
-#         colors = testCol )
+# showLCZ(redonBDT, title="Zones climatiques locales à Redon",repr="standard")
 
 #  showLCZ(sf=redonOSM, wf="OSM", column="LCZ_PRIMARY", title="test", repr="alter", colors=testCol, useStandCol=FALSE)
 # # 

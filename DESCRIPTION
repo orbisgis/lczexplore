@@ -1,6 +1,6 @@
 Package: lczexplore
 Title: lczexplore
-Version: 0.0.1.0003
+Version: 0.0.1.0029
 Authors@R: c(
     person("Matthieu", "Gousseff", , "matthieu.gousseff@univ-ubs.fr", role = c("aut", "cre")),
     person(, "Centre National de la Recherche Scientifique, Lab-Sticc", role = "cph", comment = c(ORCID = "0000-0002-7106-2677"))
@@ -9,7 +9,7 @@ Description: This lczexplore package automatize the comparison of sets of local 
 License: LGPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Imports: RColorBrewer,
           cowplot,
           dplyr,
@@ -22,16 +22,15 @@ Imports: RColorBrewer,
           units,
           rlang,
           grDevices,
-          DescTools,
           methods
 Suggests: 
     tinytest,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
-    png
+    png,
+    markdown
 Config/testthat/edition: 3
-VignetteBuilder: knitr
 LazyData: true
 Depends: 
     R (>= 2.10)

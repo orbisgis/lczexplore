@@ -106,3 +106,13 @@ test<-importLCZvect(dirPath=paste0(
   system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),file="rsu_lcz.geojson",
               column="LCZ_PRIMARY", geomID="ID_RSU", confid="LCZ_UNIQUENESS_VALUE", drop=FALSE)
 expect_equal("LCZ_SECONDARY"%in%names(test),TRUE)
+
+# Special test with a flatgeobuffer file. 
+test<-importLCZvect(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),
+                            column="LCZ_PRIMARY",geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE",verbose=T)
+if (file.exists("test.fgb")) file.remove("test.fgb")
+write_sf(test, "test.fgb")
+expect_silent(test<-importLCZvect(dirPath=getwd(),file="test.fgb",
+                    column="LCZ_PRIMARY",geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE",verbose=T))
+rm(test)
+if (file.exists("test.fgb")) file.remove("test.fgb")
