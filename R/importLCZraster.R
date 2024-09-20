@@ -66,7 +66,7 @@ importLCZraster<-function(dirPath, bBox, fileName="EU_LCZ_map.tif", LCZband=1, L
     if (sum(class(bBox)%in%c("sfc_POLYGON","sfc" ))==0) {
       bBox<-st_as_sfc(bBox)
     }
-    bBox<-st_transform(bBox, st_crs(filePath,proj=TRUE))
+    bBox<-st_transform(bBox, st_crs(sfFile,proj=TRUE))
     
 
     cropTry<-try(sfFile %>% crop(bBox))
@@ -85,7 +85,7 @@ importLCZraster<-function(dirPath, bBox, fileName="EU_LCZ_map.tif", LCZband=1, L
     names(sfFile)[names(sfFile)==LCZband]<-LCZcolumn
     names(sfFile)[names(sfFile)==confidenceBand]<-confidenceColumn
       print(str(sfFile))
-    sfFile<-sfFile%>% mutate(!!LCZcolumn:=fct_recode(factor(subset(sfFile,select=LCZcolumn,drop=T),levels=typeLevels),
+    sfFile<-sfFile%>% mutate(!!LCZcolumn:=fct_recode(factor(subset(sfFile,select=all_of(LCZcolumn),drop=T),levels=typeLevels),
                                     !!!typeLevels)) %>%
         drop_na(LCZcolumn)
 
