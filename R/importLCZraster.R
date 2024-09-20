@@ -51,20 +51,22 @@ importLCZraster<-function(dirPath, bBox, fileName="EU_LCZ_map.tif", LCZband=1, L
                            "9"="9","10"="10","101"="11","102"="12","103"="13","104"="14",
                             "105"="15", "106"="16","107"="17")){
 # internal import function used in two loops
-  effectiveImport<-function(fileName,bBox,LCZband,confidenceBand,LCZcolumn, confidenceColumn){
+  if ( substring(dirPath, first = nchar(dirPath), last = nchar(dirPath))!="/" ) { dirPath<- paste0( dirPath, "/")}
+  
+  effectiveImport<-function(filePath,bBox,LCZband,confidenceBand,LCZcolumn, confidenceColumn){
 
      if(confidenceBand=="") {
     lyrs=list(LCZband)
-    sfFile<-do.call(rast, list(x=fileName, lyrs=lyrs))
+    sfFile<-do.call(rast, list(x=filePath, lyrs=lyrs))
   } else if (confidenceBand!="") {
     lyrs=list(LCZband,confidenceBand)
-    sfFile<-do.call(rast, list(x=fileName, lyrs=lyrs))
+    sfFile<-do.call(rast, list(x=filePath, lyrs=lyrs))
   }
 
     if (sum(class(bBox)%in%c("sfc_POLYGON","sfc" ))==0) {
       bBox<-st_as_sfc(bBox)
     }
-    bBox<-st_transform(bBox, st_crs(sfFile,proj=TRUE))
+    bBox<-st_transform(bBox, st_crs(filePath,proj=TRUE))
     
 
     cropTry<-try(sfFile %>% crop(bBox))
@@ -98,19 +100,19 @@ importLCZraster<-function(dirPath, bBox, fileName="EU_LCZ_map.tif", LCZband=1, L
 
   if (!file.exists(dirPath)){stop(message="The directory set in dirPath doesn't seem to exist")}
   else{
-    fileName<-paste0(dirPath,"/",fileName)
-    print(fileName)
-    if (!file.exists(fileName)) {
+    filePath<-paste0(dirPath,fileName)
+    print(filePath)
+    if (!file.exists(filePath)) {
         stop("The raster file doesn't exist in the specified directory")
         } else  { # if the user specifies the number of the layer and not its name
           if (is.numeric(LCZband) | is.numeric(confidenceBand)){
-            sfFile<-rast(fileName)
+            sfFile<-rast(filePath)
             layerNames <- names(sfFile)
             if (is.numeric(LCZband)) { LCZband<-layerNames[LCZband] }
             if (is.numeric(confidenceBand)) { confidenceBand<-layerNames[confidenceBand] }
           }
           
-          sfFile<-effectiveImport(fileName  =  fileName,  bBox = bBox,  
+          sfFile<-effectiveImport(filePath  =  filePath,  bBox = bBox,  
                                   LCZband = LCZband,  LCZcolumn = LCZcolumn, 
                                   confidenceBand =  confidenceBand, 
                                   confidenceColumn = confidenceColumn)

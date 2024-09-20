@@ -63,8 +63,8 @@
 #' 
 #' # Examples for non LCZ variables are available in the importQualVar function examples.
 #' 
-compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
-                     sf2,column2,geomID2="",confid2="",wf2="osm",ref=1,
+compareLCZ<-function(sf1, geomID1="", column1 = "LCZ_PRIMARY", confid1="", wf1="bdtopo_2_2",
+                     sf2, column2="LCZ_PRIMARY", geomID2="", confid2="", wf2="osm", ref=1,
                      repr="standard",saveG="",exwrite=FALSE,outDir=getwd(),
                      location="Your Place", plot=TRUE, tryGroup=FALSE, ...){
 
