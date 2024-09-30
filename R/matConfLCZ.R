@@ -39,9 +39,9 @@ matConfLCZ<-function(sf1, column1, sf2, column2, typeLevels=as.character(c(1:10,
   sf2<-sf2 %>% mutate(!!column2:=factor(subset(sf2,select=column2,drop=T),levels=typeLevels))%>% drop_na(column2)
 
   # creation of the data set with intersected geoms and the values of both lcz class in these geoms
-  echInt<-st_intersection(x=sf1[column1],y=sf2[column2])
+  intersec_sf<-st_intersection(x=sf1[column1],y=sf2[column2])
   # checks if the two LCZ classifications agree
-  echInt$agree<-subset(echInt,select=column1,drop=T)==subset(echInt,select=column2,drop=T)
+  intersec_sf$agree<-subset(intersec_sf,select=column1,drop=T)==subset(intersec_sf,select=column2,drop=T)
 
 
 
@@ -52,20 +52,20 @@ matConfLCZ<-function(sf1, column1, sf2, column2, typeLevels=as.character(c(1:10,
   ######################################################
 
   # compute the area of geoms (used later as wieght of agreement between classifcations)
-  echInt<-echInt %>% mutate(area=st_area(geometry)) %>% drop_units
+  intersec_sf<-intersec_sf %>% mutate(area=st_area(geometry)) %>% drop_units
 
   # the writing/appending will happen in compareLCZ function
 
   # marginal areas (grouped by levels of LCZ for each input dataset) rounded at the unit
     # marginal for first LCZ
-   areaLCZ1<-echInt %>% st_drop_geometry %>% group_by_at(.vars=column1) %>%
+   areaLCZ1<-intersec_sf %>% st_drop_geometry %>% group_by_at(.vars=column1) %>%
     summarize(area=sum(area,na.rm=F))%>%
     drop_units %>%
     ungroup()
   areaLCZ1$area<-round(areaLCZ1$area/sum(areaLCZ1$area,na.rm=F)*100,digits = 2)
 
     # marginal for second LCZ
-  areaLCZ2<-echInt %>% st_drop_geometry %>% group_by_at(.vars=column2) %>%
+  areaLCZ2<-intersec_sf %>% st_drop_geometry %>% group_by_at(.vars=column2) %>%
     summarize(area=sum(area,na.rm=F))%>%
     drop_units %>%
     ungroup()
@@ -92,14 +92,14 @@ matConfLCZ<-function(sf1, column1, sf2, column2, typeLevels=as.character(c(1:10,
   }
 
   # Get the general agreement between both input files
-  percAgg<-(((echInt %>% st_drop_geometry() %>% filter(agree==T) %>% select(area) %>% sum) /
-                (echInt %>% st_drop_geometry()%>% select(area) %>% sum))*100) %>% round(digits=2)
+  percAgg<-(((intersec_sf %>% st_drop_geometry() %>% filter(agree==T) %>% select(area) %>% sum) /
+                (intersec_sf %>% st_drop_geometry()%>% select(area) %>% sum))*100) %>% round(digits=2)
 
   # the way to "feed" group_by is through .dots, to be checked, as it seems to be deprecated :
   # fixed with group_by_at
 
 
-  matConf<-echInt %>% st_drop_geometry %>% group_by_at(.vars=c(column1,column2)) %>%
+  matConf<-intersec_sf %>% st_drop_geometry %>% group_by_at(.vars=c(column1,column2)) %>%
     summarize(area=sum(area))%>% drop_units %>% ungroup %>% ungroup
 
   # print("matConf")

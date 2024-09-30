@@ -314,19 +314,19 @@ compareLCZ<-function(sf1, geomID1="", column1 = "LCZ_PRIMARY", confid1="", wf1="
    # # Intersect geometries of both files
   ######################################################
     #intersection of geometries
-  echInt<-st_intersection(x=sf1[,nom1],y=sf2[,nom2]) %>% st_buffer(0) %>% 
+  intersec_sf<-st_intersection(x=sf1[,nom1],y=sf2[,nom2]) %>% st_buffer(0) %>% 
     mutate(area=drop_units(st_area(geometry)))
-  nbNoSurf<-nrow(subset(echInt,area==0))
+  nbNoSurf<-nrow(subset(intersec_sf,area==0))
   if (nbNoSurf>0){
   message(paste0(
     "The intersection of the two data set geometries return ",
     nbNoSurf, " geometries with an null area. They will be discarded."))
-  echInt<-subset(echInt,area!=0)
+  intersec_sf<-subset(intersec_sf,area!=0)
   }
 
   
     # checks if the two LCZ classifications agree
-  echInt$agree<-subset(echInt,select=column1,drop=T)==subset(echInt,select=column2,drop=T)
+  intersec_sf$agree<-subset(intersec_sf,select=column1,drop=T)==subset(intersec_sf,select=column2,drop=T)
 
 
 ######################################################
@@ -337,11 +337,11 @@ compareLCZ<-function(sf1, geomID1="", column1 = "LCZ_PRIMARY", confid1="", wf1="
 
   # Export of lcz and area for each geom for further analysis
 
-        #echInt<-echInt %>% mutate(area=st_area(geometry)) %>% drop_units
+        #intersec_sf<-intersec_sf %>% mutate(area=st_area(geometry)) %>% drop_units
     # Drop intersected geometries with area equal to zero
-        echInt<-subset(echInt,area!=0)
+        intersec_sf<-subset(intersec_sf,area!=0)
   
-        echIntExpo<-echInt %>% mutate(location=location,area=as.numeric(area)) %>%
+        intersec_sfExpo<-intersec_sf %>% mutate(location=location,area=as.numeric(area)) %>%
           st_set_geometry(NULL) %>% as.data.frame()
 
 
@@ -357,12 +357,12 @@ compareLCZ<-function(sf1, geomID1="", column1 = "LCZ_PRIMARY", confid1="", wf1="
                        getwd())
                 )
         if (!file.exists(filePath)){
-        write.table(x=echIntExpo, file =nom, append = TRUE, quote = TRUE, sep = ";",
+        write.table(x=intersec_sfExpo, file =nom, append = TRUE, quote = TRUE, sep = ";",
                     eol = "\n", na = "NA", dec = ".",
                    qmethod = c("escape", "double"),
                     fileEncoding = "", col.names=TRUE,row.names=F)
         }else{
-          write.table(x=echIntExpo, file =nom, append = TRUE, quote = TRUE, sep = ";",
+          write.table(x=intersec_sfExpo, file =nom, append = TRUE, quote = TRUE, sep = ";",
                       eol = "\n", na = "NA", dec = ".",
                       qmethod = c("escape", "double"),
                       fileEncoding = "", col.names=FALSE,row.names=F)
@@ -374,7 +374,7 @@ compareLCZ<-function(sf1, geomID1="", column1 = "LCZ_PRIMARY", confid1="", wf1="
 
 matConfOut<-matConfLCZ(sf1=sf1, column1=column1, sf2=sf2, column2=column2,
                        repr=repr, typeLevels=LCZlevels, plot=FALSE)
-matConfOut$data<-echIntExpo
+matConfOut$data<-intersec_sfExpo
 matConfLong<-matConfOut$matConf
 matConfLarge<-pivot_wider(matConfLong,names_from = column2,values_from = agree)
 matConfLarge<-matConfLarge %>% as.data.frame()
@@ -440,7 +440,7 @@ if (plot == TRUE){
 
   nbgeom1<-nrow(sf1)
   nbgeom2<-nrow(sf2)
-  nbgeomInter<-nrow(echInt)
+  nbgeomInter<-nrow(intersec_sf)
 
   # Plot the first classification
      l1Plot<- ggplot2::ggplot(boundary)+ # les données
@@ -463,7 +463,7 @@ if (plot == TRUE){
   # Plot areas where classifications agree
      agreePlot<-ggplot(boundary)+
        geom_sf(data=boundary, fill=NA,lty='blank')+
-       geom_sf(data=echInt,aes(fill=agree),lwd=0,colour=NA)+
+       geom_sf(data=intersec_sf,aes(fill=agree),lwd=0,colour=NA)+
        scale_fill_manual(values=c("red","green"),
                          name=paste0(
                            "The two classifications agree for \n ",percAgg, " % of the area Agreement"))+

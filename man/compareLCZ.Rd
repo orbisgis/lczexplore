@@ -2,7 +2,7 @@
 % Please edit documentation in R/compareLCZ.R
 \name{compareLCZ}
 \alias{compareLCZ}
-\title{Compares two set of geographical classifications, especially Local Climate Zones classifications. It
+\title{Compares two sets of geographical classifications, especially Local Climate Zones classifications. It
 produces a map for each classification, a map of their agreement (and a pseudo Kappa coefficent),
 and a confusion matrix between them. All are stored in a list, easily reusable.}
 \usage{
@@ -91,7 +91,7 @@ pseudoK is a heuristic estimate of a Cohen's kappa coefficient of agreement betw
 If saveG is not an empty string, graphics are saved under "saveG.png"
 }
 \description{
-Compares two set of geographical classifications, especially Local Climate Zones classifications. It
+Compares two sets of geographical classifications, especially Local Climate Zones classifications. It
 produces a map for each classification, a map of their agreement (and a pseudo Kappa coefficent),
 and a confusion matrix between them. All are stored in a list, easily reusable.
 }

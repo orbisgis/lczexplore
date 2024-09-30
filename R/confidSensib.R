@@ -49,25 +49,25 @@ confidSensib<-function(inputDf="", filePath="", nPoints=5,
 
   # Import the data if they are in a csv file or in a R object
   if(filePath!=""){
-    echInt<-dplyr::distinct(read.csv(filePath,sep,header=T,stringsAsFactors = T))
-    names(echInt)<-colonnes
+    intersec_sf<-dplyr::distinct(read.csv(filePath,sep,header=T,stringsAsFactors = T))
+    names(intersec_sf)<-colonnes
   } else {
-    if(!is.null(inputDf)) {echInt<-dplyr::distinct(inputDf[,colonnes])}
+    if(!is.null(inputDf)) {intersec_sf<-dplyr::distinct(inputDf[,colonnes])}
     else {stop("You must specifiy a file path or the name of the object storing confidence and agreement")}
   }
 
 
-  echInt$confidMin<-pmin(echInt[,confid1],echInt[,confid2])
+  intersec_sf$confidMin<-pmin(intersec_sf[,confid1],intersec_sf[,confid2])
 
 
 
 # What is the agreement between LCZ classifications when no confidence value is available on any of them ?
-  echIntNoconf<-subset(echInt,is.na(echInt$confidMin))
-  nbOutCasted<-nrow(echIntNoconf)
+  intersec_sfNoconf<-subset(intersec_sf,is.na(intersec_sf$confidMin))
+  nbOutCasted<-nrow(intersec_sfNoconf)
   # print("Number of geoms without any confidence value : ")
   # print(nbOutCasted)
 
-  NAPercAgr<-matConfLCZGlob(inputDf=echIntNoconf, wf1=wf1, wf2=wf2,
+  NAPercAgr<-matConfLCZGlob(inputDf=intersec_sfNoconf, wf1=wf1, wf2=wf2,
                  geomID1=geomID1, column1=column1, confid1=confid1,
                  geomID2=geomID2, column2=column2, confid2=confid2,
                  sep=";", repr="standard",typeLevels="", plot=F)$pourcAcc
@@ -75,14 +75,14 @@ confidSensib<-function(inputDf="", filePath="", nPoints=5,
   #How does the max of the confidence value of the LCZ classifs influences the agreement
   # between LCZ classifications
 
-  echIntConf<-subset(echInt,!is.na(echInt$confidMin))
+  intersec_sfConf<-subset(intersec_sf,!is.na(intersec_sf$confidMin))
 
 
   #############################################################################################
   # All LCZ levels treated together
   #############################################################################################
-   internFunction<-function(echIntConf,nPoints){
-       confSeq<-quantile(echIntConf$confidMin,probs=seq(0,1,length.out=nPoints),na.rm=T)
+   internFunction<-function(intersec_sfConf,nPoints){
+       confSeq<-quantile(intersec_sfConf$confidMin,probs=seq(0,1,length.out=nPoints),na.rm=T)
        print("confSeq in internFunction ") ; print(confSeq)
 
        percAgrKeep<-NULL
@@ -94,34 +94,34 @@ confidSensib<-function(inputDf="", filePath="", nPoints=5,
 
         for (i in confSeq){
          #print(i)
-         echIntKeep<-subset(echIntConf,confidMin>=i)
-         if(nrow(echIntKeep)>0){#print(nrow(echIntKeep))
+         intersec_sfKeep<-subset(intersec_sfConf,confidMin>=i)
+         if(nrow(intersec_sfKeep)>0){#print(nrow(intersec_sfKeep))
            percAgrKeep<-c(percAgrKeep,
-                        matConfLCZGlob(inputDf = echIntKeep, wf1=wf1, wf2=wf2,
+                        matConfLCZGlob(inputDf = intersec_sfKeep, wf1=wf1, wf2=wf2,
                                        geomID1 = geomID1, column1 = column1, confid1 = confid1,
                                        geomID2 = geomID2, column2 = column2, confid2 = confid2,
                                        sep=";", repr="standard", typeLevels="", plot = F)$pourcAcc)
-           nbKeep<-c(nbKeep, nrow(echIntKeep))
+           nbKeep<-c(nbKeep, nrow(intersec_sfKeep))
 
          }else{
              percAgrKeep<-c(percAgrKeep,NA)
              nbKeep<-c(nbKeep,0)
              }
 
-         echIntDrop<-subset(echIntConf,confidMin<i)
-         if(nrow(echIntDrop)>0){#print(nrow(echIntDrop))
+         intersec_sfDrop<-subset(intersec_sfConf,confidMin<i)
+         if(nrow(intersec_sfDrop)>0){#print(nrow(intersec_sfDrop))
            percAgrDrop<-c(percAgrDrop,
-                          matConfLCZGlob(inputDf = echIntDrop, wf1 = wf1, wf2 = wf2,
+                          matConfLCZGlob(inputDf = intersec_sfDrop, wf1 = wf1, wf2 = wf2,
                                          geomID1 = geomID1, column1 = column1, confid1 = confid1,
                                          geomID2 = geomID2, column2 = column2, confid2 = confid2,
                                          sep=";", repr="standard", typeLevels="", plot=F)$pourcAcc)
-           nbDrop<-c(nbDrop,nrow(echIntDrop))
+           nbDrop<-c(nbDrop,nrow(intersec_sfDrop))
          }else{
            percAgrDrop<-c(percAgrDrop,NA)
            nbDrop<-c(nbDrop,0)}
 
      }
-     #   summary(echInt)
+     #   summary(intersec_sf)
 
     data<-data.frame(Confidence=c(confSeq,confSeq),
                      Agreement=c(percAgrKeep,percAgrDrop),
@@ -159,7 +159,7 @@ confidSensib<-function(inputDf="", filePath="", nPoints=5,
     return(ctOut)
 }
 
-  allLCZ<-internFunction(echIntConf=echIntConf,nPoints=nPoints)
+  allLCZ<-internFunction(intersec_sfConf=intersec_sfConf,nPoints=nPoints)
   if(plot==TRUE){
   plot(allLCZ$ctPlot)
   }
@@ -174,18 +174,18 @@ confidSensib<-function(inputDf="", filePath="", nPoints=5,
 #############################################################################################
 # Per LCZ levels of the first classification
 #############################################################################################
-typeLevels<-unique(echIntConf[,column1]) %>% as.vector
+typeLevels<-unique(intersec_sfConf[,column1]) %>% as.vector
  #  print("typeLevels")
  #  print(typeLevels)
- # print("echinConf avant boucle LCZ") ; print(head(echIntConf))
+ # print("echinConf avant boucle LCZ") ; print(head(intersec_sfConf))
   byLCZ<-data.frame(Confidence=numeric(), Agreement=numeric(),
                     Kept=character(),nbGeoms=numeric(),LCZ=character())
 
- echIntConfSplit<-split(x=echIntConf,f=echIntConf[[column1]],drop=T)
+ intersec_sfConfSplit<-split(x=intersec_sfConf,f=intersec_sfConf[[column1]],drop=T)
 
- internFunction2<-function(echIntConf,nPoints){internFunction(echIntConf,nPoints)$ctData}
- # sortieParLCZ<-aggregate(echIntConf,by=echIntConf[[column1]],internFunction2,nPoints=nPoints)
- sortieParLCZ<-lapply(echIntConfSplit,internFunction2,nPoints=nPoints)
+ internFunction2<-function(intersec_sfConf,nPoints){internFunction(intersec_sfConf,nPoints)$ctData}
+ # sortieParLCZ<-aggregate(intersec_sfConf,by=intersec_sfConf[[column1]],internFunction2,nPoints=nPoints)
+ sortieParLCZ<-lapply(intersec_sfConfSplit,internFunction2,nPoints=nPoints)
  nivList<-names(sortieParLCZ)
  output<-data.frame(Confidence=numeric(0), Agreement=numeric(0), Kept=character(0),
                     nbGeom=numeric(0), LCZ=character(0))

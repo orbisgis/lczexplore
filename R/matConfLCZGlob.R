@@ -54,32 +54,32 @@ matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, co
   colonnes<-colonnes[sapply(colonnes,nchar)!=0] %>% c("agree","area","location")
 
   if(filePath!=""){
-    echInt<-read.csv(filePath,sep,header=T,stringsAsFactors = T)
-    names(echInt)<-colonnes
-  } else {echInt<-inputDf[,colonnes]}
+    intersec_sf<-read.csv(filePath,sep,header=T,stringsAsFactors = T)
+    names(intersec_sf)<-colonnes
+  } else {intersec_sf<-inputDf[,colonnes]}
 
 
 
 
-  nbTowns<-length(unique(echInt$ville))
+  nbTowns<-length(unique(intersec_sf$ville))
 
   # if typeLevels not specified, it is created from the file (longer sys.time)
 
   if (length(typeLevels)==1){
     typeLevels<-unique(
-      c(echInt[,column1],echInt[,column2])
+      c(intersec_sf[,column1],intersec_sf[,column2])
     )
   }
 
-  echInt[,column1]<-factor(echInt[,column1],levels=typeLevels)
-  echInt[,column2]<-factor(echInt[,column2],levels=typeLevels)
+  intersec_sf[,column1]<-factor(intersec_sf[,column1],levels=typeLevels)
+  intersec_sf[,column2]<-factor(intersec_sf[,column2],levels=typeLevels)
 
-  # print("echInt")
-  # print(head(echInt))
+  # print("intersec_sf")
+  # print(head(intersec_sf))
 
   # Marginal areas for first LCZ
 
-  areaLCZ1<-echInt %>% group_by_at(.vars=column1) %>%
+  areaLCZ1<-intersec_sf %>% group_by_at(.vars=column1) %>%
     summarize(area=sum(area,na.rm=F))%>%
     drop_units %>%
     ungroup()
@@ -87,7 +87,7 @@ matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, co
   areaLCZ1<-areaLCZ1 %>% as.data.frame()
 
   # marginal for second LCZ
-  areaLCZ2<-echInt %>% group_by_at(.vars=column2) %>%
+  areaLCZ2<-intersec_sf %>% group_by_at(.vars=column2) %>%
     summarize(area=sum(area,na.rm=F))%>%
     drop_units %>%
     ungroup()
@@ -117,14 +117,14 @@ matConfLCZGlob<-function(filePath="", inputDf, wf1, wf2, geomID1="", column1, co
   }
 
   # Get the general agreement between both input files
-  pourcAcc<-(((echInt %>%  filter(agree==T) %>% select(area) %>% sum) /
-                (echInt %>% select(area) %>% sum))*100) %>% round(digits=2)
+  pourcAcc<-(((intersec_sf %>%  filter(agree==T) %>% select(area) %>% sum) /
+                (intersec_sf %>% select(area) %>% sum))*100) %>% round(digits=2)
 
   # the way to "feed" group_by is through .dots, to be checked, as it seems to be deprecated :
   # fixed with group_by_at
 
 
-  matConf<-echInt %>% group_by_at(.vars=c(column1,column2)) %>%
+  matConf<-intersec_sf %>% group_by_at(.vars=c(column1,column2)) %>%
     summarize(area=sum(area))%>% drop_units %>% ungroup %>% ungroup
 
   # print("matConf")

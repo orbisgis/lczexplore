@@ -10,11 +10,7 @@
 #' @importFrom ggplot2 geom_sf guides ggtitle aes
 #' @import sf dplyr cowplot forcats units tidyr RColorBrewer utils grDevices rlang
 #' @return returns graphics of comparison and an object called matConfOut which contains :
-#' matConfLong, a confusion matrix in a longer form, 
-#' matConfPlot is a ggplot2 object showing the confusion matrix.
-#' percAgg is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
-#' pseudoK is a heuristic estimate of a Cohen's kappa coefficient of agreement between classifications
-#' If saveG is not an empty string, graphics are saved under "saveG.png"
+#'TO DO
 #' @export
 #' @examples
 #' 
@@ -53,88 +49,88 @@ compareMultipleLCZ<-function(sfList, LCZcolumns, refCrs=NULL, sfWf=NULL, trimPer
 }
 
 
-sfBDT_11_78030<-importLCZvect(dirPath="/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/GeoClimate/2011/bdtopo_2_78030/",
-                   file="rsu_lcz.fgb", column="LCZ_PRIMARY")
-class(sfBDT_11_78030)
-sfBDT_22_78030<-importLCZvect(dirPath="/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/GeoClimate/2022/bdtopo_3_78030/",
-                              file="rsu_lcz.fgb", column="LCZ_PRIMARY")
-sf_OSM_11_Auffargis<-importLCZvect(dirPath="//home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/GeoClimate/2011/osm_Auffargis/",
-                                   file="rsu_lcz.fgb", column="LCZ_PRIMARY")
-sf_OSM_22_Auffargis<-importLCZvect(dirPath="/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/GeoClimate/2022/osm_Auffargis/",
-                                   file="rsu_lcz.fgb", column="LCZ_PRIMARY")
-sf_WUDAPT_78030<-importLCZvect("/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/WUDAPT/",
-                               file ="wudapt_Auffargis.fgb", column="lcz_primary")
+# sfBDT_11_78030<-importLCZvect(dirPath="/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/GeoClimate/2011/bdtopo_2_78030/",
+#                    file="rsu_lcz.fgb", column="LCZ_PRIMARY")
+# class(sfBDT_11_78030)
+# sfBDT_22_78030<-importLCZvect(dirPath="/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/GeoClimate/2022/bdtopo_3_78030/",
+#                               file="rsu_lcz.fgb", column="LCZ_PRIMARY")
+# sf_OSM_11_Auffargis<-importLCZvect(dirPath="//home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/GeoClimate/2011/osm_Auffargis/",
+#                                    file="rsu_lcz.fgb", column="LCZ_PRIMARY")
+# sf_OSM_22_Auffargis<-importLCZvect(dirPath="/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/GeoClimate/2022/osm_Auffargis/",
+#                                    file="rsu_lcz.fgb", column="LCZ_PRIMARY")
+# sf_WUDAPT_78030<-importLCZvect("/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/WUDAPT/",
+#                                file ="wudapt_Auffargis.fgb", column="lcz_primary")
 
-sfList<-list(BDT11 = sfBDT_11_78030, BDT22 = sfBDT_22_78030, OSM11= sf_OSM_11_Auffargis, OSM22 = sf_OSM_22_Auffargis,
-             WUDAPT = sf_WUDAPT_78030)
+# sfList<-list(BDT11 = sfBDT_11_78030, BDT22 = sfBDT_22_78030, OSM11= sf_OSM_11_Auffargis, OSM22 = sf_OSM_22_Auffargis,
+#              WUDAPT = sf_WUDAPT_78030)
 
-intersected<-createIntersec(sfList = sfList, LCZcolumns = c(rep("LCZ_PRIMARY",4),"lcz_primary"),
-                            sfWf = c("BDT11","BDT22","OSM11","OSM22","WUDAPT"))
+# intersected<-createIntersec(sfList = sfList, LCZcolumns = c(rep("LCZ_PRIMARY",4),"lcz_primary"),
+#                             sfWf = c("BDT11","BDT22","OSM11","OSM22","WUDAPT"))
 
-# test_list<-list(a=c(1,2),b="top",c=TRUE)
-# length(test_list)
-# for (i in test_list[2:3]) print(str(i))
+# # test_list<-list(a=c(1,2),b="top",c=TRUE)
+# # length(test_list)
+# # for (i in test_list[2:3]) print(str(i))
 
 multicompare_test<-compareMultipleLCZ(sfList = sfList, LCZcolumns = c(rep("LCZ_PRIMARY",4),"lcz_primary"),
                                       sfWf = c("BDT11","BDT22","OSM11","OSM22","WUDAPT"),trimPerc = 0.5)
 multicompare_test
 
-test<-multicompare_test$intersec_sfLong
-test2<-test %>% subset(agree==TRUE) %>% group_by(LCZvalue) %>% summarize(agreementArea=sum(area)) %>% mutate(percAgreementArea=agreementArea/sum(agreementArea))
+# test<-multicompare_test$intersec_sfLong
+# test2<-test %>% subset(agree==TRUE) %>% group_by(LCZvalue) %>% summarize(agreementArea=sum(area)) %>% mutate(percAgreementArea=agreementArea/sum(agreementArea))
 
-test<-multicompare_test$intersec_sf[,1:5] %>% st_drop_geometry()
-prov1<-apply(X = test, MARGIN = 1, table )
-prov2<-apply(X = test, MARGIN = 1, function(x) max(table(x)) )
+# test<-multicompare_test$intersec_sf[,1:5] %>% st_drop_geometry()
+# prov1<-apply(X = test, MARGIN = 1, table )
+# prov2<-apply(X = test, MARGIN = 1, function(x) max(table(x)) )
 
-head(prov1)
-head(prov2)
+# head(prov1)
+# head(prov2)
 
-plot1<-showLCZ(sf = multicompare_test$intersec_sf, column="LCZBDT22", wf="22")
-plot2<-showLCZ(sf = multicompare_test$intersec_sf, column="LCZBDT11", wf="11")
+# plot1<-showLCZ(sf = multicompare_test$intersec_sf, column="LCZBDT22", wf="22")
+# plot2<-showLCZ(sf = multicompare_test$intersec_sf, column="LCZBDT11", wf="11")
 
-ggplot(data=multicompare_test$intersec_sf) +
-  geom_sf(aes(fill=maxAgree, color=after_scale(fill)))+
-  scale_fill_gradient(low = "red" , high = "green", na.value = NA)
+# ggplot(data=multicompare_test$intersec_sf) +
+#   geom_sf(aes(fill=maxAgree, color=after_scale(fill)))+
+#   scale_fill_gradient(low = "red" , high = "green", na.value = NA)
 
-hist(st_area(multicompare_test$intersec_sf$geometry))
+# hist(st_area(multicompare_test$intersec_sf$geometry))
 
-allSameList<-list(OSM11= sf_OSM_11_Auffargis, OSM11.2 = sf_OSM_11_Auffargis, 
-  OSM11.3 = sf_OSM_11_Auffargis, OSM11.4 = sf_OSM_11_Auffargis, OSM_11.5 = sf_OSM_11_Auffargis)
-showLCZ(sfList[[1]])
+# allSameList<-list(OSM11= sf_OSM_11_Auffargis, OSM11.2 = sf_OSM_11_Auffargis, 
+#   OSM11.3 = sf_OSM_11_Auffargis, OSM11.4 = sf_OSM_11_Auffargis, OSM_11.5 = sf_OSM_11_Auffargis)
+# showLCZ(sfList[[1]])
 
-sf_OSM_11_Auffargis[which.max(st_area(sf_OSM_11_Auffargis)),] 
+# sf_OSM_11_Auffargis[which.max(st_area(sf_OSM_11_Auffargis)),] 
 
-max(st_area(sf_OSM_11_Auffargis))
+# max(st_area(sf_OSM_11_Auffargis))
 
-multicompare_test_all_same<-compareMultipleLCZ(sfList = allSameList, 
-  LCZcolumns = rep("LCZ_PRIMARY",5),
-  sfWf = c("OSM1","OSM2", "OSM3", "OSM4", "OSM5"),
-  trimPerc = 0.5)
-
-
-
-areas_test<-st_area(multicompare_test_all_same$intersec_sf)
-hist(areas_test)
-hist(st_area(sf_OSM_11_Auffargis$geometry))
+# multicompare_test_all_same<-compareMultipleLCZ(sfList = allSameList, 
+#   LCZcolumns = rep("LCZ_PRIMARY",5),
+#   sfWf = c("OSM1","OSM2", "OSM3", "OSM4", "OSM5"),
+#   trimPerc = 0.5)
 
 
-quantile(areas_test, prob = 0.5)
-test2<-multicompare_test_all_same$intersec_sf[
-  st_area(multicompare_test_all_same$intersec_sf) == 
-    max(st_area(multicompare_test_all_same$intersec_sf)),
-]
+
+# areas_test<-st_area(multicompare_test_all_same$intersec_sf)
+# hist(areas_test)
+# hist(st_area(sf_OSM_11_Auffargis$geometry))
 
 
-ggplot() + 
-    geom_sf(data=multicompare_test_all_same$intersec_sf, aes(fill=maxAgree))+
-    scale_fill_gradient(low = "red" , high = "green", na.value = NA)
+# quantile(areas_test, prob = 0.5)
+# test2<-multicompare_test_all_same$intersec_sf[
+#   st_area(multicompare_test_all_same$intersec_sf) == 
+#     max(st_area(multicompare_test_all_same$intersec_sf)),
+# ]
 
-ggplot() + 
-    geom_sf(data=test2, aes(color = "gray", fill=maxAgree)) +
-      scale_fill_gradient(low = "red" , high = "green", na.value = NA) + 
-    scale_linewidth(range=c(8))
 
-ggplot() +
-  geom_sf(data = sf_OSM_11_Auffargis[which.max(st_area(sf_OSM_11_Auffargis)),], 
-aes(color = LCZ_PRIMARY) 
-)
+# ggplot() + 
+#     geom_sf(data=multicompare_test_all_same$intersec_sf, aes(fill=maxAgree))+
+#     scale_fill_gradient(low = "red" , high = "green", na.value = NA)
+
+# ggplot() + 
+#     geom_sf(data=test2, aes(color = "gray", fill=maxAgree)) +
+#       scale_fill_gradient(low = "red" , high = "green", na.value = NA) + 
+#     scale_linewidth(range=c(8))
+
+# ggplot() +
+#   geom_sf(data = sf_OSM_11_Auffargis[which.max(st_area(sf_OSM_11_Auffargis)),], 
+# aes(color = LCZ_PRIMARY) 
+# )
