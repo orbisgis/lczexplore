@@ -19,37 +19,37 @@
 #' @examples
 #' 
 compareMultipleLCZ<-function(sfList, LCZcolumns, refCrs=NULL, sfWf=NULL, trimPerc=0.05){
-  echInt<-createIntersec(sfList = sfList, LCZcolumns = LCZcolumns , refCrs= refCrs, sfWf = sfWf)
-  print(nrow(echInt))
-  echInt$area<-st_area(echInt)
-  echInt <- echInt %>% subset(area>quantile(echInt$area, probs=trimPerc) & !is.na(area))
-  print(nrow(echInt))
-  echIntnogeom<-st_drop_geometry(echInt)
+  intersec_sf<-createIntersec(sfList = sfList, LCZcolumns = LCZcolumns , refCrs= refCrs, sfWf = sfWf)
+  print(nrow(intersec_sf))
+  intersec_sf$area<-st_area(intersec_sf)
+  intersec_sf <- intersec_sf %>% subset(area>quantile(intersec_sf$area, probs=trimPerc) & !is.na(area))
+  print(nrow(intersec_sf))
+  intersec_sfnogeom<-st_drop_geometry(intersec_sf)
   for (i in 1:(length(sfList) - 1)) {
     for(j in (i+1):length(sfList)){
       compName<-paste0(i,"_",j)
       print(compName)
-      echIntnogeom[,compName]<-echIntnogeom[,i] == echIntnogeom[,j]
+      intersec_sfnogeom[,compName]<-intersec_sfnogeom[,i] == intersec_sfnogeom[,j]
     }
   }
-  rangeCol<-(length(listSfs)+3):ncol(echIntnogeom)
+  rangeCol<-(length(sfList)+3):ncol(intersec_sfnogeom)
   print(rangeCol)
-  # print(names(echIntnogeom[,rangeCol]))
-  echIntnogeom$nbAgree<-apply(echIntnogeom[,rangeCol],MARGIN=1,sum)
-  echIntnogeom$maxAgree<-apply(
-    X = echIntnogeom[,1:length(sfList)], MARGIN = 1, function(x) max(table(x) ))
-  echInt<-cbind(echIntnogeom,echInt$geometry)  %>% st_as_sf()
-  echInt
-  echIntLong<-pivot_longer(st_drop_geometry(echInt),cols=rangeCol, names_to = "whichWfs", values_to = "agree")
-  echIntLong$LCZref<-substr(echIntLong$whichWfs,start = 1, stop=1 )
-  print(head(echIntLong[,c(1,2,9:10)]))
-  whichLCZagree <- names(echIntLong)[as.numeric(echIntLong$LCZref)]
-  indRow<- seq_len(nrow(echIntLong))
+  # print(names(intersec_sfnogeom[,rangeCol]))
+  intersec_sfnogeom$nbAgree<-apply(intersec_sfnogeom[,rangeCol],MARGIN=1,sum)
+  intersec_sfnogeom$maxAgree<-apply(
+    X = intersec_sfnogeom[,1:length(sfList)], MARGIN = 1, function(x) max(table(x) ))
+  intersec_sf<-cbind(intersec_sfnogeom,intersec_sf$geometry)  %>% st_as_sf()
+  intersec_sf
+  intersec_sfLong<-pivot_longer(st_drop_geometry(intersec_sf),cols=rangeCol, names_to = "whichWfs", values_to = "agree")
+  intersec_sfLong$LCZref<-substr(intersec_sfLong$whichWfs,start = 1, stop=1 )
+  print(head(intersec_sfLong[,c(1,2,9:10)]))
+  whichLCZagree <- names(intersec_sfLong)[as.numeric(intersec_sfLong$LCZref)]
+  indRow<- seq_len(nrow(intersec_sfLong))
   z<-data.frame(indRow, whichLCZagree)
-  echIntLong$LCZvalue<-apply(z, 1, function(x) unlist(st_drop_geometry(echIntLong)[x[1], x[2]]))
-  print(head(echIntLong[,c(1,2,9:11)]))
+  intersec_sfLong$LCZvalue<-apply(z, 1, function(x) unlist(st_drop_geometry(intersec_sfLong)[x[1], x[2]]))
+  print(head(intersec_sfLong[,c(1,2,9:11)]))
 
-  output<-list(echInt=echInt, echIntLong=echIntLong)
+  output<-list(intersec_sf=intersec_sf, intersec_sfLong=intersec_sfLong)
 }
 
 
@@ -67,13 +67,9 @@ sf_WUDAPT_78030<-importLCZvect("/home/gousseff/Documents/3_data/data_article_LCZ
 
 sfList<-list(BDT11 = sfBDT_11_78030, BDT22 = sfBDT_22_78030, OSM11= sf_OSM_11_Auffargis, OSM22 = sf_OSM_22_Auffargis,
              WUDAPT = sf_WUDAPT_78030)
-showLCZ(sfList[[1]])
-
-
 
 intersected<-createIntersec(sfList = sfList, LCZcolumns = c(rep("LCZ_PRIMARY",4),"lcz_primary"),
                             sfWf = c("BDT11","BDT22","OSM11","OSM22","WUDAPT"))
-
 
 # test_list<-list(a=c(1,2),b="top",c=TRUE)
 # length(test_list)
@@ -83,20 +79,62 @@ multicompare_test<-compareMultipleLCZ(sfList = sfList, LCZcolumns = c(rep("LCZ_P
                                       sfWf = c("BDT11","BDT22","OSM11","OSM22","WUDAPT"),trimPerc = 0.5)
 multicompare_test
 
-test<-multicompare_test$echIntLong
+test<-multicompare_test$intersec_sfLong
 test2<-test %>% subset(agree==TRUE) %>% group_by(LCZvalue) %>% summarize(agreementArea=sum(area)) %>% mutate(percAgreementArea=agreementArea/sum(agreementArea))
 
-test<-multicompare_test$echInt[,1:5] %>% st_drop_geometry()
+test<-multicompare_test$intersec_sf[,1:5] %>% st_drop_geometry()
 prov1<-apply(X = test, MARGIN = 1, table )
 prov2<-apply(X = test, MARGIN = 1, function(x) max(table(x)) )
 
 head(prov1)
 head(prov2)
 
-plot1<-showLCZ(sf = multicompare_test$echInt, column="LCZBDT22", wf="22")
-plot2<-showLCZ(sf = multicompare_test$echInt, column="LCZBDT11", wf="11")
+plot1<-showLCZ(sf = multicompare_test$intersec_sf, column="LCZBDT22", wf="22")
+plot2<-showLCZ(sf = multicompare_test$intersec_sf, column="LCZBDT11", wf="11")
 
-ggplot(data=multicompare_test$echInt) +
+ggplot(data=multicompare_test$intersec_sf) +
   geom_sf(aes(fill=maxAgree, color=after_scale(fill)))+
   scale_fill_gradient(low = "red" , high = "green", na.value = NA)
 
+hist(st_area(multicompare_test$intersec_sf$geometry))
+
+allSameList<-list(OSM11= sf_OSM_11_Auffargis, OSM11.2 = sf_OSM_11_Auffargis, 
+  OSM11.3 = sf_OSM_11_Auffargis, OSM11.4 = sf_OSM_11_Auffargis, OSM_11.5 = sf_OSM_11_Auffargis)
+showLCZ(sfList[[1]])
+
+sf_OSM_11_Auffargis[which.max(st_area(sf_OSM_11_Auffargis)),] 
+
+max(st_area(sf_OSM_11_Auffargis))
+
+multicompare_test_all_same<-compareMultipleLCZ(sfList = allSameList, 
+  LCZcolumns = rep("LCZ_PRIMARY",5),
+  sfWf = c("OSM1","OSM2", "OSM3", "OSM4", "OSM5"),
+  trimPerc = 0.5)
+
+
+
+areas_test<-st_area(multicompare_test_all_same$intersec_sf)
+hist(areas_test)
+hist(st_area(sf_OSM_11_Auffargis$geometry))
+
+
+quantile(areas_test, prob = 0.5)
+test2<-multicompare_test_all_same$intersec_sf[
+  st_area(multicompare_test_all_same$intersec_sf) == 
+    max(st_area(multicompare_test_all_same$intersec_sf)),
+]
+
+
+ggplot() + 
+    geom_sf(data=multicompare_test_all_same$intersec_sf, aes(fill=maxAgree))+
+    scale_fill_gradient(low = "red" , high = "green", na.value = NA)
+
+ggplot() + 
+    geom_sf(data=test2, aes(color = "gray", fill=maxAgree)) +
+      scale_fill_gradient(low = "red" , high = "green", na.value = NA) + 
+    scale_linewidth(range=c(8))
+
+ggplot() +
+  geom_sf(data = sf_OSM_11_Auffargis[which.max(st_area(sf_OSM_11_Auffargis)),], 
+aes(color = LCZ_PRIMARY) 
+)

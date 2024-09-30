@@ -1,15 +1,15 @@
-createIntersec<-function(sfList, columns, refCrs=NULL, sfWf=NULL){
-  echInt<-sfList[[1]] %>% select(columns[1])
-  if (is.null(refCrs)){refCrs<-st_crs(echInt)}
+createIntersec<-function(sfList, LCZcolumns, refCrs=NULL, sfWf=NULL){
+  intersec_sf<-sfList[[1]] %>% select(LCZcolumns[1])
+  if (is.null(refCrs)){refCrs<-st_crs(intersec_sf)}
   for (i in 2:length(sfList)){
-    sfProv<-sfList[[i]] %>% select(columns[i])
+    sfProv<-sfList[[i]] %>% select(LCZcolumns[i])
     if (st_crs(sfProv) != refCrs ) {sfProv<-st_transform(sfProv, crs=refCrs)}
-    echInt<-st_intersection(echInt,sfProv)
+    intersec_sf<-st_intersection(intersec_sf,sfProv)
   }
   if (!is.null(sfWf) & length(sfWf) == length(sfList)){
-    names(echInt)[1:(ncol(echInt)-1)]<-paste0("LCZ",sfWf)
-  } else { names(echInt)[1:(ncol(echInt)-1)]<-paste0("LCZ",1:length(sfList)) }
-  echInt 
+    names(intersec_sf)[1:(ncol(intersec_sf)-1)]<-paste0("LCZ",sfWf)
+  } else { names(intersec_sf)[1:(ncol(intersec_sf)-1)]<-paste0("LCZ",1:length(sfList)) }
+  intersec_sf 
 }
 
 # sfBDT_11_78030<-importLCZvect(dirPath="/home/gousseff/Documents/0_DocBiblioTutosPublis/0_ArticlesScientEtThèses/ArticleComparaisonLCZGCWUDAPTEXPERTS/BDT/2011/bdtopo_2_78030",
@@ -30,7 +30,7 @@ createIntersec<-function(sfList, columns, refCrs=NULL, sfWf=NULL){
 # 
 # 
 # 
-# intersected<-createIntersec(sfList = sfList, columns = c(rep("LCZ_PRIMARY",4),"lcz_primary"), 
+# intersected<-createIntersec(sfList = sfList, LCZcolumns = c(rep("LCZ_PRIMARY",4),"lcz_primary"), 
 #                             sfWf = c("BDT11","BDT22","OSM11","OSM22","WUDAPT"))
 # 
 # 
