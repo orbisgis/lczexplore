@@ -1,5 +1,25 @@
-compareMultipleLCZ<-function(sfList, columns, refCrs=NULL, sfWf=NULL, trimPerc=0.05){
-  echInt<-createIntersec(sfList = sfList, columns = columns , refCrs= refCrs, sfWf = sfWf)
+#' Compares several sets of geographical classifications, especially Local Climate Zones classifications
+#' @param sfList a list which contains the classifications to compare, as sf objects
+#' @param LCZcolumns a vector which contains, for eacfh sf of sfList, the name of the column of the classification to compare
+#' @param refCrs a number which indicates which sf object from sfList will provide the CRS in which all the sf objects will be projected before comparison
+#' By defautl it is set to an empty string and no ID is loaded.
+#' @param sfWf a vector of strings which contains the names of the workflows used to produce the sf objects
+#' @param trimPerc this parameters indicates which percentile to drop out of the smallest geometries resulting 
+#' from the intersection of the original sf geometries intersection. 
+#' It allows to account for numeric precision errors and to speed up computations at the cost of not considering the smallest geometries. 
+#' @importFrom ggplot2 geom_sf guides ggtitle aes
+#' @import sf dplyr cowplot forcats units tidyr RColorBrewer utils grDevices rlang
+#' @return returns graphics of comparison and an object called matConfOut which contains :
+#' matConfLong, a confusion matrix in a longer form, 
+#' matConfPlot is a ggplot2 object showing the confusion matrix.
+#' percAgg is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
+#' pseudoK is a heuristic estimate of a Cohen's kappa coefficient of agreement between classifications
+#' If saveG is not an empty string, graphics are saved under "saveG.png"
+#' @export
+#' @examples
+#' 
+compareMultipleLCZ<-function(sfList, LCZcolumns, refCrs=NULL, sfWf=NULL, trimPerc=0.05){
+  echInt<-createIntersec(sfList = sfList, LCZcolumns = LCZcolumns , refCrs= refCrs, sfWf = sfWf)
   print(nrow(echInt))
   echInt$area<-st_area(echInt)
   echInt <- echInt %>% subset(area>quantile(echInt$area, probs=trimPerc) & !is.na(area))
@@ -28,38 +48,38 @@ compareMultipleLCZ<-function(sfList, columns, refCrs=NULL, sfWf=NULL, trimPerc=0
   z<-data.frame(indRow, whichLCZagree)
   echIntLong$LCZvalue<-apply(z, 1, function(x) unlist(st_drop_geometry(echIntLong)[x[1], x[2]]))
   print(head(echIntLong[,c(1,2,9:11)]))
-  
+
   output<-list(echInt=echInt, echIntLong=echIntLong)
 }
 
 
-# sfBDT_11_78030<-importLCZvect(dirPath="/home/gousseff/Documents/0_DocBiblioTutosPublis/0_ArticlesScientEtThèses/ArticleComparaisonLCZGCWUDAPTEXPERTS/BDT/2011/bdtopo_2_78030",
-#                    file="rsu_lcz.fgb", column="LCZ_PRIMARY")
-# class(sfBDT_11_78030)
-# sfBDT_22_78030<-importLCZvect(dirPath="/home/gousseff/Documents/0_DocBiblioTutosPublis/0_ArticlesScientEtThèses/ArticleComparaisonLCZGCWUDAPTEXPERTS/BDT/2022/bdtopo_3_78030",
-#                               file="rsu_lcz.fgb", column="LCZ_PRIMARY")
-# sf_OSM_11_Auffargis<-importLCZvect(dirPath="/home/gousseff/Documents/0_DocBiblioTutosPublis/0_ArticlesScientEtThèses/ArticleComparaisonLCZGCWUDAPTEXPERTS/OSM/2011/osm_Auffargis/",
-#                                    file="rsu_lcz.fgb", column="LCZ_PRIMARY")
-# sf_OSM_22_Auffargis<-importLCZvect(dirPath="/home/gousseff/Documents/0_DocBiblioTutosPublis/0_ArticlesScientEtThèses/ArticleComparaisonLCZGCWUDAPTEXPERTS/OSM/2022/osm_Auffargis/",
-#                                    file="rsu_lcz.fgb", column="LCZ_PRIMARY")
-# sf_WUDAPT_78030<-importLCZvect("/home/gousseff/Documents/0_DocBiblioTutosPublis/0_ArticlesScientEtThèses/ArticleComparaisonLCZGCWUDAPTEXPERTS/WUDAPT", 
-#                                file ="wudapt_78030.geojson", column="lcz_primary")
-# 
-# sfList<-list(BDT11 = sfBDT_11_78030, BDT22 = sfBDT_22_78030, OSM11= sf_OSM_11_Auffargis, OSM22 = sf_OSM_22_Auffargis, 
-#              WUDAPT = sf_WUDAPT_78030)
-# showLCZ(sfList[[1]])
-# 
-# 
-# 
-# intersected<-createIntersec(sfList = sfList, columns = c(rep("LCZ_PRIMARY",4),"lcz_primary"), 
-#                             sfWf = c("BDT11","BDT22","OSM11","OSM22","WUDAPT"))
-# 
-# 
+sfBDT_11_78030<-importLCZvect(dirPath="/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/GeoClimate/2011/bdtopo_2_78030/",
+                   file="rsu_lcz.fgb", column="LCZ_PRIMARY")
+class(sfBDT_11_78030)
+sfBDT_22_78030<-importLCZvect(dirPath="/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/GeoClimate/2022/bdtopo_3_78030/",
+                              file="rsu_lcz.fgb", column="LCZ_PRIMARY")
+sf_OSM_11_Auffargis<-importLCZvect(dirPath="//home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/GeoClimate/2011/osm_Auffargis/",
+                                   file="rsu_lcz.fgb", column="LCZ_PRIMARY")
+sf_OSM_22_Auffargis<-importLCZvect(dirPath="/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/GeoClimate/2022/osm_Auffargis/",
+                                   file="rsu_lcz.fgb", column="LCZ_PRIMARY")
+sf_WUDAPT_78030<-importLCZvect("/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/WUDAPT/",
+                               file ="wudapt_Auffargis.fgb", column="lcz_primary")
+
+sfList<-list(BDT11 = sfBDT_11_78030, BDT22 = sfBDT_22_78030, OSM11= sf_OSM_11_Auffargis, OSM22 = sf_OSM_22_Auffargis,
+             WUDAPT = sf_WUDAPT_78030)
+showLCZ(sfList[[1]])
+
+
+
+intersected<-createIntersec(sfList = sfList, LCZcolumns = c(rep("LCZ_PRIMARY",4),"lcz_primary"),
+                            sfWf = c("BDT11","BDT22","OSM11","OSM22","WUDAPT"))
+
+
 # test_list<-list(a=c(1,2),b="top",c=TRUE)
 # length(test_list)
 # for (i in test_list[2:3]) print(str(i))
 
-multicompare_test<-compareMultipleLCZ(sfList = sfList, columns = c(rep("LCZ_PRIMARY",4),"lcz_primary"),
+multicompare_test<-compareMultipleLCZ(sfList = sfList, LCZcolumns = c(rep("LCZ_PRIMARY",4),"lcz_primary"),
                                       sfWf = c("BDT11","BDT22","OSM11","OSM22","WUDAPT"),trimPerc = 0.5)
 multicompare_test
 
