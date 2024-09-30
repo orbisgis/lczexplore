@@ -1,4 +1,4 @@
-#' Compares two set of geographical classifications, especially Local Climate Zones classifications. It
+#' Compares two sets of geographical classifications, especially Local Climate Zones classifications. It
 #' produces a map for each classification, a map of their agreement (and a pseudo Kappa coefficent), 
 #' and a confusion matrix between them. All are stored in a list, easily reusable. 
 #'
