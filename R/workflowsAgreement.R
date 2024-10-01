@@ -1,4 +1,4 @@
-buildWorkflowAgreement <- function(intersec_sf, sfWfs = NULL){ 
+workflowsAgreement <- function(intersec_sf, sfWfs = NULL){ 
   if ( !is.null(intersec_sf$geometry)) {
     intersec_sf<-st_drop_geometry(intersec_sf)
   }
@@ -26,5 +26,6 @@ buildWorkflowAgreement <- function(intersec_sf, sfWfs = NULL){
  return(sort(agreement_by_pair[,1], decreasing = TRUE))
 }
 
-tetest<-buildWorkflowAgreement(intersec_sf = multicompare_test$intersec_sf, 
+
+tetest<-workflowsAgreement(intersec_sf = multicompare_test$intersec_sf, 
   sfWfs = c("BDT11", "BDT22", "OSM11", "OSM22", "WUDAPT"))
