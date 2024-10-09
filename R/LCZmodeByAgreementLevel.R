@@ -11,16 +11,19 @@ LCZmodeByAgreementLevel <- function(intersec_sf, sfWfs = NULL){
   LCZwfsNames<-grep( pattern = "LCZ*",  x = names(intersec_sf), value = TRUE)
   intersec_sf$LCZmode<-apply(intersec_sf[,LCZwfsNames], 1, Mode)
   
-  modeLCZSurfbyAgreement <- intersec_sf %>% group_by(maxAgree, LCZmode) %>% summarize(modeLCZsurf = sum(area)) %>% mutate(modeLCZSurfPerc = modeLCZsurf/sum(modeLCZsurf)*100)
+  modeLCZSurfbyAgreement <- intersec_sf %>% group_by(maxAgree, LCZmode) %>% summarize(modeLCZsurf = sum(drop_units(area))) %>% mutate(modeLCZSurfPerc = modeLCZsurf/sum(modeLCZsurf)*100)
 
-  generalProp<-intersec_sf %>%select(area, LCZmode) %>% mutate(totalArea=sum(area)) %>% 
+  areaByAgreement <- intersec_sf %>% group_by(maxAgree) %>% summarize ( areaByAgree = sum(drop_units(area))) %>% mutate ( agreementSurfPerc = round(areaByAgree / sum(areaByAgree) * 100, digits = 3))
+
+  generalProp<-intersec_sf %>%select(area, LCZmode) %>% mutate(totalArea=sum(drop_units(area))) %>% 
     group_by(LCZmode) %>% 
-    summarize(modeLCZGenSurfPerc = sum(area), totalArea = mean(totalArea)) %>% 
-    mutate(modeLCZGenSurfPerc = modeLCZGenSurfPerc / totalArea *100 ) %>% 
+    summarize(modeLCZGenSurfPerc = sum(drop_units(area)), totalArea = mean(totalArea)) %>% 
+    mutate(modeLCZGenSurfPerc = round(modeLCZGenSurfPerc / totalArea *100 , digits = 3)) %>% 
     select(LCZmode, modeLCZGenSurfPerc)
 
   modeLCZSurfbyAgreement<-left_join(modeLCZSurfbyAgreement, generalProp, by = "LCZmode") %>% 
     arrange(desc(maxAgree),desc(modeLCZSurfPerc))
+  modeLCZSurfbyAgreement<-left_join(modeLCZSurfbyAgreement, areaByAgreement, by = "maxAgree")
 
   # if (!is.null(sfWfs)) {
   #   lengthSfWfs<-length(sfWfs)
@@ -36,7 +39,9 @@ LCZmodeByAgreementLevel <- function(intersec_sf, sfWfs = NULL){
   #   row.names(agreement_by_pair) <- compNames
 
   #    }
- return(modeLCZSurfbyAgreement )
+
+
+ return(modeLCZSurfbyAgreement[,c("maxAgree", "agreementSurfPerc", "LCZmode", "modeLCZSurfPerc", "modeLCZGenSurfPerc", "modeLCZsurf", "areaByAgree")] )
 }
 
 Mode <- function(x) {
@@ -46,7 +51,12 @@ Mode <- function(x) {
 
 
 LCZmodeTest <- LCZmodeByAgreementLevel(multicompare_test$intersec_sf)
-LCZmodeTest[601:610,c(LCZwfsNamesTest,"LCZmode")]
+
+
+
+
+
+LCZmodeTest[601:610,c(LCZwfsNamesTest,"LCZmode")]Je n'ai certes pas lu d'articles scientifiques à ce sujet, car je n'en ai pas le temps, ni sans doute la capacité
 
 test1<-multicompare_test$intersec_sf
 LCZwfsNamesTest<-grep( pattern = "LCZ*",  x = names(test1), value = TRUE) 
