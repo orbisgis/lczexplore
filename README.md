@@ -23,8 +23,18 @@ https://www.r-project.org/Licenses/LGPL-3
 The lczexplore library has been originally developed within the following research projects:
 * PAENDORA2 (Pour la gestion du confort estival : Donnees, Outils et Recherche-Action) (2022 -2025), funded by [ADEME](https://www.ademe.fr/)
 
+# Reference paper
+
+lczexplore is described in the following paper :
+
+Matthieu Gousseff, Erwan Bocher, Jérémy Bernard, Elisabeth Le Saux Wiederhold. 
+**lczexplore: an R package to explore Local Climate Zone classifications.** 
+Journal of Open Source Software, 2023, 8 (91), 
+pp.5445. ⟨10.21105/joss.05445⟩. ⟨halshs-04293878⟩
+
 # Citation
 If you are kind enough to cite this package, please check in the /inst directory for the CITATION file (in cff style without the extension)
+
 
 # Installation
 This package can be installed from github using the install_github function of the devtools package. 
