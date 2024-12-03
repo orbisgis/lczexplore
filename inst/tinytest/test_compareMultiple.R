@@ -44,9 +44,11 @@ prov2<-apply(X = test, MARGIN = 1, function(x) max(table(x)) )
 head(prov1)
 head(prov2)
 
-plot1<-showLCZ(sf = multicompare_test$echInt, column="LCZBDT22", wf="22")
-plot2<-showLCZ(sf = multicompare_test$echInt, column="LCZBDT11", wf="11")
-
-ggplot(data=multicompare_test$echInt) +
+plot1<-showLCZ(sf = multicompare_test$echInt, column="BDT22", wf="BDT22")
+plot2<-showLCZ(sf = multicompare_test$echInt, column="BDT11", wf="BDT1111")
+plot3<-showLCZ(sf = multicompare_test$echInt, column="OSM22", wf="OSM22")
+plot4<-showLCZ(sf = multicompare_test$echInt, column="WUDAPT", wf="WUDAPT")
+plot5<-ggplot(data=multicompare_test$echInt) +
   geom_sf(aes(fill=nbAgree, color=after_scale(fill)))+
   scale_fill_gradient(low = "red" , high = "green", na.value = NA)
+plot_grid(plot1, plot2, plot3, plot4, plot5)

@@ -365,7 +365,7 @@ compareLCZ<-function(sf1,geomID1="",column1,confid1="",wf1="bdtopo_2_2",
           write.table(x=echIntExpo, file =nom, append = TRUE, quote = TRUE, sep = ";",
                       eol = "\n", na = "NA", dec = ".",
                       qmethod = c("escape", "double"),
-                      fileEncoding = "", col.names=FALSE,row.names=F)
+                      fileEncoding = "", col.names=FALSE, row.names=F)
         }
         }
 ###################################################
@@ -393,12 +393,6 @@ areas<-matConfOut$areas
 percAgg<-matConfOut$percAgg
 
 
-
-
-  
-  
-  
-  
 ################################################
 #  GRAPHICS
 ################################################

@@ -21,9 +21,7 @@
 compareMultipleLCZ<-function(sfList, LCZcolumns, refCrs=NULL, sfWf=NULL, trimPerc=0.05){
   echInt<-createIntersect(sfList = sfList, columns = LCZcolumns , refCrs= refCrs, sfWf = sfWf)
   print(nrow(echInt))
-  echInt$area<-st_area(echInt)
   echInt <- echInt %>% subset(area>quantile(echInt$area, probs=trimPerc) & !is.na(area))
-  print(nrow(echInt))
   echIntnogeom<-st_drop_geometry(echInt)
   for (i in 1:(length(sfList) - 1)) {
     for(j in (i+1):length(sfList)){

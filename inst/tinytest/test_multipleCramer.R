@@ -22,30 +22,41 @@ sfList<-list(BDT11 = sfBDT_11_78030, BDT22 = sfBDT_22_78030, OSM11= sf_OSM_11_Au
 
 
 intersected<-createIntersect(sfList = sfList, columns = c(rep("LCZ_PRIMARY",4),"lcz_primary"),
-                             sfWf = c("BDT11","BDT22","OSM11","OSM22","WUDAPT"))
-intersectedSample
+                             sfWf = c("BDT11","BDT22","OSM11","OSM22","WUDAPT"), minZeroArea=0.1)
+summary(intersected$area)
+min(intersected$area)
+intersected[intersected$area==0,]
 
-
-testVs<-multipleCramer(intersected, columns = names(intersected)[names(intersected)!="geometry"], nbOutAssociations = 5)
+testVs<-multipleCramer(intersected, columns = names(intersected)[names(intersected)!="geometry" &names(intersected)!="area"], 
+                       nbOutAssociations = 30)
 testVs$signifAssoc
-str(testVs)
+testVs$cramerLong %>% head(10)
 
-names6<-grep(x = rownames(testVs), pattern = "6$", value = TRUE)
+intersectedDf<-st_drop_geometry(intersected)
+str(intersectedDf)
+summary(intersectedDf$area)
+min(intersectedDf$area)
+dataTest<-intersectedDf[ ,-6]
+dataTest <- as.data.frame(lapply(X = dataTest, factor))
+summary(dataTest)
+str(dataTest)
+weights<-(intersectedDf$area/sum(intersectedDf$area))
+length(weights)
+auffargisMCA<-MCA(X = dataTest[, names(dataTest)!="area"], ncp = 5, row.w = weights)
+plot.MCA(auffargisMCA, invisible = c("ind"))
 
-testVsSampled<-testVs[1:6,1:6]
+dataTestNo107<-dataTest[apply(dataTest, 1, function(x) all(x!="107")),]
+nrow(dataTestNo107)
+weightsNo107<-(intersectedDf$area/sum(intersectedDf$area))[
+  apply(dataTest, 1, function(x) all(x!="107"))]
+length(weightsNo107)
 
-testMask<-testVsSampled
-ncol(testVsSampled)
-nrow(testVsSampled)
-testMask<-(testMask>0.004 & testMask<1)
-testMask[!testMask]<-NA
+auffargisMCANo107<-MCA(X = dataTestNo107[,names(dataTest)!="area"], ncp = 5) #, row.w = weightsNo107)
+plot.MCA(auffargisMCANo107, invisible= c("ind"))
+auffargisMCANo107Weights<-MCA(X = dataTestNo107[,names(dataTest)!="area"], ncp = 5, row.w = weightsNo107)
+plot.MCA(auffargisMCANo107Weights, invisible= c("ind"))
 
-keptRows<-apply(
-  X = apply(X = testMask, MARGIN = 1, is.na), 
-  MARGIN = 1, sum)<ncol(testVs)
-keptCols<-apply(
-  X = apply(X = testMask, MARGIN = 2, is.na ),
-  MARGIN = 2, sum)<nrow(testVs)
-signifAssoc<-testVsSampled[keptRows, keptCols]
-signifAssoc[(signifAssoc>=1 | signifAssoc<0.004)]<-NA
+
+str(auffargisMCANo107)
+
 

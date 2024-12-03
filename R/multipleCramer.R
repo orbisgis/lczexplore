@@ -1,12 +1,15 @@
-#' Computes Cramer's V for all pairs of one hot encoded levels of input LCZ classifications
-#' @param sfInt an sf object with several LCZ classifications to compare on the same intersected geometries, 
-#' typically an output of the createIntersec function
+#' Computes Cramer's V for all pairs of onehot encoded levels of input LCZ classifications
+#' @param sfInt an sf object with several LCZ classifications on the same (intersected) geometries, 
+#' typically an output of the createIntersect function
 #' @param columns a vector which contains names of LCZ classification columns
+#' @param nbOutAssociations the number of significant associations we want to extract, ie pair of levels 
+#' from two different workflows whose Cramer's V is high (association between LCZ 101 from workflow 1
+#' and LCZ 101 from workflow 2 are exclude, for instance, but can be read from the cramerLong output)
 #' @importFrom ggplot2 geom_sf guides ggtitle aes
 #' @importFrom caret dummyVars
 #' @import sf dplyr cowplot forcats units tidyr RColorBrewer utils grDevices rlang
-#' @return an sf file with values of LCZ from all the input 
-#' are assigned to geometries resulting from intersection of all input geometries
+#' @return Cramer's V between pairs of levels, in a matrix (cramerMatrix) or long form (cramerLong), 
+#' and a dataframe with the nbOutAssociation most significant association
 #' @export
 #' @examples
 multipleCramer<-function(sfInt, columns, nbOutAssociations ){ 
@@ -27,29 +30,37 @@ multipleCramer<-function(sfInt, columns, nbOutAssociations ){
       # print(table(sfDummy[,c(i,j)]))
     }
   }
+
   rownames(Vs)<-names(sfDummy)
   colnames(Vs)<-names(sfDummy)
 
-  threshold <- Vs %>% as.vector %>% unique %>% sort(decreasing=TRUE) %>% head(n = (nbOutAssociations+1)) %>% min
+  VsLong<-data.frame(
+    LCZ_type_1 = rownames(Vs),
+    LCZ_type_2 = rep(colnames(Vs), each = nrow(Vs)),
+    cramerVs = as.vector(Vs)) %>% arrange(desc(cramerVs))%>% na.omit()
+  
+  # Remove association between modalities of a same LCZ classification
+  VsLong$wf1<-gsub(x = VsLong$LCZ_type_1,
+         pattern = "(\\w[0-9]*)\\.([0-9]+)", replacement = "\\1")
+  VsLong$wf2<-gsub(x = VsLong$LCZ_type_2,
+         pattern="(\\w[0-9]*)\\.([0-9]+)", replacement = "\\1")
+  VsLong$LCZ1<-gsub(x = VsLong$LCZ_type_1,
+                   pattern = "([A-Za-z]*\\d*)(\\.)(\\d+)", replacement = "\\3")
+  VsLong$LCZ2<-gsub(x = VsLong$LCZ_type_2,
+                   pattern = "([A-Za-z]*\\d*)(\\.)([0-9]+)", replacement = "\\3")
+  VsLong<-VsLong[,c("wf1", "LCZ1", "wf2", "LCZ2", "cramerVs", "LCZ_type_1","LCZ_type_2")]
+  VsLong<-VsLong[VsLong$wf1!=VsLong$wf2,]
+
+
+
+  VsLong<-VsLong[VsLong$LCZ_type_1!=VsLong$LCZ_type_2,]
+  threshold <- 
+    VsLong$cramerVs[VsLong$LCZ1!=VsLong$LCZ2] %>% as.vector %>% 
+      unique %>% sort(decreasing=TRUE) %>% head(n = (nbOutAssociations+1)) %>% min
+  signifAssoc<-VsLong[VsLong$cramerVs>=threshold & VsLong$LCZ1!=VsLong$LCZ2,]
   print(paste0("threshold = ", threshold))
   
-  Mask<-Vs
-  Mask<-(Mask>=threshold)
-  Mask[Vs<threshold]<-NA
-  Mask[Vs==1]<- NA
-
-  keptRows<-apply(
-    X = apply(X = Mask, MARGIN = 1, is.na),
-    MARGIN = 1, sum)<ncol(Vs)
-  keptCols<-apply(
-    X = apply(X = Mask, MARGIN = 2, is.na ),
-    MARGIN = 2, sum)<nrow(Vs)
-  print("keptRows = ") ; print(keptRows)
-  print("keptCols = ") ; print(keptCols)
-  signifAssoc<-Vs[keptRows, keptCols]
-  signifAssoc[(signifAssoc>=1 | signifAssoc<threshold)]<-NA
-  
-  output<-list(cramerMatrix = Vs, signifAssoc = signifAssoc)
+  output<-list(cramerMatrix = Vs, cramerLong = VsLong, threshold = threshold, signifAssoc = signifAssoc)
   
   return(output)
 }

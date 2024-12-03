@@ -10,7 +10,7 @@
 #' are assigned to geometries resulting from intersection of all input geometries
 #' @export
 #' @examples
-createIntersect<-function(sfList, columns, refCrs=NULL, sfWf=NULL){
+createIntersect<-function(sfList, columns, refCrs=NULL, sfWf=NULL, minZeroArea=0.0001){
   sfInt<-sfList[[1]] %>% select(columns[1])
   if (is.null(refCrs)){refCrs<-st_crs(sfInt)}
   for (i in 2:length(sfList)){
@@ -19,8 +19,10 @@ createIntersect<-function(sfList, columns, refCrs=NULL, sfWf=NULL){
     sfInt<-st_intersection(sfInt,sfProv)
   }
   if (!is.null(sfWf) & length(sfWf) == length(sfList)){
-    names(sfInt)[1:(ncol(sfInt)-1)]<-paste0("LCZ",sfWf)
+    names(sfInt)[1:(ncol(sfInt)-1)]<-sfWf
   } else { names(sfInt)[1:(ncol(sfInt)-1)]<-paste0("LCZ",1:length(sfList)) }
+  sfInt$area<-units::drop_units(st_area(sfInt$geometry))
+  sfInt<-sfInt[sfInt$area>minZeroArea,]
   return(sfInt) 
 }
 
