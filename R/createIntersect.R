@@ -21,7 +21,8 @@ createIntersect<-function(sfList, columns, refCrs=NULL, sfWf=NULL, minZeroArea=0
   if (!is.null(sfWf) & length(sfWf) == length(sfList)){
     names(sfInt)[1:(ncol(sfInt)-1)]<-sfWf
   } else { names(sfInt)[1:(ncol(sfInt)-1)]<-paste0("LCZ",1:length(sfList)) }
-  sfInt$area<-units::drop_units(st_area(sfInt$geometry))
+  sfInt<-mutate(sfInt, area = units::drop_units(st_area(sfInt$geometry)),
+                                         .before=geometry)
   sfInt<-sfInt[sfInt$area>minZeroArea,]
   return(sfInt) 
 }
