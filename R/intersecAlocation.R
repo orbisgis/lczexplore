@@ -10,6 +10,9 @@
 #' @export
 #' @examples
 intersectAlocation<-function(dirPath, workflowNames = c("osm","bdt","iau","wudapt"), location){
+  lastPos<-nchar(dirPath)
+  if(substr(dirPath, start = lastPos, stop = lastPos)!="/"){dirPath<-paste0(dirPath,"/")}
+  
   typeLevels<-c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",
                 "9"="9","10"="10",
                 "101"="101","102"="102","103"="103","104"="104", "105"="105","106"="106","107"="107",

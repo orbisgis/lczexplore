@@ -1,8 +1,6 @@
 #' Compares several sets of geographical classifications, especially Local Climate Zones classifications
-#' @param sfList a list which contains the classifications to compare, as sf objects
-#' @param LCZcolumns a vector which contains, for eacfh sf of sfList, the name of the column of the classification to compare
-#' @param refCrs a number which indicates which sf object from sfList will provide the CRS in which all the sf objects will be projected before comparison
-#' By defautl it is set to an empty string and no ID is loaded.
+#' @param sfInt an sf objects with intersected geometries and the LCZ columns for each workflow LCZ
+#' @param LCZcolumns a vector which contains, the name of the columns of the classification to compare
 #' @param sfWf a vector of strings which contains the names of the workflows used to produce the sf objects
 #' @param trimPerc this parameters indicates which percentile to drop out of the smallest geometries resulting 
 #' from the intersection of the original sf geometries intersection. 
@@ -18,36 +16,46 @@
 #' @export
 #' @examples
 #' 
-compareMultipleLCZ<-function(sfList, LCZcolumns, refCrs=NULL, sfWf=NULL, trimPerc=0.05){
-  echInt<-createIntersect(sfList = sfList, columns = LCZcolumns , refCrs= refCrs, sfWf = sfWf)
-  print(nrow(echInt))
-  echInt <- echInt %>% subset(area>quantile(echInt$area, probs=trimPerc) & !is.na(area))
-  echIntnogeom<-st_drop_geometry(echInt)
-  for (i in 1:(length(sfList) - 1)) {
-    for(j in (i+1):length(sfList)){
-      compName<-paste0(i,"_",j)
+compareMultipleLCZ<-function(sfInt, LCZcolumns, sfWf=NULL, trimPerc=0.05){
+  if (is.null(LCZcolumns)) { 
+    LCZcolumns<-names(sfInt)[!names(sfInt)%in%c("area", "geometry")]
+  }
+  sfInt <- sfInt %>% subset(area>quantile(sfInt$area, probs=trimPerc) & !is.na(area))
+  sfIntnogeom<-st_drop_geometry(sfInt)
+  
+  if (is.null(sfWf) | length(sfWf)!=length(LCZcolumns)){sfWf<-LCZcolumns}
+  
+  for (i in 1:(length(LCZcolumns) - 1)) {
+    for(j in (i+1):length(LCZcolumns)){
+      compName<-paste0(sfWf[i],"_",sfWf[j])
       print(compName)
-      echIntnogeom[,compName]<-echIntnogeom[,i] == echIntnogeom[,j]
+      sfIntnogeom[,compName]<-sfIntnogeom[ , LCZcolumns[i]] == sfIntnogeom[ , LCZcolumns[j]]
     }
   }
-  rangeCol<-(length(sfList)+3):ncol(echIntnogeom)
+  rangeCol<-(length(LCZcolumns)+2):ncol(sfIntnogeom)
   print(rangeCol)
-  # print(names(echIntnogeom[,rangeCol]))
-  echIntnogeom$nbAgree<-apply(echIntnogeom[,rangeCol],MARGIN=1,sum)
-  echIntnogeom$maxAgree<-apply(
-    X = echIntnogeom[,1:length(sfList)], MARGIN = 1, function(x) max(table(x) ))
-  echInt<-cbind(echIntnogeom,echInt$geometry)  %>% st_as_sf()
-  echInt
-  echIntLong<-pivot_longer(st_drop_geometry(echInt),cols=rangeCol, names_to = "whichWfs", values_to = "agree")
-  echIntLong$LCZref<-substr(echIntLong$whichWfs,start = 1, stop=1 )
-  print(head(echIntLong[,c(1,2,9:10)]))
-  whichLCZagree <- names(echIntLong)[as.numeric(echIntLong$LCZref)]
-  indRow<- seq_len(nrow(echIntLong))
+  # print(names(sfIntnogeom[,rangeCol]))
+  sfIntnogeom$nbAgree<-apply(
+     X = sfIntnogeom[,rangeCol],MARGIN=1,sum)
+  sfIntnogeom$maxAgree<-apply(
+    X = sfIntnogeom[,1:length(LCZcolumns)], MARGIN = 1, function(x) max(table(x) ))
+ print(head(sfIntnogeom))
+  
+  # long format
+  sfIntLong<-pivot_longer(sfIntnogeom, cols=names(sfIntnogeom)[rangeCol], names_to = "whichWfs", values_to = "agree")
+  
+  # Get the reference LCZ column on which 2 wf agree
+  
+  whichLCZagree <- gsub( x = sfIntLong$whichWfs, pattern = "(.*)(_)(.*)", replacement = "\\1")
+  indRow<- seq_len(nrow(sfIntLong))
   z<-data.frame(indRow, whichLCZagree)
-  echIntLong$LCZvalue<-apply(z, 1, function(x) unlist(st_drop_geometry(echIntLong)[x[1], x[2]]))
-  print(head(echIntLong[,c(1,2,9:11)]))
-
-  output<-list(echInt=echInt, echIntLong=echIntLong)
+  print(head(z))
+  sfIntLong$LCZvalue<-apply(z, 1, function(x) unlist(st_drop_geometry(sfIntLong)[x[1], x[2]]))
+  print(head(sfIntLong[,c(1,2,9:11)]))
+  sfInt<-cbind(sfIntnogeom,sfInt$geometry)  %>% st_as_sf()
+  
+  
+  output<-list(sfInt=sfInt, sfIntLong=sfIntLong)
 }
 
 

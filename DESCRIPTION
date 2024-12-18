@@ -23,6 +23,8 @@ Imports: RColorBrewer,
           rlang,
           grDevices,
           DescTools,
+          caret,
+          confintr,
           methods
 Suggests: 
     tinytest,

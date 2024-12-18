@@ -17,7 +17,8 @@ importLCZvect(
     "12", `103` = "13", `104` = "14", `105` = "15", `106` = "16", `107` = "17", `101` =
     "A", `102` = "B", `103` = "C", `104` = "D", `105` = "E", `106` = "F", `107` = "G"),
   drop = T,
-  verbose = FALSE
+  verbose = FALSE,
+  sfIn = NULL
 )
 }
 \arguments{
