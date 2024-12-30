@@ -35,7 +35,7 @@ plotLCZaLocation<-function(dirPath, location, workflowNames = c("osm","bdt","iau
 
   surfaces<-concatSf %>%
     mutate(wf = factor(wf, levels = c("bdt", "osm", "wudapt", "iau"))) %>%
-    group_by(wf, lcz_primary) %>% summarise(area=sum(area), location=unique(location))
+    dplyr::group_by(wf, lcz_primary) %>% dplyr::summarise(area=sum(area), location=unique(location))
 
   location<-unique(surfaces$location)
   outPlot<-ggplot(surfaces, aes(fill=lcz_primary, y=area, x=wf)) +
