@@ -48,7 +48,10 @@ importLCZvectFromFile<-function(dirPath, file="rsu_lcz.geojson", column, geomID=
     colErr<-c("It seems that some of the columns you try to import do not exist in the source file,
               are you sure you meant ",
               paste(badCol),"?")
-    if (prod(inCol)==0){ stop(colErr) } else {
+    if (prod(inCol)==0){ 
+      
+      
+      stop(colErr) } else {
       if (drop== TRUE) {sfFile<-sf::st_read(dsn=fileName,quiet=!verbose)[,colonnes] } else {
         sfFile<-sf::st_read(dsn=fileName,quiet=!verbose)[,]}
     }

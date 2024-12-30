@@ -49,9 +49,9 @@ compareMultipleLCZ<-function(sfInt, LCZcolumns, sfWf=NULL, trimPerc=0.05){
   whichLCZagree <- gsub( x = sfIntLong$whichWfs, pattern = "(.*)(_)(.*)", replacement = "\\1")
   indRow<- seq_len(nrow(sfIntLong))
   z<-data.frame(indRow, whichLCZagree)
-  print(head(z))
+
   sfIntLong$LCZvalue<-apply(z, 1, function(x) unlist(st_drop_geometry(sfIntLong)[x[1], x[2]]))
-  print(head(sfIntLong[,c(1,2,9:11)]))
+
   sfInt<-cbind(sfIntnogeom,sfInt$geometry)  %>% st_as_sf()
   
   
