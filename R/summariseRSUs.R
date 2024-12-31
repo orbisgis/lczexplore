@@ -11,8 +11,10 @@ summariseRSUs<-function(sf, column ){
   return(output)
 }
 
-# osm<-importLCZvect(dirPath = "/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/newDataTree/Dourdan/",
-#                    file = "osm_lcz.fgb")
+osm<-importLCZvect(dirPath = "/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/newDataTree/Dourdan/",
+                   file = "osm_lcz.fgb")
+write_sf(osm, "inst/extdata/example.geojson")
+
 # osm %>% group_by(LCZ_PRIMARY) %>% summarise(geometry = st_union(geometry))
 # showLCZ(osm)
 # test<-summariseRSUs(osm, column ="LCZ_PRIMARY")
@@ -37,3 +39,13 @@ summariseRSUs<-function(sf, column ){
 # 
 # st_area(osm2)
 # showLCZ(osm2)
+
+options(timeout=1000)
+tmp <- tempdir(check = TRUE)
+zf <- file.path(tmp, "example.fgb")
+if(file.exists(zf)){file.remove(zf)}
+if(!file.exists(zf)){
+download.file(
+  "https://github.com/orbisgis/lczexplore/blob/72bd63c95d2d0d79d763073e023436859b1324bf/inst/extdata/dourdan_osm_lcz.fgb", 
+  destfile = zf)}
+
