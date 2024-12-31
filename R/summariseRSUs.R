@@ -13,7 +13,7 @@ summariseRSUs<-function(sf, column ){
 
 osm<-importLCZvect(dirPath = "/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/newDataTree/Dourdan/",
                    file = "osm_lcz.fgb")
-write_sf(osm, "inst/extdata/example.geojson")
+write_sf(osm, "inst/extdata/example.fgb")
 
 # osm %>% group_by(LCZ_PRIMARY) %>% summarise(geometry = st_union(geometry))
 # showLCZ(osm)
@@ -39,13 +39,19 @@ write_sf(osm, "inst/extdata/example.geojson")
 # 
 # st_area(osm2)
 # showLCZ(osm2)
-
+dput(osm)
 options(timeout=1000)
 tmp <- tempdir(check = TRUE)
-zf <- file.path(tmp, "example.fgb")
+zf <- file.path(tmp, "example2.geojson")
 if(file.exists(zf)){file.remove(zf)}
 if(!file.exists(zf)){
 download.file(
-  "https://github.com/orbisgis/lczexplore/blob/72bd63c95d2d0d79d763073e023436859b1324bf/inst/extdata/dourdan_osm_lcz.fgb", 
-  destfile = zf)}
+  "https://raw.githubusercontent.com/MGousseff/lczexplore/multipleComparison/inst/extdata/dourdan_osm_lcz.fgb",
+destfile = zf)
+}
+
+test<-read_sf(zf)
+test %>% group_by(LCZ_PRIMARY) %>% summarise %>% ungroup %>% st_cast("POLYGON")
+test %>% group_by(LCZ_PRIMARY) %>% summarise %>% ungroup %>% st_cast("MULTIPOLYGON") %>% st_cast("POLYGON")
+
 
