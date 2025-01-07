@@ -10,7 +10,7 @@
 #' and a dataframe with the nbOutAssociation most significant association
 #' @export
 #' @examples
-plotLCZaLocation<-function(dirPath, location, workflowNames = c("osm","bdt","iau","wudapt"),
+boxplotLCZaLocation<-function(dirPath, location, workflowNames = c("osm","bdt","iau","wudapt"),
                            plotNow = FALSE, plotSave = TRUE){
   colorMap<-c("#8b0101","#cc0200","#fc0001","#be4c03","#ff6602","#ff9856",
               "#fbed08","#bcbcba","#ffcca7","#57555a","#006700","#05aa05",

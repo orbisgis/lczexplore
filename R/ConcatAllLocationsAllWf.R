@@ -13,7 +13,7 @@
 #' @export
 #' @examples
 #' 
-concatIntersectedLocations<-function(dirList, locations, workflowNames = c("osm","bdt","iau","wudapt")){
+concatAllLocationsAllWfs<-function(dirList, locations, workflowNames = c("osm","bdt","iau","wudapt")){
   allLocAllWfSf<-matrix(ncol = 5, nrow = 0)
   allLocAllWfSf<-as.data.frame(allLocAllWfSf)
   names(allLocAllWfSf)<- c("lcz_primary", "location", "wf", "area", "geometry")
@@ -25,20 +25,12 @@ for( i in 1:length(dirList)){
     if(substr(dirPath, nchar(dirPath), nchar(dirPath))!="/"){dirPath<-paste0(dirPath, "/")}
     zoneSfPath<-paste0(dirPath,"zone.fgb")
     zoneSf<-read_sf(zoneSfPath)
-    sfList<-repairRoadsIAU(sfList = sfList, zoneSf = zoneSf, location = location)
+    sfList<-repairRoadsIAU(sfList = sfList, zoneSf = zoneSf, location = aLocation)
     concatSf<-concatAlocationWorkflows(sfList = sfList,
-                                       location = location, refCrs = 1)
+                                       location = aLocation, refCrs = 1)
     allLocAllWfSf<-rbind(allLocAllWfSf, concatSf)
   }
   
   allLocAllWfSf<- st_as_sf(allLocAllWfSf)
 }
 
-# rootDir<-"/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/newDataTree"
-# setwd(rootDir)
-# allLCZDirNames <- list.dirs()[-1]
-# allLCZDirNames <- substr(allLCZDirNames, start = 2, stop = 1000)
-# allLocationsNames<-substr(allLCZDirNames, start = 2, stop = 1000)
-# allLCZDirNames<-paste0(rootDir, allLCZDirNames, "/")
-# allLocallWfs<-concatIntersectedLocations(
-#   dirList = allLCZDirNames, locations = allLocationsNames , workflowNames = c("osm","bdt","iau","wudapt"))
