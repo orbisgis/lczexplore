@@ -1,4 +1,5 @@
 rootDir<-"/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/newDataTree"
+wd<-getwd()
 setwd(rootDir)
 allLCZDirNames <- list.dirs()[-1]
 allLCZDirNames <- substr(allLCZDirNames, start = 2, stop = 1000)
@@ -11,3 +12,4 @@ for (i in 1:2){
     dirPath = allLCZDirNames[i],
     location = allLocationsNames[i], plotNow = FALSE, plotSave = TRUE)
 }
+setwd(wd)

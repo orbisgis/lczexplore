@@ -29,7 +29,7 @@ boxplotLCZaLocation<-function(dirPath, location, workflowNames = c("osm","bdt","
   if(substr(dirPath, nchar(dirPath), nchar(dirPath))!="/"){dirPath<-paste0(dirPath, "/")}
   zoneSfPath<-paste0(dirPath,"zone.fgb")
   zoneSf<-read_sf(zoneSfPath)
-  sfList<-repairRoadsIAU(sfList = sfList, zoneSf = zoneSf, location = location)
+  sfList<-addRoadLCZ(sfList = sfList, zoneSf = zoneSf, missingRoadsWf= "iau", location = location)
   concatSf<-concatAlocationWorkflows(sfList = sfList,
                                      location = location, refCrs = 1)
 
