@@ -11,6 +11,7 @@
 #' @export
 #' @examples
 boxplotLCZaLocation<-function(dirPath, location, workflowNames = c("osm","bdt","iau","wudapt"),
+                              refWf = NULL, refLCZ = NA, residualLCZvalue=NA,
                            plotNow = FALSE, plotSave = TRUE){
   colorMap<-c("#8b0101","#cc0200","#fc0001","#be4c03","#ff6602","#ff9856",
               "#fbed08","#bcbcba","#ffcca7","#57555a","#006700","#05aa05",
@@ -29,7 +30,9 @@ boxplotLCZaLocation<-function(dirPath, location, workflowNames = c("osm","bdt","
   if(substr(dirPath, nchar(dirPath), nchar(dirPath))!="/"){dirPath<-paste0(dirPath, "/")}
   zoneSfPath<-paste0(dirPath,"zone.fgb")
   zoneSf<-read_sf(zoneSfPath)
-  sfList<-addRoadLCZ(sfList = sfList, zoneSf = zoneSf, missingRoadsWf= "iau", location = location)
+  sfList<-addMissingRSUs(sfList, missingGeomsWf="iau", zoneSf = zoneSf, refWf = refWf, 
+                                    refLCZ = refLCZ,
+                         residualLCZvalue = residualLCZvalue, location = location, column = "lcz_primary")
   concatSf<-concatAlocationWorkflows(sfList = sfList,
                                      location = location, refCrs = 1)
 

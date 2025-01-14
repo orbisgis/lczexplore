@@ -25,7 +25,7 @@ for( i in 1:length(dirList)){
     if(substr(dirPath, nchar(dirPath), nchar(dirPath))!="/"){dirPath<-paste0(dirPath, "/")}
     zoneSfPath<-paste0(dirPath,"zone.fgb")
     zoneSf<-read_sf(zoneSfPath)
-    sfList<-repairRoadsIAU(sfList = sfList, zoneSf = zoneSf, location = aLocation)
+    sfList<-addRoadLCZ(sfList = sfList, missingRoadsWf="iau", zoneSf = zoneSf, location = aLocation)
     concatSf<-concatAlocationWorkflows(sfList = sfList,
                                        location = aLocation, refCrs = 1)
     allLocAllWfSf<-rbind(allLocAllWfSf, concatSf)
