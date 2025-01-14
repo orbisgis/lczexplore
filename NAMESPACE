@@ -2,7 +2,9 @@
 
 export(CohenKappa)
 export(LCZareas)
+export(addMissingRSUs)
 export(addRoadLCZ)
+export(addRoadWaterLCZ)
 export(areColors)
 export(boxplotLCZaLocation)
 export(compareLCZ)

@@ -9,6 +9,9 @@ boxplotLCZaLocation(
   dirPath,
   location,
   workflowNames = c("osm", "bdt", "iau", "wudapt"),
+  refWf = NULL,
+  refLCZ = NA,
+  residualLCZvalue = NA,
   plotNow = FALSE,
   plotSave = TRUE
 )
