@@ -28,5 +28,6 @@ concatIntersectedLocations<-function(dirList, locations, workflowNames = c("osm"
   }
   concatIntersectedDf$location<-factor(concatIntersectedDf$location)
   concatIntersectedSf<-concatIntersectedDf %>% st_as_sf()
+  
   return(concatIntersectedSf)
 }
