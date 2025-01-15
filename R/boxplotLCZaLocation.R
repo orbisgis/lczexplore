@@ -25,7 +25,7 @@ boxplotLCZaLocation<-function(dirPath, location, workflowNames = c("osm","bdt","
                 "LCZ C: Bush,scrub","LCZ D: Low plants",
                 "LCZ E: Bare rock or paved","LCZ F: Bare soil or sand","LCZ G: Water", "Not Available")
 
-  sfList<-loadMultipleSf(dirPath = dirPath,
+  sfList<-loadMultipleSfs(dirPath = dirPath,
                          workflowNames = workflowNames , location = location )
   if(substr(dirPath, nchar(dirPath), nchar(dirPath))!="/"){dirPath<-paste0(dirPath, "/")}
   zoneSfPath<-paste0(dirPath,"zone.fgb")

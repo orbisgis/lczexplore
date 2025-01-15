@@ -13,19 +13,24 @@
 #' @export
 #' @examples
 #' 
-concatAllLocationsAllWfs<-function(dirList, locations, workflowNames = c("osm","bdt","iau","wudapt")){
-  allLocAllWfSf<-matrix(ncol = 5, nrow = 0)
+concatAllLocationsAllWfs<-function(dirList, locations, workflowNames = c("osm","bdt","iau","wudapt"),
+                                   missingGeomsWf = "iau", refWf = NULL, refLCZ = NA,
+                                   residualLCZvalue = NA, column = "lcz_primary"){
+  allLocAllWfSf<-matrix(ncol = length(workflowNames)+1, nrow = 0)
   allLocAllWfSf<-as.data.frame(allLocAllWfSf)
   names(allLocAllWfSf)<- c("lcz_primary", "location", "wf", "area", "geometry")
 for( i in 1:length(dirList)){
     dirPath<-dirList[1]
     aLocation<-locations[i]
-    sfList<-loadMultipleSf(dirPath = dirPath,
+    sfList<-loadMultipleSfs(dirPath = dirPath,
                            workflowNames = workflowNames , location = aLocation )
     if(substr(dirPath, nchar(dirPath), nchar(dirPath))!="/"){dirPath<-paste0(dirPath, "/")}
     zoneSfPath<-paste0(dirPath,"zone.fgb")
     zoneSf<-read_sf(zoneSfPath)
-    sfList<-addRoadLCZ(sfList = sfList, missingRoadsWf="iau", zoneSf = zoneSf, location = aLocation)
+    sfList<-addMissingRSUs(sfList = sfList,
+                           missingGeomsWf="iau", zoneSf, refWf = refWf, refLCZ = refLCZ, 
+                           residualLCZvalue = residualLCZvalue,
+                           column = "lcz_primary", location = aLocation)
     concatSf<-concatAlocationWorkflows(sfList = sfList,
                                        location = aLocation, refCrs = 1)
     allLocAllWfSf<-rbind(allLocAllWfSf, concatSf)

@@ -7,7 +7,7 @@ library(ggplot2)
 library(cowplot)
 library(forcats)
 
-sfList<-loadMultipleSf(dirPath = "/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/newDataTree/Drancy/", 
+sfList<-loadMultipleSfs(dirPath = "/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/newDataTree/Drancy/", 
                        workflowNames = c("osm","bdt","iau","wudapt"), location = "Drancy"  )
 
 intersected<-createIntersect(sfList = sfList, columns = rep("lcz_primary", 4),
