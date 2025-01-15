@@ -16,12 +16,19 @@
 concatAllLocationsAllWfs<-function(dirList, locations, workflowNames = c("osm","bdt","iau","wudapt"),
                                    missingGeomsWf = "iau", refWf = NULL, refLCZ = NA,
                                    residualLCZvalue = NA, column = "lcz_primary"){
-  allLocAllWfSf<-matrix(ncol = length(workflowNames)+1, nrow = 0)
-  allLocAllWfSf<-as.data.frame(allLocAllWfSf)
-  names(allLocAllWfSf)<- c("lcz_primary", "location", "wf", "area", "geometry")
+  # allLocAllWfSf<-matrix(ncol = 5, nrow = 0)
+  tmp <- st_sfc()
+  class(tmp)[1] <- "sfc_POLYGON" 
+  allLocAllWfSf<- data.frame(
+    lcz_primary=character(0),location=character(0),
+  wf=character(0), area=numeric(0)) %>% 
+  st_as_sf(geometry = st_sfc(),  # Initialize with an empty geometry column
+           crs = 4326)
+
 for( i in 1:length(dirList)){
-    dirPath<-dirList[1]
+    dirPath<-dirList[i]
     aLocation<-locations[i]
+    print(aLocation)
     sfList<-loadMultipleSfs(dirPath = dirPath,
                            workflowNames = workflowNames , location = aLocation )
     if(substr(dirPath, nchar(dirPath), nchar(dirPath))!="/"){dirPath<-paste0(dirPath, "/")}
@@ -33,9 +40,13 @@ for( i in 1:length(dirList)){
                            column = "lcz_primary", location = aLocation)
     concatSf<-concatAlocationWorkflows(sfList = sfList,
                                        location = aLocation, refCrs = 1)
-    allLocAllWfSf<-rbind(allLocAllWfSf, concatSf)
+  if(i==1 && st_crs(allLocAllWfSf)!=st_crs(concatSf)){
+    allLocAllWfSf<-st_transform(allLocAllWfSf, crs = st_crs(concatSf))
+  }
+  allLocAllWfSf<-rbind(allLocAllWfSf, concatSf)
+
   }
   
-  allLocAllWfSf<- st_as_sf(allLocAllWfSf)
+  return(allLocAllWfSf)
 }
 

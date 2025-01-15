@@ -7,7 +7,12 @@
 concatAllLocationsAllWfs(
   dirList,
   locations,
-  workflowNames = c("osm", "bdt", "iau", "wudapt")
+  workflowNames = c("osm", "bdt", "iau", "wudapt"),
+  missingGeomsWf = "iau",
+  refWf = NULL,
+  refLCZ = NA,
+  residualLCZvalue = NA,
+  column = "lcz_primary"
 )
 }
 \arguments{
