@@ -20,7 +20,7 @@ showLCZ(test, column="lcz_primary")+geom_sf_text(aes(label = round(drop_units(ar
 
 
 library(sf)
-allLocAllWfs<-read_sf("/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/newDataTree/AllLocAllWorkflows.fgb")
+allLocAllWfs<-read_sf("/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/newDataTree/allLocAllWfs.fgb")
 # summary(allLocAllWfs)
 RSUsSummarisedAllLoc<-matrix(ncol=6, nrow=0) %>% as.data.frame
 names(RSUsSummarisedAllLoc)<-c("lcz",   "numberRSUs", "meanArea", "numberRSUsClust", "meanAreaClust", "wf")
