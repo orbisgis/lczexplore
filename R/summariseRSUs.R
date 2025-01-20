@@ -12,28 +12,13 @@ summariseRSUs<-function(sf, column = "lcz_primary" ){
   # sf<-sf %>% mutate(area=st_area(geometry)) %>% st_drop_geometry() %>% as.data.frame
   
   unClustered <-sf %>% group_by(.data[[column]])  %>%
-    summarise(numberRSUs=n(), meanArea = round(mean(st_area(geometry)), digits = 0)) %>% st_drop_geometry()
+    dplyr::summarise(numberRSUs=n(), meanArea = round(mean(st_area(geometry)), digits = 0)) %>% st_drop_geometry()
   
-  clustered <-sf %>% group_by(.data[[column]]) %>%  summarize() %>% ungroup %>% 
-    st_cast("MULTIPOLYGON") %>% st_cast("POLYGON") %>%  group_by(.data[[column]]) %>% 
-    summarise(numberRSUsClust=n(), meanAreaClust = round(mean(st_area(geometry)), digits = 0)) %>% st_drop_geometry
+  clustered <-sf %>% group_by(.data[[column]]) %>%  dplyr::summarise() %>% ungroup %>% 
+    st_cast("MULTIPOLYGON") %>% st_cast("POLYGON") %>%  group_by(.data[[column]]) %>%
+    dplyr::summarise(numberRSUsClust=n(), meanAreaClust = round(mean(st_area(geometry)), digits = 0)) %>% st_drop_geometry
   output <- full_join(unClustered,clustered, by = column)
   names(output)[1]<-"lcz"
   return(output)
 }
 
-
-summariseRSUs<-function (sf, column)
-{
-  unClustered <- sf %>% group_by(.data[[column]]) %>% dplyr::summarise(numberRSUs = n(),
-                                                                meanArea = round(mean(st_area(geometry)), digits = 0)) %>%
-    st_drop_geometry()
-  clustered <- sf %>% group_by(.data[[column]]) %>% dplyr::summarise() %>%
-    ungroup %>% st_cast("MULTIPOLYGON") %>% st_cast("POLYGON") %>%
-    group_by(.data[[column]]) %>% dplyr::summarise(numberRSUsClust = n(),
-                                            meanAreaClust = round(mean(st_area(geometry)), digits = 0)) %>%
-    st_drop_geometry
-  output <- full_join(unClustered, clustered, by = column)
-  names(output)[1] <- "lcz"
-  return(output)
-}
