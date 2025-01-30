@@ -34,4 +34,4 @@ st_transform(allLocAllWfSf, crs = 32631)
 allLocAllWfs<-concatAllLocationsAllWfs(
   dirList = allLCZDirNames, locations = allLocationsNames , workflowNames = c("osm","bdt","iau","wudapt"))
 
-sf::write_sf(allLocAllWfs, paste0(rootDir, "/allLocAllWfs.fgb"))
+# sf::write_sf(allLocAllWfs, paste0(rootDir, "/allLocAllWfs.fgb"))

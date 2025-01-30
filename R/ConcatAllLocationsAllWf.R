@@ -27,6 +27,7 @@ concatAllLocationsAllWfs<-function(dirList, locations, workflowNames = c("osm","
 
 for( i in 1:length(dirList)){
     dirPath<-dirList[i]
+    if (substring(text = dirPath, first = nchar(dirPath))!="/"){dirPath<-paste0(dirPath, "/")} 
     aLocation<-locations[i]
     print(aLocation)
     sfList<-loadMultipleSfs(dirPath = dirPath,

@@ -20,6 +20,9 @@ addMissingRSUs<-function(sfList, missingGeomsWf="iau", zoneSf, refWf = "bdt", re
   refCRS<-st_crs(sfList[[missingGeomsWf]])
   zoneSf<-st_transform(zoneSf,
                        crs=refCRS)
+  sfList[[missingGeomsWf]][[column]]<-factor(sfList[[missingGeomsWf]][[column]], 
+                                             levels = unique(c(
+    levels(sfList[[missingGeomsWf]][[column]]), refLCZ, residualLCZvalue)))
   missingDiff<-st_difference(
     st_union(zoneSf),
     st_union(sfList[[missingGeomsWf]])) %>% st_as_sf

@@ -32,83 +32,83 @@ library(confintr)
 testVs<-multipleCramer(intersected, 
                        columns = names(intersected)[names(intersected)!="geometry" &names(intersected)!="area"],
                        nbOutAssociations = 30)
-# testVs$signifAssoc
-# testVs$cramerLong %>% head(10)
-# 
-# intersectedDf<-st_drop_geometry(intersected)
-# str(intersectedDf)
-# summary(intersectedDf$area)
-# min(intersectedDf$area)
-# names(intersectedDf)
-# dataTest<-intersectedDf[ ,names(intersectedDf)!="area"]
-# dataTest <- as.data.frame(lapply(X = dataTest, factor))
-# summary(dataTest)
-# str(dataTest)
-# weights<-(intersectedDf$area/sum(intersectedDf$area))
-# length(weights)
-# auffargisMCA<-MCA(X = dataTest[, names(dataTest)!="area"], ncp = 5, row.w = weights)
-# plot.MCA(auffargisMCA, invisible = c("ind"))
-# 
-# dataTestNo107<-dataTest[apply(dataTest, 1, function(x) all(x!="107")),]
-# nrow(dataTestNo107)
-# weightsNo107<-(intersectedDf$area/sum(intersectedDf$area))[
-#   apply(dataTest, 1, function(x) all(x!="107"))]
-# length(weightsNo107)
-# 
-# auffargisMCANo107<-MCA(X = dataTestNo107[,names(dataTest)!="area"], ncp = 10, graph = FALSE)
-# # plot.MCA(auffargisMCANo107, invisible= c("ind"))
-# auffargisMCANo107Weights<-MCA(X = dataTestNo107[,names(dataTest)!="area"], ncp = 10, row.w = weightsNo107, graph = FALSE)
-# # plot.MCA(auffargisMCANo107Weights, invisible= c("ind"))
-# # plot.MCA(auffargisMCANo107Weights, invisible= c("ind"), axes=c(3,4))
-# # plot.MCA(auffargisMCANo107Weights, invisible= c("ind"), axes=c(5,6))
-# 
-# library(factoextra)
-# fviz_mca_var(
-#   auffargisMCANo107Weights,
-#   choice = c("var.cat"),
-#   axes = c(1, 2),
-#   geom = c("point", "text"),
-#   repel = TRUE,
-#   col.var = "red",
-#   alpha.var = 1,
-#   shape.var = 17,
-#   col.quanti.sup = "blue",
-#   col.quali.sup = "darkgreen",
-#   map = "symmetric",
-#   select.var = list(name = NULL, cos2 = NULL, contrib = NULL)
-# )
-# 
-# fviz_mca_var(
-#   auffargisMCANo107Weights,
-#   choice = c("var.cat"),
-#   axes = c(3, 4),
-#   geom = c("point", "text"),
-#   repel = TRUE,
-#   col.var = "red",
-#   alpha.var = 1,
-#   shape.var = 17,
-#   col.quanti.sup = "blue",
-#   col.quali.sup = "darkgreen",
-#   map = "symmetric",
-#   select.var = list(name = NULL, cos2 = NULL, contrib = NULL)
-# )
-# 
-# fviz_mca_var(
-#   auffargisMCANo107Weights,
-#   choice = c("var.cat"),
-#   axes = c(5, 6),
-#   geom = c("point", "text"),
-#   repel = TRUE,
-#   col.var = "red",
-#   alpha.var = 1,
-#   shape.var = 17,
-#   col.quanti.sup = "blue",
-#   col.quali.sup = "darkgreen",
-#   map = "symmetric",
-#   select.var = list(name = NULL, cos2 = NULL, contrib = NULL)
-# )
-# 
-# 
-# str(auffargisMCANo107)
-# 
+testVs$signifAssoc
+testVs$cramerLong %>% head(10)
+
+intersectedDf<-st_drop_geometry(intersected)
+str(intersectedDf)
+summary(intersectedDf$area)
+min(intersectedDf$area)
+names(intersectedDf)
+dataTest<-intersectedDf[ ,names(intersectedDf)!="area"]
+dataTest <- as.data.frame(lapply(X = dataTest, factor))
+summary(dataTest)
+str(dataTest)
+weights<-(intersectedDf$area/sum(intersectedDf$area))
+length(weights)
+auffargisMCA<-MCA(X = dataTest[, names(dataTest)!="area"], ncp = 5, row.w = weights)
+plot.MCA(auffargisMCA, invisible = c("ind"))
+
+dataTestNo107<-dataTest[apply(dataTest, 1, function(x) all(x!="107")),]
+nrow(dataTestNo107)
+weightsNo107<-(intersectedDf$area/sum(intersectedDf$area))[
+  apply(dataTest, 1, function(x) all(x!="107"))]
+length(weightsNo107)
+
+auffargisMCANo107<-MCA(X = dataTestNo107[,names(dataTest)!="area"], ncp = 10, graph = FALSE)
+# plot.MCA(auffargisMCANo107, invisible= c("ind"))
+auffargisMCANo107Weights<-MCA(X = dataTestNo107[,names(dataTest)!="area"], ncp = 10, row.w = weightsNo107, graph = FALSE)
+# plot.MCA(auffargisMCANo107Weights, invisible= c("ind"))
+# plot.MCA(auffargisMCANo107Weights, invisible= c("ind"), axes=c(3,4))
+# plot.MCA(auffargisMCANo107Weights, invisible= c("ind"), axes=c(5,6))
+
+library(factoextra)
+fviz_mca_var(
+  auffargisMCANo107Weights,
+  choice = c("var.cat"),
+  axes = c(1, 2),
+  geom = c("point", "text"),
+  repel = TRUE,
+  col.var = "red",
+  alpha.var = 1,
+  shape.var = 17,
+  col.quanti.sup = "blue",
+  col.quali.sup = "darkgreen",
+  map = "symmetric",
+  select.var = list(name = NULL, cos2 = NULL, contrib = NULL)
+)
+
+fviz_mca_var(
+  auffargisMCANo107Weights,
+  choice = c("var.cat"),
+  axes = c(3, 4),
+  geom = c("point", "text"),
+  repel = TRUE,
+  col.var = "red",
+  alpha.var = 1,
+  shape.var = 17,
+  col.quanti.sup = "blue",
+  col.quali.sup = "darkgreen",
+  map = "symmetric",
+  select.var = list(name = NULL, cos2 = NULL, contrib = NULL)
+)
+
+fviz_mca_var(
+  auffargisMCANo107Weights,
+  choice = c("var.cat"),
+  axes = c(5, 6),
+  geom = c("point", "text"),
+  repel = TRUE,
+  col.var = "red",
+  alpha.var = 1,
+  shape.var = 17,
+  col.quanti.sup = "blue",
+  col.quali.sup = "darkgreen",
+  map = "symmetric",
+  select.var = list(name = NULL, cos2 = NULL, contrib = NULL)
+)
+
+
+str(auffargisMCANo107)
+
 

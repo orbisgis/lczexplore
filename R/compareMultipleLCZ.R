@@ -22,11 +22,14 @@ compareMultipleLCZ<-function(sfInt, LCZcolumns, sfWf=NULL, trimPerc=0.05){
   }
   sfInt <- sfInt %>% subset(area>quantile(sfInt$area, probs=trimPerc) & !is.na(area))
   # if input intersected file comes from a concatenation, it will have a location column that is not needed
-  if("location" %in% names(sfInt)){ sfInt<-sfInt[,!names(allLocIntersected)=="location"]}
+  if("location" %in% names(sfInt)){ sfInt<-sfInt[,!names(sfInt)=="location"]}
   
   sfIntnogeom<-st_drop_geometry(sfInt)
   
   if (is.null(sfWf) | length(sfWf)!=length(LCZcolumns)){sfWf<-LCZcolumns}
+  
+  allLevels<- sfIntnogeom[,LCZcolumns] %>% lapply(levels) %>% unlist %>% unique()
+  sfIntnogeom[, LCZcolumns] <-   sfIntnogeom[, LCZcolumns] %>%  lapply(function(x) factor(x, levels=allLevels))
   
   for (i in 1:(length(LCZcolumns) - 1)) {
     for(j in (i+1):length(LCZcolumns)){
@@ -41,7 +44,7 @@ compareMultipleLCZ<-function(sfInt, LCZcolumns, sfWf=NULL, trimPerc=0.05){
   sfIntnogeom$nbAgree<-apply(
      X = sfIntnogeom[,rangeCol],MARGIN=1,sum)
   sfIntnogeom$maxAgree<-apply(
-    X = sfIntnogeom[,1:length(LCZcolumns)], MARGIN = 1, function(x) max(table(x) ))
+    X = sfIntnogeom[,1:length(LCZcolumns)], MARGIN = 1, function(x) max(table(x), na.rm = TRUE ))
  print(head(sfIntnogeom))
   
   # long format

@@ -472,8 +472,8 @@ if (plot == TRUE){
        scale_fill_gradient2(low = "lightgrey", mid="cyan", high = "blue",
                          midpoint = 50, limit = c(0,100), space = "Lab",
                          name="% area") +
-       geom_text(data=matConfLong[matConfLong$agree!=0,],aes(label=round(agree,digits=0)),
-                 color="black") +coord_fixed()+
+       geom_text(data=matConfLong[matConfLong$agree!=0,], aes(label=round(agree,digits=0)),
+                 color="black") + coord_fixed()+
        theme(axis.text.x = element_text(angle =70, hjust = 1),
              panel.background = element_rect(fill="grey"))+
        geom_tile(datatemp,mapping=aes(x=a,y=coordRef,fill=percArea1, height=0.8,width=0.8))+

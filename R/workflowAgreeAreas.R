@@ -10,8 +10,12 @@
 #' @examples
 #' 
 workflowAgreeAreas<-function(sfMultiCompLong){
-  agreeAreas<- sfMultiCompLong%>% subset(agree) %>% group_by(whichWfs) %>% summarise(area=sum(area)) %>% arrange(desc(area))
-  disagreeAreas<-sfMultiCompLong%>% subset(!agree) %>% group_by(whichWfs) %>% summarise(area=sum(area)) %>% arrange(desc(area))
-  output<-list(agreeAreas=agreeAreas, disagreeAreas = disagreeAreas)
+    agreeAreas<- sfMultiCompLong%>% subset(agree) %>% group_by(whichWfs) %>% 
+    dplyr::summarise(area=sum(area))
+  disagreeAreas<-sfMultiCompLong%>% subset(!agree) %>% group_by(whichWfs) %>% 
+    dplyr::summarise(area=sum(area))
+  output<-merge(agreeAreas, disagreeAreas, by = "whichWfs",
+suffixes = c("Agree", "Disagree")) %>% arrange(desc(areaAgree)) %>%
+mutate(percAgree = areaAgree/(areaAgree+areaDisagree)*100)
   return(output)
 }
