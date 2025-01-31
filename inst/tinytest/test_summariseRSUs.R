@@ -17,9 +17,10 @@ showLCZ(osm) + geom_sf_text(aes(label = round(drop_units(area)/100, digits = 0))
 test<-osm %>% group_by(LCZ_PRIMARY) %>%  summarise() %>% ungroup %>%
   st_cast("MULTIPOLYGON") %>% st_cast("POLYGON") %>% mutate(area=st_area(geometry))
 
-showLCZ(test)+geom_sf_text(aes(label = round(drop_units(area)/100, digits = 0)))
 
-test<-lczexplore::summariseRSUs(redonBDT, column ="LCZ_PRIMARY")
+showLCZ(test, column = "LCZ_PRIMARY")+ geom_sf_text(aes(label = round(drop_units(area)/100, digits = 0)))
+
+
 
 wudapt<-importLCZvect(dirPath = "/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/newDataTree/Conflans-Sainte-Honorine/",
                       file = "wudapt_lcz.fgb", column="lcz_primary")
@@ -41,13 +42,14 @@ test <- wudapt %>% group_by(lcz_primary) %>%  summarise() %>% ungroup %>%
 
 showLCZ(test, column="lcz_primary") + geom_sf_text(aes(label = round(drop_units(area)/100, digits = 0)))
 
-bufferDist <- 0.2
-test2 <-wudapt %>% group_by(lcz_primary) %>% 
-  st_buffer(dist = bufferDist) %>% 
-  dplyr::summarise(across(geometry, ~ sf::st_combine(.)), .groups = "keep") %>%
-  mutate(geometry = st_make_valid(geometry)) %>% 
-  dplyr::summarise(across(geometry, ~ sf::st_union(., by_feature = TRUE)), .groups = "drop") %>%
-  st_cast("MULTIPOLYGON") %>% st_cast("POLYGON") %>% mutate(area=st_area(geometry))
+bufferDist <- 0.00001
+
+# test2 <-wudapt %>% group_by(lcz_primary) %>% 
+#   st_buffer(dist = bufferDist) %>% 
+#   dplyr::summarise(across(geometry, ~ sf::st_combine(.)), .groups = "keep") %>%
+#   mutate(geometry = st_make_valid(geometry)) %>% 
+#   dplyr::summarise(across(geometry, ~ sf::st_union(., by_feature = TRUE)), .groups = "drop") %>%
+#   st_cast("MULTIPOLYGON") %>% st_cast("POLYGON") %>% mutate(area=st_area(geometry))
 
 test4 <-wudapt %>% group_by(lcz_primary) %>%
    st_buffer(dist=0.00001) %>%

@@ -2,9 +2,14 @@
 % Please edit documentation in R/summariseRSUs.R
 \name{summariseRSUs}
 \alias{summariseRSUs}
-\title{For a given LCZ sf object, returns the niumber of geometries and their mean area per levels of LCZ}
+\title{For a given LCZ sf object, returns the number of geometries and their mean area per level of LCZ}
 \usage{
-summariseRSUs(sf, column = "lcz_primary")
+summariseRSUs(
+  sf,
+  column = "lcz_primary",
+  aggregateBufferSize = 1e-05,
+  trim = 0.1
+)
 }
 \arguments{
 \item{sf}{contains the geometry and LCZ levels}
@@ -17,5 +22,5 @@ and their mean area per level of LCZ, and the same after agregatting geometries
 with same level of LCZ which touch each other
 }
 \description{
-For a given LCZ sf object, returns the niumber of geometries and their mean area per levels of LCZ
+For a given LCZ sf object, returns the number of geometries and their mean area per level of LCZ
 }

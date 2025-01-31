@@ -19,7 +19,8 @@ loadMultipleSfs<-function(dirPath, workflowNames = c("osm","bdt","iau","wudapt")
                 "101"="101","102"="102","103"="103","104"="104", "105"="105","106"="106","107"="107",
                 "101"="11","102"="12","103"="13","104"="14", "105"="15", "106"="16","107"="17",
                 "101"="A","102"="B","103"="C","104"="D","105"="E","106"="F","107"="G")
-  
+  dirPath<-checkDirSlash(dirPath)
+  print(dirPath)
   sfList<-list()
   for (i in workflowNames){
     inName<-paste0(dirPath, i, "_lcz.fgb")

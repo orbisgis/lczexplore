@@ -13,6 +13,9 @@ showLCZ(
   drop = FALSE,
   useStandCol = FALSE,
   tryGroup = TRUE,
+  naAsUnclassified = TRUE,
+  noPerc = FALSE,
+  plotNow = TRUE,
   ...
 )
 }

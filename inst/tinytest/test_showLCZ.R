@@ -6,7 +6,7 @@
 
 expect_silent(
   showLCZ(redonOSM, title="Zones climatiques locales à Redon",
-          repr="standard", drop=FALSE, colors="", LCZlevels="")
+          repr="standard", drop=FALSE, colors="", LCZlevels = "", naAsUnclassified = TRUE)
 )
 expect_silent(showLCZ(redonBDT, drop=TRUE))
 

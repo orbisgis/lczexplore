@@ -1,7 +1,9 @@
-#' For a given LCZ sf object, plots the number of geometries and their median area per level of LCZ
+#' For a given LCZ sf object, plots the number of geometries and their mean area per level of LCZ
 #' @param longSf contains the geometry and LCZ levels
 #' @param workflows the names of workflows (they will indicate the names of the columns containing LCZ levels)
 #' @param plotNow if TRUE the plot will be displayed in the session
+#' @whichPlot if "totalAreaClust" the total aggregated areas per levels of LCZ will be plotted, 
+#' if "meanAreaClust", the trimmed mean will
 #' @graphPath : a valid directory path where th plot will be saved 
 #' (for now an empty string to avoid saving in the working directory)
 #' @importFrom ggplot2 geom_sf guides ggtitle aes
@@ -11,7 +13,10 @@
 #' with same level of LCZ which touch each other
 #' @export
 #' @examples
-plotSummarisedRSUs<-function(longSf, workflows = c("osm", "bdt", "iau", "wudapt"), plotNow = TRUE, locations = NULL, graphPath = ""){
+plotSummarisedRSUs<-function(longSf, workflows = c("osm", "bdt", "iau", "wudapt"), 
+                             plotNow = TRUE, locations = NULL, graphPath = "",
+                              title = "", whichPlot = "totalAreaClust",
+                             aggregateBufferSize = 0.00001, trim = 0.1 ){
   print(locations)
   # colorMap<-c("#8b0101","#cc0200","#fc0001","#be4c03","#ff6602","#ff9856",
   #             "#fbed08","#bcbcba","#ffcca7","#57555a","#006700","#05aa05",
@@ -26,8 +31,8 @@ plotSummarisedRSUs<-function(longSf, workflows = c("osm", "bdt", "iau", "wudapt"
   #               "LCZ E: Bare rock or paved","LCZ F: Bare soil or sand","LCZ G: Water", "Unclassified")
   
   
-  summarisedRSUs<-matrix(ncol=6, nrow=0) %>% as.data.frame
-  names(summarisedRSUs)<-c("lcz",   "numberRSUs", "medianArea", "numberRSUsClust", "medianAreaClust", "wf")
+  summarisedRSUs<-matrix(ncol= 7, nrow=0) %>% as.data.frame
+  names(summarisedRSUs)<-c("lcz",   "numberRSUs", "meanArea", "numberRSUsClust", "meanAreaClust", "totalAreaClust", "wf")
   if(is.null(locations) | length(locations)==0){
     locations<-unique(longSf$location)
   }
@@ -35,31 +40,33 @@ plotSummarisedRSUs<-function(longSf, workflows = c("osm", "bdt", "iau", "wudapt"
   for (wfi in workflows){
     print(wfi)
     sfIn<-longSf[longSf$location%in%locations & longSf$wf==wfi,]
-    dfOut<-summariseRSUs(sfIn, column = "lcz_primary" )
+    dfOut<-summariseRSUs(sfIn, column = "lcz_primary", aggregateBufferSize = aggregateBufferSize, trim = trim )
     dfOut$wf<-wfi
     summarisedRSUs<-rbind(summarisedRSUs, dfOut)
   }
 
   summarisedRSUs$lcz<-factor(summarisedRSUs$lcz,
-                                   levels = c(as.character(1:10),as.character(101:107)))
+                                   levels = c(as.character(1:10),as.character(101:107), "unClassified"))
 
-  summarisedRSUs$medianArea<-round(summarisedRSUs$medianArea)
-  summarisedRSUs$medianAreaClust<-round(summarisedRSUs$medianAreaClust)
+  summarisedRSUs$meanArea<-round(summarisedRSUs$meanArea)
+  summarisedRSUs$meanAreaClust<-round(summarisedRSUs$meanAreaClust)
   summarisedRSUs<-summarisedRSUs %>% arrange(wf,lcz)
 
 
   # 
   outPlot<-ggplot() +
-    # geom_point(data = summarisedRSUs, aes(x=numberRSUs, y = medianArea, color = lcz), size = 2) +
-    geom_point(data = summarisedRSUs, aes(x=numberRSUsClust, y = medianAreaClust, color = lcz), size = 2) +
+    # geom_point(data = summarisedRSUs, aes(x=numberRSUs, y = meanArea, color = lcz), size = 2) +
+    geom_point(data = summarisedRSUs, aes(x=numberRSUsClust, y = .data[[whichPlot]], color = lcz), size = 2) +
     scale_color_manual(values=colorMap, breaks = names(colorMap), labels = etiquettes, na.value = "ghostwhite")+
     facet_wrap(vars(wf))
   if(plotNow){print(outPlot)}
   
   if(!is.null(graphPath) && length(graphPath)==1 && nchar(graphPath)>1){
     if(substr(graphPath, nchar(graphPath), nchar(graphPath))!="/"){graphPath<-paste0(graphPath, "/")}
-    graphName<-paste0(graphPath, paste0(locations, collapse = "_"), ".png")
-    ggsave(graphName, outPlot)
+    if (length(locations)<=3){
+    graphName<-paste0(graphPath, paste0(locations, collapse = "_"), ".png")}
+    else{graphName<-paste0(graphPath, title, ".png")}
+    ggsave(graphName, outPlot, , width = 724, height = 509, units = "px")
   }
   
   output<-list(outPlot=outPlot, summarisedRSUs=summarisedRSUs)

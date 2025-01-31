@@ -21,10 +21,10 @@
 #'
 #' @examples
 #'
-matConfPlot <- function(matConfLong,
+matConfPlot <- function(matConf,
                         column1 = "lcz_primary", column2 = "lcz_primary.1", agreeColumn = "agree",
                         wf1 = "reference", wf2 = "alternative", plotNow = TRUE, saveG = NULL) {
-  outPlot <- ggplot(matConfLong) +
+  outPlot <- ggplot(matConfLong$matConf) +
     geom_tile(aes(x = .data[[column1]], y = .data[[column2]], fill = .data[[agreeColumn]]),
               color = "white", lwd = 1.2, linetype = 1) +
     scale_fill_gradient2(low = "lightgrey", mid = "cyan", high = "blue",
