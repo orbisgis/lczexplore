@@ -10,7 +10,7 @@ matConfLCZ(
   column1,
   sf2,
   column2,
-  typeLevels = as.character(c(1:10, 101:107)),
+  typeLevels = unique(names(typeLevelsDefault)),
   plot = FALSE,
   wf1 = "Reference",
   wf2 = "Alternative",

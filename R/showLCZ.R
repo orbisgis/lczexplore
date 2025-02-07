@@ -49,7 +49,8 @@ showLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
           factor(subset(sf, select = column, drop = T), levels = typeLevels), !!!typeLevels))  #%>%
     # 
     if (naAsUnclassified) { sf[[column]] <- forcats::fct_na_value_to_level(sf[[column]], "Unclassified") }
-    else { sf <- drop_na(sf, column) }
+    else { sf <- drop_na(sf, column) 
+    }
 
 
     areas <- LCZareas(sf, column, LCZlevels = unique(names(typeLevelsDefault)))
@@ -74,8 +75,9 @@ showLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
       presentLevels <- levels(droplevels(sf[[column]]))
       temp <- sf[[column]] %>% factor(levels = presentLevels)
       sf <- sf %>% mutate(!!column := temp)
-      presentIndices <- sapply(presentLevels, grep, x = etiquettes) %>%
-        unlist 
+      presentIndices <- match(presentLevels, unique(names(typeLevels)))
+      print(presentLevels) ; print(unique(names(typeLevels))) ; print(presentIndices)
+      
       colorMap <- colorMap[presentIndices]
       etiquettes <- etiquettes[presentIndices]
     }
