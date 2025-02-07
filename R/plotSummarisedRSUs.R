@@ -18,18 +18,19 @@ plotSummarisedRSUs<-function(longSf, workflows = c("osm", "bdt", "iau", "wudapt"
                               title = "", whichPlot = "totalAreaClust",
                              aggregateBufferSize = 0.00001, trim = 0.1 ){
   print(locations)
-  # colorMap<-c("#8b0101","#cc0200","#fc0001","#be4c03","#ff6602","#ff9856",
-  #             "#fbed08","#bcbcba","#ffcca7","#57555a","#006700","#05aa05",
-  #             "#648423","#bbdb7a","#010101","#fdf6ae","#6d67fd", "ghostwhite")
-  # names(colorMap)<-as.character(c(1:10,101:107, "Unclassified"))
-  # etiquettes<-c("LCZ 1: Compact high-rise","LCZ 2: Compact mid-rise","LCZ 3: Compact low-rise",
-  #               "LCZ 4: Open high-rise","LCZ 5: Open mid-rise","LCZ 6: Open low-rise",
-  #               "LCZ 7: Lightweight low-rise","LCZ 8: Large low-rise",
-  #               "LCZ 9: Sparsely built","LCZ 10: Heavy industry",
-  #               "LCZ A: Dense trees", "LCZ B: Scattered trees",
-  #               "LCZ C: Bush,scrub","LCZ D: Low plants",
-  #               "LCZ E: Bare rock or paved","LCZ F: Bare soil or sand","LCZ G: Water", "Unclassified")
+  colorMap<-c("#8b0101","#cc0200","#fc0001","#be4c03","#ff6602","#ff9856",
+              "#fbed08","#bcbcba","#ffcca7","#57555a","#006700","#05aa05",
+              "#648423","#bbdb7a","#010101","#fdf6ae","#6d67fd", "ghostwhite")
+  names(colorMap)<-as.character(c(1:10,101:107, "Unclassified"))
+  etiquettes<-c("LCZ 1: Compact high-rise","LCZ 2: Compact mid-rise","LCZ 3: Compact low-rise",
+                "LCZ 4: Open high-rise","LCZ 5: Open mid-rise","LCZ 6: Open low-rise",
+                "LCZ 7: Lightweight low-rise","LCZ 8: Large low-rise",
+                "LCZ 9: Sparsely built","LCZ 10: Heavy industry",
+                "LCZ A: Dense trees", "LCZ B: Scattered trees",
+                "LCZ C: Bush,scrub","LCZ D: Low plants",
+                "LCZ E: Bare rock or paved","LCZ F: Bare soil or sand","LCZ G: Water", "Unclassified")
   
+  graphPath<-checkDirSlash(graphPath)
   
   summarisedRSUs<-matrix(ncol= 7, nrow=0) %>% as.data.frame
   names(summarisedRSUs)<-c("lcz",   "numberRSUs", "meanArea", "numberRSUsClust", "meanAreaClust", "totalAreaClust", "wf")
@@ -69,7 +70,22 @@ plotSummarisedRSUs<-function(longSf, workflows = c("osm", "bdt", "iau", "wudapt"
     ggsave(graphName, outPlot, , width = 724, height = 509, units = "px")
   }
   
-  output<-list(outPlot=outPlot, summarisedRSUs=summarisedRSUs)
+  wf2<-summarisedRSUs$wf
+  names(wf2<-c(0,1,2,5))
+  
+  outPlot2<-ggplot() +
+    # geom_point(data = summarisedRSUs, aes(x=numberRSUs, y = meanArea, color = lcz), size = 2) +
+    geom_point(data = summarisedRSUs, 
+               aes(x=numberRSUsClust, y =.data[[whichPlot]], 
+                   shape = wf, color = lcz, fill = lcz, size = drop_units(totalAreaClust)), stroke = 2) +
+    scale_size(name = whichPlot) +
+    scale_fill_manual(values= colorMap, breaks = names(colorMap), labels = etiquettes, na.value = "ghostwhite") +    
+    scale_color_manual(values = colorMap, breaks = names(colorMap), labels = etiquettes, na.value = "ghostwhite") +
+    scale_shape_manual(values = wf2) + 
+    labs( x = "number of Spatial units", y = whichPlot) 
+  
+  output<-list(outPlot=outPlot, summarisedRSUs=summarisedRSUs, outPlot2 = outPlot2)
+  
   return(output)
   
 }

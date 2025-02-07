@@ -12,6 +12,8 @@ matConfLCZ(
   column2,
   typeLevels = as.character(c(1:10, 101:107)),
   plot = FALSE,
+  wf1 = "Reference",
+  wf2 = "Alternative",
   ...
 )
 }

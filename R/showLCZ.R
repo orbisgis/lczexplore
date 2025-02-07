@@ -14,7 +14,7 @@
 #' @param ... these dynamic dots allow you to pass arguments to specify levels expected 
 #' in your dataset and colors associated to these levels when not in the standard representation. You can pas your levels through a vector and you colors through another vector called colors. 
 #' For more details about this, read the "lcz_explore_alter" vignette. 
-#' @import sf ggplot2 dplyr cowplot forcats grDevices
+#' @import sf ggplot2 dplyr cowplot forcats grDevices ggspatial
 #' @return return the plot of the LCZ levels
 #' @export
 #' @examples 

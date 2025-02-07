@@ -37,7 +37,7 @@
 #' The expected arguments are the name of each level of the variables contained 
 #' in column1 and column2, and also a vector called colors.
 #' @importFrom ggplot2 geom_sf guides ggtitle aes
-#' @import sf dplyr cowplot forcats units tidyr RColorBrewer utils grDevices rlang
+#' @import sf dplyr cowplot forcats units tidyr RColorBrewer utils grDevices rlang ggspatial
 #' @return returns graphics of comparison and an object called matConfOut which contains :
 #' matConfLong, a confusion matrix in a longer form, 
 #' matConfPlot is a ggplot2 object showing the confusion matrix.
