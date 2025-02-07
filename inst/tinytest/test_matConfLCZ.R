@@ -10,7 +10,7 @@ require(tidyr)
 ########### Test if the agree of an sf file with itself is 100 % (or 0 for LCZ present in no geom)
 expect_warning(
 matConfRedonBDTBDT<-matConfLCZ(sf1=redonBDT,column1='LCZ_PRIMARY',
-                               sf2=redonBDT,column2='LCZ_PRIMARY', plot = FALSE),
+                               sf2=redonBDT,column2='LCZ_PRIMARY', plot = TRUE),
 "attribute variables are assumed to be spatially constant throughout all geometries"
 )
 
@@ -28,7 +28,13 @@ expect_equal(testAuto,1)
 ######## test that different classification do not agreee everywhere
 
 matConfRedonBDTOSM<-matConfLCZ(sf1=redonBDT,column1='LCZ_PRIMARY',
-                            sf2=redonOSM,column2='LCZ_PRIMARY', plot=TRUE, wf1 = "GC BDTOPO", wf2 = "GC OSM")
+                            sf2=redonOSM,column2='LCZ_PRIMARY', plot=TRUE, 
+                               wf1 = "GC BDTOPO", wf2 = "GC OSM")
+
+matConfRedonOSMBDT<-matConfLCZ(sf1=redonOSM,column1='LCZ_PRIMARY',
+                               sf2=redonBDT,column2='LCZ_PRIMARY', plot=TRUE,
+                               wf1 = "GC BDTOPO", wf2 = "GC OSM")
+
 matConfLargeHetero<-matConfRedonBDTOSM$matConf %>%
   pivot_wider(names_from=LCZ_PRIMARY, values_from=agree, values_fill=0)
 

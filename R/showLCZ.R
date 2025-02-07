@@ -71,13 +71,11 @@ showLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
     }
 
     if (drop == TRUE) {
-      presentLevels <- levels(droplevels(subset(sf, select = column, drop = T)))
-      temp <- subset(sf, select = column, drop = T) %>%
-        factor(levels = presentLevels)
+      presentLevels <- levels(droplevels(sf[[column]]))
+      temp <- sf[[column]] %>% factor(levels = presentLevels)
       sf <- sf %>% mutate(!!column := temp)
       presentIndices <- sapply(presentLevels, grep, x = etiquettes) %>%
-        unlist %>%
-        print
+        unlist 
       colorMap <- colorMap[presentIndices]
       etiquettes <- etiquettes[presentIndices]
     }

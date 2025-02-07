@@ -25,7 +25,7 @@
 #' @examples
 #' matConfRedonBDTOSM<-matConfLCZ(sf1=redonBDT,column1='LCZ_PRIMARY',
 #' sf2=redonOSM,column2='LCZ_PRIMARY',plot=TRUE)
-matConfLCZ <- function(sf1, column1, sf2, column2, typeLevels = as.character(c(1:10, 101:107)), 
+matConfLCZ <- function(sf1, column1, sf2, column2, typeLevels = unique(names(typeLevelsDefault)), 
                        plot = FALSE, wf1 = "Reference", wf2 = "Alternative", ...) {
   # coerce the crs of sf2 to the crs of sf1
   if (st_crs(sf1) != st_crs(sf2)) { sf2 <- sf2 %>% st_transform(crs = st_crs(sf1)) }
@@ -187,7 +187,7 @@ matConfLCZ <- function(sf1, column1, sf2, column2, typeLevels = as.character(c(1
 
   # print("matConfLongaprès reorder factor")
   # print(matConfLong)
-  datatemp <- data.frame(a = factor(typeLevels), percArea1 = areas$area1, percArea2 = areas$area2)
+  datatemp <- data.frame(marginLevels = factor(typeLevels), percArea1 = areas$area1, percArea2 = areas$area2)
   ############
   # Plot
   coordRef <- length(typeLevels) + 1
@@ -200,20 +200,20 @@ matConfLCZ <- function(sf1, column1, sf2, column2, typeLevels = as.character(c(1
       scale_fill_gradient2(low = "grey97", mid = "cyan", high = "blue",
                            midpoint = 50, limit = c(0, 100), space = "Lab",
                            name = "% area") +
-      geom_text(data=matConfLong[matConfLong$agree!=0,], aes(x = get(column1), y = get(column2), label=round(agree,digits=0)),
+      geom_text(data=matConfLong[matConfLong$agree!=0,], aes(x = .data[[column1]], y = .data[[column2]], label=round(agree,digits=0)),
                 color="black") + 
         coord_fixed()+
       theme(axis.text.x = element_text(angle = 70, hjust = 1),
             panel.background = element_rect(fill = "grey97")) +
-      geom_tile(datatemp, mapping = aes(x = a, y = coordRef, fill = percArea2, height = 0.8, width = 0.8)) +
+      geom_tile(datatemp, mapping = aes(x = marginLevels, y = coordRef, fill = percArea1, height = 0.8, width = 0.8)) +
       theme(panel.background = element_rect(fill = "grey97")) +
       geom_text(data = datatemp[round(datatemp$percArea1, 0) != 0,], 
-                aes(x = a, y = coordRef, label = round(percArea1, digits = 0)),
+                aes(x = marginLevels, y = coordRef, label = round(percArea1, digits = 0)),
                 color = "gray37") +
       coord_fixed() +
-      geom_tile(datatemp, mapping = aes(x = coordRef, y = a, fill = percArea1, height = 0.8, width = 0.8)) +
+      geom_tile(datatemp, mapping = aes(x = coordRef, y = marginLevels, fill = percArea2, height = 0.8, width = 0.8)) +
       geom_text(data = datatemp[round(datatemp$percArea2, 0) != 0,], 
-                aes(x = coordRef, y = a, label = round(percArea2, digits = 0)),
+                aes(x = coordRef, y = marginLevels, label = round(percArea2, digits = 0)),
                 color = "gray37") +
       coord_fixed() +
       ggtitle(paste0("Repartition of ", wf1, " classes into ", wf2, " classes"))
