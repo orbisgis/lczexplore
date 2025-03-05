@@ -6,6 +6,8 @@
 #' @param sf1 is the sf dataset containing the first lcz classification
 #' @param column1 is the column of the first data set containing the lcz to be compared
 #' @param sf2 is the sf dataset containing the second lcz classification
+#' @param wf1 the name of the workflow used to produce data from sf1
+#' @param wf2 the name of the workflow used to produce data from sf2
 #' @param column2 is the column of the second data set containing the lcz to be compared
 #' @param typeLevels by default the levels of lcz incoded from 1 to 10 and 101 to 107.
 #' When comparing othe variable, like grouped LCZ, the grouped levels have to be specified.
@@ -25,7 +27,7 @@
 #' @examples
 #' matConfRedonBDTOSM<-matConfLCZ(sf1=redonBDT,column1='LCZ_PRIMARY',
 #' sf2=redonOSM,column2='LCZ_PRIMARY',plot=TRUE)
-matConfLCZ <- function(sf1, column1, sf2, column2, typeLevels = unique(names(typeLevelsDefault)), 
+matConfLCZ <- function(sf1, column1, sf2, column2, typeLevels = unique(names(.lczenv$typeLevelsDefault)), 
                        plot = FALSE, wf1 = "Reference", wf2 = "Alternative", ...) {
   # coerce the crs of sf2 to the crs of sf1
   if (st_crs(sf1) != st_crs(sf2)) { sf2 <- sf2 %>% st_transform(crs = st_crs(sf1)) }

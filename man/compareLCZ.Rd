@@ -9,11 +9,11 @@ and a confusion matrix between them. All are stored in a list, easily reusable.}
 compareLCZ(
   sf1,
   geomID1 = "",
-  column1,
+  column1 = "LCZ_PRIMARY",
   confid1 = "",
   wf1 = "bdtopo_2_2",
   sf2,
-  column2,
+  column2 = "LCZ_PRIMARY",
   geomID2 = "",
   confid2 = "",
   wf2 = "osm",

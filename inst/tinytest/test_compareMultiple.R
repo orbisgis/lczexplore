@@ -26,9 +26,9 @@ osm<-importLCZvect(dirPath = "/home/gousseff/Documents/3_data/data_article_LCZ_d
 bdt<-importLCZvect(dirPath = "/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/newDataTree/Dourdan/",
                    file = "bdt_lcz.fgb")
 iau<-importLCZvect(dirPath = "/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/newDataTree/Dourdan/",
-                   file = "iau_lcz.fgb")
+                   file = "iau_lcz.fgb", column = "lcz_primary")
 wudapt<-importLCZvect(dirPath = "/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/newDataTree/Dourdan/",
-                   file = "wudapt_lcz.fgb")
+                   file = "wudapt_lcz.fgb", column = "lcz_primary")
 
 # multicompare_test
 # 

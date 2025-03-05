@@ -27,7 +27,8 @@
 #' redonBDTex<-importLCZvectFromFile(dirPath=paste0(system.file("extdata", package = "lczexplore"),
 #' "/bdtopo_2_2/Redon"), file="rsu_lcz.geojson", column="LCZ_PRIMARY",
 #' geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
-importLCZvectFromFile <- function(dirPath, file = "rsu_lcz.geojson", column, geomID = "", confid = "", verbose = TRUE, drop = TRUE) {
+importLCZvectFromFile <- function(
+  dirPath, file = "rsu_lcz.geojson", column, geomID = "", confid = "", verbose = TRUE, drop = TRUE) {
   if (!file.exists(dirPath)) { stop(message = "The directory set in dirPath doesn't seem to exist") }
 
   fileName <- paste0(dirPath, "/", file)
@@ -42,31 +43,17 @@ importLCZvectFromFile <- function(dirPath, file = "rsu_lcz.geojson", column, geo
   if (extension != ".fgb") { # Some metadata for fgb files do not specify table/layer names
     query <- paste0("select * from ", nom, " limit 0") # So this query wouldn't work with such fgb files
     sourceCol <- st_read(dsn = fileName, query = query, quiet = !verbose) %>% names
-    inCol <- colonnes %in% sourceCol
-    badCol <- colonnes[!inCol]
-    colErr <- c("It seems that some of the columns you try to import do not exist in the source file,
-              are you sure you meant ",
-                paste(badCol), "?")
-    if (prod(inCol) == 0) {
-
-
-      stop(colErr) } else {
-      if (drop == TRUE) { sfFile <- sf::st_read(dsn = fileName, quiet = !verbose)[, colonnes] } else {
-        sfFile <- sf::st_read(dsn = fileName, quiet = !verbose)[,] }
-    }
-  } else { if (extension == ".fgb") {
-    sfFile <- sf::st_read(dsn = fileName, quiet = !verbose)[,]
-    sourceCol <- names(sfFile)
-    inCol <- colonnes %in% sourceCol
-    badCol <- colonnes[!inCol]
-    colErr <- c("It seems that some of the columns you try to import do not exist in the source file,
-              are you sure you meant ",
-                paste(badCol), "?")
-    if (prod(inCol) == 0) { stop(colErr) }
-
+    colonnes<-checkColnameCase(colonnes, sourceCol)
+    sfFile <- sf::st_read(dsn = fileName, quiet = !verbose)[, colonnes]    
+  } else { 
+      if (extension == ".fgb") {
+        sfFile <- sf::st_read(dsn = fileName, quiet = !verbose)[,]
+        sourceCol <- names(sfFile)
+        colonnes<-checkColnameCase(colonnes, sourceCol)
+        sfFile<-sfFile[,colonnes]
+      }
   }
 
-  }
   return(sfFile)
 }
 
@@ -74,7 +61,7 @@ importLCZvectFromFile <- function(dirPath, file = "rsu_lcz.geojson", column, geo
 #' Imports Local Climate Zone classifications from a standard geographical file (tested : geojson, shp, more to come)
 #'
 #' @param dirPath is the path of the directory of the file
-#' @param file is the name of the file from which the LCZ are imported
+#' @param sfIn is the sf object containing the LCZ map
 #' @param column indicates the name of the column containing LCZ values. 
 #' LCZ values are expected to be of a standard LCZ format (1 to 17, or 1 to 10 and 101 to 107 or 1 to G),
 #' else, use the importQualVar function
@@ -106,12 +93,9 @@ importLCZvectFromSf <- function(sfIn, column, geomID = "", confid = "") {
   colonnes <- c(geomID, column, confid)
   colonnes <- colonnes[sapply(colonnes, nchar) != 0]
   sourceCol <- names(sfIn)
-  inCol <- colonnes %in% sourceCol
-  badCol <- colonnes[!inCol]
-  colErr <- c("It seems that some of the columns you try to import do not exist in the source file,
-              are you sure you meant ",
-              paste(badCol), "?")
-  if (prod(inCol) == 0) { stop(colErr) } else { sfFile <- sfIn[, colonnes] }
+  colonnes<-checkColnameCase(userColNames = colonnes, dataColNames =sourceCol)
+  sfFile<-sfIn[,colonnes]  
+  
   return(sfFile)
 }
 
@@ -148,7 +132,7 @@ importLCZvectFromSf <- function(sfIn, column, geomID = "", confid = "") {
 #' showLCZ(redonBDTex)
 importLCZvect <- function(dirPath, file = "rsu_lcz.geojson", output = "sfFile", column = "LCZ_PRIMARY",
                     geomID = "", confid = "",
-                    typeLevels =  typeLevelsDefault,
+                    typeLevels =  .lczenv$typeLevelsDefault,
                     drop = T, verbose = FALSE, sfIn = NULL, naAsUnclassified = TRUE) {
   
   if (is.null(sfIn)) {

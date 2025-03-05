@@ -20,6 +20,18 @@ intersectAlocation(
 \item{dirPath}{is the directory where the original data are}
 
 \item{workflowNames}{are the names of the workflows : they are used to identify the files}
+
+\item{location}{is the name of the location (string)}
+
+\item{addMissingRSUs}{if TRUE calls the addMissingRSUs function to avoid areas with no geometries}
+
+\item{missingGeomsWf}{is passed to addMissingRSU function}
+
+\item{refWf}{is passed to addMissingRSU function}
+
+\item{refLCZ}{is passed to addMissingRSU function}
+
+\item{column}{the column name of the LCZ classification}
 }
 \value{
 an sf file with values of LCZ from all the input

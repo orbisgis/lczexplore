@@ -207,9 +207,9 @@ Le dernier graphique représente cette information.
 *Le graphique produit contient quatre graphiques, il est plus lisible zoomé.*
 
 ```{r, fig.dim = c(16,12 ), echo = FALSE}
-comparaison<-compareLCZ(sf1=redonBDT,column1="LCZ_PRIMARY", wf1="BD TOPO v2.2",
-                        sf2=redonOSM,column2="LCZ_PRIMARY",wf2="Open Street Map", ref=1,
-                        repr="standard",exwrite=F,location="Redon",saveG="comparison")
+comparaison<-compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", wf1="BD TOPO v2.2",
+                        sf2=redonOSM, column2="LCZ_PRIMARY", wf2="Open Street Map", ref=1,
+                        repr="standard", exwrite=F, location="Redon", saveG="comparison")
 dirPath<-paste0(system.file("extdata",package="lczexplore"),"/")
 
 ```

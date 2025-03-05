@@ -10,7 +10,7 @@ matConfLCZ(
   column1,
   sf2,
   column2,
-  typeLevels = unique(names(typeLevelsDefault)),
+  typeLevels = unique(names(.lczenv$typeLevelsDefault)),
   plot = FALSE,
   wf1 = "Reference",
   wf2 = "Alternative",
@@ -30,6 +30,10 @@ matConfLCZ(
 When comparing othe variable, like grouped LCZ, the grouped levels have to be specified.}
 
 \item{plot}{if TRUE the plot of the matrix}
+
+\item{wf1}{the name of the workflow used to produce data from sf1}
+
+\item{wf2}{the name of the workflow used to produce data from sf2}
 
 \item{...}{a set of unspecified arguments, for instance when the produceAnalysis function calls other functions}
 }

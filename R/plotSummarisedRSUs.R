@@ -1,10 +1,10 @@
-#' For a given LCZ sf object, plots the number of geometries and their mean area per level of LCZ
+    #' For a given LCZ sf object, plots the number of geometries and their mean area per level of LCZ
 #' @param longSf contains the geometry and LCZ levels
-#' @param workflows the names of workflows (they will indicate the names of the columns containing LCZ levels)
-#' @param plotNow if TRUE the plot will be displayed in the session
-#' @whichPlot if "totalAreaClust" the total aggregated areas per levels of LCZ will be plotted, 
+#' @param workflows contains the names of workflows (they will indicate the names of the columns containing LCZ levels)
+#' @param plotNow : if TRUE the plot will be displayed in the session
+#' @param whichPlot : if "totalAreaClust" the total aggregated areas per levels of LCZ will be plotted, 
 #' if "meanAreaClust", the trimmed mean will
-#' @graphPath : a valid directory path where th plot will be saved 
+#' @param graphPath : a valid directory path where th plot will be saved 
 #' (for now an empty string to avoid saving in the working directory)
 #' @importFrom ggplot2 geom_sf guides ggtitle aes
 #' @import sf dplyr cowplot forcats units tidyr RColorBrewer utils grDevices rlang
@@ -15,7 +15,7 @@
 #' @examples
 plotSummarisedRSUs<-function(longSf, workflows = c("osm", "bdt", "iau", "wudapt"), 
                              plotNow = TRUE, locations = NULL, graphPath = "",
-                              title = "", whichPlot = "totalAreaClust",
+                              title = "", whichPlot = "meanAreaClust",
                              aggregateBufferSize = 0.00001, trim = 0.1 ){
   print(locations)
   colorMap<-c("#8b0101","#cc0200","#fc0001","#be4c03","#ff6602","#ff9856",
@@ -33,7 +33,9 @@ plotSummarisedRSUs<-function(longSf, workflows = c("osm", "bdt", "iau", "wudapt"
   graphPath<-checkDirSlash(graphPath)
   
   summarisedRSUs<-matrix(ncol= 7, nrow=0) %>% as.data.frame
-  names(summarisedRSUs)<-c("lcz",   "numberRSUs", "meanArea", "numberRSUsClust", "meanAreaClust", "totalAreaClust", "wf")
+  names(summarisedRSUs)<-c(
+    "lcz",   "numberRSUs", "meanArea", 
+    "numberRSUsClust", "meanAreaClust", "totalAreaClust", "wf")
   if(is.null(locations) | length(locations)==0){
     locations<-unique(longSf$location)
   }
@@ -41,13 +43,15 @@ plotSummarisedRSUs<-function(longSf, workflows = c("osm", "bdt", "iau", "wudapt"
   for (wfi in workflows){
     print(wfi)
     sfIn<-longSf[longSf$location%in%locations & longSf$wf==wfi,]
-    dfOut<-summariseRSUs(sfIn, column = "lcz_primary", aggregateBufferSize = aggregateBufferSize, trim = trim )
+    dfOut<-summariseRSUs(sfIn, column = "lcz_primary", 
+                         aggregateBufferSize = aggregateBufferSize, trim = trim )
     dfOut$wf<-wfi
     summarisedRSUs<-rbind(summarisedRSUs, dfOut)
   }
 
-  summarisedRSUs$lcz<-factor(summarisedRSUs$lcz,
-                                   levels = c(as.character(1:10),as.character(101:107), "unClassified"))
+  summarisedRSUs$lcz<-factor(
+    summarisedRSUs$lcz,
+    levels = c(as.character(1:10),as.character(101:107), "Unclassified"))
 
   summarisedRSUs$meanArea<-round(summarisedRSUs$meanArea)
   summarisedRSUs$meanAreaClust<-round(summarisedRSUs$meanAreaClust)
@@ -57,7 +61,9 @@ plotSummarisedRSUs<-function(longSf, workflows = c("osm", "bdt", "iau", "wudapt"
   # 
   outPlot<-ggplot() +
     # geom_point(data = summarisedRSUs, aes(x=numberRSUs, y = meanArea, color = lcz), size = 2) +
-    geom_point(data = summarisedRSUs, aes(x=numberRSUsClust, y = .data[[whichPlot]], color = lcz), size = 2) +
+    geom_point(data = summarisedRSUs, 
+               aes(x=numberRSUsClust, y = log(.data[[whichPlot]]), color = lcz), 
+               size = 3) +
     scale_color_manual(values=colorMap, breaks = names(colorMap), labels = etiquettes, na.value = "ghostwhite")+
     facet_wrap(vars(wf))
   if(plotNow){print(outPlot)}
@@ -76,8 +82,9 @@ plotSummarisedRSUs<-function(longSf, workflows = c("osm", "bdt", "iau", "wudapt"
   outPlot2<-ggplot() +
     # geom_point(data = summarisedRSUs, aes(x=numberRSUs, y = meanArea, color = lcz), size = 2) +
     geom_point(data = summarisedRSUs, 
-               aes(x=numberRSUsClust, y =.data[[whichPlot]], 
-                   shape = wf, color = lcz, fill = lcz, size = drop_units(totalAreaClust)), stroke = 2) +
+               aes(x=numberRSUsClust, y =log(.data[[whichPlot]]), 
+                   shape = wf, color = lcz, fill = lcz, 
+                   size = drop_units(totalAreaClust)), stroke = 1.5) +
     scale_size(name = whichPlot) +
     scale_fill_manual(values= colorMap, breaks = names(colorMap), labels = etiquettes, na.value = "ghostwhite") +    
     scale_color_manual(values = colorMap, breaks = names(colorMap), labels = etiquettes, na.value = "ghostwhite") +

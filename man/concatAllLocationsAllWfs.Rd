@@ -18,9 +18,19 @@ concatAllLocationsAllWfs(
 \arguments{
 \item{dirList}{the list of directories for which the different LCZ files will be intersected}
 
+\item{locations}{for each diretory from dirList, a location name must be fed to the function}
+
 \item{workflowNames}{sets the names of workflows and define the name of the files which will be loaded and intersected}
 
-\item{for}{each diretory from dirList, a location name must be fed to the function}
+\item{missingGeomsWf}{the name of the workflow where some areas were not classified}
+
+\item{refWf}{the name of the workflow one uses as a reference to complete the incomplete workflow.
+if NULL then the geometries added will get the level specified in residualLCZvalue, else, the level in refLCZ}
+
+\item{refLCZ}{the reference level the completed geometries will receive}
+
+\item{residualLCZvalue}{the value the completed geometries where the reference workflow does not classify
+the geometry with refLCZ level}
 }
 \value{
 returns graphics of comparison and an object called matConfOut which contains :

@@ -7,6 +7,8 @@
 importLCZvectFromSf(sfIn, column, geomID = "", confid = "")
 }
 \arguments{
+\item{sfIn}{is the sf object containing the LCZ map}
+
 \item{column}{indicates the name of the column containing LCZ values.
 LCZ values are expected to be of a standard LCZ format (1 to 17, or 1 to 10 and 101 to 107 or 1 to G),
 else, use the importQualVar function}
@@ -18,8 +20,6 @@ If an empty string, no column is loaded.}
 for instance the uniqueness of the LCZ level of each geom}
 
 \item{dirPath}{is the path of the directory of the file}
-
-\item{file}{is the name of the file from which the LCZ are imported}
 
 \item{output}{: if sfFile, the function returns an sfFile with the specified columns,
 if bBox, returns a bounding box one can use to crop a raster file or to intersect another sf file}

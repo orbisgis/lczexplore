@@ -11,6 +11,7 @@
 #' @param drop indicates if you want to show the levels present in no geometry.
 #' @param useStandCol is set to TRUE implies that any levels detected as a standard LCZ level will receive the standard associated color
 #' @param tryGroup is set to TRUE when one wants to group and plot on the fly 
+#' @param naAsUnclassified if TRUE, affects Unclassified value to NAs in the LCZ column
 #' @param ... these dynamic dots allow you to pass arguments to specify levels expected 
 #' in your dataset and colors associated to these levels when not in the standard representation. You can pas your levels through a vector and you colors through another vector called colors. 
 #' For more details about this, read the "lcz_explore_alter" vignette. 
@@ -42,7 +43,7 @@ showLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
   if (wf != "") { nomLegende <- paste0("LCZ from ", wf, " workflow") } else { nomLegende <- "Levels" }
 
   if (repr == 'standard') {
-    typeLevels <- typeLevelsDefault
+    typeLevels <- .lczenv$typeLevelsDefault
     sf <-
       sf %>%
         mutate(!!column := fct_recode(
@@ -53,10 +54,10 @@ showLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
     }
 
 
-    areas <- LCZareas(sf, column, LCZlevels = unique(names(typeLevelsDefault)))
-    colorMap <- colorMapDefault
-    if (!noPerc) { etiquettes <- paste(etiquettesDefault, ": ", areas$area, "%") }
-    else { etiquettes <- etiquettesDefault }
+    areas <- LCZareas(sf, column, LCZlevels = unique(names(.lczenv$typeLevelsDefault)))
+    colorMap <- .lczenv$colorMapDefault
+    if (!noPerc) { etiquettes <- paste(.lczenv$etiquettesDefault, ": ", areas$area, "%") }
+    else { etiquettes <- .lczenv$etiquettesDefault }
 
 
     if (wf != "") { nomLegende <- paste0("LCZ from ", wf, " workflow") } else { nomLegende <- "LCZ" }

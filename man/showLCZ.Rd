@@ -39,6 +39,8 @@ If "standard" then an optimal set of colors is used to produce the plotted map. 
 
 \item{tryGroup}{is set to TRUE when one wants to group and plot on the fly}
 
+\item{naAsUnclassified}{if TRUE, affects Unclassified value to NAs in the LCZ column}
+
 \item{...}{these dynamic dots allow you to pass arguments to specify levels expected
 in your dataset and colors associated to these levels when not in the standard representation. You can pas your levels through a vector and you colors through another vector called colors.
 For more details about this, read the "lcz_explore_alter" vignette.}

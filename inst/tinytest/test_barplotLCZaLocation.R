@@ -8,8 +8,8 @@ allLCZDirNames<-paste0(rootDir, allLCZDirNames, "/")
 require(units)
 
 for (i in 1:2){
-  boxplotLCZaLocation(
+  barplotLCZaLocation(
     dirPath = allLCZDirNames[i],
-    location = allLocationsNames[i], plotNow = FALSE, plotSave = TRUE)
+    location = allLocationsNames[i], plotNow = FALSE, plotSave = FALSE)
 }
 setwd(wd)

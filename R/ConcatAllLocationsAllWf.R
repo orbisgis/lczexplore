@@ -1,7 +1,13 @@
 #' In a given list of directories the function looks for LCZ datafiles, return a datasets LCZ values for each geom and workflow
 #' @param dirList the list of directories for which the different LCZ files will be intersected
 #' @param workflowNames sets the names of workflows and define the name of the files which will be loaded and intersected
-#' @param for each diretory from dirList, a location name must be fed to the function
+#' @param locations for each diretory from dirList, a location name must be fed to the function
+#' @param missingGeomsWf the name of the workflow where some areas were not classified
+#' @param refWf the name of the workflow one uses as a reference to complete the incomplete workflow.
+#' if NULL then the geometries added will get the level specified in residualLCZvalue, else, the level in refLCZ
+#' @param refLCZ the reference level the completed geometries will receive
+#' @param residualLCZvalue the value the completed geometries where the reference workflow does not classify 
+#' the geometry with refLCZ level
 #' @importFrom ggplot2 geom_sf guides ggtitle aes
 #' @import sf dplyr cowplot forcats units tidyr RColorBrewer utils grDevices rlang
 #' @return returns graphics of comparison and an object called matConfOut which contains :

@@ -11,7 +11,7 @@ importLCZvect(
   column = "LCZ_PRIMARY",
   geomID = "",
   confid = "",
-  typeLevels = typeLevelsDefault,
+  typeLevels = .lczenv$typeLevelsDefault,
   drop = T,
   verbose = FALSE,
   sfIn = NULL,

@@ -60,9 +60,9 @@ we can see they seem to quite disagree.
 
 ```{R, fig.dim = c(8, 6)}
 
-comparison<-compareLCZ(sf1=redonBDT,column1="LCZ_PRIMARY", wf1="BD TOPO v2.2",
-                        sf2=redonOSM,column2="LCZ_PRIMARY",wf2="Open Street Map", ref=1,
-                        repr="standard",exwrite=F,location="Redon",saveG="")
+comparison <- compareLCZ(sf1 = redonBDT, column1 = "LCZ_PRIMARY", wf1 = "BD TOPO v2.2",
+                         sf2 = redonOSM, column2 = "LCZ_PRIMARY", wf2 = "Open Street Map", ref = 1,
+                         repr = "standard", exwrite = F, location = "Redon", saveG = "")
 comparison$pseudoK
 ```
 

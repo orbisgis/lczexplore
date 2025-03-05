@@ -1,6 +1,12 @@
 #' Intersects several sf files for a given location identified by a given directory path and name 
 #' @param dirPath is the directory where the original data are
 #' @param workflowNames are the names of the workflows : they are used to identify the files
+#' @param location is the name of the location (string)
+#' @param addMissingRSUs if TRUE calls the addMissingRSUs function to avoid areas with no geometries
+#' @param missingGeomsWf is passed to addMissingRSU function
+#' @param refWf  is passed to addMissingRSU function
+#' @param refLCZ  is passed to addMissingRSU function
+#' @param column the column name of the LCZ classification
 #' @importFrom ggplot2 geom_sf guides ggtitle aes
 #' @import sf dplyr cowplot forcats units tidyr RColorBrewer utils grDevices rlang
 #' @return an sf file with values of LCZ from all the input 
