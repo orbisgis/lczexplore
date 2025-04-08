@@ -33,7 +33,7 @@
 #' 
 showLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
                     repr = "standard", drop = FALSE, useStandCol = FALSE, tryGroup = TRUE,
-                    naAsUnclassified = TRUE, noPerc = FALSE, plotNow = TRUE,  ...) {
+                    naAsUnclassified = TRUE, noPerc = FALSE, plotNow = TRUE, addBorders = FALSE, ...) {
 
   datasetName <- deparse(substitute(sf))
 
@@ -109,6 +109,8 @@ showLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
         text_pad = unit(0.05, "cm"),
       ) +
       ggtitle(wtitre)
+    
+    if (addBorders){pstandard<-pstandard+geom_sf(color = "black")}
   }
   #
 

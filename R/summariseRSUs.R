@@ -8,20 +8,25 @@
 #' with same level of LCZ which touch each other
 #' @export
 #' @examples
-summariseRSUs<-function(sf, column = "lcz_primary", aggregateBufferSize = 0.00001, trim = 0.1 ){
-  # sf<-sf %>% mutate(area=st_area(geometry)) %>% st_drop_geometry() %>% as.data.frame
+summariseRSUs<-function(sfIn, aggregatingColumns = "lcz_primary", trimValue = 0 ){
+  if (!"sf"%in%class(sfIn)){sfIn<-st_as_sf(sfIn)}
   
-  unClustered <-sf %>% group_by(.data[[column]])  %>%
-    dplyr::summarise(numberRSUs=n(), meanArea = round(mean(st_area(geometry), na.rm = TRUE, trim = trim), digits = 0)) %>% st_drop_geometry()
+  DTin<-sfIn
+  data.table::setDT(DTin)
+  sfOut<-DTin[,
+    as.list(
+      c(
+        number = .N,
+        meanArea = round(mean(area / 10000, trim = trimValue), digits = 2),
+        sdArea = round(sd(area / 10000), digits = 2),
+        totalArea=round(sum(area/10000), digits = 2),
+        meanLogArea = round(mean(log(area / 10000), trim = trimValue), digits = 2),
+        sdLogArea = round(sd(log(area / 10000)), digits = 2)
+      )
+    ), by = aggregatingColumns]
   
-  clustered <-sf %>% group_by(.data[[column]]) %>%  st_buffer(dist=aggregateBufferSize) %>%
-    dplyr::summarise() %>% ungroup %>% 
-    st_cast("MULTIPOLYGON") %>% st_cast("POLYGON") %>%  group_by(.data[[column]]) %>%
-    dplyr::summarise(numberRSUsClust=n(), 
-                     meanAreaClust = round(mean(st_area(geometry), na.rm = TRUE, , trim = trim), digits = 0),
-                     totalAreaClust = round(sum(st_area(geometry), na.rm = TRUE), digits = 0) ) %>% st_drop_geometry
-  output <- full_join(unClustered, clustered, by = column)
-  names(output)[1]<-"lcz"
-  return(output)
+ return(sfOut)
 }
+
+
 

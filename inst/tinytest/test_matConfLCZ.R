@@ -2,7 +2,8 @@
 # library(tinytest)
 #
 # library(sf)
-require(tidyr)
+library(tidyr)
+require(dplyr)
 
 #showLCZ(redonBDT)
 #showLCZ(redonOSM)

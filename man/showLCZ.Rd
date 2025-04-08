@@ -16,6 +16,7 @@ showLCZ(
   naAsUnclassified = TRUE,
   noPerc = FALSE,
   plotNow = TRUE,
+  addBorders = FALSE,
   ...
 )
 }

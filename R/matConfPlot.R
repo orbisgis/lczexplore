@@ -21,11 +21,15 @@
 #'
 #' @examples
 #'
-matConfPlot <- function(matConf,
+matConfPlot <- function(matConfLong, marginAreas = NULL,
                         column1 = "lcz_primary", column2 = "lcz_primary.1", agreeColumn = "agree",
                         wf1 = "reference", wf2 = "alternative", plotNow = TRUE, saveG = NULL) {
-  outPlot <- ggplot(matConfLong$matConf) +
-    geom_tile(aes(x = .data[[column1]], y = .data[[column2]], fill = .data[[agreeColumn]]),
+
+  coordRef <- length(unique(marginAreas$marginLevels))+1
+  print(coordRef)
+  outPlot <- ggplot_build(
+    ggplot() +
+    geom_tile(data = matConfLong, aes(x = .data[[column1]], y = .data[[column2]], fill = .data[[agreeColumn]]),
               color = "white", lwd = 1.2, linetype = 1) +
     scale_fill_gradient2(low = "lightgrey", mid = "cyan", high = "blue",
                          midpoint = 50, limit = c(0, 100), space = "Lab",
@@ -36,12 +40,31 @@ matConfPlot <- function(matConf,
     coord_fixed() +
     labs(x = wf1, y = wf2) +
     theme(axis.text.x = element_text(angle = 70, hjust = 1),
-          panel.background = element_rect(fill = "grey"))
-  if (!is.null(saveG) && length(saveG) ==1){
-    plotPath<-paste0(saveG, "/", wf1,"_",wf2,"_matConfPlot.png")
-    print(plotPath)
-    ggsave(plotPath, outPlot)
-  }
-  print(outPlot)
+          panel.background = element_rect(fill = "grey")) + 
+    geom_tile(marginAreas, mapping = aes(x = marginLevels, y = coordRef, fill = percArea1, height = 0.8, width = 0.8)) +
+   theme(panel.background = element_rect(fill = "grey97")) +
+   geom_text(data = marginAreas[round(marginAreas$percArea1, 0) != 0,], 
+                   aes(x = marginLevels, y = coordRef, label = round(percArea2, digits = 0)),
+                   color = "gray37") +
+         coord_fixed() +
+       geom_tile(marginAreas, mapping = aes(x = coordRef, y = marginLevels, fill = percArea2, height = 0.8, width = 0.8)) +
+         geom_text(data = marginAreas[round(marginAreas$percArea2, 0) != 0,], 
+                   aes(x = coordRef, y = marginLevels, label = round(percArea2, digits = 0)),
+                   color = "gray37") +
+         coord_fixed() +
+         ggtitle(paste0("Repartition of ", wf1, " classes into ", wf2, " classes"))
+  )
+    # }
+  
+
+  
+  
+  
+  # if (!is.null(saveG) && length(saveG) ==1){
+  #   plotPath<-paste0(saveG, "/", wf1,"_",wf2,"_matConfPlot.png")
+  #   print(plotPath)
+  #   ggsave(plotPath, outPlot)
+  # }
+  # print(outPlot)
   return(outPlot)
 }

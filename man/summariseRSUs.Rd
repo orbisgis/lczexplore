@@ -4,12 +4,7 @@
 \alias{summariseRSUs}
 \title{For a given LCZ sf object, returns the number of geometries and their mean area per level of LCZ}
 \usage{
-summariseRSUs(
-  sf,
-  column = "lcz_primary",
-  aggregateBufferSize = 1e-05,
-  trim = 0.1
-)
+summariseRSUs(sfIn, aggregatingColumns = "lcz_primary", trimValue = 0)
 }
 \arguments{
 \item{sf}{contains the geometry and LCZ levels}

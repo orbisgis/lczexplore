@@ -1,5 +1,5 @@
     #' For a given LCZ sf object, plots the number of geometries and their mean area per level of LCZ
-#' @param longSf contains the geometry and LCZ levels
+#' @param aggregatedSF contains the geometry and LCZ levels
 #' @param workflows contains the names of workflows (they will indicate the names of the columns containing LCZ levels)
 #' @param plotNow : if TRUE the plot will be displayed in the session
 #' @param whichPlot : if "totalAreaClust" the total aggregated areas per levels of LCZ will be plotted, 
@@ -13,10 +13,10 @@
 #' with same level of LCZ which touch each other
 #' @export
 #' @examples
-plotSummarisedRSUs<-function(longSf, workflows = c("osm", "bdt", "iau", "wudapt"), 
+plotSummarisedRSUs<-function(summarisedSfIn, workflows = c("wudapt", "iau", "osm", "bdt"),
                              plotNow = TRUE, locations = NULL, graphPath = "",
-                              title = "", whichPlot = "meanAreaClust",
-                             aggregateBufferSize = 0.00001, trim = 0.1 ){
+                              title = "", whichPlot = "meanAreaClust", logScale = FALSE
+                              ){
   print(locations)
   colorMap<-c("#8b0101","#cc0200","#fc0001","#be4c03","#ff6602","#ff9856",
               "#fbed08","#bcbcba","#ffcca7","#57555a","#006700","#05aa05",
@@ -31,70 +31,51 @@ plotSummarisedRSUs<-function(longSf, workflows = c("osm", "bdt", "iau", "wudapt"
                 "LCZ E: Bare rock or paved","LCZ F: Bare soil or sand","LCZ G: Water", "Unclassified")
   
   graphPath<-checkDirSlash(graphPath)
+  initalAlphas<-rep(0.1,length(workflows))
+  names(initalAlphas)<-workflows
+  allPlotNames<-NULL
+  wf2<-c(5,1,2,0)
+  wfNamedVector<-c('bdt' = "GC/BDT", 'osm' = "GC/OSM", 'wudapt' = "WUDAPT", 'iau' = "IAU")
   
-  summarisedRSUs<-matrix(ncol= 7, nrow=0) %>% as.data.frame
-  names(summarisedRSUs)<-c(
-    "lcz",   "numberRSUs", "meanArea", 
-    "numberRSUsClust", "meanAreaClust", "totalAreaClust", "wf")
-  if(is.null(locations) | length(locations)==0){
-    locations<-unique(longSf$location)
-  }
+  for (wf in workflows) {
+    wfAlphas<-initalAlphas
+    wfAlphas[wf]<-1
+    plotName<-paste0("plot_",wf)
+    allPlotNames<-c(allPlotNames,plotName)
+   assign( plotName, 
+   {ggplot(data = summarisedSfIn) +
+    geom_point(
+      aes(x=number, y = meanLogArea,
+          shape = wf, color = lcz_primary, fill = lcz_primary, alpha = wf,
+          size = totalArea), stroke = 1.5) +
+    scale_alpha_manual(values = wfAlphas)+
+    scale_fill_manual(
+      values= colorMap, breaks = names(colorMap),
+      labels = etiquettes, na.value = "ghostwhite") +
+    scale_color_manual(
+      values = colorMap, breaks = names(colorMap),
+      labels = etiquettes, na.value = "ghostwhite") +
+    scale_shape_manual(values = wf2, name = "workflow",
+                       labels = wfNamedVector,
+                       breaks = c("wudapt","iau", "osm", "bdt")) +
+    labs( x = "number of Spatial units", y = "Avereage mean of log areas of ASU") +
+     guides(alpha = "none") + 
+     labs(subtitle = wfNamedVector[wf]) +
+     theme(legend.position = "right") }
+   )
+ }
+  
+ allPlots<-do.call(list, mget(allPlotNames))
+ library(patchwork)
+  outPlot <- allPlots[[1]] + allPlots[[2]] + allPlots[[3]] + allPlots[[4]] + plot_layout(ncol = 2, guides = "collect") +
+    plot_annotation(
+      title = "Overview of aggregating behavior", 
+      subtitle = "Average size x Average number of spatial units per LCZ types and workflow",
+    caption = "Along the y axis : coarser map, along the x axis, patchworky map ")
+  if (plotNow) {print(outPlot)}
 
-  for (wfi in workflows){
-    print(wfi)
-    sfIn<-longSf[longSf$location%in%locations & longSf$wf==wfi,]
-    dfOut<-summariseRSUs(sfIn, column = "lcz_primary", 
-                         aggregateBufferSize = aggregateBufferSize, trim = trim )
-    dfOut$wf<-wfi
-    summarisedRSUs<-rbind(summarisedRSUs, dfOut)
-  }
-
-  summarisedRSUs$lcz<-factor(
-    summarisedRSUs$lcz,
-    levels = c(as.character(1:10),as.character(101:107), "Unclassified"))
-
-  summarisedRSUs$meanArea<-round(summarisedRSUs$meanArea)
-  summarisedRSUs$meanAreaClust<-round(summarisedRSUs$meanAreaClust)
-  summarisedRSUs<-summarisedRSUs %>% arrange(wf,lcz)
-
-
-  # 
-  outPlot<-ggplot() +
-    # geom_point(data = summarisedRSUs, aes(x=numberRSUs, y = meanArea, color = lcz), size = 2) +
-    geom_point(data = summarisedRSUs, 
-               aes(x=numberRSUsClust, y = log(.data[[whichPlot]]), color = lcz), 
-               size = 3) +
-    scale_color_manual(values=colorMap, breaks = names(colorMap), labels = etiquettes, na.value = "ghostwhite")+
-    facet_wrap(vars(wf))
-  if(plotNow){print(outPlot)}
-  
-  if(!is.null(graphPath) && length(graphPath)==1 && nchar(graphPath)>1){
-    if(substr(graphPath, nchar(graphPath), nchar(graphPath))!="/"){graphPath<-paste0(graphPath, "/")}
-    if (length(locations)<=3){
-    graphName<-paste0(graphPath, paste0(locations, collapse = "_"), ".png")}
-    else{graphName<-paste0(graphPath, title, ".png")}
-    ggsave(graphName, outPlot, , width = 724, height = 509, units = "px")
-  }
-  
-  wf2<-summarisedRSUs$wf
-  names(wf2<-c(0,1,2,5))
-  
-  outPlot2<-ggplot() +
-    # geom_point(data = summarisedRSUs, aes(x=numberRSUs, y = meanArea, color = lcz), size = 2) +
-    geom_point(data = summarisedRSUs, 
-               aes(x=numberRSUsClust, y =log(.data[[whichPlot]]), 
-                   shape = wf, color = lcz, fill = lcz, 
-                   size = drop_units(totalAreaClust)), stroke = 1.5) +
-    scale_size(name = whichPlot) +
-    scale_fill_manual(values= colorMap, breaks = names(colorMap), labels = etiquettes, na.value = "ghostwhite") +    
-    scale_color_manual(values = colorMap, breaks = names(colorMap), labels = etiquettes, na.value = "ghostwhite") +
-    scale_shape_manual(values = wf2) + 
-    labs( x = "number of Spatial units", y = whichPlot) 
-  
-  output<-list(outPlot=outPlot, summarisedRSUs=summarisedRSUs, outPlot2 = outPlot2)
-  
-  return(output)
   
 }
 
-# plotSummarisedRSUs(longSf = allLocAllWfs)
+
+# plotSummarisedRSUs(aggregatedSF = allLocAllWfs)

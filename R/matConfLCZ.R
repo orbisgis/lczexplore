@@ -18,7 +18,7 @@
 #' matConfLong, a confusion matrix in a longer form, which can be written in a file by the compareLCZ function
 #' and is used by the geom_tile function of the ggplot2 package.
 #' matConfPlot is a ggplot2 object showing the confusion matrix. If plot=TRUE, it is also directly plotted
-#' areas contains the sums of each LCZ area
+#' marginAreas contains the sums of each LCZ area
 #' percAgg is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
 #' @import sf ggplot2 dplyr cowplot forcats units tidyr RColorBrewer rlang
 
@@ -48,7 +48,7 @@ matConfLCZ <- function(sf1, column1, sf2, column2, typeLevels = unique(names(.lc
   # creation of the data set with intersected geoms and the values of both lcz class in these geoms
   echInt <- st_intersection(x = sf1[column1], y = sf2[column2])
   # checks if the two LCZ classifications agree
-  echInt$agree <- subset(echInt, select = column1, drop = T) == subset(echInt, select = column2, drop = T)
+  echInt$agree <- echInt[[column1]] == echInt[[column2]]
 
 
   ######################################################
@@ -87,19 +87,18 @@ matConfLCZ <- function(sf1, column1, sf2, column2, typeLevels = unique(names(.lc
   # pasting the area to the labels would return an error
   # Here is an ugly solution to overcome this (and see later to include the potentially missing combination of levels)
 
-  areas <- data.frame(typeLevels = typeLevels, area1 = 0, area2 = 0)
+  marginAreas <- data.frame(typeLevels = typeLevels, area1 = 0, area2 = 0)
 
 
-  for (i in subset(areaLCZ1, select = column1, drop = T)) {
+  for (i in areaLCZ1[[column1]]) {
     if (!is.na(i)) {
-      areas[areas$typeLevels == i, 'area1'] <- areaLCZ1[subset(areaLCZ1, select = column1, drop = T) == i, 'area']
+      marginAreas[marginAreas$typeLevels == i, "area1"] <- areaLCZ1[areaLCZ1[[column1]] == i, 'area']
     }
   }
 
-  for (i in subset(areaLCZ2, select = column2, drop = T)) {
+  for (i in areaLCZ2[[column2]]) {
     if (!is.na(i)) {
-      areas[areas$typeLevels == i, 'area2'] <- areaLCZ2[subset(areaLCZ2, select = column2, drop = T) == i, 'area']
-      #testprov<-areaLCZ1[subset(areaLCZ1,select=column1,drop=T)==i,'area']
+      marginAreas[marginAreas$typeLevels == i, "area2"] <- areaLCZ2[areaLCZ2[[column2]] == i, 'area']
     }
   }
 
@@ -172,7 +171,9 @@ matConfLCZ <- function(sf1, column1, sf2, column2, typeLevels = unique(names(.lc
   # print("complement")
   # complement %>% head %>% print
 
-  completed <- merge(x = matConfLong, y = complement, by.x = c(column1, column2), by.y = c("LCZ1", "LCZ2"), all = T)
+  completed <- merge(x = matConfLong, y = complement, 
+                     by.x = c(column1, column2), by.y = c("LCZ1", "LCZ2"), 
+                     all = T)
   completed$agree[is.na(completed$agree)] <- completed$tempArea[is.na(completed$agree)]
 
 
@@ -189,41 +190,45 @@ matConfLCZ <- function(sf1, column1, sf2, column2, typeLevels = unique(names(.lc
 
   # print("matConfLongaprès reorder factor")
   # print(matConfLong)
-  datatemp <- data.frame(marginLevels = factor(typeLevels), percArea1 = areas$area1, percArea2 = areas$area2)
+  marginAreas <- data.frame(marginLevels = factor(typeLevels), percArea1 = marginAreas$area1, percArea2 = marginAreas$area2)
   ############
   # Plot
-  coordRef <- length(typeLevels) + 1
-
-
-  matConfPlot <- ggplot_build(
-    ggplot() +
-      geom_tile(data = matConfLong, aes(x = get(column1), y = get(column2), fill = agree), color = "white", lwd = 1.2, linetype = 1) +
-      labs(x = wf1, y = wf2) +
-      scale_fill_gradient2(low = "grey97", mid = "cyan", high = "blue",
-                           midpoint = 50, limit = c(0, 100), space = "Lab",
-                           name = "% area") +
-      geom_text(data=matConfLong[matConfLong$agree!=0,], aes(x = .data[[column1]], y = .data[[column2]], label=round(agree,digits=0)),
-                color="black") + 
-        coord_fixed()+
-      theme(axis.text.x = element_text(angle = 70, hjust = 1),
-            panel.background = element_rect(fill = "grey97")) +
-      geom_tile(datatemp, mapping = aes(x = marginLevels, y = coordRef, fill = percArea1, height = 0.8, width = 0.8)) +
-      theme(panel.background = element_rect(fill = "grey97")) +
-      geom_text(data = datatemp[round(datatemp$percArea1, 0) != 0,], 
-                aes(x = marginLevels, y = coordRef, label = round(percArea1, digits = 0)),
-                color = "gray37") +
-      coord_fixed() +
-      geom_tile(datatemp, mapping = aes(x = coordRef, y = marginLevels, fill = percArea2, height = 0.8, width = 0.8)) +
-      geom_text(data = datatemp[round(datatemp$percArea2, 0) != 0,], 
-                aes(x = coordRef, y = marginLevels, label = round(percArea2, digits = 0)),
-                color = "gray37") +
-      coord_fixed() +
-      ggtitle(paste0("Repartition of ", wf1, " classes into ", wf2, " classes"))
-  )
+ print(head(marginAreas))
+  matConfPlot <- matConfPlot(matConf = matConfLong, marginAreas = marginAreas,
+                          column1 = column1, column2 = column2 , agreeColumn = "agree",
+                          wf1 = "reference", wf2 = "alternative", plotNow = TRUE, saveG = NULL)
+ # 
+ #  coordRef <- length(typeLevels) + 1
+ #  print(coordRef)
+ #  matConfPlot <- ggplot_build(
+ #    ggplot() +
+ #      geom_tile(data = matConfLong, aes(x = get(column1), y = get(column2), fill = agree), color = "white", lwd = 1.2, linetype = 1) +
+ #      labs(x = wf1, y = wf2) +
+ #      scale_fill_gradient2(low = "grey97", mid = "cyan", high = "blue",
+ #                           midpoint = 50, limit = c(0, 100), space = "Lab",
+ #                           name = "% area") +
+ #      geom_text(data=matConfLong[matConfLong$agree!=0,], aes(x = .data[[column1]], y = .data[[column2]], label=round(agree,digits=0)),
+ #                color="black") + 
+ #        coord_fixed()+
+ #      theme(axis.text.x = element_text(angle = 70, hjust = 1),
+ #            panel.background = element_rect(fill = "grey97")) +
+ #      geom_tile(marginAreas, mapping = aes(x = marginLevels, y = coordRef, fill = percArea1, height = 0.8, width = 0.8)) +
+ #      theme(panel.background = element_rect(fill = "grey97")) +
+ #      geom_text(data = marginAreas[round(marginAreas$percArea1, 0) != 0,], 
+ #                aes(x = marginLevels, y = coordRef, label = round(percArea1, digits = 0)),
+ #                color = "gray37") +
+ #      coord_fixed() +
+ #      geom_tile(marginAreas, mapping = aes(x = coordRef, y = marginLevels, fill = percArea2, height = 0.8, width = 0.8)) +
+ #      geom_text(data = marginAreas[round(marginAreas$percArea2, 0) != 0,], 
+ #                aes(x = coordRef, y = marginLevels, label = round(percArea2, digits = 0)),
+ #                color = "gray37") +
+ #      coord_fixed() +
+ #      ggtitle(paste0("Repartition of ", wf1, " classes into ", wf2, " classes"))
+ #  )
 
   if (isTRUE(plot)) { print(matConfPlot) }
 
-  matConfOut <- list(matConf = matConfLong, matConfPlot = matConfPlot, areas = areas, percAgg = percAgg)
+  matConfOut <- list(matConf = matConfLong, matConfPlot = matConfPlot, marginAreas = marginAreas, percAgg = percAgg)
   return(matConfOut)
 
 }
