@@ -5,20 +5,17 @@
 \title{For a given LCZ sf object, plots the number of geometries and their mean area per level of LCZ}
 \usage{
 plotSummarisedRSUs(
-  longSf,
-  workflows = c("osm", "bdt", "iau", "wudapt"),
+  summarisedSfIn,
+  workflows = c("wudapt", "iau", "osm", "bdt"),
   plotNow = TRUE,
   locations = NULL,
   graphPath = "",
   title = "",
   whichPlot = "meanAreaClust",
-  aggregateBufferSize = 1e-05,
-  trim = 0.1
+  logScale = FALSE
 )
 }
 \arguments{
-\item{longSf}{contains the geometry and LCZ levels}
-
 \item{workflows}{contains the names of workflows (they will indicate the names of the columns containing LCZ levels)}
 
 \item{plotNow}{: if TRUE the plot will be displayed in the session}
@@ -28,6 +25,8 @@ plotSummarisedRSUs(
 
 \item{whichPlot}{: if "totalAreaClust" the total aggregated areas per levels of LCZ will be plotted,
 if "meanAreaClust", the trimmed mean will}
+
+\item{aggregatedSF}{contains the geometry and LCZ levels}
 }
 \value{
 the number of geometries (Reference Spatial units or RSUs)
