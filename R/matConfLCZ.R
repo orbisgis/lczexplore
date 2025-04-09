@@ -27,9 +27,14 @@
 #' @examples
 #' matConfRedonBDTOSM<-matConfLCZ(sf1=redonBDT,column1='LCZ_PRIMARY',
 #' sf2=redonOSM,column2='LCZ_PRIMARY',plot=TRUE)
-matConfLCZ <- function(sf1, column1, sf2, column2, typeLevels = unique(names(.lczenv$typeLevelsDefault)), 
-                       plot = FALSE, wf1 = "Reference", wf2 = "Alternative", ...) {
+matConfLCZ <- function(sf1, column1, sf2, column2, typeLevels = unique(names(.lczenv$typeLevelsDefault)),
+                       plotNow = FALSE, wf1 = "Reference", wf2 = "Alternative", ...) {
   # coerce the crs of sf2 to the crs of sf1
+  
+  levelsCheck<-prod(unique(c(levels(sf1[[column1]]), levels(sf2[[column2]]))) %in% typeLevels)==0
+  if (levelsCheck) {typeLevels<-unique(c(levels(sf1[[column1]]), levels(sf2[[column2]]))) }
+  
+  
   if (st_crs(sf1) != st_crs(sf2)) { sf2 <- sf2 %>% st_transform(crs = st_crs(sf1)) }
 
   if (column1 == column2) {
@@ -44,11 +49,13 @@ matConfLCZ <- function(sf1, column1, sf2, column2, typeLevels = unique(names(.lc
   sf2 <- sf2 %>%
     mutate(!!column2 := factor(subset(sf2, select = column2, drop = T), levels = typeLevels)) %>%
     drop_na(column2)
-
+  print(head(sf1))
+  print(head(sf1))  
   # creation of the data set with intersected geoms and the values of both lcz class in these geoms
-  echInt <- st_intersection(x = sf1[column1], y = sf2[column2])
+  echInt <- st_intersection(x = sf1[,column1], y = sf2[,column2])
   # checks if the two LCZ classifications agree
   echInt$agree <- echInt[[column1]] == echInt[[column2]]
+
 
 
   ######################################################
@@ -193,10 +200,10 @@ matConfLCZ <- function(sf1, column1, sf2, column2, typeLevels = unique(names(.lc
   marginAreas <- data.frame(marginLevels = factor(typeLevels), percArea1 = marginAreas$area1, percArea2 = marginAreas$area2)
   ############
   # Plot
- print(head(marginAreas))
+
   matConfPlot <- matConfPlot(matConf = matConfLong, marginAreas = marginAreas,
                           column1 = column1, column2 = column2 , agreeColumn = "agree",
-                          wf1 = "reference", wf2 = "alternative", plotNow = TRUE, saveG = NULL)
+                          wf1 = wf1, wf2 = wf2)
  # 
  #  coordRef <- length(typeLevels) + 1
  #  print(coordRef)
@@ -226,7 +233,7 @@ matConfLCZ <- function(sf1, column1, sf2, column2, typeLevels = unique(names(.lc
  #      ggtitle(paste0("Repartition of ", wf1, " classes into ", wf2, " classes"))
  #  )
 
-  if (isTRUE(plot)) { print(matConfPlot) }
+  if (plotNow) { print(matConfPlot) }
 
   matConfOut <- list(matConf = matConfLong, matConfPlot = matConfPlot, marginAreas = marginAreas, percAgg = percAgg)
   return(matConfOut)

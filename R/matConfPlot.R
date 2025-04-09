@@ -23,12 +23,95 @@
 #'
 matConfPlot <- function(matConfLong, marginAreas = NULL,
                         column1 = "lcz_primary", column2 = "lcz_primary.1", agreeColumn = "agree",
-                        wf1 = "reference", wf2 = "alternative", plotNow = TRUE, saveG = NULL) {
+                        wf1 = "reference", wf2 = "alternative") {
+condition<-(prod(unique(matConfLong[[column1]])%in%.lczenv$typeLevelsDefault) * prod(unique(matConfLong[[column2]])%in%.lczenv$typeLevelsDefault)) ==1
+print(condition)
+  if(condition) {
+    matConfLong[[column1]]<-fct_recode(matConfLong[[column1]], 
+                                       "Compact high" = "1",
+                                       "Compact mid" = "2",
+                                       "Compact low" = "3",
+                                       "Open High" = "4",
+                                       "Open mid" = "5",
+                                       "Open low" = "6",
+                                       "Lightweight low" = "7",
+                                       "Large low" = "8",
+                                       "Sparsely Built" = "9",
+                                       "Heavy industry" = "10",
+                                       "Dense trees" = "101",
+                                       "Scattered trees" = "102",
+                                       "Bush scrub" = "103",
+                                       "Low plants" = "104",
+                                       "Bare rock paved" = "105",
+                                       "Bare soil sand" = "106",
+                                       "Water" = "107",
+                                       "Unclassified" = "Unclassified")
+    matConfLong[[column2]]<-fct_recode(matConfLong[[column2]], 
+                                       "Compact high" = "1",
+                                       "Compact mid" = "2",
+                                       "Compact low" = "3",
+                                       "Open High" = "4",
+                                       "Open mid" = "5",
+                                       "Open low" = "6",
+                                       "Lightweight low" = "7",
+                                       "Large low" = "8",
+                                       "Sparsely Built" = "9",
+                                       "Heavy industry" = "10",
+                                       "Dense trees" = "101",
+                                       "Scattered trees" = "102",
+                                       "Bush scrub" = "103",
+                                       "Low plants" = "104",
+                                       "Bare rock paved" = "105",
+                                       "Bare soil sand" = "106",
+                                       "Water" = "107",
+                                       "Unclassified" = "Unclassified")
+    marginAreas$marginLevels<-fct_recode( marginAreas$marginLevels, "Compact high" = "1",
+                                         "Compact mid" = "2",
+                                         "Compact low" = "3",
+                                         "Open High" = "4",
+                                         "Open mid" = "5",
+                                         "Open low" = "6",
+                                         "Lightweight low" = "7",
+                                         "Large low" = "8",
+                                         "Sparsely Built" = "9",
+                                         "Heavy industry" = "10",
+                                         "Dense trees" = "101",
+                                         "Scattered trees" = "102",
+                                         "Bush scrub" = "103",
+                                         "Low plants" = "104",
+                                         "Bare rock paved" = "105",
+                                         "Bare soil sand" = "106",
+                                         "Water" = "107",
+                                         "Unclassified" = "Unclassified")
 
-  coordRef <- length(unique(marginAreas$marginLevels))+1
-  print(coordRef)
-  outPlot <- ggplot_build(
-    ggplot() +
+  ticklabels<-c("Compact high",
+                  "Compact mid",
+                  "Compact low",
+                  "Open High",
+                  "Open mid",
+                  "Open low",
+                  "Lightweight low",
+                  "Large low",
+                  "Sparsely Built",
+                  "Heavy industry",
+                  "Dense trees",
+                  "Scattered trees",
+                  "Bush scrub",
+                  "Low plants",
+                  "Bare rock paved",
+                  "Bare soil sand",
+                  "Water",
+                  "Unclassified" , "(Margins->)" )    
+  } else { ticklabels<-c(unique(c(levels(matConfLong[[column1]]), levels(matConfLong[[column2]]))),"(Margins->)") }
+
+  levels(marginAreas$marginLevels)<-c(levels(marginAreas$marginLevels), "(Margins->)")
+  marginAreas[nrow(marginAreas)+1,] <- list("(Margins->)",0,0)
+  print(marginAreas)
+
+
+  coordRef <- length(unique(marginAreas$marginLevels))
+  
+  outPlot <- ggplot() +
     geom_tile(data = matConfLong, aes(x = .data[[column1]], y = .data[[column2]], fill = .data[[agreeColumn]]),
               color = "white", lwd = 1.2, linetype = 1) +
     scale_fill_gradient2(low = "lightgrey", mid = "cyan", high = "blue",
@@ -39,25 +122,30 @@ matConfPlot <- function(matConfLong, marginAreas = NULL,
               color = "black") +
     coord_fixed() +
     labs(x = wf1, y = wf2) +
-    theme(axis.text.x = element_text(angle = 70, hjust = 1),
-          panel.background = element_rect(fill = "grey")) + 
-    geom_tile(marginAreas, mapping = aes(x = marginLevels, y = coordRef, fill = percArea1, height = 0.8, width = 0.8)) +
-   theme(panel.background = element_rect(fill = "grey97")) +
+    geom_tile(
+      data = matConfLong[matConfLong[[column1]]==matConfLong[[column2]] , ], 
+      aes(x = .data[[column1]], y = .data[[column2]]),
+                color = alpha("orangered", 0.5), lwd = 1.2, linetype = 1, fill = NA) +
+   ggnewscale::new_scale_fill() +
+   geom_tile(marginAreas, mapping = aes(x = marginLevels, y = coordRef, fill = percArea1), height = 0.8, width = 0.8) +
+   theme(panel.background = element_rect(fill = "ghostwhite")) +
    geom_text(data = marginAreas[round(marginAreas$percArea1, 0) != 0,], 
-                   aes(x = marginLevels, y = coordRef, label = round(percArea2, digits = 0)),
+                   aes(x = marginLevels, y = coordRef, label = round(percArea1, digits = 0)),
                    color = "gray37") +
-         coord_fixed() +
-       geom_tile(marginAreas, mapping = aes(x = coordRef, y = marginLevels, fill = percArea2, height = 0.8, width = 0.8)) +
-         geom_text(data = marginAreas[round(marginAreas$percArea2, 0) != 0,], 
+   theme(axis.text.x = element_text(angle = 70, hjust = 1)) +
+   geom_tile(marginAreas, mapping = aes(x = coordRef, y = marginLevels, fill = percArea2), height = 0.8, width = 0.8) +
+   geom_text(data = marginAreas[round(marginAreas$percArea2, 0) != 0,], 
                    aes(x = coordRef, y = marginLevels, label = round(percArea2, digits = 0)),
                    color = "gray37") +
-         coord_fixed() +
-         ggtitle(paste0("Repartition of ", wf1, " classes into ", wf2, " classes"))
-  )
-    # }
-  
-
-  
+  scale_fill_gradient2(low = "white", mid = "cyan", high = "blue",
+                         midpoint = 50, limit = c(0, 100), space = "Lab",
+                         name = "% area") +
+    guides(fill = "none") +
+    scale_x_discrete(breaks = ticklabels, labels = ticklabels, position = "bottom", expand = c(0, 0)) +
+    scale_y_discrete(breaks = ticklabels, labels = ticklabels, position = "left", expand = c(0, 0)) +
+    theme(
+      panel.background = element_rect(fill = "ghostwhite")) +
+   ggtitle(paste0("Repartition of ", wf1, " classes into ", wf2, " classes"))
   
   
   # if (!is.null(saveG) && length(saveG) ==1){

@@ -386,7 +386,7 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
   pseudoK <- CohenKappa(x = PseudoWeightedCross)
   matConfOut$pseudoK <- pseudoK
 
-  areas <- matConfOut$areas
+  areas <- matConfOut$marginAreas
   percAgg <- matConfOut$percAgg
 
 
@@ -413,14 +413,15 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
 
 
     # ypos<-if (repr=="standard"){ypos=5} else {ypos=2}
-    etiquettes1 <- paste(etiquettes, areas$area1, " %")
+    etiquettes1 <- paste(etiquettes, areas$percArea1, " %")
     names(etiquettes1) <- LCZlevels
     etiquettes2 <- etiquettes
     etiquettes2 <- gsub(":.*", ": ", etiquettes)
-    etiquettes2 <- paste(etiquettes2, areas$area2, " %")
+    etiquettes2 <- paste(etiquettes2, areas$percArea2, " %")
 
-    etiquettes1.2 <- paste(etiquettes2, areas$area1)
-    datatemp <- data.frame(a = factor(LCZlevels), percArea = areas$area1, percArea1 = areas$area1, percArea2 = areas$area2)
+    etiquettes1.2 <- paste(etiquettes2, areas$percArea1)
+    print("LCZlevels") ;print(LCZlevels)
+    datatemp <- data.frame(a = factor(LCZlevels), percArea1 = areas$percArea1, percArea2 = areas$percArea2)
 
     # center all plots
     boundary1 <- sf1 %>% st_union %>% st_boundary()

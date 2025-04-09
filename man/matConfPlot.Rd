@@ -11,9 +11,7 @@ matConfPlot(
   column2 = "lcz_primary.1",
   agreeColumn = "agree",
   wf1 = "reference",
-  wf2 = "alternative",
-  plotNow = TRUE,
-  saveG = NULL
+  wf2 = "alternative"
 )
 }
 \arguments{
@@ -27,14 +25,14 @@ matConfPlot(
 
 \item{wf2}{is the name of the second workflow (for labels)}
 
-\item{plotNow}{if TRUE the plot of the matrix is returned}
-
-\item{saveG}{if not NULL will be the path in which the plot will be saved}
-
 \item{matConf}{is a dataframe for the matrice of confusion/agreement, in the longform :
 first column is the LCZ level of the first workflow, second the level of the second workflow and
 the third column the percentage of surface of the level of the first classification classified in the level of
 the second classification}
+
+\item{plotNow}{if TRUE the plot of the matrix is returned}
+
+\item{saveG}{if not NULL will be the path in which the plot will be saved}
 
 \item{...}{a set of unspecified arguments, for instance when the produceAnalysis function calls other functions}
 }

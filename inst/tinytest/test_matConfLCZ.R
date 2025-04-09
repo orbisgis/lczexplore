@@ -34,7 +34,25 @@ matConfRedonBDTOSM<-matConfLCZ(sf1=redonBDT,column1='LCZ_PRIMARY',
 
 matConfRedonOSMBDT<-matConfLCZ(sf1=redonOSM,column1='LCZ_PRIMARY',
                                sf2=redonBDT,column2='LCZ_PRIMARY', plot=TRUE,
-                               wf1 = "GC BDTOPO", wf2 = "GC OSM")
+                               wf1 = "GC OSM", wf2 = "GC BDTOPO")
+
+redonBDTgrouped<-groupLCZ(
+  redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
+  industry="10",
+  vegetation=c("101","102","103","104"),
+  impervious="105",pervious="106",water="107",
+  colors=c("red","black","green","grey","burlywood","blue"))
+
+redonOSMgrouped<-groupLCZ(
+  redonOSM,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
+  industry="10",
+  vegetation=c("101","102","103","104"),
+  impervious="105",pervious="106",water="107",colors=c("red","black","green","grey","burlywood","blue"))
+
+matConfRedonOSMBDTGrouped<-matConfLCZ(sf1 = redonOSMgrouped, column1 = "grouped",
+                               sf2 = redonBDTgrouped, column2 = "grouped", plot=TRUE,
+                               wf1 = "GC OSM", wf2 = "GC BDTOPO")
+
 
 matConfLargeHetero<-matConfRedonBDTOSM$matConf %>%
   pivot_wider(names_from=LCZ_PRIMARY, values_from=agree, values_fill=0)
