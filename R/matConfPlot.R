@@ -22,9 +22,13 @@
 #' @examples
 #'
 matConfPlot <- function(matConfLong, marginAreas = NULL,
-                        column1 = "lcz_primary", column2 = "lcz_primary.1", agreeColumn = "agree",
+                        column1 = "lcz_primary", column2 = "lcz_primary.1", agreeColumn = "agreePercArea",
                         wf1 = "reference", wf2 = "alternative") {
-condition<-(prod(unique(matConfLong[[column1]])%in%.lczenv$typeLevelsDefault) * prod(unique(matConfLong[[column2]])%in%.lczenv$typeLevelsDefault)) ==1
+condition<-(
+  prod(unique(matConfLong[[column1]])%in%.lczenv$typeLevelsDefault) 
+  * 
+  prod(unique(matConfLong[[column2]])%in%.lczenv$typeLevelsDefault)
+  ) ==1
 print(condition)
   if(condition) {
     matConfLong[[column1]]<-fct_recode(matConfLong[[column1]], 
@@ -45,7 +49,7 @@ print(condition)
                                        "Bare rock paved" = "105",
                                        "Bare soil sand" = "106",
                                        "Water" = "107",
-                                       "Unclassified" = "Unclassified")
+                                       "Unclassified" = "Unclassified") %>% as.ordered
     matConfLong[[column2]]<-fct_recode(matConfLong[[column2]], 
                                        "Compact high" = "1",
                                        "Compact mid" = "2",
@@ -64,7 +68,7 @@ print(condition)
                                        "Bare rock paved" = "105",
                                        "Bare soil sand" = "106",
                                        "Water" = "107",
-                                       "Unclassified" = "Unclassified")
+                                       "Unclassified" = "Unclassified")  %>% as.ordered
     marginAreas$marginLevels<-fct_recode( marginAreas$marginLevels, "Compact high" = "1",
                                          "Compact mid" = "2",
                                          "Compact low" = "3",
@@ -82,7 +86,7 @@ print(condition)
                                          "Bare rock paved" = "105",
                                          "Bare soil sand" = "106",
                                          "Water" = "107",
-                                         "Unclassified" = "Unclassified")
+                                         "Unclassified" = "Unclassified")  %>% as.ordered
 
   ticklabels<-c("Compact high",
                   "Compact mid",
@@ -105,7 +109,7 @@ print(condition)
   } else { ticklabels<-c(unique(c(levels(matConfLong[[column1]]), levels(matConfLong[[column2]]))),"(Margins->)") }
 
   levels(marginAreas$marginLevels)<-c(levels(marginAreas$marginLevels), "(Margins->)")
-  marginAreas[nrow(marginAreas)+1,] <- list("(Margins->)",0,0)
+  marginAreas<- rbind(marginAreas, list("(Margins->)",0,0))
   print(marginAreas)
 
 

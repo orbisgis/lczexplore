@@ -102,22 +102,22 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
   # If LCZ name is the same in both input sf files we rename column2
   if (column1 == column2) {
     column2 <- paste0(column1, ".1")
-    sf2 <- sf2 %>% mutate(!!column2 := subset(sf2, select = column1, drop = T))
-    sf2 <- sf2 %>% mutate(!!column1 := NULL)
+    sf2[[column2]] <- sf2[[column1]]
+    sf2[[column1]] <- NULL
   }
   # If geomID name is the same in both input sf files we rename column2
 
-  if (geomID1 != "" && geomID1 == geomID2) {
+  if (geomID1 == geomID2) {
     geomID2 <- paste0(geomID1, ".1")
-    sf2 <- sf2 %>% mutate(!!geomID2 := subset(sf2, select = geomID1, drop = T))
-    sf2 <- sf2 %>% mutate(!!geomID1 := NULL)
+    sf2[[geomID2]] <- sf2[[geomID1]]
+    sf2[[geomID1]] <- NULL
   }
   # If confid name is the same in both input sf files we rename column2
 
-  if (confid1 != "" && confid1 == confid2) {
+  if (confid1 == confid2) {
     confid2 <- paste0(confid1, ".1")
-    sf2 <- sf2 %>% mutate(!!confid2 := subset(sf2, select = confid1, drop = T))
-    sf2 <- sf2 %>% mutate(!!confid1 := NULL)
+    sf2[[confid2]] <- sf2[[confid1]]
+    sf2[[confid1]] <- NULL
   }
 
 
@@ -140,21 +140,14 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
 
   if (repr == "standard") {
 
-    uniqueData1 <- sf1[column1] %>%
-      sf::st_drop_geometry() %>%
+    uniqueData1 <- sf1[[column1]] %>%
       unique() # Attention unique outputs a list of length 1
-    uniqueData1 <- levels(uniqueData1[, 1]) %>%
-      as.character() %>%
-      as.vector()
 
-    uniqueData2 <- sf2[column2] %>%
-      sf::st_drop_geometry() %>%
-      unique() # Attention unique outputs a list of length 1
-    uniqueData2 <- levels(uniqueData2[, 1]) %>%
-      as.character() %>%
-      as.vector()
+    uniqueData2 <- sf2[[column2]] %>% unique
+
 
     LCZlevels <- .lczenv$typeLevelsDefault
+    print("LCZlevels") ; print(LCZlevels)
     if (prod(uniqueData1 %in% LCZlevels) == 0) {
       line1 <- "The column chosen for the first data set doesn't seem to be a standard LCZ encoding. \n"
       line2 <- "Did you import the data with importLCZvect ? \n"
@@ -172,71 +165,13 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
 
     etiquettes <- .lczenv$etiquettesDefault
 
-
-    #names(typeLevels)<-typeLevels
+    print(typeLevels)
+    # names(typeLevels) <- names(.lczenv$typeLevelsDefault)
     # Classification must be encoded as factors
-    sf1 <- sf1 %>% mutate(!!column1 := factor(subset(sf1, select = column1, drop = T), levels = LCZlevels))
-    sf2 <- sf2 %>% mutate(!!column2 := factor(subset(sf2, select = column2, drop = T), levels = LCZlevels))
-    temp1 <- subset(sf1, select = column1, drop = T) %>% fct_recode(
-      "Compact high" = "1",
-      "Compact mid" = "2",
-      "Compact low" = "3",
-      "Open High" = "4",
-      "Open mid" = "5",
-      "Open low" = "6",
-      "Lightweight low" = "7",
-      "Large low" = "8",
-      "Sparsely Built" = "9",
-      "Heavy industry" = "10",
-      "Dense trees" = "101",
-      "Scattered trees" = "102",
-      "Bush scrub" = "103",
-      "Low plants" = "104",
-      "Bare rock paved" = "105",
-      "Bare soil sand" = "106",
-      "Water" = "107",
-      "Unclassified" = "Unclassified")
-    sf1 <- sf1 %>% mutate(!!column1 := temp1)
-
-    temp2 <- subset(sf2, select = column2, drop = T) %>% fct_recode("Compact high" = "1",
-                                                                    "Compact mid" = "2",
-                                                                    "Compact low" = "3",
-                                                                    "Open High" = "4",
-                                                                    "Open mid" = "5",
-                                                                    "Open low" = "6",
-                                                                    "Lightweight low" = "7",
-                                                                    "Large low" = "8",
-                                                                    "Sparsely Built" = "9",
-                                                                    "Heavy industry" = "10",
-                                                                    "Dense trees" = "101",
-                                                                    "Scattered trees" = "102",
-                                                                    "Bush scrub" = "103",
-                                                                    "Low plants" = "104",
-                                                                    "Bare rock paved" = "105",
-                                                                    "Bare soil sand" = "106",
-                                                                    "Water" = "107",
-                                                                    "Unclassified" = "Unclassified")
-    sf2 <- sf2 %>% mutate(!!column2 := temp2)
-    LCZlevels <- c("Compact high",
-                   "Compact mid",
-                   "Compact low",
-                   "Open High",
-                   "Open mid",
-                   "Open low",
-                   "Lightweight low",
-                   "Large low",
-                   "Sparsely Built",
-                   "Heavy industry",
-                   "Dense trees",
-                   "Scattered trees",
-                   "Bush scrub",
-                   "Low plants",
-                   "Bare rock paved",
-                   "Bare soil sand",
-                   "Water",
-                   "Unclassified")
-    names(typeLevels) <- LCZlevels
-    rm(temp1); rm(temp2)
+    sf1[[column1]] <- factor(sf1[[column1]], levels = .lczenv$typeLevelsDefault)
+    sf2[[column2]] <- factor(sf2[[column2]], levels = .lczenv$typeLevelsDefault)
+    
+ 
   }
 
 
@@ -373,11 +308,11 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
                            repr = repr, typeLevels = LCZlevels, plot = FALSE)
   matConfOut$data <- intersec_sfExpo
   matConfLong <- matConfOut$matConf
-  matConfLarge <- pivot_wider(matConfLong, names_from = column2, values_from = agree)
+  matConfLarge <- pivot_wider(matConfLong, names_from = column2, values_from = agreePercArea)
   matConfLarge <- matConfLarge %>% as.data.frame()
   row.names(matConfLarge) <- matConfLarge[, 1] %>% as.character
   matConfLarge <- matConfLarge[, -1]
-  matConfLarge <- as.matrix(matConfLarge)
+  matConfLarge <- as.matrix(matConfLarge) 
 
 
   # Add pseudo Kappa Statistic to output to   
@@ -421,7 +356,7 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
 
     etiquettes1.2 <- paste(etiquettes2, areas$percArea1)
     print("LCZlevels") ;print(LCZlevels)
-    datatemp <- data.frame(a = factor(LCZlevels), percArea1 = areas$percArea1, percArea2 = areas$percArea2)
+    # datatemp <- data.frame(a = factor(LCZlevels), percArea1 = areas$percArea1, percArea2 = areas$percArea2)
 
     # center all plots
     boundary1 <- sf1 %>% st_union %>% st_boundary()
@@ -504,21 +439,22 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
     # Plot how the LCZ each level of the first classification is split into levels of the second classification
     coordRef <- length(typeLevels) + 1
 
-    matConfPlot <- ggplot(data = matConfLong, aes(x = get(column1), y = get(column2), fill = agree)) +
-      geom_tile(color = "white", lwd = 1.2, linetype = 1) +
-      labs(x = titre1, y = titre2) +
-      scale_fill_gradient2(low = "lightgrey", mid = "cyan", high = "blue",
-                           midpoint = 50, limit = c(0, 100), space = "Lab",
-                           name = "% area") +
-      geom_text(data = matConfLong[matConfLong$agree != 0,], aes(label = round(agree, digits = 0)),
-                color = "black") +
-      coord_fixed() +
-      theme(axis.text.x = element_text(angle = 70, hjust = 1),
-            panel.background = element_rect(fill = "grey")) +
-      geom_tile(datatemp, mapping = aes(x = a, y = coordRef, fill = percArea1, height = 0.8, width = 0.8)) +
-      geom_tile(datatemp, mapping = aes(x = coordRef, y = a, fill = percArea2, height = 0.8, width = 0.8)) +
-      ggtitle(titre4, subtitle = "Percentage inferior to 0.5 are rounded to 0")
-
+    # matConfPlot <- ggplot(data = matConfLong, aes(x = get(column1), y = get(column2), fill = agree)) +
+    #   geom_tile(color = "white", lwd = 1.2, linetype = 1) +
+    #   labs(x = titre1, y = titre2) +
+    #   scale_fill_gradient2(low = "lightgrey", mid = "cyan", high = "blue",
+    #                        midpoint = 50, limit = c(0, 100), space = "Lab",
+    #                        name = "% area") +
+    #   geom_text(data = matConfLong[matConfLong$agree != 0,], aes(label = round(agree, digits = 0)),
+    #             color = "black") +
+    #   coord_fixed() +
+    #   theme(axis.text.x = element_text(angle = 70, hjust = 1),
+    #         panel.background = element_rect(fill = "grey")) +
+    #   geom_tile(datatemp, mapping = aes(x = a, y = coordRef, fill = percArea1, height = 0.8, width = 0.8)) +
+    #   geom_tile(datatemp, mapping = aes(x = coordRef, y = a, fill = percArea2, height = 0.8, width = 0.8)) +
+    #   ggtitle(titre4, subtitle = "Percentage inferior to 0.5 are rounded to 0")
+    matConfPlot <- matConfOut$matConfPlot
+    
     if (saveG != "") {
       plotName <- paste0(saveG, ".png")
       png(filename = plotName, width = 1200, height = 900)

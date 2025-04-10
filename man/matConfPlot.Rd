@@ -9,7 +9,7 @@ matConfPlot(
   marginAreas = NULL,
   column1 = "lcz_primary",
   column2 = "lcz_primary.1",
-  agreeColumn = "agree",
+  agreeColumn = "agreePercArea",
   wf1 = "reference",
   wf2 = "alternative"
 )

@@ -20,37 +20,41 @@
 #' matConfPlot is a ggplot2 object showing the confusion matrix. If plot=TRUE, it is also directly plotted
 #' marginAreas contains the sums of each LCZ area
 #' percAgg is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
-#' @import sf ggplot2 dplyr cowplot forcats units tidyr RColorBrewer rlang
+#' @import sf ggplot2 dplyr cowplot forcats units tidyr RColorBrewer rlang data.table
 
 #' @export
 #'
 #' @examples
 #' matConfRedonBDTOSM<-matConfLCZ(sf1=redonBDT,column1='LCZ_PRIMARY',
 #' sf2=redonOSM,column2='LCZ_PRIMARY',plot=TRUE)
-matConfLCZ <- function(sf1, column1, sf2, column2, typeLevels = unique(names(.lczenv$typeLevelsDefault)),
+matConfLCZ <- function(sf1, column1, sf2, column2, typeLevels = .lczenv$typeLevelsDefault,
                        plotNow = FALSE, wf1 = "Reference", wf2 = "Alternative", ...) {
   # coerce the crs of sf2 to the crs of sf1
-  
-  levelsCheck<-prod(unique(c(levels(sf1[[column1]]), levels(sf2[[column2]]))) %in% typeLevels)==0
-  if (levelsCheck) {typeLevels<-unique(c(levels(sf1[[column1]]), levels(sf2[[column2]]))) }
+  typeLevelsConvert<-.lczenv$typeLevelsConvert 
+  allLevels<-unique(
+    c(
+      levels(sf1[[column1]]), 
+      levels(sf2[[column2]])
+    )
+  ) 
+  allCheck<- allLevels %in% typeLevels
+  levelsUnMAtch<-prod(allCheck)==0
+  if (levelsUnMAtch) {typeLevels<-unique(c(levels(sf1[[column1]]), levels(sf2[[column2]]))) }
   
   
   if (st_crs(sf1) != st_crs(sf2)) { sf2 <- sf2 %>% st_transform(crs = st_crs(sf1)) }
 
   if (column1 == column2) {
     column2 <- paste0(column1, ".1")
-    sf2 <- sf2 %>% mutate(!!column2 := subset(sf2, select = column1, drop = T))
-    sf2 <- sf2 %>% mutate(!!column1 := NULL)
+    sf2[[column2]] <- sf2[[column1]]
+    sf2[[column1]] <- NULL
   }
 
-  sf1 <- sf1 %>%
-    mutate(!!column1 := factor(subset(sf1, select = column1, drop = T), levels = typeLevels)) %>%
-    drop_na(column1)
-  sf2 <- sf2 %>%
-    mutate(!!column2 := factor(subset(sf2, select = column2, drop = T), levels = typeLevels)) %>%
-    drop_na(column2)
-  print(head(sf1))
-  print(head(sf1))  
+  sf1[[column1]] <- ordered(sf1[[column1]], levels = typeLevels)
+  sf1[[column1]][is.na(sf1[[column1]])]<-"Unclassified"
+  sf2[[column2]] <- ordered(sf2[[column2]], levels = typeLevels)
+  sf2[[column2]][is.na(sf2[[column2]])]<-"Unclassified"
+
   # creation of the data set with intersected geoms and the values of both lcz class in these geoms
   echInt <- st_intersection(x = sf1[,column1], y = sf2[,column2])
   # checks if the two LCZ classifications agree
@@ -70,172 +74,82 @@ matConfLCZ <- function(sf1, column1, sf2, column2, typeLevels = unique(names(.lc
     drop_units
 
   # the writing/appending will happen in compareLCZ function
-
+  echInt<-setDT(echInt)
   # marginal areas (grouped by levels of LCZ for each input dataset) rounded at the unit
   # marginal for first LCZ
-  areaLCZ1 <- echInt %>%
-    st_drop_geometry %>%
-    group_by_at(.vars = column1) %>%
-    summarize(area = sum(area, na.rm = F)) %>%
-    drop_units %>%
-    ungroup()
-  areaLCZ1$area <- round(areaLCZ1$area / sum(areaLCZ1$area, na.rm = F) * 100, digits = 2)
+
+col1<-eval(substitute(column1), envir = parent.frame())
+col2<-eval(substitute(column2), envir = parent.frame())
+
+areaLCZ1<-echInt[,.(sumArea = sum(area, na.rm = TRUE)), keyby=col1, env = list(col1 = substitute(col1))][
+  , .(col1, percArea1 = 100*sumArea / sum(sumArea)), env = list(col1 = substitute(col1))]
 
   # marginal for second LCZ
-  areaLCZ2 <- echInt %>%
-    st_drop_geometry %>%
-    group_by_at(.vars = column2) %>%
-    summarize(area = sum(area, na.rm = F)) %>%
-    drop_units %>%
-    ungroup()
-  areaLCZ2$area <- round(areaLCZ2$area / sum(areaLCZ2$area, na.rm = F) * 100, digits = 2)
+areaLCZ2<-echInt[,.(sumArea = sum(area, na.rm = TRUE)), keyby=col2, env = list(col2 = substitute(col2))][
+    , .(col2, percArea2 = 100*sumArea / sum(sumArea)), env = list(col2 = substitute(col2))]
 
-  # Problem : some of the input files do not exhibit all possible LCZ values :
-  # pasting the area to the labels would return an error
-  # Here is an ugly solution to overcome this (and see later to include the potentially missing combination of levels)
+  marginAreas<-merge(areaLCZ1, areaLCZ2, by.x = column1, by.y = column2)
 
-  marginAreas <- data.frame(typeLevels = typeLevels, area1 = 0, area2 = 0)
+  allLevelsDT<-data.table(lcz = ordered(levels(areaLCZ1[[column1]]), levels = typeLevels))
+  marginAreas<- merge(marginAreas, allLevelsDT, by.x = column1, by.y = "lcz", all.y = TRUE) 
+  marginAreas[["percArea1"]][is.na(marginAreas[["percArea1"]])]<-0
+  marginAreas[["percArea2"]][is.na(marginAreas[["percArea2"]])]<-0
+
+  names(marginAreas)[1]<-"marginLevels"
 
 
-  for (i in areaLCZ1[[column1]]) {
-    if (!is.na(i)) {
-      marginAreas[marginAreas$typeLevels == i, "area1"] <- areaLCZ1[areaLCZ1[[column1]] == i, 'area']
-    }
-  }
+  print(marginAreas)
 
-  for (i in areaLCZ2[[column2]]) {
-    if (!is.na(i)) {
-      marginAreas[marginAreas$typeLevels == i, "area2"] <- areaLCZ2[areaLCZ2[[column2]] == i, 'area']
-    }
-  }
+  percAgg<-echInt[,.(agree, percArea = area/sum(area)),][agree==TRUE, .(percAgg = round(sum(percArea)*100,2)),]
+  print(percAgg)
 
-  # Get the general agreement between both input files
-  percAgg <- (((echInt %>%
-    st_drop_geometry() %>%
-    filter(agree == T) %>%
-    select(area) %>%
-    sum) /
-    (echInt %>%
-      st_drop_geometry() %>%
-      select(area) %>%
-      sum)) * 100) %>% round(digits = 2)
+col1<-eval(substitute(column1), envir = parent.frame())
+col2<-eval(substitute(column2), envir = parent.frame())
+byvars<-c(col1,col2)
 
-  # the way to "feed" group_by is through .dots, to be checked, as it seems to be deprecated :
-  # fixed with group_by_at
+matConfLong<-echInt[,.(col1, col2, area = sum(area, na.rm = TRUE)), 
+                     keyby = byvars, 
+                     env = list(col1 = substitute(col1), col2 = substitute(col2))][  
+  ,.(col2, agreePercArea = 100 * area /sum(area)), keyby = col1, env = list(col1 = substitute(col1), col2 = substitute(col2))]
+
+matConfLong<-completeDT(matConfLong, cols = c(col1, col2), defs = c(agreePercArea = 0))
+  
+matConfLong[[column1]]<-ordered(matConfLong[[column1]], levels = typeLevels)
+matConfLong[[column2]]<-ordered(matConfLong[[column2]], levels = typeLevels)
+
+# matConfLong<-merge(matConfLong, toCompleteCases, by.x = c(column1, column2), by.y = c("lcz1","lcz2"), all.y = TRUE)
+# matConfLong[["agreePercArea"]][is.na(matConfLong[["agreePercArea"]])]<-0  
 
 
-  matConf <- echInt %>%
-    st_drop_geometry %>%
-    group_by_at(.vars = c(column1, column2)) %>%
-    summarize(area = sum(area)) %>%
-    drop_units %>%
-    ungroup %>%
-    ungroup
 
-  # print("matConf")
-  # print(head(matConf))
-
-  # Wider format to compute area based confusion
-
-  # This "confusion matrix" contains the area of intersected geom who have the i LCZ
-  # for the first dataset and the j LCZ for the second dataset
-  matConfLarge <- pivot_wider(data = matConf, names_from = column2, values_from = area)
-  readable <- matConfLarge[, -1] / rowSums(matConfLarge[, -1], na.rm = T) * 100
-  matConfLarge <- cbind(matConfLarge[, 1], round(x = readable, digits = 2))
-
-  # print("matConfLarge")
-  # print(head(matConfLarge))
-
-
-  # Longer format to feet the geom_tile aes in ggplot2
-
-  matConfLong <- pivot_longer(matConfLarge, cols = -1, names_to = column2)
-  # print("matConfLong avant reorder factor")
-  names(matConfLong) <- c(column1, column2, "agree")
-
-  # Reordering of factors (as they were sorted in the order of showing in the file)
-
-  matConfLong <- matConfLong %>% mutate(across(where(is.character), as_factor))
-  matConfLong <- matConfLong %>%
-    mutate(!!column1 := ordered(subset(matConfLong, select = column1, drop = T), levels = typeLevels))
-  matConfLong <- matConfLong %>%
-    mutate(!!column2 := ordered(subset(matConfLong, select = column2, drop = T), levels = typeLevels))
-
-
-  ##############################################################################################################
-  # Some values of LCZ may not appear in all datasets, we want to force them to appear to make all heat map easy to compare
-  #################################################################################################################
-
-  complement <- cbind(crossing(typeLevels, typeLevels),
-                      data.frame(
-                        indice = apply(
-                          crossing(typeLevels, typeLevels), 1, paste, collapse = "."),
-                        area = 0
-                      )
-  )
-
-  names(complement) <- c("LCZ1", "LCZ2", "uselessIndex", "tempArea")
-  # print("complement")
-  # complement %>% head %>% print
-
-  completed <- merge(x = matConfLong, y = complement, 
-                     by.x = c(column1, column2), by.y = c("LCZ1", "LCZ2"), 
-                     all = T)
-  completed$agree[is.na(completed$agree)] <- completed$tempArea[is.na(completed$agree)]
-
-
-  matConfLong <- completed[, c(column1, column2, "agree")]
-  matConfLong <- matConfLong %>%
-    mutate(!!column1 := addNA(subset(matConfLong, select = column1, drop = T), ifany = T),
-           !!column2 := addNA(subset(matConfLong, select = column2, drop = T), ifany = T),) %>%
-    mutate(!!column1 := factor(subset(matConfLong, select = column1, drop = T), levels = typeLevels),
-           !!column2 := factor(subset(matConfLong, select = column2, drop = T), levels = typeLevels))
-
-
-  matConfLong <- matConfLong %>% arrange(column1, column2)
-  #Include all the lcz levels, even if they are not present in the datasets
-
-  # print("matConfLongaprès reorder factor")
-  # print(matConfLong)
-  marginAreas <- data.frame(marginLevels = factor(typeLevels), percArea1 = marginAreas$area1, percArea2 = marginAreas$area2)
   ############
   # Plot
 
   matConfPlot <- matConfPlot(matConf = matConfLong, marginAreas = marginAreas,
-                          column1 = column1, column2 = column2 , agreeColumn = "agree",
+                          column1 = column1, column2 = column2 , agreeColumn = "agreePercArea",
                           wf1 = wf1, wf2 = wf2)
- # 
- #  coordRef <- length(typeLevels) + 1
- #  print(coordRef)
- #  matConfPlot <- ggplot_build(
- #    ggplot() +
- #      geom_tile(data = matConfLong, aes(x = get(column1), y = get(column2), fill = agree), color = "white", lwd = 1.2, linetype = 1) +
- #      labs(x = wf1, y = wf2) +
- #      scale_fill_gradient2(low = "grey97", mid = "cyan", high = "blue",
- #                           midpoint = 50, limit = c(0, 100), space = "Lab",
- #                           name = "% area") +
- #      geom_text(data=matConfLong[matConfLong$agree!=0,], aes(x = .data[[column1]], y = .data[[column2]], label=round(agree,digits=0)),
- #                color="black") + 
- #        coord_fixed()+
- #      theme(axis.text.x = element_text(angle = 70, hjust = 1),
- #            panel.background = element_rect(fill = "grey97")) +
- #      geom_tile(marginAreas, mapping = aes(x = marginLevels, y = coordRef, fill = percArea1, height = 0.8, width = 0.8)) +
- #      theme(panel.background = element_rect(fill = "grey97")) +
- #      geom_text(data = marginAreas[round(marginAreas$percArea1, 0) != 0,], 
- #                aes(x = marginLevels, y = coordRef, label = round(percArea1, digits = 0)),
- #                color = "gray37") +
- #      coord_fixed() +
- #      geom_tile(marginAreas, mapping = aes(x = coordRef, y = marginLevels, fill = percArea2, height = 0.8, width = 0.8)) +
- #      geom_text(data = marginAreas[round(marginAreas$percArea2, 0) != 0,], 
- #                aes(x = coordRef, y = marginLevels, label = round(percArea2, digits = 0)),
- #                color = "gray37") +
- #      coord_fixed() +
- #      ggtitle(paste0("Repartition of ", wf1, " classes into ", wf2, " classes"))
- #  )
+
 
   if (plotNow) { print(matConfPlot) }
-
-  matConfOut <- list(matConf = matConfLong, matConfPlot = matConfPlot, marginAreas = marginAreas, percAgg = percAgg)
-  return(matConfOut)
+matConfOut<-list(matConf=matConfLong, 
+                 matConfPlot=matConfPlot,
+                 areas=marginAreas, percAgg=percAgg)
+return(matConfOut)
 
 }
+
+
+# doesn't need to be documented. 
+completeDT <- function(DT, cols, defs = NULL){
+
+  make_vals <- function(col) {
+    if(is.factor(col)) factor(levels(col))
+    else unique(col)
+  }
+
+  mDT <- do.call(CJ, c(lapply(DT[, ..cols], make_vals), list(unique=TRUE)))
+  res <- DT[mDT, on=names(mDT)]
+  if (length(defs))
+    res[, names(defs) := Map(replace, .SD, lapply(.SD, is.na), defs), .SDcols=names(defs)]
+  res[]
+} 
