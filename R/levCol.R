@@ -25,7 +25,7 @@ levCol<-function(sf,column,drop=FALSE,useStandCol=FALSE,...){
   You can use the function groupLCZ to group some levels.")}
 
 # get the natural levels from the data : uniqueData
-  uniqueData<-sf[column] %>% sf::st_drop_geometry()  %>% unique() 
+  uniqueData<-unique(sf[[column]]) 
   # Attention, unique outputs a list of length 1
   
   # Sometimes, the input data can be a factor, with levels not present in the actual data.
@@ -33,7 +33,7 @@ levCol<-function(sf,column,drop=FALSE,useStandCol=FALSE,...){
   
   if(drop==TRUE){uniqueData<-droplevels(uniqueData)}
   
-  uniqueData<-levels(uniqueData[,1]) %>% as.character() %>% as.vector()
+  uniqueData<-levels(uniqueData) %>% as.character() %>% as.vector()
 
   # Stop if there are more than 36 levels : really impossible to read such a map
   # or confusion matrix

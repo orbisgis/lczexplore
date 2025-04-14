@@ -32,3 +32,4 @@ names(.lczenv$colorMapDefault) <- c(as.character(c(1:10,101:107)), "Unclassified
                                "Bare rock or paved", "Bare soil or sand", "Water", "Unclassified")
 
 
+.lczenv$veryShortEtiquettesDefault <- c(paste0("00", 1:9), "010", LETTERS[1:7], "Unclassified")

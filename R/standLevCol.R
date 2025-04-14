@@ -22,20 +22,9 @@ standLevCol<-function(levels,colors="", useStandCol=FALSE){
   # It will be used if no colors are specified and if levels are not known standard levels 
   alienColors<-palette.colors(n=length(levels), palette="Polychrome 36")
 
-  standardLevels<-c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",
-               "9"="9","10"="10",
-               "101"="101","102"="102","103"="103","104"="104", "105"="105","106"="106","107"="107",
-               "101"="11","102"="12","103"="13","104"="14", "105"="15", "106"="16","107"="17",
-               "101"="A","102"="B","103"="C","104"="D","105"="E","106"="F","107"="G")
-  standCorresp<-c("1"="#8b0101","2"="#cc0200","3"="#fc0001","4"="#be4c03","5"="#ff6602","6"="#ff9856",
-                  "7" ="#fbed08","8"="#bcbcba","9"="#ffcca7","10"="#57555a",
-                  "11"="#006700","101"="#006700","A"="#006700",
-                  "12"="#05aa05","102"="#05aa05","B"="#05aa05",
-                  "13"="#648423","103"="#648423","C"="#648423",
-                  "14"="#bbdb7a", "104"="#bbdb7a","D"="#bbdb7a",
-                  "15"="#010101","105"="#010101","E"="#010101",
-                  "16"="#fdf6ae", "106" = "#fdf6ae" , "F" = "#fdf6ae",
-                  "17"="#6d67fd","107"="#6d67fd","G"="#6d67fd")
+  standardLevels<-.lczenv$typeLevelsConvert 
+  standCorresp<- .lczenv$colorMapDefault
+  names(standCorresp) <- .lczenv$typeLevelsDefault
 
   if (length(colors)==length(levels) && prod(areColors(colors))==1){
     typeLevels<-colors
@@ -55,7 +44,5 @@ standLevCol<-function(levels,colors="", useStandCol=FALSE){
       standCorresp[names(standCorresp)%in%levels[levels%in%standardLevels]]
     typeLevels
     } else {return(typeLevels)}
-
-
 
 }

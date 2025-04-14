@@ -14,9 +14,10 @@ showLCZ(
   useStandCol = FALSE,
   tryGroup = TRUE,
   naAsUnclassified = TRUE,
-  noPerc = FALSE,
+  noPercAlter = FALSE,
   plotNow = TRUE,
   addBorders = FALSE,
+  labelType = "long",
   ...
 )
 }

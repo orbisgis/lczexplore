@@ -370,63 +370,25 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
     nbgeomInter <- nrow(intersec_sf)
 
     # Plot the first classification
-    l1Plot <- ggplot2::ggplot(boundary) + # les données
-      ggplot2::geom_sf(data = boundary, fill = NA, lty = 'blank') +
-      ggplot2::geom_sf(data = sf1, aes(fill = get(column1)), colour = NA) +
-      ggplot2::scale_fill_manual(values = typeLevels, labels = etiquettes1, drop = FALSE) +
-      ggplot2::guides(fill = guide_legend(title = titrou)) +
-      ggplot2::ggtitle(titre1, subtitle = paste0("Number of RSU : ", nbgeom1)) +
-      ggspatial::annotation_north_arrow(
-        location = "tl",
-        width = unit(0.5, "cm"),
-        height = unit(0.5, "cm"),
-        pad_x = unit(0.15, "cm"),
-        pad_y = unit(0.15, "cm"),
-        # data = subset(allLocAllWfs[allLocAllWfs$location == aLocation,], wf == "osm"),
-        style = north_arrow_orienteering(
-          text_size = 5,
-        )) +
-      ggspatial::annotation_scale(
-        location = "br",
-        # data = subset(allLocAllWfs[allLocAllWfs$location == aLocation,], wf == "osm"),
-        width_hint = 0.4,
-        height = unit(0.1, "cm"),
-        pad_x = unit(0.35, "in"),
-        pad_y = unit(0.06, "in"),
-        text_cex = 0.5,
-        text_pad = unit(0.05, "cm"),
-      )
+    l1Plot <- 
+      # ggplot2::ggplot(boundary) + 
+      showLCZ(sf = sf1, column = column1, wf = wf1, plotNow = FALSE, repr = repr,
+              useStandCol = TRUE, , noPercAlter = FALSE, 
+                tryGroup = tryGroup, labelType = "long",
+             ...) +
+      ggtitle(titre1, subtitle = paste0("Number of RSU : ",nbgeom1))
     #
 
-
     # Plot the second classification
-    l2Plot <- ggplot(boundary) +
-      geom_sf(data = boundary, fill = NA, lty = 'blank') +
-      geom_sf(data = sf2, aes(fill = get(column2)), colour = NA) +
-      scale_fill_manual(values = typeLevels, labels = etiquettes2, drop = FALSE) +
-      guides(fill = guide_legend(title = titrou)) +
-      ggtitle(titre2, subtitle = paste0("Number of RSU : ", nbgeom2)) +
-      ggspatial::annotation_north_arrow(
-        location = "tl",
-        width = unit(0.5, "cm"),
-        height = unit(0.5, "cm"),
-        pad_x = unit(0.15, "cm"),
-        pad_y = unit(0.15, "cm"),
-        # data = subset(allLocAllWfs[allLocAllWfs$location == aLocation,], wf == "osm"),
-        style = north_arrow_orienteering(
-          text_size = 5,
-        )) +
-      ggspatial::annotation_scale(
-        location = "br",
-        # data = subset(allLocAllWfs[allLocAllWfs$location == aLocation,], wf == "osm"),
-        width_hint = 0.4,
-        height = unit(0.1, "cm"),
-        pad_x = unit(0.35, "in"),
-        pad_y = unit(0.06, "in"),
-        text_cex = 0.5,
-        text_pad = unit(0.05, "cm"),
-      )
-
+    l2Plot <-
+      # ggplot2::ggplot(boundary) + 
+      showLCZ(sf = sf2, column = column2, wf = wf2, labelType = "very short",
+              plotNow = FALSE, repr = repr,
+              useStandCol = TRUE,
+              tryGroup =tryGroup, 
+              ...) +
+        ggtitle(titre2, subtitle = paste0("Number of RSU : ",nbgeom2))
+    
     # Plot areas where classifications agree
     agreePlot <- ggplot(boundary) +
       geom_sf(data = boundary, fill = NA, lty = 'blank') +
