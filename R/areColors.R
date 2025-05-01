@@ -4,7 +4,8 @@
 #' @return a vector of booleans indicting if the elements of x define a color in R (TRUE) or don't (FALSE)
 #' @export
 #'
-#' @examples areColors(c(NA, "black", "blackk", "1", "#00", "#000000"))
+#' @examples 
+#' areColors(c(NA, "black", "blackk", "1", "#00", "#000000"))
 areColors <- function(x) {
   numInd<-grepl('^-?[0-9.]+$', x)
   if(sum(numInd)>0){message("please do not use numeric to specify colors, replace with a string with a color name,

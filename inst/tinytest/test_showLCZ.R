@@ -51,7 +51,7 @@ expect_message(
 expect_message(
   showLCZ(redonBDTgrouped, column = "grouped", repr = "alter", levels = c(
     "urban" = "red", "industry" = "black", "vegetation" = "green", "impervious" = "grey",
-    "pervious" = "burlywood", "water" = "blue")),
+    "pervious" = "burlywood", "water" = "blue", "Unclassified" = "ghostwhite")),
   "4:"
 )
 
@@ -71,7 +71,7 @@ expect_silent(
 
 expect_message(
   showLCZ(redonBDTgrouped, column = "grouped", repr = "alter",
-          LCZlevels = c("urban", "industry", "vegetation", "impervious", "pervious", "water")),
+          LCZlevels = c("urban", "industry", "vegetation", "impervious", "pervious", "water", "Unclassified")),
   "7: No color vector but a level vector whose names cover the levels in the data"
 )
 
@@ -81,6 +81,6 @@ expect_message(
           urban = c("1", "2", "3", "4", "5", "6", "7", "8", "9"),
           industry = "10",
           vegetation = c("101", "102", "103", "104"),
-          impervious = "105", pervious = "106", water = "107",
-          colors = c("red", "black", "green", "grey", "burlywood", "blue"), tryGroup = TRUE),
+          impervious = "105", pervious = "106", water = "107", Unclassified = "Unclassified",
+          colors = c("red", "black", "green", "grey", "burlywood", "blue", "ghostwhite"), tryGroup = TRUE),
   "the function groupLCZ will try to create ")

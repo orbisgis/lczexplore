@@ -20,7 +20,7 @@ An sf object with 3 variables and a geometry :
 redonBDT
 }
 \description{
-Full baby name data provided by the SSA. This includes all names with at
-least 5 uses.
+LCZ for Redon as produced by GeoClimate on BDTOPO data
+#'
 }
 \keyword{datasets}

@@ -21,6 +21,8 @@ Useful when you suspect numeric precision to create false disjunction of geometr
 \item{LCZcolumn}{the name of the column coontaining LCZ types}
 
 \item{wfColumn}{is the column where the workflow used to produce lcz is precised.}
+
+\item{locationColumn}{is the name of the column where the location is stored}
 }
 \value{
 an sf object containing the agregated geometries, their LCZ types and the wf and location columns
@@ -28,4 +30,20 @@ if present in the initial sf
 }
 \description{
 For an sf object containing LCZ types, aggregates touching geometries with same value of LCZ
+}
+\examples{
+dirList<-list.dirs(paste0(
+system.file("extdata", package = "lczexplore"),"/multipleWfs"))[-1]
+allLocAllWfs<-concatAllLocationsAllWfs(
+ dirList = dirList, locations = c("Blaru", "Goussainville"), 
+workflowNames = c("osm","bdt","iau","wudapt"),
+ missingGeomsWf = "iau",
+ refWf = NULL,
+ refLCZ = "Unclassified",
+ residualLCZvalue = "Unclassified",
+ column = "lcz_primary"
+)
+ASUallLocAllWfs <- aggregateRSUsByLCZ(
+allLocAllWfs,
+LCZcolumn = "lcz_primary", wfColumn = "wf", location = "location", aggregateBufferSize = 0.5)
 }

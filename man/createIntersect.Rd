@@ -21,6 +21,8 @@ createIntersect(
 By defautl it is set to an empty string and no ID is loaded.}
 
 \item{sfWf}{a vector of strings which contains the names of the workflows used to produce the sf objects}
+
+\item{minZeroArea}{all geometries smaller than this value are discarded (avoids numeric precision problems)}
 }
 \value{
 an sf file with values of LCZ from all the input
@@ -28,4 +30,11 @@ are assigned to geometries resulting from intersection of all input geometries
 }
 \description{
 Intersect multiple sf files in which Local Climate Zones are set for polygon geometries
+}
+\examples{
+sfList<-loadMultipleSfs(dirPath = paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Goussainville"),
+workflowNames = c("osm","bdt","iau","wudapt"), location = "Goussainville")
+GoussainvilleIntersect <- createIntersect(
+ sfList = sfList, columns = rep("lcz_primary", 4),  
+ sfWf = c("osm","bdt","iau","wudapt"))
 }

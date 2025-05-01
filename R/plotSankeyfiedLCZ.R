@@ -7,7 +7,14 @@
 #' @export
 #'
 #' @examples
-#'
+#' dirList<-list.dirs(paste0(
+#' system.file("extdata", package = "lczexplore"),"/multipleWfs"))[-1]
+#' allLocIntersected<-concatIntersectedLocations(
+#' dirList = dirList, locations = c("Blaru", "Goussainville"))
+#' testSankey<-prepareSankeyLCZ(intersectedDf = allLocIntersected
+#'  , wf1 = "wudapt", wf2 = "osm")
+#' testSankeyPlot<-plotSankeyfiedLCZ(
+#' sankeyfied = testSankey, plotNow=TRUE)
 plotSankeyfiedLCZ<-function(sankeyfied, plotNow=TRUE, colorMap = NULL){
   if(is.null(colorMap)) {
     colorMap<-.lczenv$colorMapDefault
@@ -18,18 +25,21 @@ plotSankeyfiedLCZ<-function(sankeyfied, plotNow=TRUE, colorMap = NULL){
   )
   } else colorMap<-colorMap
   
+  colorMap<-colorMap[sort(names(colorMap))]
+
   # pos <- position_sankey(split_nodes = TRUE, align = "top",
   #                        width = 0.2, v_space = 0.15, h_space = 0.25)
   sankeyPlot<-ggplot(sankeyfied,
          aes(x = stage, y = area, group = node, connector = connector,
              edge_id = edge_id, fill = node)) +
-    ggsankeyfier::geom_sankeyedge(order = "as_is") +
-    ggsankeyfier::geom_sankeynode(order = "as_is") +
-    guides(fill   = guide_legend(ncol = 1),
-           alpha  = guide_legend(ncol = 1),
-           colour = guide_legend(ncol = 1)) +
+    ggsankeyfier::geom_sankeyedge(order = "ascending") +
+    ggsankeyfier::geom_sankeynode(order = "ascending") +
+    guides(
+      # fill   = guide_legend(ncol = 1),
+      #      alpha  = guide_legend(ncol = 1),
+           colour = guide_legend(title = "LCZ type", ncol = 1)) +
     theme(legend.position = "top") +
-    scale_fill_manual(
+    scale_color_manual(
       values = colorMap
     ) +
     theme(legend.position = "right") +

@@ -2,14 +2,17 @@
 % Please edit documentation in R/summariseRSUs.R
 \name{summariseRSUs}
 \alias{summariseRSUs}
-\title{For a given LCZ sf object, returns the number of geometries and their mean area per level of LCZ}
+\title{For a given LCZ sf object, returns the number of geometries and their mean area per LCZ type}
 \usage{
 summariseRSUs(sfIn, aggregatingColumns = "lcz_primary", trimValue = 0)
 }
 \arguments{
-\item{sf}{contains the geometry and LCZ levels}
+\item{sfIn}{an sf objects that contains the geometry and LCZ levels}
 
-\item{columns}{a the LCZ column name}
+\item{aggregatingColumns}{tshould be the name of the LCZ types column, but can be any factor variable names}
+
+\item{trimValue}{a trim parameter to feed the mean function in order to avoid letting artifially small or big
+geometries to influence the average area results}
 }
 \value{
 the number of geometries (Reference Spatial units or RSUs)
@@ -17,5 +20,19 @@ and their mean area per level of LCZ, and the same after agregatting geometries
 with same level of LCZ which touch each other
 }
 \description{
-For a given LCZ sf object, returns the number of geometries and their mean area per level of LCZ
+For a given LCZ sf object, returns the number of geometries and their mean area per LCZ type
+}
+\examples{
+dirList<-list.dirs(paste0(
+system.file("extdata", package = "lczexplore"),"/multipleWfs"))[-1]
+allLocAllWfs<-concatAllLocationsAllWfs(
+ dirList = dirList, locations = c("Blaru", "Goussainville"), 
+workflowNames = c("osm","bdt","iau","wudapt"),
+ missingGeomsWf = "iau",
+ refWf = NULL,
+ refLCZ = "Unclassified",
+ residualLCZvalue = "Unclassified",
+ column = "lcz_primary"
+)
+summarisedRSUs<-summariseRSUs(allLocAllWfs, aggregatingColumns = "wf")
 }

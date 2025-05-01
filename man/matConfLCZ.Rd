@@ -14,6 +14,8 @@ matConfLCZ(
   plotNow = FALSE,
   wf1 = "Reference",
   wf2 = "Alternative",
+  sfInt = NULL,
+  drop = FALSE,
   ...
 )
 }
@@ -26,16 +28,20 @@ matConfLCZ(
 
 \item{column2}{is the column of the second data set containing the lcz to be compared}
 
-\item{typeLevels}{by default the levels of lcz incoded from 1 to 10 and 101 to 107.
-When comparing othe variable, like grouped LCZ, the grouped levels have to be specified.}
+\item{typeLevels}{by default the levels of lcz incoded from 1 to 10 and 101 to 107.}
+
+\item{plotNow}{shows the graphical representation of the confusion matrix}
 
 \item{wf1}{the name of the workflow used to produce data from sf1}
 
 \item{wf2}{the name of the workflow used to produce data from sf2}
 
-\item{...}{a set of unspecified arguments, for instance when the produceAnalysis function calls other functions}
+\item{sfInt}{allows to produce the confusion matrix directly on the intersected sf object if it was produced before}
 
-\item{plot}{if TRUE the plot of the matrix}
+\item{drop}{if TRUE the empty LCZ types are dropped
+When comparing othe variable, like grouped LCZ, the grouped levels have to be specified.}
+
+\item{...}{a set of unspecified arguments, for instance when the produceAnalysis function calls other functions}
 }
 \value{
 returns an object called matConfOut which contains

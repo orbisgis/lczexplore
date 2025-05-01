@@ -2,31 +2,24 @@
 % Please edit documentation in R/plotSummarisedRSUs.R
 \name{plotSummarisedRSUs}
 \alias{plotSummarisedRSUs}
-\title{For a given LCZ sf object, plots the number of geometries and their mean area per level of LCZ}
+\title{For a given LCZ sf object, plots the number of geometries and an average area indicator per level of LCZ}
 \usage{
 plotSummarisedRSUs(
   summarisedSfIn,
-  workflows = c("wudapt", "iau", "osm", "bdt"),
+  workflowNames = c("wudapt", "iau", "osm", "bdt"),
   plotNow = TRUE,
-  locations = NULL,
-  graphPath = "",
-  title = "",
-  whichPlot = "meanAreaClust",
-  logScale = FALSE
+  graphPath = ""
 )
 }
 \arguments{
-\item{workflows}{contains the names of workflows (they will indicate the names of the columns containing LCZ levels)}
+\item{summarisedSfIn}{the output of summariseRSU function}
+
+\item{workflowNames}{contain the names of the workflows}
 
 \item{plotNow}{: if TRUE the plot will be displayed in the session}
 
 \item{graphPath}{: a valid directory path where th plot will be saved
 (for now an empty string to avoid saving in the working directory)}
-
-\item{whichPlot}{: if "totalAreaClust" the total aggregated areas per levels of LCZ will be plotted,
-if "meanAreaClust", the trimmed mean will}
-
-\item{aggregatedSF}{contains the geometry and LCZ levels}
 }
 \value{
 the number of geometries (Reference Spatial units or RSUs)
@@ -34,5 +27,21 @@ and their mean area per level of LCZ, and the same after agregatting geometries
 with same level of LCZ which touch each other
 }
 \description{
-For a given LCZ sf object, plots the number of geometries and their mean area per level of LCZ
+For a given LCZ sf object, plots the number of geometries and an average area indicator per level of LCZ
+}
+\examples{
+dirList<-list.dirs(paste0(
+system.file("extdata", package = "lczexplore"),"/multipleWfs"))[-1]
+allLocAllWfs<-concatAllLocationsAllWfs(
+ dirList = dirList, 
+    locations = c("Blaru", "Goussainville"), 
+    workflowNames = c("osm","bdt","iau","wudapt"),
+ missingGeomsWf = "iau",
+ refWf = NULL,
+ refLCZ = "Unclassified",
+ residualLCZvalue = "Unclassified",
+ column = "lcz_primary"
+)
+summarisedRSUs<-summariseRSUs(allLocAllWfs, aggregatingColumns = c("wf", "lcz_primary"))
+plotSummarisedRSUs(summarisedSfIn = summarisedRSUs)
 }

@@ -31,6 +31,8 @@ intersectAlocation(
 
 \item{refLCZ}{is passed to addMissingRSU function}
 
+\item{residualLCZvalue}{is passed to addMissingRSU function}
+
 \item{column}{the column name of the LCZ classification}
 }
 \value{
@@ -43,4 +45,7 @@ Intersects several sf files for a given location identified by a given directory
 \details{
 This function is not generic, it expects the data files to be named wf_rsu_lcz; wf varying among
 the values of workflownames, and the LCZ columns are expected to be lcz_primary (but lower and upper cases are accepted)
+}
+\examples{
+# deprecated : use concatIntersectedLocations with the proper arguments
 }

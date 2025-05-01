@@ -13,6 +13,9 @@
 #' If saveG is not an empty string, graphics are saved under "saveG.png"
 #' @export
 #' @examples
+#' sfList<-loadMultipleSfs(dirPath = paste0(
+#' system.file("extdata", package = "lczexplore"),"/multipleWfs/Goussainville"),
+#' workflowNames = c("osm","bdt","iau","wudapt"), location = "Goussainville"  )
 loadMultipleSfs<-function(dirPath, workflowNames = c("osm","bdt","iau","wudapt"), location ){
   typeLevels<-c("1"="1","2"="2","3"="3","4"="4","5"="5","6"="6","7"="7","8"="8",
                 "9"="9","10"="10",

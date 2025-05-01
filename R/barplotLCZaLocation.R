@@ -1,15 +1,26 @@
-#' in a given directory, if several LCZ files are present, it plots the repartition of LCZ regarding of their source (workflow)
+#' in a given directory, if several LCZ files are present, plots the repartition 
+#' of LCZ regarding of their source (workflow)
 #' NOTE: to represent the map of LCZ for a given fil, use `showLCZ` function instead
-#' @param workflownames is a vector of prefixes. The LCZ files must benames workflow_rsu.fgb  
-#' @param plotNow. If TRUE, the boxplot of the repartition will be printed
-#' @param plotSave. If TRUE, the plot will be saved in the directory pointed by dirPath 
+#' @param dirPath is the path where the datasets are stored
+#' @param location is the name of the locations for the plot is produced
+#' @param refWf is a reference workflow name, passed to the function addMissingRSUs when needed
+#' @param refLCZ is a reference LCZtype, passed to the function addMissingRSUs when needed
+#' @param residualLCZvalue a LCZ default type, passed to the function addMissingRSUs when needed
+#' @param workflowNames is a vector of prefixes. The LCZ files must be named workflow_rsu.fgb
+#' where workflow is on of the values in workflowNames vector 
+#' @param plotNow If TRUE, the boxplot of the repartition will be printed
+#' @param plotSave If TRUE, the plot will be saved in the directory pointed by dirPath 
 #' @importFrom ggplot2 geom_sf guides ggtitle aes
 #' @importFrom caret dummyVars
-#' @import sf dplyr cowplot forcats units tidyr RColorBrewer utils grDevices rlang
+#' @import sf dplyr cowplot forcats units tidyr RColorBrewer units utils grDevices rlang
 #' @return Cramer's V between pairs of levels, in a matrix (cramerMatrix) or long form (cramerLong), 
 #' and a dataframe with the nbOutAssociation most significant association
 #' @export
 #' @examples
+#' barplotLCZaLocation(
+#' dirPath = paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Goussainville"),
+#' refWf = NULL, refLCZ = NA, residualLCZvalue = "Unclassified",
+#' location = "Goussainville", plotNow = TRUE)
 barplotLCZaLocation<-function(dirPath, location, workflowNames = c("osm", "bdt", "iau", "wudapt"),
                               refWf = NULL, refLCZ = NA, residualLCZvalue=NA,
                               plotNow = FALSE, plotSave = TRUE){
@@ -33,14 +44,14 @@ barplotLCZaLocation<-function(dirPath, location, workflowNames = c("osm", "bdt",
   zoneSf<-read_sf(zoneSfPath)
   sfList<-addMissingRSUs(sfList, missingGeomsWf="iau", zoneSf = zoneSf, refWf = refWf, 
                                     refLCZ = refLCZ,
-                         residualLCZvalue = residualLCZvalue, location = location, column = "lcz_primary")
+                         residualLCZvalue = residualLCZvalue, column = "lcz_primary")
   concatSf<-concatAlocationWorkflows(sfList = sfList,
                                      location = location, refCrs = 1)
   surfaces<-concatSf %>%
     mutate(wf = factor(wf, levels = c("bdt", "osm", "wudapt", "iau"))) %>%
     mutate(lcz_primary = factor(lcz_primary, levels = names(colorMap))) %>%
     mutate(lcz_primary = tidyr::replace_na(lcz_primary, "Unclassified")) %>%
-    dplyr::group_by(wf, lcz_primary) %>% dplyr::summarise(area=sum(area), location=unique(location))
+    dplyr::group_by(wf, lcz_primary) %>% dplyr::summarise(area=drop_units(sum(area)), location=unique(location))
 
   location<-unique(surfaces$location)
   outPlot<-ggplot(surfaces) +

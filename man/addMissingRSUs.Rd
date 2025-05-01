@@ -14,16 +14,24 @@ addMissingRSUs(
   refWf = "bdt",
   refLCZ = "107",
   residualLCZvalue = "105",
-  location,
   column = "lcz_primary"
 )
 }
 \arguments{
 \item{sfList}{the list of LCZ sf objects}
 
-\item{location}{the name of the location at which all LCZ are created}
+\item{missingGeomsWf}{is the name of the column where some geometries are missing}
 
-\item{workflowNames}{sets the names of workflows and define the name of the files which will be loaded and intersected}
+\item{zoneSf}{is an sf file containing one geometry defining the zone where some geometries must be added}
+
+\item{refWf}{in case one wants to give the added geometries the value of a workflow of reference,}
+
+\item{refLCZ}{the LCZ type to report from the reference workflow to the missing geometries}
+
+\item{residualLCZvalue}{the LCZ type to add when the reference workflow has a different value than
+refLCZ for the added geometries}
+
+\item{column}{is the name of the LCZ column (to be explained)}
 }
 \value{
 returns graphics of comparison and an object called matConfOut which contains :
@@ -38,4 +46,17 @@ adds missing Reference Spatial Units (geometries) from the difference with a ref
 and possibly add a value to the lcz column according to a reference workflow
 reference spatial units nor represented by their own geometries
 adding a column for location and workflow names
+}
+\examples{
+sfList<-loadMultipleSfs(dirPath = paste0(
+system.file("extdata", package = "lczexplore"),"/multipleWfs/Goussainville"),
+ workflowNames = c("osm","bdt","iau","wudapt"), location = "Goussainville"  )
+zoneSf <- sf::read_sf(
+  paste0(
+   system.file("extdata", package = "lczexplore"),
+   "/multipleWfs/Goussainville/zone.fgb")
+)
+SfList<-addMissingRSUs(
+sfList, zoneSf = zoneSf, refWf = NULL,
+ refLCZ = "Unclassified", residualLCZvalue = "Unclassified")
 }

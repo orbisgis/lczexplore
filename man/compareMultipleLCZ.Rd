@@ -28,3 +28,15 @@ If saveG is not an empty string, graphics are saved under "saveG.png"
 \description{
 Compares several sets of geographical classifications, especially Local Climate Zones classifications
 }
+\examples{
+sfList<-loadMultipleSfs(dirPath = 
+paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Goussainville"),
+workflowNames = c("osm","bdt","iau","wudapt"), location = "Goussainville")
+GoussainvilleIntersect <- createIntersect(
+ sfList = sfList, columns = rep("lcz_primary", 4),  
+ sfWf = c("osm","bdt","iau","wudapt"))
+GoussainvilleMultipleComparison<-compareMultipleLCZ(
+ sfInt = GoussainvilleIntersect,
+ LCZcolumns = c("osm","bdt","iau","wudapt"),
+ trimPerc = 0.5)
+}

@@ -19,7 +19,8 @@
 #' and if specified, columns for the IDs of the geoms and the confidence value of 
 #' thevalues of the variable.
 #' @export
-#' @examples utrfRedonBDT<-importQualVar(dirPath=paste0(
+#' @examples 
+#' utrfRedonBDT<-importQualVar(dirPath=paste0(
 #' system.file("extdata", package = "lczexplore"), "/bdtopo_2_2/Redon"),
 #' file="rsu_utrf_area.geojson", column="TYPO_MAJ")
 #' showLCZ(sf=utrfRedonBDT, column="TYPO_MAJ",repr="alter")
@@ -31,8 +32,8 @@
 #'  sf1=utrfRedonBDT, column1="TYPO_MAJ", wf1=" UTRF BDT",
 #'  sf2=utrfRedonOSM, column2="TYPO_MAJ", wf2 = " UTRF OSM",
 #' location = " Redon",exwrite=FALSE,repr="alter")
-#  # ... then plot the confusion matrix of these two classifications  
-# print(utrfComparison$matConfPlot)
+#'  # ... then plot the confusion matrix of these two classifications  
+#' print(utrfComparison$matConfPlot)
 #' 
 #' 
 importQualVar<-function(dirPath, file="rsu_utrf_area.geojson", output="sfFile", column="TYPO_MAJ",
@@ -93,10 +94,8 @@ importQualVar<-function(dirPath, file="rsu_utrf_area.geojson", output="sfFile", 
   }
 
 
-    sfFile <-
-      sfFile%>%
-        mutate(!!column:=factor(subset(sfFile,select=column,drop=T),levels=typeLevels)) %>%
-        drop_na(column)
+    sfFile[[column]]<-factor(sfFile[[column]],levels=typeLevels)
+      sfFile<-drop_na(sfFile, column)
   }
   else {stop("You must specify the column containing your qualitative variable")}
 

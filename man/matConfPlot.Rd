@@ -6,15 +6,20 @@
 \usage{
 matConfPlot(
   matConfLong,
-  marginAreas = NULL,
   column1 = "lcz_primary",
   column2 = "lcz_primary.1",
+  marginAreas = NULL,
   agreeColumn = "agreePercArea",
   wf1 = "reference",
   wf2 = "alternative"
 )
 }
 \arguments{
+\item{matConfLong}{is a dataframe for the matrice of confusion/agreement, in the longform :
+first column is the LCZ level of the first workflow, second the level of the second workflow and
+the third column the percentage of surface of the level of the first classification classified in the level of
+the second classification}
+
 \item{column1}{is the name of the first classification}
 
 \item{column2}{is the name of the second classification}
@@ -24,17 +29,6 @@ matConfPlot(
 \item{wf1}{is the name of the first workflow (for labels)}
 
 \item{wf2}{is the name of the second workflow (for labels)}
-
-\item{matConf}{is a dataframe for the matrice of confusion/agreement, in the longform :
-first column is the LCZ level of the first workflow, second the level of the second workflow and
-the third column the percentage of surface of the level of the first classification classified in the level of
-the second classification}
-
-\item{plotNow}{if TRUE the plot of the matrix is returned}
-
-\item{saveG}{if not NULL will be the path in which the plot will be saved}
-
-\item{...}{a set of unspecified arguments, for instance when the produceAnalysis function calls other functions}
 }
 \value{
 returns a plot of a matrice of confusion
@@ -45,4 +39,13 @@ Plots a tile graph of a confusion matrix between two sets of lcz on the same are
 \details{
 Most of the time this function will not be called directly
 by the user but by the compareLCZ function
+}
+\examples{
+matConfRedonBDTOSM <- matConfLCZ(sf1 = redonBDT, column1 = 'LCZ_PRIMARY',
+                                sf2 = redonOSM, column2 = 'LCZ_PRIMARY', plot = TRUE)
+matConfLong <- matConfRedonBDTOSM$matConf
+marginAreas <- matConfRedonBDTOSM$areas
+matConfPlot(matConfLong,
+           column1 = "LCZ_PRIMARY", column2 = "LCZ_PRIMARY.1", agreeColumn = "agreePercArea",
+           wf1 = "reference", wf2 = "alternative", marginAreas = marginAreas)
 }

@@ -30,3 +30,8 @@ If saveG is not an empty string, graphics are saved under "saveG.png"
 In a given directory (or a list of directories) the function looks for LCZ datafiles
 and load them in a list
 }
+\examples{
+sfList<-loadMultipleSfs(dirPath = paste0(
+system.file("extdata", package = "lczexplore"),"/multipleWfs/Goussainville"),
+workflowNames = c("osm","bdt","iau","wudapt"), location = "Goussainville"  )
+}

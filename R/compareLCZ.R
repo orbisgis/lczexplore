@@ -1,7 +1,7 @@
-#' Compares two sets of geographical classifications, especially Local Climate Zones classifications. It
-#' produces a map for each classification, a map of their agreement (and a pseudo Kappa coefficent), 
-#' and a confusion matrix between them. All are stored in a list, easily reusable. 
-#'
+#' Compares two sets of geographical classifications, especially Local Climate Zones classifications
+#' @details compareLCZ produces a map for each classification, 
+#' a map of their agreement (and a pseudo Kappa coefficent), 
+#' and a confusion matrix between them. All are stored in a list, easily reusable
 #' @param sf1 is the sf object that contains the first (LCZ) classification
 #' @param column1 is the column of sf1 that contains the LCZ classification for each geom of sf1.
 #' @param geomID1 is the name of the optionnal column storing the ID of the geoms in sf1
@@ -37,7 +37,7 @@
 #' The expected arguments are the name of each level of the variables contained 
 #' in column1 and column2, and also a vector called colors.
 #' @importFrom ggplot2 geom_sf guides ggtitle aes
-#' @import sf dplyr cowplot forcats units tidyr RColorBrewer utils grDevices rlang
+#' @import cowplot data.table dplyr forcats grDevices rlang RColorBrewer sf tidyr units  utils 
 #' @return returns graphics of comparison and an object called matConfOut which contains :
 #' matConfLong, a confusion matrix in a longer form, 
 #' matConfPlot is a ggplot2 object showing the confusion matrix.
@@ -53,7 +53,7 @@
 #' repr="standard", saveG="", exwrite=FALSE, location="Redon", plot=TRUE)
 #' # To get the summed area of each LCZ levels for both dataset : 
 #' comparisonBDT_OSM$areas
-#' # The plots of each dataset can be produced with the /`showLCZ/` function.
+#' # The plots of each dataset can be produced with the showLCZ function.
 #' # To get the value of the general percentage of agreement call :
 #' comparisonBDT_OSM$percAgg
 #' # The values of that confusion matrix is available in a wide form:
@@ -100,21 +100,21 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
   # In order not to "carry" the whole file, keep only the column of interest (LCZ)
 
   # If LCZ name is the same in both input sf files we rename column2
-  if (column1 == column2) {
+  if (column1 == column2 & nchar(column1)!= 0) {
     column2 <- paste0(column1, ".1")
     sf2[[column2]] <- sf2[[column1]]
     sf2[[column1]] <- NULL
   }
   # If geomID name is the same in both input sf files we rename column2
 
-  if (geomID1 == geomID2) {
+  if (geomID1 == geomID2 & nchar(geomID1)!= 0) {
     geomID2 <- paste0(geomID1, ".1")
     sf2[[geomID2]] <- sf2[[geomID1]]
     sf2[[geomID1]] <- NULL
   }
   # If confid name is the same in both input sf files we rename column2
 
-  if (confid1 == confid2) {
+  if (confid1 == confid2 & nchar(confid1)!= 0) {
     confid2 <- paste0(confid1, ".1")
     sf2[[confid2]] <- sf2[[confid1]]
     sf2[[confid1]] <- NULL
@@ -134,8 +134,9 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
   nom2 <- nom2[sapply(nom2, nchar) != 0]
 
 
-  sf1 <- select(sf1, nom1) %>% drop_na(column1)
-  sf2 <- select(sf2, nom2) %>% drop_na(column2)
+
+  sf1 <- select(sf1, all_of(nom1)) %>% drop_na(column1)
+  sf2 <- select(sf2, all_of(nom2)) %>% drop_na(column2)
   # Prepare the levels of the expected LCZ
 
   if (repr == "standard") {
@@ -147,7 +148,7 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
 
 
     LCZlevels <- .lczenv$typeLevelsDefault
-    print("LCZlevels") ; print(LCZlevels)
+    # print("LCZlevels") ; print(LCZlevels)
     if (prod(uniqueData1 %in% LCZlevels) == 0) {
       line1 <- "The column chosen for the first data set doesn't seem to be a standard LCZ encoding. \n"
       line2 <- "Did you import the data with importLCZvect ? \n"
@@ -165,7 +166,7 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
 
     etiquettes <- .lczenv$etiquettesDefault
 
-    print(typeLevels)
+    # print(typeLevels)
     # names(typeLevels) <- names(.lczenv$typeLevelsDefault)
     # Classification must be encoded as factors
     sf1[[column1]] <- factor(sf1[[column1]], levels = .lczenv$typeLevelsDefault)
@@ -307,12 +308,14 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
   matConfOut <- matConfLCZ(sf1 = sf1, column1 = column1, sf2 = sf2, column2 = column2,
                            repr = repr, typeLevels = LCZlevels, plot = FALSE)
   matConfOut$data <- intersec_sfExpo
-  matConfLong <- matConfOut$matConf
+  matConfLong <- as.data.frame(matConfOut$matConf)
+
   matConfLarge <- pivot_wider(matConfLong, names_from = column2, values_from = agreePercArea)
   matConfLarge <- matConfLarge %>% as.data.frame()
   row.names(matConfLarge) <- matConfLarge[, 1] %>% as.character
   matConfLarge <- matConfLarge[, -1]
-  matConfLarge <- as.matrix(matConfLarge) 
+  matConfLarge <- as.matrix(matConfLarge)
+  matConfOut$matConfLarge<-matConfLarge
 
 
   # Add pseudo Kappa Statistic to output to   
@@ -355,7 +358,7 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
     etiquettes2 <- paste(etiquettes2, areas$percArea2, " %")
 
     etiquettes1.2 <- paste(etiquettes2, areas$percArea1)
-    print("LCZlevels") ;print(LCZlevels)
+    # print("LCZlevels") ;print(LCZlevels)
     # datatemp <- data.frame(a = factor(LCZlevels), percArea1 = areas$percArea1, percArea2 = areas$percArea2)
 
     # center all plots

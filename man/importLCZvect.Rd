@@ -43,6 +43,8 @@ dropped excepted those specified in previous parameters}
 
 \item{verbose}{if TRUE show the discrepancies between specified levels of LCZ and
 levels actually present in column}
+
+\item{sfIn}{allows you to import from an existing object of your session, not from an external file}
 }
 \value{
 returns an sf object containing at least the geoms and the LCZ values,

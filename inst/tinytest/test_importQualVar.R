@@ -3,28 +3,29 @@
 #
 library(sf)
 library(dplyr)
+library(lczexplore)
 # test<-st_read(
 #   "/home/gousseff/Documents/2_CodesSources/R/lczexplore/lczexplore/inst/extdata/bdtopo_2_2/Redon/rsu_lcz.geojson")
 # colonnes<-c("LCZ_PRIMARY","ID_RSU","LCZ_UNIQUENESS_VALU")
 # tetest<-try(test[colonnes]) %>% class
 # "try-error"%in%tetest
 
-utrfRedonBDT<-importQualVar(dirPath=paste0(
-  system.file("extdata", package = "lczexplore"), "/bdtopo_2_2/Redon"),
-  file="rsu_utrf_area.geojson", column="TYPO_MAJ")
-  
-map1<-showLCZ(sf=utrfRedonBDT, column="TYPO_MAJ",repr="alter")
-
-utrfRedonOSM<-importQualVar(dirPath=paste0(
-  system.file("extdata", package = "lczexplore"),"/osm/2022/Redon"),
-  file="rsu_utrf_area.geojson", column="TYPO_MAJ",geomID="ID_RSU",confid="UNIQUENESS_VALUE")
-  
-  utrfComparison<-compareLCZ(sf1=utrfRedonBDT, column1="TYPO_MAJ", wf1=" UTRF BDT",
-                             sf2=utrfRedonOSM, column2="TYPO_MAJ", wf2 = " UTRF OSM",
-  location = " Redon",exwrite=FALSE,repr="alter", saveG="")
-  # Plot the confusion matrix of thes two classifications  
-  print(utrfComparison$matConfPlot)
-
+# utrfRedonBDT<-importQualVar(dirPath=paste0(
+#   system.file("extdata", package = "lczexplore"), "/bdtopo_2_2/Redon"),
+#   file="rsu_utrf_area.geojson", column="TYPO_MAJ")
+#   
+# map1<-showLCZ(sf=utrfRedonBDT, column="TYPO_MAJ",repr="alter")
+# 
+# utrfRedonOSM<-importQualVar(dirPath=paste0(
+#   system.file("extdata", package = "lczexplore"),"/osm/2022/Redon"),
+#   file="rsu_utrf_area.geojson", column="TYPO_MAJ",geomID="ID_RSU",confid="UNIQUENESS_VALUE")
+#   
+#   utrfComparison<-compareLCZ(sf1=utrfRedonBDT, column1="TYPO_MAJ", wf1="UTRF BDT",
+#                              sf2=utrfRedonOSM, column2="TYPO_MAJ", wf2 = "UTRF OSM",
+#   location = " Redon", exwrite=FALSE, repr="alter", saveG="")
+#   # Plot the confusion matrix of thes two classifications  
+#   print(utrfComparison$matConfPlot)
+# 
 
 
 
@@ -34,7 +35,7 @@ expect_silent(
                  file="rsu_utrf_area.geojson", column="TYPO_MAJ", geomID="ID_RSU", confid="UNIQUENESS_VALUE")
 )
 
-map2<-showLCZ(utrfRedonBDT,column = "TYPO_MAJ",repr="alter")
+# map2<-showLCZ(utrfRedonBDT,column = "TYPO_MAJ",repr="alter")
 
 expect_silent(
   utrfRedonOSM<-
@@ -48,14 +49,14 @@ utrfComparison<-
              sf2=utrfRedonOSM, column2="TYPO_MAJ", wf2 = " UTRF OSM", 
            location = " Redon",exwrite=FALSE,repr="alter", saveG="")
 
-utrfComparison$matConfPlot %>% print
-utrfComparison$data
-utrfComparison$matConf
-utrfComparison$matConfLarge
+# utrfComparison$matConfPlot %>% print
+# utrfComparison$data
+# utrfComparison$matConf
+# utrfComparison$matConfLarge
 
-library(tidyr)
-pivot_wider(utrfComparison$matConf, names_from = TYPO_MAJ.1, values_from = agree)
-expect_equal(utrfComparison$matConf[1,3],62.96)
+# library(tidyr)
+# pivot_wider(utrfComparison$matConf, names_from = TYPO_MAJ.1, values_from = agreePercArea)
+expect_equal(round(as.numeric(utrfComparison$matConf[1,3]), 2), 62.96)
 # 
 # expect_silent(importLCZvect(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon")
 #                            ,file="rsu_lcz.geojson",

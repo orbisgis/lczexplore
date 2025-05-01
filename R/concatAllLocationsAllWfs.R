@@ -8,8 +8,9 @@
 #' @param refLCZ the reference level the completed geometries will receive
 #' @param residualLCZvalue the value the completed geometries where the reference workflow does not classify 
 #' the geometry with refLCZ level
+#' @param column a parameter to feed addMissingRSUs function
 #' @importFrom ggplot2 geom_sf guides ggtitle aes
-#' @import sf dplyr cowplot forcats units tidyr RColorBrewer utils grDevices rlang
+#' @import sf data.table dplyr cowplot forcats units tidyr RColorBrewer utils grDevices rlang
 #' @return returns graphics of comparison and an object called matConfOut which contains :
 #' matConfLong, a confusion matrix in a longer form, 
 #' matConfPlot is a ggplot2 object showing the confusion matrix.
@@ -18,7 +19,17 @@
 #' If saveG is not an empty string, graphics are saved under "saveG.png"
 #' @export
 #' @examples
-#' 
+#' dirList<-list.dirs(paste0(
+#' system.file("extdata", package = "lczexplore"),"/multipleWfs"))[-1]
+#' allLocAllWfs<-concatAllLocationsAllWfs(
+#'  dirList = dirList, locations = c("Blaru", "Goussainville"), 
+#' workflowNames = c("osm","bdt","iau","wudapt"),
+#'  missingGeomsWf = "iau",
+#'  refWf = NULL,
+#'  refLCZ = "Unclassified",
+#'  residualLCZvalue = "Unclassified",
+#'  column = "lcz_primary"
+#')
 concatAllLocationsAllWfs<-function(dirList, locations, workflowNames = c("osm","bdt","iau","wudapt"),
                                    missingGeomsWf = "iau", refWf = NULL, refLCZ = NA,
                                    residualLCZvalue = NA, column = "lcz_primary"){
@@ -44,7 +55,7 @@ for( i in 1:length(dirList)){
     sfList<-addMissingRSUs(sfList = sfList,
                            missingGeomsWf="iau", zoneSf, refWf = refWf, refLCZ = refLCZ, 
                            residualLCZvalue = residualLCZvalue,
-                           column = "lcz_primary", location = aLocation)
+                           column = "lcz_primary")
     concatSf<-concatAlocationWorkflows(sfList = sfList,
                                        location = aLocation, refCrs = 1)
   if(i==1 && st_crs(allLocAllWfSf)!=st_crs(concatSf)){

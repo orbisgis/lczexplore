@@ -35,14 +35,14 @@ expect_equal(grep("1:",test$case),1)
 
 test<-levCol(sf=redonBDTgrouped,column="grouped",
              colors=c("red","black","green","grey","burlywood","blue"))
-expect_equal(grep("2:",test$case),1)
+expect_equal(grep("3.1 :",test$case),1)
 
 # case 3: No levels but a color vector which size does not cover the number of levels in the data,
 # colors will be picked from a standard palette..
 
 test<-levCol(sf=redonBDTgrouped,column="grouped",
              colors=c("red","black","green","grey","burlywood"))
-expect_equal(grep("3:",test$case),1)
+expect_equal(grep("3.1 :",test$case),1)
 
 test<-levCol(sf=redonBDTgrouped,column="grouped",
                    colors=c("red","black","green","grey","burlywood","blue","purple"))

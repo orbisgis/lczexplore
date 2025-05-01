@@ -5,7 +5,7 @@
 \title{Computes the agreement between geographical (LCZ) classifications on a range of values of
 an indicator of confidence granted to each LCZ classification.
 The input file or dataset must have been produced by compareLCZ function,
-or at least the columns must be in the same order.}
+or at least the columns must be in the same order}
 \usage{
 confidSensib(
   inputDf = "",
@@ -67,7 +67,7 @@ for the confidence value and the agreement between classifications for the LCZ l
 Computes the agreement between geographical (LCZ) classifications on a range of values of
 an indicator of confidence granted to each LCZ classification.
 The input file or dataset must have been produced by compareLCZ function,
-or at least the columns must be in the same order.
+or at least the columns must be in the same order
 }
 \examples{
 # creation of the comparison data on which to perform the analysis

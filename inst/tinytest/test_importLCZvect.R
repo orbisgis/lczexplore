@@ -25,6 +25,9 @@ redonBDT2<-importLCZvect(dirPath=paste0(
   column="LCZ_PRIMARY", geomID="ID_RSU", confid="LCZ_UNIQUENESS_VALUE", naAsUnclassified = FALSE)
 st_crs(redonBDT2)$wkt<-gsub("é","e",st_crs(redonBDT2)$wkt)
 
+summary(redonBDT$LCZ_PRIMARY)
+summary(redonBDT2$LCZ_PRIMARY)
+
 expect_identical(redonBDT,redonBDT2)
 
 # Error if file doesn't exist in location

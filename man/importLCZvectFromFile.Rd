@@ -34,11 +34,6 @@ levels actually present in column}
 
 \item{drop}{: the default is TRUE, which means all the column are
 dropped excepted those specified in previous parameters}
-
-\item{output}{: if sfFile, the function returns an sfFile with the specified columns,
-if bBox, returns a bounding box one can use to crop a raster file or to intersect another sf file}
-
-\item{typeLevels}{the levels of the imported LCZ classification}
 }
 \value{
 returns an sf object containing at least the geoms and the LCZ values,

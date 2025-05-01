@@ -1,4 +1,5 @@
-#' Compute Cohen's Kappa Coefficient. Taken from descTools,
+#' Compute Cohen's Kappa Coefficient
+#' @details Taken from descTools
 #' who based it on Kappa from library(vcd)
 #' author: David Meyer
 #' see also: kappa in library(psych)

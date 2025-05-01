@@ -12,7 +12,7 @@ concatAlocationWorkflows(sfList, location, refCrs = 1)
 
 \item{location}{the name of the location at which all LCZ are created}
 
-\item{workflowNames}{sets the names of workflows and define the name of the files which will be loaded and intersected}
+\item{refCrs}{a number telling which sf of the sfList will be the reference in termes of Coordinate Reference System}
 }
 \value{
 returns graphics of comparison and an object called matConfOut which contains :
@@ -25,4 +25,14 @@ If saveG is not an empty string, graphics are saved under "saveG.png"
 \description{
 Take sf files with an lcz_primary column, and concatenates them in a single sf object,
 adding a column for location and workflow names
+}
+\examples{
+sfList<-loadMultipleSfs(dirPath = paste0(
+system.file("extdata", package = "lczexplore"),"/multipleWfs/Goussainville"),
+workflowNames = c("osm","bdt","iau","wudapt"), location = "Goussainville"  )
+zoneSf <- sf::read_sf(
+paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Goussainville/zone.fgb")
+)
+GoussainvilleAllWfs <-  concatAlocationWorkflows(
+sfList = sfList,  location = "Goussainville") 
 }

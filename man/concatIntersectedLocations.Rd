@@ -13,18 +13,19 @@ concatIntersectedLocations(
 \arguments{
 \item{dirList}{the list of directories for which the different LCZ files will be intersected}
 
-\item{workflowNames}{sets the names of workflows and define the name of the files which will be loaded and intersected}
+\item{locations}{: for each diretory from dirList, a location name must be fed to the function}
 
-\item{for}{each diretory from dirList, a location name must be fed to the function}
+\item{workflowNames}{sets the names of workflows and define the name of the files which will be loaded and intersected}
 }
 \value{
-returns graphics of comparison and an object called matConfOut which contains :
-matConfLong, a confusion matrix in a longer form,
-matConfPlot is a ggplot2 object showing the confusion matrix.
-percAgg is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
-pseudoK is a heuristic estimate of a Cohen's kappa coefficient of agreement between classifications
-If saveG is not an empty string, graphics are saved under "saveG.png"
+returns an sf object with all intersections
 }
 \description{
 In a given directory (or a list of directories) the function looks for LCZ datafiles, intersects them and return a datasets with intersected geometries and LCZ values for each workflow
+}
+\examples{
+dirList<-list.dirs(paste0(
+system.file("extdata", package = "lczexplore"),"/multipleWfs"))[-1]
+allLocIntersected<-concatIntersectedLocations(
+dirList = dirList, locations = c("Blaru", "Goussainville"))
 }

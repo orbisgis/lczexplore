@@ -1,6 +1,6 @@
 Package: lczexplore
 Title: lczexplore
-Version: 0.0.1.0003
+Version: 1.0.0.0001
 Authors@R: c(
     person("Matthieu", "Gousseff", , "matthieu.gousseff@univ-ubs.fr", role = c("aut", "cre")),
     person(, "Centre National de la Recherche Scientifique, Lab-Sticc", role = "cph", comment = c(ORCID = "0000-0002-7106-2677"))
@@ -12,10 +12,13 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports: RColorBrewer,
           cowplot,
+          data.table,
           dplyr,
           forcats,
+          ggnewscale,
           ggplot2,
           ggspatial,
+          ggsankeyfier,
           magrittr,
           sf,
           terra,
@@ -26,7 +29,8 @@ Imports: RColorBrewer,
           DescTools,
           caret,
           confintr,
-          methods
+          methods,
+          patchwork
 Suggests: 
     tinytest,
     knitr,

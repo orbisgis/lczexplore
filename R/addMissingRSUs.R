@@ -3,8 +3,13 @@
 #' reference spatial units nor represented by their own geometries
 #' adding a column for location and workflow names 
 #' @param sfList the list of LCZ sf objects 
-#' @param workflowNames sets the names of workflows and define the name of the files which will be loaded and intersected
-#' @param location the name of the location at which all LCZ are created
+#' @param missingGeomsWf is the name of the column where some geometries are missing
+#' @param zoneSf is an sf file containing one geometry defining the zone where some geometries must be added
+#' @param refWf in case one wants to give the added geometries the value of a workflow of reference,  
+#' @param refLCZ the LCZ type to report from the reference workflow to the missing geometries
+#' @param residualLCZvalue the LCZ type to add when the reference workflow has a different value than 
+#' refLCZ for the added geometries
+#' @param column is the name of the LCZ column (to be explained)
 #' @importFrom ggplot2 geom_sf guides ggtitle aes
 #' @import sf dplyr cowplot forcats units tidyr RColorBrewer utils grDevices rlang
 #' @return returns graphics of comparison and an object called matConfOut which contains :
@@ -15,8 +20,19 @@
 #' If saveG is not an empty string, graphics are saved under "saveG.png"
 #' @export
 #' @examples
+#' sfList<-loadMultipleSfs(dirPath = paste0(
+#' system.file("extdata", package = "lczexplore"),"/multipleWfs/Goussainville"),
+#'  workflowNames = c("osm","bdt","iau","wudapt"), location = "Goussainville"  )
+#' zoneSf <- sf::read_sf(
+#'   paste0(
+#'    system.file("extdata", package = "lczexplore"),
+#'    "/multipleWfs/Goussainville/zone.fgb")
+#' )
+#' SfList<-addMissingRSUs(
+#' sfList, zoneSf = zoneSf, refWf = NULL,
+#'  refLCZ = "Unclassified", residualLCZvalue = "Unclassified")
 addMissingRSUs<-function(sfList, missingGeomsWf="iau", zoneSf, refWf = "bdt", refLCZ = "107", residualLCZvalue="105",
-                           location, column = "lcz_primary"){
+                           column = "lcz_primary"){
   refCRS<-st_crs(sfList[[missingGeomsWf]])
   zoneSf<-st_transform(zoneSf,
                        crs=refCRS)

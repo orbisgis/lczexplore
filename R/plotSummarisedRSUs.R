@@ -1,23 +1,33 @@
-    #' For a given LCZ sf object, plots the number of geometries and their mean area per level of LCZ
-#' @param aggregatedSF contains the geometry and LCZ levels
-#' @param workflows contains the names of workflows (they will indicate the names of the columns containing LCZ levels)
+#' For a given LCZ sf object, plots the number of geometries and an average area indicator per level of LCZ
+#' @param summarisedSfIn the output of summariseRSU function
 #' @param plotNow : if TRUE the plot will be displayed in the session
-#' @param whichPlot : if "totalAreaClust" the total aggregated areas per levels of LCZ will be plotted, 
-#' if "meanAreaClust", the trimmed mean will
+#' @param workflowNames contain the names of the workflows
 #' @param graphPath : a valid directory path where th plot will be saved 
 #' (for now an empty string to avoid saving in the working directory)
 #' @importFrom ggplot2 geom_sf guides ggtitle aes
-#' @import sf dplyr cowplot forcats units tidyr RColorBrewer utils grDevices rlang
+#' @import sf dplyr cowplot forcats units tidyr RColorBrewer utils grDevices rlang patchwork
 #' @return the number of geometries (Reference Spatial units or RSUs) 
 #' and their mean area per level of LCZ, and the same after agregatting geometries 
 #' with same level of LCZ which touch each other
 #' @export
 #' @examples
-plotSummarisedRSUs<-function(summarisedSfIn, workflows = c("wudapt", "iau", "osm", "bdt"),
-                             plotNow = TRUE, locations = NULL, graphPath = "",
-                              title = "", whichPlot = "meanAreaClust", logScale = FALSE
-                              ){
-  print(locations)
+#' dirList<-list.dirs(paste0(
+#' system.file("extdata", package = "lczexplore"),"/multipleWfs"))[-1]
+#' allLocAllWfs<-concatAllLocationsAllWfs(
+#'  dirList = dirList, 
+#'     locations = c("Blaru", "Goussainville"), 
+#'     workflowNames = c("osm","bdt","iau","wudapt"),
+#'  missingGeomsWf = "iau",
+#'  refWf = NULL,
+#'  refLCZ = "Unclassified",
+#'  residualLCZvalue = "Unclassified",
+#'  column = "lcz_primary"
+#')
+#' summarisedRSUs<-summariseRSUs(allLocAllWfs, aggregatingColumns = c("wf", "lcz_primary"))
+#' plotSummarisedRSUs(summarisedSfIn = summarisedRSUs)
+plotSummarisedRSUs<-function(summarisedSfIn, workflowNames = c("wudapt", "iau", "osm", "bdt"),
+                             plotNow = TRUE, graphPath = ""){
+  
   colorMap<-c("#8b0101","#cc0200","#fc0001","#be4c03","#ff6602","#ff9856",
               "#fbed08","#bcbcba","#ffcca7","#57555a","#006700","#05aa05",
               "#648423","#bbdb7a","#010101","#fdf6ae","#6d67fd", "ghostwhite")
@@ -31,13 +41,13 @@ plotSummarisedRSUs<-function(summarisedSfIn, workflows = c("wudapt", "iau", "osm
                 "LCZ E: Bare rock or paved","LCZ F: Bare soil or sand","LCZ G: Water", "Unclassified")
   
   graphPath<-checkDirSlash(graphPath)
-  initalAlphas<-rep(0.1,length(workflows))
-  names(initalAlphas)<-workflows
+  initalAlphas<-rep(0.1,length(workflowNames))
+  names(initalAlphas)<-workflowNames
   allPlotNames<-NULL
   wf2<-c(5,1,2,0)
   wfNamedVector<-c('bdt' = "GC/BDT", 'osm' = "GC/OSM", 'wudapt' = "WUDAPT", 'iau' = "IAU")
   
-  for (wf in workflows) {
+  for (wf in workflowNames) {
     wfAlphas<-initalAlphas
     wfAlphas[wf]<-1
     plotName<-paste0("plot_",wf)
@@ -70,7 +80,7 @@ plotSummarisedRSUs<-function(summarisedSfIn, workflows = c("wudapt", "iau", "osm
   outPlot <- allPlots[[1]] + allPlots[[2]] + allPlots[[3]] + allPlots[[4]] + plot_layout(ncol = 2, guides = "collect") +
     plot_annotation(
       title = "Overview of aggregating behavior", 
-      subtitle = "Average size x Average number of spatial units per LCZ types and workflow",
+      subtitle = "Average log area x Average number of spatial units per LCZ types and workflow",
     caption = "Along the y axis : coarser map, along the x axis, patchworky map ")
   if (plotNow) {print(outPlot)}
 

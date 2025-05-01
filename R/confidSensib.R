@@ -1,7 +1,7 @@
 #' Computes the agreement between geographical (LCZ) classifications on a range of values of
 #' an indicator of confidence granted to each LCZ classification. 
 #' The input file or dataset must have been produced by compareLCZ function, 
-#' or at least the columns must be in the same order.
+#' or at least the columns must be in the same order
 #'
 #' @param inputDf is an R file with geom IDs, (LCZ) classifications and
 #' a confidence value granted for the (LCZ) classifications values of each geom. Ignored if filePath is not empty.

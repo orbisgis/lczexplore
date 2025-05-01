@@ -2,7 +2,7 @@
 % Please edit documentation in R/checkDirSlash.R
 \name{checkDirSlash}
 \alias{checkDirSlash}
-\title{Simply adds a slash at then end of a directory path if there is none.}
+\title{Simply adds a slash at then end of a directory path if there is none}
 \usage{
 checkDirSlash(dirPath)
 }
@@ -13,9 +13,9 @@ checkDirSlash(dirPath)
 the same string if it ended with a slash, else the string with a slash at its end
 }
 \description{
-Simply adds a slash at then end of a directory path if there is none.
+Simply adds a slash at then end of a directory path if there is none
 }
 \examples{
-grr<-"test"
-checkDirSlash(grr)
+dirPathTest<-"test"
+checkDirSlash(dirPathTest)
 }

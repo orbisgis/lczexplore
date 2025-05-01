@@ -1,8 +1,8 @@
 #' Take sf files with an lcz_primary column, and concatenates them in a single sf object, 
 #' adding a column for location and workflow names 
-#' @param sfList the list of LCZ sf objects 
-#' @param workflowNames sets the names of workflows and define the name of the files which will be loaded and intersected
+#' @param sfList the list of LCZ sf objects
 #' @param location the name of the location at which all LCZ are created
+#' @param refCrs a number telling which sf of the sfList will be the reference in termes of Coordinate Reference System
 #' @importFrom ggplot2 geom_sf guides ggtitle aes
 #' @import sf dplyr cowplot forcats units tidyr RColorBrewer utils grDevices rlang
 #' @return returns graphics of comparison and an object called matConfOut which contains :
@@ -13,6 +13,14 @@
 #' If saveG is not an empty string, graphics are saved under "saveG.png"
 #' @export
 #' @examples
+#' sfList<-loadMultipleSfs(dirPath = paste0(
+#' system.file("extdata", package = "lczexplore"),"/multipleWfs/Goussainville"),
+#' workflowNames = c("osm","bdt","iau","wudapt"), location = "Goussainville"  )
+#' zoneSf <- sf::read_sf(
+#' paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Goussainville/zone.fgb")
+#' )
+#' GoussainvilleAllWfs <-  concatAlocationWorkflows(
+#' sfList = sfList,  location = "Goussainville") 
 concatAlocationWorkflows<-function(sfList, location, refCrs = 1){
   if (is.null(location)){
     location<- sfList[[1]]["location"][1]

@@ -2,12 +2,7 @@
 % Please edit documentation in R/CohenKappa.R
 \name{CohenKappa}
 \alias{CohenKappa}
-\title{Compute Cohen's Kappa Coefficient. Taken from descTools,
-who based it on Kappa from library(vcd)
-author: David Meyer
-see also: kappa in library(psych)
-Integrated here to reduce dependecy to descTools as it is the only function from DescTools we used
-Computes the agreement rates Cohen's kappa and weighted kappa and their confidence intervals.}
+\title{Compute Cohen's Kappa Coefficient}
 \usage{
 CohenKappa(
   x,
@@ -38,14 +33,16 @@ allowing i.e. to set \code{useNA}. This refers only to the vector interface.}
 the value of this pseudoKappa
 }
 \description{
-Compute Cohen's Kappa Coefficient. Taken from descTools,
+Compute Cohen's Kappa Coefficient
+}
+\details{
+Taken from descTools
 who based it on Kappa from library(vcd)
 author: David Meyer
 see also: kappa in library(psych)
 Integrated here to reduce dependecy to descTools as it is the only function from DescTools we used
 Computes the agreement rates Cohen's kappa and weighted kappa and their confidence intervals.
-}
-\details{
+
 Cohen's kappa is the diagonal sum of the (possibly weighted) relative frequencies, corrected for expected values and standardized by its maximum value. \cr
 The equal-spacing weights (see Cicchetti and Allison 1971) are defined by \deqn{1 - \frac{|i - j|}{r - 1}}
 \code{r} being the number of columns/rows, and the Fleiss-Cohen weights by \deqn{1 - \frac{(i - j)^2}{(r - 1)^2}}

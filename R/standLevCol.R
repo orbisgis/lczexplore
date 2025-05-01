@@ -17,32 +17,42 @@
 #' # It deals with levels and colors provided by the user and 
 #' # tries to replace user color by standard color 
 #' # when a standard level of LCZ is recognized
-standLevCol<-function(levels,colors="", useStandCol=FALSE){
-# alienColors is a standard palette, chosen for its readibility : Polychrome 36
+standLevCol <- function(levels, colors = "", useStandCol = FALSE) {
+  # alienColors is a standard palette, chosen for its readibility : Polychrome 36
   # It will be used if no colors are specified and if levels are not known standard levels 
-  alienColors<-palette.colors(n=length(levels), palette="Polychrome 36")
+  alienColors <- palette.colors(n = length(levels), palette = "Polychrome 36")
 
-  standardLevels<-.lczenv$typeLevelsConvert 
-  standCorresp<- .lczenv$colorMapDefault
-  names(standCorresp) <- .lczenv$typeLevelsDefault
+  standardLevelsConvert <- .lczenv$typeLevelsConvert
+  colorMapDefault <- .lczenv$colorMapDefault
+  names(colorMapDefault) <- .lczenv$typeLevelsDefault
 
-  if (length(colors)==length(levels) && prod(areColors(colors))==1){
-    typeLevels<-colors
-    names(typeLevels)<-levels
-
+  if (length(colors) == length(levels) && prod(areColors(colors)) == 1) {
+    levelsColors <- colors
+    names(levelsColors) <- levels
   } else {
     print("Please, check your vectors of levels and colors")
-    typeLevels<-alienColors
-    names(typeLevels)<-levels
-    typeLevels
+    levelsColors <- alienColors
+    names(levelsColors) <- levels
+    levelsColors
   }
 
-  if(useStandCol==TRUE){
+  if (useStandCol == TRUE) {
     message("As useStandCol is set to TRUE, some of the specified colors may have been over-ridden to use standard colors if standard LCZ values have been detected")
-    names(typeLevels)<-levels
-    typeLevels[levels%in%standardLevels]<-
-      standCorresp[names(standCorresp)%in%levels[levels%in%standardLevels]]
-    typeLevels
-    } else {return(typeLevels)}
+    originalLevels <- levels
+    isStandardIndex <- levels %in% standardLevelsConvert
+    standardLevels <- names(standardLevelsConvert)[
+      match(
+        originalLevels[isStandardIndex], standardLevelsConvert
+      )]
+    standardisedLevels <- originalLevels
+    standardisedLevels[isStandardIndex] <- standardLevels
 
+    levelsColors[isStandardIndex] <- colorMapDefault[
+      match(standardLevels, names(colorMapDefault))]
+    
+    levelsColors
+  }
+
+  typeLevels <- levelsColors # for retro compatibility
+  return(typeLevels)
 }

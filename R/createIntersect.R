@@ -4,12 +4,18 @@
 #' @param refCrs a number which indicates which sf object from sfList will provide the CRS in which all the sf objects will be projected before comparison
 #' By defautl it is set to an empty string and no ID is loaded.
 #' @param sfWf a vector of strings which contains the names of the workflows used to produce the sf objects 
+#' @param minZeroArea all geometries smaller than this value are discarded (avoids numeric precision problems)
 #' @importFrom ggplot2 geom_sf guides ggtitle aes
 #' @import sf dplyr cowplot forcats units tidyr RColorBrewer utils grDevices rlang
 #' @return an sf file with values of LCZ from all the input 
 #' are assigned to geometries resulting from intersection of all input geometries
 #' @export
 #' @examples
+#' sfList<-loadMultipleSfs(dirPath = paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Goussainville"),
+#' workflowNames = c("osm","bdt","iau","wudapt"), location = "Goussainville")
+#' GoussainvilleIntersect <- createIntersect(
+#'  sfList = sfList, columns = rep("lcz_primary", 4),  
+#'  sfWf = c("osm","bdt","iau","wudapt"))
 createIntersect<-function(sfList, columns, refCrs=NULL, sfWf=NULL, minZeroArea=0.0001){
   sfInt<-sfList[[1]] %>% select(columns[1])
   if (is.null(refCrs)){refCrs<-st_crs(sfInt)}

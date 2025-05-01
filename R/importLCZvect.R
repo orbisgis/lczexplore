@@ -9,9 +9,6 @@
 #' If an empty string, no column is loaded.
 #' @param confid is the name of the column containing a confidence indicator to filter geoms,
 #' for instance the uniqueness of the LCZ level of each geom
-#' @param output : if sfFile, the function returns an sfFile with the specified columns,
-#' if bBox, returns a bounding box one can use to crop a raster file or to intersect another sf file
-#' @param typeLevels the levels of the imported LCZ classification
 #' @param verbose if TRUE show the discrepancies between specified levels of LCZ and
 #' levels actually present in column
 #' @param drop : the default is TRUE, which means all the column are 
@@ -44,13 +41,16 @@ importLCZvectFromFile <- function(
     query <- paste0("select * from ", nom, " limit 0") # So this query wouldn't work with such fgb files
     sourceCol <- st_read(dsn = fileName, query = query, quiet = !verbose) %>% names
     colonnes<-checkColnameCase(colonnes, sourceCol)
-    sfFile <- sf::st_read(dsn = fileName, quiet = !verbose)[, colonnes]    
+    sfFile <- sf::st_read(dsn = fileName, quiet = !verbose)
+    if (drop){sfFile<-sfFile[, colonnes] }
+    
   } else { 
       if (extension == ".fgb") {
         sfFile <- sf::st_read(dsn = fileName, quiet = !verbose)[,]
         sourceCol <- names(sfFile)
         colonnes<-checkColnameCase(colonnes, sourceCol)
-        sfFile<-sfFile[,colonnes]
+        sfFile<-sfFile
+        if (drop){sfFile<-sfFile[, colonnes] }
       }
   }
 
@@ -60,7 +60,6 @@ importLCZvectFromFile <- function(
 
 #' Imports Local Climate Zone classifications from a standard geographical file (tested : geojson, shp, more to come)
 #'
-#' @param dirPath is the path of the directory of the file
 #' @param sfIn is the sf object containing the LCZ map
 #' @param column indicates the name of the column containing LCZ values. 
 #' LCZ values are expected to be of a standard LCZ format (1 to 17, or 1 to 10 and 101 to 107 or 1 to G),
@@ -69,13 +68,7 @@ importLCZvectFromFile <- function(
 #' If an empty string, no column is loaded.
 #' @param confid is the name of the column containing a confidence indicator to filter geoms,
 #' for instance the uniqueness of the LCZ level of each geom
-#' @param output : if sfFile, the function returns an sfFile with the specified columns,
-#' if bBox, returns a bounding box one can use to crop a raster file or to intersect another sf file
-#' @param typeLevels the levels of the imported LCZ classification
-#' @param verbose if TRUE show the discrepancies between specified levels of LCZ and
-#' levels actually present in column
-#' @param drop : the default is TRUE, which means all the column are 
-#' dropped excepted those specified in previous parameters
+#' @param naAsUnclassified if TRUE allows NAs in the input file and assigns them the value "Unclassified" 
 #' @import dplyr forcats rlang sf
 #' @importFrom terra crop
 #' @importFrom tidyr drop_na
@@ -104,6 +97,7 @@ importLCZvectFromSf <- function(sfIn, column, geomID = "", confid = "") {
 #'
 #' @param dirPath is the path of the directory of the file
 #' @param file is the name of the file from which the LCZ are imported
+#' @param sfIn allows you to import from an existing object of your session, not from an external file
 #' @param column indicates the name of the column containing LCZ values. 
 #' LCZ values are expected to be of a standard LCZ format (1 to 17, or 1 to 10 and 101 to 107 or 1 to G),
 #' else, use the importQualVar function
@@ -178,8 +172,8 @@ importLCZvect <- function(dirPath, file = "rsu_lcz.geojson", output = "sfFile", 
 
     sfFile <-
       sfFile %>%
-        mutate(!!column := fct_recode(
-          factor(subset(sfFile, select = column, drop = T), levels = typeLevels), !!!typeLevels))  #%>%
+        mutate(!!column := 
+          factor(sfFile[[column]], levels = typeLevels))  #%>%
         # 
     if (naAsUnclassified){ sfFile[[column]]<- forcats::fct_na_value_to_level(sfFile[[column]], "Unclassified") }
     else { sfFile <- drop_na(sfFile, column)}

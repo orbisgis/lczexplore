@@ -9,7 +9,12 @@
 #' @export
 #'
 #' @examples
-#'
+#' dirList<-list.dirs(paste0(
+#' system.file("extdata", package = "lczexplore"),"/multipleWfs"))[-1]
+#' allLocIntersected<-concatIntersectedLocations(
+#' dirList = dirList, locations = c("Blaru", "Goussainville"))
+#' testSankey<-prepareSankeyLCZ(intersectedDf = allLocIntersected
+#'  , wf1 = "wudapt", wf2 = "osm")
 prepareSankeyLCZ<-function(intersectedDf, wf1, wf2){
   intersectedDf<-intersectedDf[,c(wf1, wf2, "area")]
   internRecode<-function(LCZvect){
@@ -25,7 +30,7 @@ prepareSankeyLCZ<-function(intersectedDf, wf1, wf2){
     stages_from = c(wf1, wf2),
     values_from = "area"
   )
-  sankeyfied$node<-factor(sankeyfied$node,
+  sankeyfied$node<-ordered(sankeyfied$node,
     levels = c("001", "002","003", "004", "005", "006", "007", "008", "009", "010",
                "101", "102", "103", "104", "105", "106", "107", "Unclassified")
   )

@@ -1,4 +1,4 @@
-#' Produces a simple representation of the LCZ contained in an sf file.
+#' Produces a simple representation of the LCZ contained in an sf file
 #'
 #' @param sf is the sf file which contains the LCZ column to be plotted.
 #' @param wf is the workflow used to produced the LCZ. "bdt" and "osm" indicate
@@ -12,6 +12,11 @@
 #' @param useStandCol is set to TRUE implies that any levels detected as a standard LCZ level will receive the standard associated color
 #' @param tryGroup is set to TRUE when one wants to group and plot on the fly 
 #' @param naAsUnclassified if TRUE, affects Unclassified value to NAs in the LCZ column
+#' @param plotNow if FALSE the plot is generated but not hown (needs to be stored in an object)
+#' @param addBorders if TRUE the borders of the geometries are visible
+#' @param labelType in the standard representation, this value can take the values "long" (number, name and percentage area for each LCZ types), 
+#' "short" (value and percentage), "very short" (only number and percentage), "no perc" (no area percentage).
+#' @param noPercAlter allows to not show the percentage area in the alter representation
 #' @param ... these dynamic dots allow you to pass arguments to specify levels expected 
 #' in your dataset and colors associated to these levels when not in the standard representation. You can pas your levels through a vector and you colors through another vector called colors. 
 #' For more details about this, read the "lcz_explore_alter" vignette. 
@@ -19,7 +24,7 @@
 #' @return return the plot of the LCZ levels
 #' @export
 #' @examples 
-#' # On original LCZ levels, use the \'standard\' value for the \'repr\' argument.
+#' # On original LCZ levels, use the standard value for the repr argument.
 #' showLCZ(redonBDT, column="LCZ_PRIMARY", repr="standard")
 #' # On grouped data, use the alter value for the repr argument.
 #' redonBDTgrouped<-groupLCZ(redonBDT,column="LCZ_PRIMARY",

@@ -2,9 +2,7 @@
 % Please edit documentation in R/compareLCZ.R
 \name{compareLCZ}
 \alias{compareLCZ}
-\title{Compares two sets of geographical classifications, especially Local Climate Zones classifications. It
-produces a map for each classification, a map of their agreement (and a pseudo Kappa coefficent),
-and a confusion matrix between them. All are stored in a list, easily reusable.}
+\title{Compares two sets of geographical classifications, especially Local Climate Zones classifications}
 \usage{
 compareLCZ(
   sf1,
@@ -91,9 +89,12 @@ pseudoK is a heuristic estimate of a Cohen's kappa coefficient of agreement betw
 If saveG is not an empty string, graphics are saved under "saveG.png"
 }
 \description{
-Compares two sets of geographical classifications, especially Local Climate Zones classifications. It
-produces a map for each classification, a map of their agreement (and a pseudo Kappa coefficent),
-and a confusion matrix between them. All are stored in a list, easily reusable.
+Compares two sets of geographical classifications, especially Local Climate Zones classifications
+}
+\details{
+compareLCZ produces a map for each classification,
+a map of their agreement (and a pseudo Kappa coefficent),
+and a confusion matrix between them. All are stored in a list, easily reusable
 }
 \examples{
 comparisonBDT_OSM<-compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU",
@@ -103,7 +104,7 @@ confid2="LCZ_UNIQUENESS_VALUE", wf2="osm",
 repr="standard", saveG="", exwrite=FALSE, location="Redon", plot=TRUE)
 # To get the summed area of each LCZ levels for both dataset : 
 comparisonBDT_OSM$areas
-# The plots of each dataset can be produced with the /`showLCZ/` function.
+# The plots of each dataset can be produced with the showLCZ function.
 # To get the value of the general percentage of agreement call :
 comparisonBDT_OSM$percAgg
 # The values of that confusion matrix is available in a wide form:

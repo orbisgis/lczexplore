@@ -21,9 +21,9 @@ library(dplyr)
 #   x = allLocationNamesSource$Nom) %>% sort
 
 # 
-allLocIntersected<-concatIntersectedLocations(
-  dirList = dirList[1:3],
-  locations = allLocationNames[1:3])
+# allLocIntersected<-concatIntersectedLocations(
+#   dirList = dirList[1:3],
+#   locations = allLocationNames[1:3])
 # 
 # dirList[1]
 # nchar(dirList[1])
@@ -37,6 +37,6 @@ allLocIntersected<-concatIntersectedLocations(
 # intersected<-createIntersect(sfList = sfList, columns = rep("lcz_primary", 4),
 #                              sfWf = c("osm","bdt","iau","wudapt"))
 # 
-multicompare_test<-compareMultipleLCZ(allLocIntersected,
-                                      LCZcolumns = c("osm","bdt","iau","wudapt"),
-                                      trimPerc = 0.5)
+# multicompare_test<-compareMultipleLCZ(allLocIntersected,
+#                                       LCZcolumns = c("osm","bdt","iau","wudapt"),
+#                                       trimPerc = 0.5)

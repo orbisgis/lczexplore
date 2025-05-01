@@ -7,15 +7,25 @@
 workflowAgreeAreas(sfMultiCompLong)
 }
 \arguments{
-\item{sfMultiCompLong}{the output of multiple comparison function}
-
-\item{LCZcolumns}{a vector which contains, the name of the columns of the classification to compare}
-
-\item{Wfs}{a vector of strings which contains the names of the workflows used to produce the sf objects}
+\item{sfMultiCompLong}{the sfLong output of compareMultipleLCZ function}
 }
 \value{
 the pairwise agreement between workflows, sorted by decreasing agreeing areas
 }
 \description{
 From the output of compare multiple, cmputes which workflows agree the most regarding the area of agreement
+}
+\examples{
+sfList<-loadMultipleSfs(dirPath = paste0(
+system.file("extdata", package = "lczexplore"),
+"/multipleWfs/Goussainville"),
+workflowNames = c("osm","bdt","iau","wudapt"), location = "Goussainville")
+GoussainvilleIntersect <- createIntersect(
+ sfList = sfList, columns = rep("lcz_primary", 4),  
+ sfWf = c("osm","bdt","iau","wudapt"))
+GoussainvilleMultipleComparison<-compareMultipleLCZ(
+ sfInt = GoussainvilleIntersect,
+ LCZcolumns = c("osm","bdt","iau","wudapt"),
+ trimPerc = 0.5)
+GoussainvilleWorkflowAgreement<-workflowAgreeAreas(GoussainvilleMultipleComparison$sfIntLong)
 }
