@@ -45,6 +45,8 @@ dropped excepted those specified in previous parameters}
 levels actually present in column}
 
 \item{sfIn}{allows you to import from an existing object of your session, not from an external file}
+
+\item{naAsUnclassified}{if TRUE allows NAs in the input file and assigns them the value "Unclassified"}
 }
 \value{
 returns an sf object containing at least the geoms and the LCZ values,

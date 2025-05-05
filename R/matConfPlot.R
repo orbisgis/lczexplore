@@ -11,6 +11,7 @@
 #' @param agreeColumn is the name where the agreement between classification is stored
 #' @param wf1 is the name of the first workflow (for labels)
 #' @param wf2 is the name of the second workflow (for labels)
+#' @param marginAreas are the percentage of areas for LCZ types for both workflows (an output of matConfLCZ)
 #' @return returns a plot of a matrice of confusion
 #' @import sf ggnewscale ggplot2 dplyr cowplot forcats units tidyr RColorBrewer rlang
 #' @export

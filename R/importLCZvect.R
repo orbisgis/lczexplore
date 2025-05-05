@@ -68,7 +68,6 @@ importLCZvectFromFile <- function(
 #' If an empty string, no column is loaded.
 #' @param confid is the name of the column containing a confidence indicator to filter geoms,
 #' for instance the uniqueness of the LCZ level of each geom
-#' @param naAsUnclassified if TRUE allows NAs in the input file and assigns them the value "Unclassified" 
 #' @import dplyr forcats rlang sf
 #' @importFrom terra crop
 #' @importFrom tidyr drop_na
@@ -108,6 +107,7 @@ importLCZvectFromSf <- function(sfIn, column, geomID = "", confid = "") {
 #' @param output : if sfFile, the function returns an sfFile with the specified columns,
 #' if bBox, returns a bounding box one can use to crop a raster file or to intersect another sf file
 #' @param typeLevels the levels of the imported LCZ classification
+#' @param naAsUnclassified if TRUE allows NAs in the input file and assigns them the value "Unclassified"
 #' @param verbose if TRUE show the discrepancies between specified levels of LCZ and
 #' levels actually present in column
 #' @param drop : the default is TRUE, which means all the column are 

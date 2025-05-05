@@ -76,8 +76,7 @@ plotSummarisedRSUs<-function(summarisedSfIn, workflowNames = c("wudapt", "iau", 
  }
   
  allPlots<-do.call(list, mget(allPlotNames))
- library(patchwork)
-  outPlot <- allPlots[[1]] + allPlots[[2]] + allPlots[[3]] + allPlots[[4]] + plot_layout(ncol = 2, guides = "collect") +
+ outPlot <- allPlots[[1]] + allPlots[[2]] + allPlots[[3]] + allPlots[[4]] + plot_layout(ncol = 2, guides = "collect") +
     plot_annotation(
       title = "Overview of aggregating behavior", 
       subtitle = "Average log area x Average number of spatial units per LCZ types and workflow",

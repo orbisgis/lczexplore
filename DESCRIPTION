@@ -26,9 +26,7 @@ Imports: RColorBrewer,
           units,
           rlang,
           grDevices,
-          DescTools,
           caret,
-          confintr,
           methods,
           patchwork
 Suggests: 

@@ -24,6 +24,8 @@ the second classification}
 
 \item{column2}{is the name of the second classification}
 
+\item{marginAreas}{are the percentage of areas for LCZ types for both workflows (an output of matConfLCZ)}
+
 \item{agreeColumn}{is the name where the agreement between classification is stored}
 
 \item{wf1}{is the name of the first workflow (for labels)}

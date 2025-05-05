@@ -18,8 +18,6 @@ If an empty string, no column is loaded.}
 
 \item{confid}{is the name of the column containing a confidence indicator to filter geoms,
 for instance the uniqueness of the LCZ level of each geom}
-
-\item{naAsUnclassified}{if TRUE allows NAs in the input file and assigns them the value "Unclassified"}
 }
 \value{
 returns an sf object containing at least the geoms and the LCZ values,
