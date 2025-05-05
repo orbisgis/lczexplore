@@ -1,9 +1,9 @@
 #' Calls functions of the package to produce an analysis of two set of LCZ
-#' produced exclusively by GeoClimate.
-#' Typically one will compare the LCZ produced by GeoClimate using the OpenStreetMap
+#' produced exclusively by GeoClimate
+#' @details Typically one will compare the LCZ produced by GeoClimate using the OpenStreetMap
 #' data as input to 
 #' the LCZ produced by GeoClimate using the french BDTopo v2.2 as input.
-#' Same analysis are reproducible using all the generic functions of the package.
+#' Same analysis are reproducible using all the generic functions of the package
 #'
 #' @param location defines the study area. The study area must have been coputed
 #' and loaded on the cloud of the team. If the fetch function returns an error,
@@ -28,8 +28,9 @@
 #' @export
 #'
 #' @examples
-#' produceAnalysis(location="Redon", outDir=paste0(system.file(package="lczexplore"),"/tinytest"),
-#' wf1="bdtopo_2_2", wf2="osm", refYear1="2022", refYear2="2022", repr="standard", saveG="")
+#' #produceAnalysis(location="Redon", outDir=paste0(system.file(package="lczexplore"),"/tinytest"),
+#' #wf1="bdtopo_2_2", wf2="osm", refYear1="2022", refYear2="2022", repr="standard", saveG="")
+#' #wf1="bdtopo_2_2", wf2="osm", refYear1="2022", refYear2="2022", repr="standard", saveG="")
 produceAnalysis<-function(location="Redon",
                           outDir=getwd(),
                           wf1="bdtopo_2_2",

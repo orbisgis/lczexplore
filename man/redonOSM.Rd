@@ -5,7 +5,7 @@
 \alias{redonOSM}
 \title{RedonOSM}
 \format{
-An sf object with 3 variables and a geometry :
+LCZ for Redon as produced by GeoClimate on OpenStreetMap data
 \describe{
 \item{\code{ID_RSU}}{index identifying the Reference spatial unit}
 \item{\code{LCZ_PRIMARY}}{Local Climate Zone encoded according to Stewad and Oke approach, 1 to 10 then 101 to 107}

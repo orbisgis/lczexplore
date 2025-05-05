@@ -27,5 +27,5 @@ and case, a string specifying what case was encountered when producing the level
 Manages the levels and the colors of the LCZ columns
 }
 \examples{
-#levCol2 is not to be used directly by user. It deals with levels and colors provided by the user
+# levCol2 is not to be used directly by user. It deals with levels and colors provided by the user
 }

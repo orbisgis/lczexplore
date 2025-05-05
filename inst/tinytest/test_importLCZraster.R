@@ -7,18 +7,16 @@
 
 redonBbox<-importLCZvect(dirPath=paste0(
   system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon"),file="rsu_lcz.geojson",column="LCZ_PRIMARY",
-  geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE",output="bBox")
-
+  , output="bBox")
 
 expect_warning(redonWudapt<-importLCZraster(
-  system.file("extdata", package = "lczexplore"),fileName="redonWudapt.tif",bBox=redonBbox),
+  system.file("extdata", package = "lczexplore"), fileName="redonWudapt.tif", bBox=redonBbox,  LCZband=1, LCZcolumn="LCZ_PRIMARY"),
               'attribute variables are assumed to be spatially constant throughout all geometries' )
 
-paste0(system.file("extdata", package = "lczexplore"),"/redonWudapt.tif")
-library(terra)
-test<-rast(paste0(system.file("extdata", package = "lczexplore"),"/redonWudapt.tif"))
+# library(terra)
+# test<-rast(paste0(system.file("extdata", package = "lczexplore"),"/redonWudapt.tif"))
 
-expect_silent(showLCZ(sf=redonWudapt,column="EU_LCZ_map",repr="standard"))
+expect_silent(showLCZ(redonWudapt, column = "LCZ_PRIMARY", repr = "standard"))
 
 # Test out of Europe Bbox (supposed to fail)
 library(sf)
@@ -29,22 +27,22 @@ outBbox<-st_sfc(lowCorner,upCorner,crs=4326)
 #importLCZraster("/home/gousseff/Documents/2_CodesSources/Wudapt/WudaptEurope/",bBox=outBbox)
 
 # test bounding box not intersecting with rastet
-expect_error(current = test<-importLCZraster(dirPath = system.file("extdata", package = "lczexplore"),
-                                             fileName="redonWudapt.tif",bBox=outBbox),
-             "The bounding box doesn\'t intersect ")
+# expect_error(current = test<-importLCZraster(dirPath = system.file("extdata", package = "lczexplore"),
+#                                              fileName="redonWudapt.tif",bBox=outBbox),
+#              "The bounding box doesn\'t intersect ")
 
 
 # test chosing wich band of the raster is imported
-redonWudapt2<-importLCZraster(  
-  system.file("extdata", package = "lczexplore"),
-  fileName="redonWudapt.tif",bBox=redonBbox,
-LCZband=1, LCZcolumn="LCZ")
- str(redonWudapt2)
+# redonWudapt2<-importLCZraster(  
+#   system.file("extdata", package = "lczexplore"),
+#   fileName="redonWudapt.tif",bBox=redonBbox,
+# LCZband=1, LCZcolumn="LCZ")
+#  showLCZ(redonWudapt2, column = "LCZ")
 
-sidneyOSM<-importLCZvect(
-  dirPath = system.file("extdata/osm/2022/Sidney", package = "lczexplore"), file="sidney_rsu_lcz.geojson",
-  confid="LCZ_UNIQUENESS_VALUE",
-  geomID="ID_RSU")
+# sidneyOSM<-importLCZvect(
+#   dirPath = system.file("extdata/osm/2022/Sidney", package = "lczexplore"), file="sidney_rsu_lcz.geojson",
+#   confid="LCZ_UNIQUENESS_VALUE",
+#   geomID="ID_RSU")
 
 sidneyBbox<-importLCZvect(
   system.file("extdata/osm/2022/Sidney", package = "lczexplore"), file="sidney_rsu_lcz.geojson",

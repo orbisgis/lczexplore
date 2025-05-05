@@ -34,7 +34,8 @@ returns no R object. The data are uploaded from the GeoClimate cloud and locally
 Fetches LCZ classification data, by default from the Geomanum cloud, for locations already uploaded there by the Geoclimate team
 }
 \examples{
-fetchLCZ(location="Allaire",
-outDir=system.file("extdata", package = "lczexplore"),
-wf="bdtopo_2_2",refYear="2022")
+# not run as the access is not open
+# fetchLCZ(location="Allaire",
+# outDir=system.file("extdata", package = "lczexplore"),
+# wf="bdtopo_2_2",refYear="2022")
 }

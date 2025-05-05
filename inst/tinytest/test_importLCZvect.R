@@ -22,8 +22,11 @@ expect_silent(importLCZvect(dirPath=paste0(system.file("extdata", package = "lcz
 # Tests if the imported version of Redon test data matches the Redon test data in the package
 redonBDT2<-importLCZvect(dirPath=paste0(
   system.file("extdata", package = "lczexplore"), "/bdtopo_2_2/Redon"),
-  column="LCZ_PRIMARY", geomID="ID_RSU", confid="LCZ_UNIQUENESS_VALUE")
+  column="LCZ_PRIMARY", geomID="ID_RSU", confid="LCZ_UNIQUENESS_VALUE", naAsUnclassified = FALSE)
 st_crs(redonBDT2)$wkt<-gsub("é","e",st_crs(redonBDT2)$wkt)
+
+summary(redonBDT$LCZ_PRIMARY)
+summary(redonBDT2$LCZ_PRIMARY)
 
 expect_identical(redonBDT,redonBDT2)
 

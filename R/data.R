@@ -1,8 +1,7 @@
 #' RedonBDT
 #'
-#' Full baby name data provided by the SSA. This includes all names with at
-#' least 5 uses.
-#'
+#' LCZ for Redon as produced by GeoClimate on BDTOPO data
+#' #'
 #' @format An sf object with 3 variables and a geometry :
 #' \describe{
 #' \item{\code{ID_RSU}}{index identifying the Reference spatial unit}
@@ -20,7 +19,7 @@
 #'
 #'
 #'
-#' @format An sf object with 3 variables and a geometry :
+#' @format LCZ for Redon as produced by GeoClimate on OpenStreetMap data
 #' \describe{
 #' \item{\code{ID_RSU}}{index identifying the Reference spatial unit}
 #' \item{\code{LCZ_PRIMARY}}{Local Climate Zone encoded according to Stewad and Oke approach, 1 to 10 then 101 to 107}

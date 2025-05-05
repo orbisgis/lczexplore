@@ -21,18 +21,17 @@
 #' showLCZ(redonBDTgrouped,column="grouped",repr="alter",
 #' LCZlevels=c("urban","industry","vegetation","impervious","pervious","water"),
 #' colors=c("red","black","green","grey","burlywood","blue"),wf="BD TOPO")
-groupLCZ<-function(sf,column,outCol='grouped',...)
+groupLCZ<-function(sf, column, outCol='grouped', ...)
 {
   #require(forcats)
   #require(dplyr)
 
   # ensure all the LCZ levels are present in the imported column
-  uniqueData<-sf[column] %>% sf::st_drop_geometry()  %>% unique() # Attention unique outputs a list of length 1
-  uniqueData<-levels(uniqueData[,1]) %>% as.character() %>% as.vector()
+  uniqueData<-sf[[column]] %>% unique() %>% as.character # Attention unique outputs a list of length 1
 
   # typeLevels<-c(1:10,101:107)
-  sf<- sf %>%  mutate(!!column:=factor(st_drop_geometry(subset(sf,select=column,drop=T)) ,levels=uniqueData))
-  temp<-subset(sf,select=column,drop=T)
+  sf[[column]]<-factor(sf[[column]], levels=uniqueData)
+  temp<-sf[[column]]
 
     # get the grouping levels as passed by ..., but without keeping arguments about colours
   args<-list(...)
@@ -43,25 +42,31 @@ groupLCZ<-function(sf,column,outCol='grouped',...)
      if(length(indCol)==0) {
        args<-append(list(temp),args)
        # temp<-do.call(fct_collapse,args)
-    temp<-tryCatch(expr=do.call(fct_collapse,args),
+    temp<-
+       tryCatch(expr=do.call(fct_collapse,args),
              warning=function(w){
                message("One of the specified levels to group doesn't exist in the data, if it is a mispelled level of the data,
                this level will be kept as ungrouped",w)
-             return(do.call(fct_collapse,args))
+             return(
+               do.call(fct_collapse,args)
+             )
              })
 
   } else {
     args2<-args[indSep[-indCol]]
     args2<-append(list(temp),args2)
-    #temp<-do.call(fct_collapse,args2)
-    temp<-tryCatch(expr=do.call(fct_collapse,args2),
+
+    temp<-
+       tryCatch(expr=do.call(fct_collapse,args2),
               warning=function(w){
               message("One of the specified levels to group doesn't exist in the data, if it is a mispelled level of the data,
               this level will be kept as ungrouped",w)
-              return(do.call(fct_collapse,args2))
+              return(
+                do.call(fct_collapse,args2)
+)
                       })
   }
 
-  sf<- sf %>%  mutate(!!outCol:=temp)
+  sf[[outCol]]<-temp
   return(sf)
 }

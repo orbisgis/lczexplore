@@ -3,11 +3,7 @@
 \name{produceAnalysis}
 \alias{produceAnalysis}
 \title{Calls functions of the package to produce an analysis of two set of LCZ
-produced exclusively by GeoClimate.
-Typically one will compare the LCZ produced by GeoClimate using the OpenStreetMap
-data as input to
-the LCZ produced by GeoClimate using the french BDTopo v2.2 as input.
-Same analysis are reproducible using all the generic functions of the package.}
+produced exclusively by GeoClimate}
 \usage{
 produceAnalysis(
   location = "Redon",
@@ -54,13 +50,16 @@ are exported either in csv (both LCZ by geoms by town) either in png
 }
 \description{
 Calls functions of the package to produce an analysis of two set of LCZ
-produced exclusively by GeoClimate.
+produced exclusively by GeoClimate
+}
+\details{
 Typically one will compare the LCZ produced by GeoClimate using the OpenStreetMap
 data as input to
 the LCZ produced by GeoClimate using the french BDTopo v2.2 as input.
-Same analysis are reproducible using all the generic functions of the package.
+Same analysis are reproducible using all the generic functions of the package
 }
 \examples{
-produceAnalysis(location="Redon", outDir=paste0(system.file(package="lczexplore"),"/tinytest"),
-wf1="bdtopo_2_2", wf2="osm", refYear1="2022", refYear2="2022", repr="standard", saveG="")
+#produceAnalysis(location="Redon", outDir=paste0(system.file(package="lczexplore"),"/tinytest"),
+#wf1="bdtopo_2_2", wf2="osm", refYear1="2022", refYear2="2022", repr="standard", saveG="")
+#wf1="bdtopo_2_2", wf2="osm", refYear1="2022", refYear2="2022", repr="standard", saveG="")
 }

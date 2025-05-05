@@ -11,13 +11,11 @@ importLCZvect(
   column = "LCZ_PRIMARY",
   geomID = "",
   confid = "",
-  typeLevels = c(`1` = "1", `2` = "2", `3` = "3", `4` = "4", `5` = "5", `6` = "6", `7` =
-    "7", `8` = "8", `9` = "9", `10` = "10", `101` = "101", `102` = "102", `103` = "103",
-    `104` = "104", `105` = "105", `106` = "106", `107` = "107", `101` = "11", `102` =
-    "12", `103` = "13", `104` = "14", `105` = "15", `106` = "16", `107` = "17", `101` =
-    "A", `102` = "B", `103` = "C", `104` = "D", `105` = "E", `106` = "F", `107` = "G"),
+  typeLevels = .lczenv$typeLevelsDefault,
   drop = T,
-  verbose = FALSE
+  verbose = FALSE,
+  sfIn = NULL,
+  naAsUnclassified = TRUE
 )
 }
 \arguments{
@@ -45,6 +43,10 @@ dropped excepted those specified in previous parameters}
 
 \item{verbose}{if TRUE show the discrepancies between specified levels of LCZ and
 levels actually present in column}
+
+\item{sfIn}{allows you to import from an existing object of your session, not from an external file}
+
+\item{naAsUnclassified}{if TRUE allows NAs in the input file and assigns them the value "Unclassified"}
 }
 \value{
 returns an sf object containing at least the geoms and the LCZ values,

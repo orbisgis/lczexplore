@@ -1,4 +1,4 @@
-#' Produces a simple representation of the LCZ contained in an sf file.
+#' Produces a simple representation of the LCZ contained in an sf file
 #'
 #' @param sf is the sf file which contains the LCZ column to be plotted.
 #' @param wf is the workflow used to produced the LCZ. "bdt" and "osm" indicate
@@ -11,14 +11,20 @@
 #' @param drop indicates if you want to show the levels present in no geometry.
 #' @param useStandCol is set to TRUE implies that any levels detected as a standard LCZ level will receive the standard associated color
 #' @param tryGroup is set to TRUE when one wants to group and plot on the fly 
+#' @param naAsUnclassified if TRUE, affects Unclassified value to NAs in the LCZ column
+#' @param plotNow if FALSE the plot is generated but not hown (needs to be stored in an object)
+#' @param addBorders if TRUE the borders of the geometries are visible
+#' @param labelType in the standard representation, this value can take the values "long" (number, name and percentage area for each LCZ types), 
+#' "short" (value and percentage), "very short" (only number and percentage), "no perc" (no area percentage).
+#' @param noPercAlter allows to not show the percentage area in the alter representation
 #' @param ... these dynamic dots allow you to pass arguments to specify levels expected 
 #' in your dataset and colors associated to these levels when not in the standard representation. You can pas your levels through a vector and you colors through another vector called colors. 
 #' For more details about this, read the "lcz_explore_alter" vignette. 
-#' @import sf ggplot2 dplyr cowplot forcats grDevices
+#' @import sf ggplot2 dplyr cowplot forcats grDevices ggspatial
 #' @return return the plot of the LCZ levels
 #' @export
 #' @examples 
-#' # On original LCZ levels, use the \'standard\' value for the \'repr\' argument.
+#' # On original LCZ levels, use the standard value for the repr argument.
 #' showLCZ(redonBDT, column="LCZ_PRIMARY", repr="standard")
 #' # On grouped data, use the alter value for the repr argument.
 #' redonBDTgrouped<-groupLCZ(redonBDT,column="LCZ_PRIMARY",
@@ -30,145 +36,233 @@
 #' LCZlevels=c("urban","industry","vegetation","impervious","pervious","water"),
 #' colors=c("red","black","green","grey","burlywood","blue"),wf="BD TOPO")
 #' 
-showLCZ<-function(sf, title="", wf="",column="LCZ_PRIMARY",
-                  repr="standard", drop=FALSE, useStandCol=FALSE, tryGroup=TRUE,...){
+showLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
+                    repr = "standard", drop = FALSE, useStandCol = FALSE, tryGroup = TRUE,
+                    naAsUnclassified = TRUE, noPercAlter = FALSE, plotNow = TRUE, addBorders = FALSE, labelType = "long",  ...) {
+
+if (repr!= "standard" & repr != "alter"){ stop("the repr argument must be \"standard\" or \"alter\" ") }
+
+
+  try(class(sf)[1] == "sf", stop("Input data must be sf object"))
+  datasetName <- deparse(substitute(sf))
+  if (wf != "") { nomLegende <- paste0("LCZ from ", wf, " workflow") } else { nomLegende <- "Levels" }
+
+  # For standard levels of LCZ after import with importLCZ* functions
   
-  datasetName<-deparse(substitute(sf))
-
-  try(class(sf)[1]=="sf", stop("Input data must be sf object"))
-
- if(wf!=""){nomLegende<-paste0("LCZ from ",wf," workflow")} else{nomLegende<-"Levels"}
-
-  if (repr=='standard'){
-  LCZlevels<-as.character(c(1:10,101:107))
-  temp<-subset(sf,select=column,drop=T) %>% fct_recode("Compact high"="1",
-                                                            "Compact mid"="2",
-                                                            "Compact low"="3",
-                                                            "Open high"="4",
-                                                            "Open mid"="5",
-                                                            "Open low"="6",
-                                                            "Lightweight low"="7",
-                                                            "Large low"="8",
-                                                            "Sparsely built"="9",
-                                                            "Heavy industry"="10",
-                                                            "Dense trees"="101",
-                                                            "Scattered trees"="102",
-                                                            "Bush scrub"="103",
-                                                            "Low plants"="104",
-                                                            "Bare rock or paved"="105",
-                                                            "Bare soil sand"="106",
-                                                            "Water"="107")
-
-  sf<-sf %>% mutate(!!column:=temp)
-
-  colorMap<-c("#8b0101","#cc0200","#fc0001","#be4c03","#ff6602","#ff9856",
-                "#fbed08","#bcbcba","#ffcca7","#57555a","#006700","#05aa05",
-                "#648423","#bbdb7a","#010101","#fdf6ae","#6d67fd")
-  typeLevels<-colorMap
-  names(typeLevels)<-levels(subset(sf,select=column,drop=T))
-  areas<-LCZareas(sf,column,LCZlevels=names(typeLevels))
-  etiquettes<-paste(c("LCZ 1: Compact high-rise","LCZ 2: Compact mid-rise","LCZ 3: Compact low-rise",
-                "LCZ 4: Open high-rise","LCZ 5: Open mid-rise","LCZ 6: Open low-rise",
-                "LCZ 7: Lightweight low-rise","LCZ 8: Large low-rise",
-                "LCZ 9: Sparsely built","LCZ 10: Heavy industry",
-                "LCZ A: Dense trees", "LCZ B: Scattered trees",
-                "LCZ C: Bush,scrub","LCZ D: Low plants",
-                "LCZ E: Bare rock or paved","LCZ F: Bare soil or sand","LCZ G: Water"),": ", areas$area, "%")
-
-  if (wf!=""){nomLegende<-paste0("LCZ from ",wf," workflow")} else{nomLegende<-"LCZ"}
-
-###### Shows the geoms with the original values of LCZ as described by Stewardt & Oke, and produced for instance by the GeoClimate workflow
-
-      if(title==""){
-        if(wf!=""){wtitre<-paste("LCZ from", wf, "workflow, for ", datasetName,"dataset")} else{
-        wtitre<-paste("LCZ from", datasetName,"dataset")
-        }
-      }else{
-        wtitre<-title
-      }
-
-    if(drop==TRUE){
-      presentLevels<-levels(droplevels(subset(sf,select=column,drop=T)))
-      temp<-subset(sf,select=column,drop=T) %>% 
-        factor(levels=presentLevels)
-      print(levels(temp))
-      sf<-sf %>% mutate(!!column:=temp)
-      presentIndices<-sapply(presentLevels,grep,x=etiquettes) %>% unlist %>% print
-      colorMap<-colorMap[presentIndices]
-      etiquettes<-etiquettes[presentIndices]
-      }
-    
-    pstandard<-ggplot(sf) + # data
-      geom_sf(data=sf,aes(fill=get(column)))+
-      scale_fill_manual(values=colorMap,labels=etiquettes,drop=FALSE)+
-      guides(fill=guide_legend(nomLegende))+
-      ggtitle(wtitre)
+  if (repr == 'standard') {
+    outPlot<-showStandardLCZ(sf = sf, title = title, wf = wf, column = column,
+                               repr = "standard", drop = drop, 
+                               naAsUnclassified = TRUE, plotNow = plotNow, addBorders = addBorders, labelType = labelType)
   }
   #
 
-###### Shows other qualitative variables, like LCZ once they are regrouped in more general classes, 
+  ###### Shows other qualitative variables, like LCZ once they are regrouped in more general classes, 
   # for instance outputs of the LCZgroup2 function.
 
-  if (repr=="alter"){
-    print(datasetName)
-    levColShow<-levCol(sf=sf,column=column, drop=drop, ...)
-    typeLevels<-levColShow$levelsColors
-    levColCase<-levColShow$case
-########## Multiple vectors of levels and tryGroup=TRUE, let's try to group on the fly
+  if (repr == "alter") {
+    outPlot<-showAlterLCZ(sf = sf, title = title, wf = wf, column = column, 
+                          drop = drop, plotNow = plotNow, addBorders = addBorders,
+                          useStandCol = useStandCol , tryGroup = tryGroup,
+                          naAsUnclassified = naAsUnclassified, noPercAlter = noPercAlter, 
+                          labelType = labelType, ...)
+  }
+
+
+    if (plotNow) { print(outPlot) } 
    
-    if (tryGroup==TRUE && 
-      (length(grep("14: ",levColCase))!=0 ||length(grep("15: ",levColCase))!=0 )){
-      message("Level names in your 1st dataset didn't match original data.
+    else 
+  return(outPlot)
+}
+
+
+
+############################################
+##
+## if repr = "alter", showAlterLCZ() function is called"
+##
+############################################
+showAlterLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
+                            drop = FALSE, useStandCol = FALSE, tryGroup = TRUE,
+                            naAsUnclassified = TRUE, noPercAlter = FALSE, plotNow = TRUE, addBorders = FALSE,
+                           labelType = "long", ...) {
+  
+datasetName <- deparse(substitute(sf))
+print(datasetName)
+try(class(sf)[1] == "sf", stop("Input data must be sf object"))
+if (wf != "") { nomLegende <- paste0("LCZ from ", wf, " workflow") } else { nomLegende <- "Levels" } 
+  
+if (naAsUnclassified) { sf[[column]] <- forcats::fct_na_value_to_level(sf[[column]], "Unclassified") }
+  else { sf <- drop_na(sf, column)}
+  
+levColShow <- levCol(sf = sf, column = column, drop = drop, ...)
+typeLevels <- levColShow$levelsColors
+levColCase <- levColShow$case
+print("typeLevels before try Group") ; print(typeLevels)
+
+  ########## Multiple vectors of levels and tryGroup=TRUE, let's try to group on the fly
+
+if (tryGroup == TRUE &&
+  (length(grep("14: ", levColCase)) != 0 || length(grep("15: ", levColCase)) != 0)) {
+  message("Level names in your 1st dataset didn't match original data.
       As tryGroup=TRUE, the function groupLCZ will try to create a \"grouped\" column with level names and levels specified in (...).
       If this doesn't work, compareLCZ function may fail.")
-      sfNew<-groupLCZ(sf,column = column,...)
-      sf<-sfNew %>% mutate(!!column:=subset(sfNew,select="grouped",drop=TRUE))
-      # print(summary(sf1))
-      levColShow<-levCol(sf,column,...)
-      typeLevels<-levColShow$levelsColors
-      
-      rm(sfNew)
-    }
-    
-    message(levColCase)
-    
-     # IN CASE SOME STANDARD LEVELS ARE DETECTED, ONE MAY WANT STANDARD COLORS TO BE APPLIED
+  sfNew <- groupLCZ(sf, column = column, ...)
+  sf[["grouped"]] <- sfNew[["grouped"]]
+  # print(summary(sf1))
+  levColShow <- levCol(sf, "grouped", ...)
+  typeLevels <- levColShow$levelsColors
+  print("typeLevels try Group") ; print(typeLevels) 
+  rm(sfNew)
+}
 
-    if(useStandCol==TRUE){typeLevels<-standLevCol(levels=names(typeLevels),colors=typeLevels,useStandCol = TRUE)}
+message(levColCase)
 
-    LCZlevels<-names(typeLevels)
-    sf<-sf %>% mutate(!!column:=factor(subset(sf,select=column,drop=T),levels=LCZlevels))
-    areas<-LCZareas(sf,column,LCZlevels=names(typeLevels))
-    etiquettes<-paste(LCZlevels,": ",areas$area,"%")
+# IN CASE SOME STANDARD LEVELS ARE DETECTED, ONE MAY WANT STANDARD COLORS TO BE APPLIED
 
-    
-   if(title=="") {
-     if(wf!=""){wtitre<-paste("Grouped LCZ for ", wf, "workflow, applied to ", datasetName,"dataset")} else {
-       wtitre<-paste("Grouped LCZ from", datasetName," dataset")
-     }
-   } else {
-     wtitre<-title
-   }
+if (useStandCol == TRUE) {
+  typeLevels <- standLevCol(levels = names(typeLevels), colors = typeLevels, useStandCol = TRUE)
+  print("typeLevels useStandCol") ; print(typeLevels) }
+  
+LCZlevels <- names(typeLevels)
+  
+sf[[column]] <- factor(sf[[column]], levels = LCZlevels)
+areas <- LCZareas(sf, column, LCZlevels = LCZlevels)
+   
+if (!noPercAlter) { etiquettes <- paste(LCZlevels, ": ", areas$area, "%") } else { etiquettes <- LCZlevels }
+  
+print("etiquettes") ; print(etiquettes)
 
-    palter<-
-      ggplot(sf) + # les données
-      geom_sf(aes(fill=get(column))) +        # Le type de géométrie : ici un sf, avec fill pour remplir les polygones
-      scale_fill_manual(values=typeLevels,
-                        labels=etiquettes,drop=FALSE)+
-      guides(fill=guide_legend(nomLegende))+
-      ggtitle(wtitre)
- }
-
-  if (repr=="standard"){
-    print(pstandard)
-    outplot<-pstandard
+# print(summary(sf[[column]]))
+   
+if (title == "") {
+  if (wf != "") { wtitre <- paste("Grouped LCZ for ", wf, "workflow, applied to ", datasetName, "dataset") } else {
+    wtitre <- paste("Grouped LCZ from", datasetName, " dataset")
   }
-    else {
-      if (repr=="alter"){
-        print(palter)
-      outplot<-palter
-      }
-      else {stop("the repr argument must be \"standard\" or \"alter\" ")}
+} else {
+  wtitre <- title
+}
+
+  print(summary(sf[[column]]))
+  
+palter <-
+  ggplot() + # les données
+    geom_sf(data = sf, aes(fill = .data[[column]], color = after_scale(fill)), show.legend = !drop) +        # Le type de géométrie : ici un sf, avec fill pour remplir les polygones
+    scale_fill_manual(values = typeLevels,
+                      labels = etiquettes, drop = FALSE) +
+    guides(fill = guide_legend(nomLegende)) +
+    ggspatial::annotation_north_arrow(
+      location = "tl",
+      width = unit(0.5, "cm"),
+      height = unit(0.5, "cm"),
+      pad_x = unit(0.15, "cm"),
+      pad_y = unit(0.15, "cm"),
+      # data = subset(allLocAllWfs[allLocAllWfs$location == aLocation,], wf == "osm"),
+      style = north_arrow_orienteering(
+        text_size = 5,
+      )) +
+    ggspatial::annotation_scale(
+      location = "br",
+      # data = subset(allLocAllWfs[allLocAllWfs$location == aLocation,], wf == "osm"),
+      width_hint = 0.4,
+      height = unit(0.1, "cm"),
+      pad_x = unit(0.35, "in"),
+      pad_y = unit(0.06, "in"),
+      text_cex = 0.5,
+      text_pad = unit(0.05, "cm"),
+    ) +
+    ggtitle(wtitre)
+  
+return(palter)
+}
+
+
+############################################
+##
+## showStandardLCZ() function is called when repr =="standard"
+##
+############################################
+
+
+showStandardLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
+                            repr = "standard", drop = FALSE, useStandCol = FALSE, tryGroup = TRUE,
+                            naAsUnclassified = TRUE, noPercAlter = FALSE, plotNow = TRUE, addBorders = FALSE, labelType = "long",  ...) {
+
+  datasetName <- deparse(substitute(sf))
+
+
+  try(class(sf)[1] == "sf", stop("Input data must be sf object"))
+
+  if (wf != "") { nomLegende <- paste0("LCZ from ", wf, " workflow") } else { nomLegende <- "Levels" }
+
+  if (repr == 'standard') {
+    typeLevels <- .lczenv$typeLevelsConvert
+    sf[[column]] <- factor(
+      sf[[column]], typeLevels)  #%>%
+    # 
+    if (naAsUnclassified) { sf[[column]] <- forcats::fct_na_value_to_level(sf[[column]], "Unclassified") }
+    else { sf <- drop_na(sf, column)
     }
-  return(outplot)
+
+    areas <- LCZareas(sf, column, LCZlevels = .lczenv$typeLevelsDefault)
+    colorMap <- .lczenv$colorMapDefault
+
+    etiquettes<-dplyr::case_when(
+      labelType == "very short" ~ paste(.lczenv$veryShortEtiquettesDefault, ": ", areas$area, "%"),
+      labelType == "short" ~ paste(.lczenv$shortEtiquettesDefault, ": ", areas$area, "%"),
+      labelType =="long" ~ paste(.lczenv$etiquettesDefault, ": ", areas$area, "%"),
+      labelType == "no perc" ~ .lczenv$veryShortEtiquettesDefault
+    )
+
+
+
+    if (wf != "") { nomLegende <- paste0("LCZ from ", wf, " workflow") } else { nomLegende <- "LCZ" }
+
+    ###### Shows the geoms with the original values of LCZ as described by Stewardt & Oke, and produced for instance by the GeoClimate workflow
+
+    if (title == "") {
+      if (wf != "") { wtitre <- paste("LCZ from", wf, "workflow, for ", datasetName, "dataset") } else {
+        wtitre <- paste("LCZ from", datasetName, "dataset")
+      }
+    }else {
+      wtitre <- title
+    }
+
+    if (drop) {
+      presentLevels <- levels(droplevels(sf[[column]]))
+      sf [[column]]<-factor(sf [[column]], levels = presentLevels)
+      presentIndices <- match(presentLevels, .lczenv$typeLevelsDefault)
+      print(presentLevels) ; print(unique(names(typeLevels))) ; print(presentIndices)
+      colorMap <- colorMap[presentIndices]
+      etiquettes <- etiquettes[presentIndices]
+    }
+
+    pstandard <- ggplot(sf) + # data
+      geom_sf(data = sf, aes(fill = .data[[column]], color = after_scale(fill)), show.legend = !drop) +
+      scale_fill_manual(values = colorMap, labels = etiquettes, drop = drop) +
+      guides(fill = guide_legend(nomLegende)) +
+      ggspatial::annotation_north_arrow(
+        location = "tl",
+        width = unit(0.5, "cm"),
+        height = unit(0.5, "cm"),
+        pad_x = unit(0.15, "cm"),
+        pad_y = unit(0.15, "cm"),
+        # data = subset(allLocAllWfs[allLocAllWfs$location == aLocation,], wf == "osm"),
+        style = north_arrow_orienteering(
+          text_size = 5,
+        )) +
+      ggspatial::annotation_scale(
+        location = "br",
+        # data = subset(allLocAllWfs[allLocAllWfs$location == aLocation,], wf == "osm"),
+        width_hint = 0.4,
+        height = unit(0.1, "cm"),
+        pad_x = unit(0.35, "in"),
+        pad_y = unit(0.06, "in"),
+        text_cex = 0.5,
+        text_pad = unit(0.05, "cm"),
+      ) +
+      ggtitle(wtitre)
+
+    if (addBorders){pstandard<-pstandard+geom_sf(color = "black")}
+  }
+  return(pstandard)
 }

@@ -3,7 +3,7 @@
 \name{importLCZgc}
 \alias{importLCZgc}
 \title{Imports the rsu_lcz geojson file produced by GeoClimate.
-Use the more generic /\verb{importLCZvect/} function}
+Use the more generic importLCZvect function}
 \usage{
 importLCZgc(dirPath, output = "sfFile")
 }
@@ -20,7 +20,7 @@ This is useful to select geoms analysed in other sf objects.
 }
 \description{
 Imports the rsu_lcz geojson file produced by GeoClimate.
-Use the more generic /\verb{importLCZvect/} function
+Use the more generic importLCZvect function
 }
 \examples{
 importLCZgc(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon/"))

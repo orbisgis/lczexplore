@@ -1,8 +1,6 @@
 #' Compares several sets of geographical classifications, especially Local Climate Zones classifications
-#' @param sfList a list which contains the classifications to compare, as sf objects
-#' @param LCZcolumns a vector which contains, for eacfh sf of sfList, the name of the column of the classification to compare
-#' @param refCrs a number which indicates which sf object from sfList will provide the CRS in which all the sf objects will be projected before comparison
-#' By defautl it is set to an empty string and no ID is loaded.
+#' @param sfInt an sf objects with intersected geometries and the LCZ columns for each workflow LCZ
+#' @param LCZcolumns a vector which contains, the name of the columns of the classification to compare
 #' @param sfWf a vector of strings which contains the names of the workflows used to produce the sf objects
 #' @param trimPerc this parameters indicates which percentile to drop out of the smallest geometries resulting 
 #' from the intersection of the original sf geometries intersection. 
@@ -10,54 +8,69 @@
 #' @importFrom ggplot2 geom_sf guides ggtitle aes
 #' @import sf dplyr cowplot forcats units tidyr RColorBrewer utils grDevices rlang
 #' @return returns graphics of comparison and an object called matConfOut which contains :
-#'TO DO
+#' matConfLong, a confusion matrix in a longer form, 
+#' matConfPlot is a ggplot2 object showing the confusion matrix.
+#' percAgg is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
+#' pseudoK is a heuristic estimate of a Cohen's kappa coefficient of agreement between classifications
+#' If saveG is not an empty string, graphics are saved under "saveG.png"
 #' @export
 #' @examples
-#' 
-compareMultipleLCZ<-function(sfList, LCZcolumns, refCrs=NULL, sfWf=NULL, trimPerc=0.05){
-  intersec_sf<-createIntersec(sfList = sfList, LCZcolumns = LCZcolumns , refCrs= refCrs, sfWf = sfWf)
-  print(nrow(intersec_sf))
-  intersec_sf$area<-st_area(intersec_sf)
-  intersec_sf <- intersec_sf %>% subset(area>quantile(intersec_sf$area, probs=trimPerc) & !is.na(area))
-  print(nrow(intersec_sf))
-  nbWfs<-length(sfList)
+#' sfList<-loadMultipleSfs(dirPath = 
+#' paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Goussainville"),
+#' workflowNames = c("osm","bdt","iau","wudapt"), location = "Goussainville")
+#' GoussainvilleIntersect <- createIntersect(
+#'  sfList = sfList, columns = rep("lcz_primary", 4),  
+#'  sfWf = c("osm","bdt","iau","wudapt"))
+#' GoussainvilleMultipleComparison<-compareMultipleLCZ(
+#'  sfInt = GoussainvilleIntersect,
+#'  LCZcolumns = c("osm","bdt","iau","wudapt"),
+#'  trimPerc = 0.5)
+compareMultipleLCZ<-function(sfInt, LCZcolumns, sfWf=NULL, trimPerc=0.05){
+  if (is.null(LCZcolumns)) { 
+    LCZcolumns<-names(sfInt)[!names(sfInt)%in%c("area", "geometry")]
+  }
+  sfInt <- sfInt %>% subset(area>quantile(sfInt$area, probs=trimPerc) & !is.na(area))
+  # if input intersected file comes from a concatenation, it will have a location column that is not needed
+  if("location" %in% names(sfInt)){ sfInt<-sfInt[,!names(sfInt)=="location"]}
   
-  intersec_sf<-computeAgreements(intersec_sf = intersec_sf, nbWfs = nbWfs)
+  sfIntnogeom<-st_drop_geometry(sfInt)
   
-  return(intersec_sf)
+  if (is.null(sfWf) | length(sfWf)!=length(LCZcolumns)){sfWf<-LCZcolumns}
+  
+  allLevels<- sfIntnogeom[,LCZcolumns] %>% lapply(levels) %>% unlist %>% unique()
+  sfIntnogeom[, LCZcolumns] <-   sfIntnogeom[, LCZcolumns] %>%  lapply(function(x) factor(x, levels=allLevels))
+  
+  for (i in 1:(length(LCZcolumns) - 1)) {
+    for(j in (i+1):length(LCZcolumns)){
+      compName<-paste0(sfWf[i],"_",sfWf[j])
+      print(compName)
+      sfIntnogeom[,compName]<-sfIntnogeom[ , LCZcolumns[i]] == sfIntnogeom[ , LCZcolumns[j]]
+    }
+  }
+  rangeCol<-(length(LCZcolumns)+2):ncol(sfIntnogeom)
+  print(rangeCol)
+  # print(names(sfIntnogeom[,rangeCol]))
+  sfIntnogeom$nbAgree<-apply(
+     X = sfIntnogeom[,rangeCol],MARGIN=1,sum)
+  sfIntnogeom$maxAgree<-apply(
+    X = sfIntnogeom[,1:length(LCZcolumns)], MARGIN = 1, function(x) max(table(x), na.rm = TRUE ))
+ print(head(sfIntnogeom))
+  
+  # long format
+  sfIntLong<-pivot_longer(sfIntnogeom, cols=names(sfIntnogeom)[rangeCol], names_to = "whichWfs", values_to = "agree")
+  
+  # Get the reference LCZ column on which 2 wf agree
+  
+  whichLCZagree <- gsub( x = sfIntLong$whichWfs, pattern = "(.*)(_)(.*)", replacement = "\\1")
+  indRow<- seq_len(nrow(sfIntLong))
+  z<-data.frame(indRow, whichLCZagree)
 
+  sfIntLong$LCZvalue<-apply(z, 1, function(x) unlist(st_drop_geometry(sfIntLong)[x[1], x[2]]))
+
+  sfInt<-cbind(sfIntnogeom,sfInt$geometry)  %>% st_as_sf()
+  
+  
+  output<-list(sfInt=sfInt, sfIntLong=sfIntLong)
 }
 
-
-sfBDT_11_78030<-importLCZvect(dirPath="/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/GeoClimate/2011/bdtopo_2_78030/",
-                   file="rsu_lcz.fgb", column="LCZ_PRIMARY")
-
-sfBDT_22_78030<-importLCZvect(dirPath="/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/GeoClimate/2022/bdtopo_3_78030/",
-                              file="rsu_lcz.fgb", column="LCZ_PRIMARY")
-# sf_OSM_11_Auffargis<-importLCZvect(dirPath="//home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/GeoClimate/2011/osm_Auffargis/", file="rsu_lcz.fgb", column="LCZ_PRIMARY")
-sf_OSM_22_Auffargis<-importLCZvect(dirPath="/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/GeoClimate/2022/osm_Auffargis/",
-                                   file="rsu_lcz.fgb", column="LCZ_PRIMARY")
-sf_WUDAPT_78030<-importLCZvect("/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/WUDAPT/",
-                               file ="wudapt_Auffargis.fgb", column="lcz_primary")
-sf_IAU_auffargis <- importLCZvect("/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/IAU", file = "IAU_Auffargis.fgb", column = "lcz_primary")
-
-sfList<-list(BDT11 = sfBDT_11_78030, BDT22 = sfBDT_22_78030, # OSM11= sf_OSM_11_Auffargis, 
-  OSM22 = sf_OSM_22_Auffargis,
-             WUDAPT = sf_WUDAPT_78030, IAU = sf_IAU_auffargis)
-
-
-multicompare_test<-compareMultipleLCZ(sfList = sfList, LCZcolumns = c(rep("LCZ_PRIMARY",3), rep("lcz_primary", 2)),
-                                      sfWf = c("BDT11","BDT22",
-                                      # "OSM11",
-                                      "OSM22","WUDAPT", "IAU"),trimPerc = 0.25)
-multicompare_test %>% summary()
-
-require(ggplot2)
-ggplot(data=multicompare_test) +
-  geom_sf(aes(fill=maxAgree, color=after_scale(fill)))+
-  scale_fill_gradient(low = "red" , high = "green", na.value = NA)
-
-ggplot(data=multicompare_test) +
-  geom_sf(aes(fill=nbAgree, color=after_scale(fill)))+
-  scale_fill_gradient(low = "red" , high = "green", na.value = NA)
 

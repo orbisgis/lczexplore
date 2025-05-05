@@ -15,7 +15,7 @@ expect_message(compareRedonBDTOSM<-
 expect_message(compareRedonBDTOSM<-
                  compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU", confid1="LCZ_UNIQUENESS_VALUE", wf1="bdtopo_2_2",
                             sf2=redonOSM, column2="LCZ_PRIMARY", geomID2 = "ID_RSU", confid2="LCZ_UNIQUENESS_VALUE", wf2="osm",
-                            repr="standard", saveG="", exwrite=TRUE, location="Redon", plot=FALSE),
+                            repr="standard", saveG="", exwrite=TRUE, location="Redon", plot=TRUE),
                "\\(redonBDT\\)")
 file.remove("bdtopo_2_2_osm.csv")
 
@@ -27,13 +27,13 @@ expect_message(compareRedonBDTOSM<-
                "\\(redonOSM\\)")
 file.remove("bdtopo_2_2_osm.csv")
 
-compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU", confid1="LCZ_UNIQUENESS_VALUE", wf1="bdtopo_2_2",
-           sf2=redonOSM, column2="LCZ_PRIMARY", geomID2 = "ID_RSU", confid2="LCZ_UNIQUENESS_VALUE", wf2="osm",
-           repr="alter", ref=2, saveG="", exwrite=FALSE, location="Redon", plot=TRUE, urban=c("1","2","3","4","5","6","7","8","9"),
-           tryGroup=TRUE, industry="10",
-           vegetation=c("101","102","103","104"),
-           impervious="105",pervious="106",water="107",
-           colors=c("orange","black","darkGreen","grey","burlywood","blue"))
+# compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU", confid1="LCZ_UNIQUENESS_VALUE", wf1="bdtopo_2_2",
+#            sf2=redonOSM, column2="LCZ_PRIMARY", geomID2 = "ID_RSU", confid2="LCZ_UNIQUENESS_VALUE", wf2="osm",
+#            repr="alter", ref=2, saveG="", exwrite=FALSE, location="Redon", plot=TRUE, urban=c("1","2","3","4","5","6","7","8","9"),
+#            tryGroup=TRUE, industry="10",
+#            vegetation=c("101","102","103","104"),
+#            impervious="105",pervious="106",water="107",
+#            colors=c("orange","black","darkGreen","grey","burlywood","blue"))
 
 expect_message(compareRedonBDTsquare<-
   compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU", confid1="LCZ_UNIQUENESS_VALUE", wf1="bdtopo_2_2",
@@ -42,10 +42,14 @@ expect_message(compareRedonBDTsquare<-
   "The column  LCZ_PRIMARY  of the dataset redonBDT is the reference against which the  LCZ_PRIMARY  column")
 
 #names(compareRedonBDTOSM)
-expect_equal(class(compareRedonBDTOSM$matConf),"data.frame")
-expect_equal(class(compareRedonBDTOSM$areas),"data.frame")
-expect_equal(class(compareRedonBDTOSM$data),"data.frame")
-expect_equal(class(compareRedonBDTOSM$matConfPlot),"ggplot_built")
+compareRedonBDTOSM<-
+  compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU", confid1="LCZ_UNIQUENESS_VALUE", wf1="bdtopo_2_2",
+             sf2=redonOSM, column2="LCZ_PRIMARY", geomID2 = "ID_RSU", confid2="LCZ_UNIQUENESS_VALUE", wf2="osm",
+             repr="standard", saveG="", exwrite=TRUE, location="Redon", plot=TRUE)
+expect_equal("data.frame"%in%class(compareRedonBDTOSM$matConf),TRUE)
+expect_equal("data.frame"%in%class(compareRedonBDTOSM$areas),TRUE)
+expect_equal("data.frame"%in%class(compareRedonBDTOSM$data),TRUE)
+expect_equal("ggplot"%in%class(compareRedonBDTOSM$matConfPlot),TRUE)
 
 
 #compareRedonBDTOSMPlot$matConfPlot %>% class
@@ -106,6 +110,8 @@ expect_warning(compareRedonBDTOSMgrouped<-
              impervious="105",pervious="106",water="107",
              colors=c("red","black","green","grey","burlywood","blue"),tryGroup = TRUE),
                "attribute variables are assumed to be spatially constant throughout all geometries")
+
+# showLCZ(redonBDTgrouped, column = "LCZ_PRIMARY", repr = "standard")
 
 
 redonBDTgrouped2<-

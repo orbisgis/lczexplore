@@ -1,5 +1,5 @@
 #' Imports the rsu_lcz geojson file produced by GeoClimate. 
-#' Use the more generic /`importLCZvect/` function
+#' Use the more generic importLCZvect function
 #'
 #' @param dirPath : the path where the rsu_lcz.geojson file is.
 #' @param output : if sfFile the rsu_lcz.geojson is imported as an sf file, if bBox, a bounding box of the area is returned
@@ -10,7 +10,8 @@
 #' @import sf dplyr
 #' @export
 #'
-#' @examples importLCZgc(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon/"))
+#' @examples 
+#' importLCZgc(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/bdtopo_2_2/Redon/"))
 importLCZgc<-function(dirPath,output="sfFile"){
   # output can be sfFile, bBox or Contour
 

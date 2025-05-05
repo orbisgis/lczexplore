@@ -61,6 +61,8 @@ utrfComparison<-compareLCZ(
  sf1=utrfRedonBDT, column1="TYPO_MAJ", wf1=" UTRF BDT",
  sf2=utrfRedonOSM, column2="TYPO_MAJ", wf2 = " UTRF OSM",
 location = " Redon",exwrite=FALSE,repr="alter")
+ # ... then plot the confusion matrix of these two classifications  
+print(utrfComparison$matConfPlot)
 
 
 }

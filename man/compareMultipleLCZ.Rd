@@ -4,21 +4,12 @@
 \alias{compareMultipleLCZ}
 \title{Compares several sets of geographical classifications, especially Local Climate Zones classifications}
 \usage{
-compareMultipleLCZ(
-  sfList,
-  LCZcolumns,
-  refCrs = NULL,
-  sfWf = NULL,
-  trimPerc = 0.05
-)
+compareMultipleLCZ(sfInt, LCZcolumns, sfWf = NULL, trimPerc = 0.05)
 }
 \arguments{
-\item{sfList}{a list which contains the classifications to compare, as sf objects}
+\item{sfInt}{an sf objects with intersected geometries and the LCZ columns for each workflow LCZ}
 
-\item{LCZcolumns}{a vector which contains, for eacfh sf of sfList, the name of the column of the classification to compare}
-
-\item{refCrs}{a number which indicates which sf object from sfList will provide the CRS in which all the sf objects will be projected before comparison
-By defautl it is set to an empty string and no ID is loaded.}
+\item{LCZcolumns}{a vector which contains, the name of the columns of the classification to compare}
 
 \item{sfWf}{a vector of strings which contains the names of the workflows used to produce the sf objects}
 
@@ -28,8 +19,24 @@ It allows to account for numeric precision errors and to speed up computations a
 }
 \value{
 returns graphics of comparison and an object called matConfOut which contains :
-TO DO
+matConfLong, a confusion matrix in a longer form,
+matConfPlot is a ggplot2 object showing the confusion matrix.
+percAgg is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
+pseudoK is a heuristic estimate of a Cohen's kappa coefficient of agreement between classifications
+If saveG is not an empty string, graphics are saved under "saveG.png"
 }
 \description{
 Compares several sets of geographical classifications, especially Local Climate Zones classifications
+}
+\examples{
+sfList<-loadMultipleSfs(dirPath = 
+paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Goussainville"),
+workflowNames = c("osm","bdt","iau","wudapt"), location = "Goussainville")
+GoussainvilleIntersect <- createIntersect(
+ sfList = sfList, columns = rep("lcz_primary", 4),  
+ sfWf = c("osm","bdt","iau","wudapt"))
+GoussainvilleMultipleComparison<-compareMultipleLCZ(
+ sfInt = GoussainvilleIntersect,
+ LCZcolumns = c("osm","bdt","iau","wudapt"),
+ trimPerc = 0.5)
 }

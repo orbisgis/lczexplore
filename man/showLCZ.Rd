@@ -2,7 +2,7 @@
 % Please edit documentation in R/showLCZ.R
 \name{showLCZ}
 \alias{showLCZ}
-\title{Produces a simple representation of the LCZ contained in an sf file.}
+\title{Produces a simple representation of the LCZ contained in an sf file}
 \usage{
 showLCZ(
   sf,
@@ -13,6 +13,11 @@ showLCZ(
   drop = FALSE,
   useStandCol = FALSE,
   tryGroup = TRUE,
+  naAsUnclassified = TRUE,
+  noPercAlter = FALSE,
+  plotNow = TRUE,
+  addBorders = FALSE,
+  labelType = "long",
   ...
 )
 }
@@ -36,6 +41,17 @@ If "standard" then an optimal set of colors is used to produce the plotted map. 
 
 \item{tryGroup}{is set to TRUE when one wants to group and plot on the fly}
 
+\item{naAsUnclassified}{if TRUE, affects Unclassified value to NAs in the LCZ column}
+
+\item{noPercAlter}{allows to not show the percentage area in the alter representation}
+
+\item{plotNow}{if FALSE the plot is generated but not hown (needs to be stored in an object)}
+
+\item{addBorders}{if TRUE the borders of the geometries are visible}
+
+\item{labelType}{in the standard representation, this value can take the values "long" (number, name and percentage area for each LCZ types),
+"short" (value and percentage), "very short" (only number and percentage), "no perc" (no area percentage).}
+
 \item{...}{these dynamic dots allow you to pass arguments to specify levels expected
 in your dataset and colors associated to these levels when not in the standard representation. You can pas your levels through a vector and you colors through another vector called colors.
 For more details about this, read the "lcz_explore_alter" vignette.}
@@ -44,10 +60,10 @@ For more details about this, read the "lcz_explore_alter" vignette.}
 return the plot of the LCZ levels
 }
 \description{
-Produces a simple representation of the LCZ contained in an sf file.
+Produces a simple representation of the LCZ contained in an sf file
 }
 \examples{
-# On original LCZ levels, use the \'standard\' value for the \'repr\' argument.
+# On original LCZ levels, use the standard value for the repr argument.
 showLCZ(redonBDT, column="LCZ_PRIMARY", repr="standard")
 # On grouped data, use the alter value for the repr argument.
 redonBDTgrouped<-groupLCZ(redonBDT,column="LCZ_PRIMARY",
