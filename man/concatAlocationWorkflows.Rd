@@ -5,7 +5,7 @@
 \title{Take sf files with an lcz_primary column, and concatenates them in a single sf object,
 adding a column for location and workflow names}
 \usage{
-concatAlocationWorkflows(sfList, location, refCrs = 1)
+concatAlocationWorkflows(sfList, location = "location", refCrs = 1)
 }
 \arguments{
 \item{sfList}{the list of LCZ sf objects}
