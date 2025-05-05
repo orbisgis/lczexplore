@@ -11,7 +11,7 @@
 completeDT <- function(DT, cols, defs = NULL){
 
   make_vals <- function(col) {
-    if(is.factor(col)) factor(levels(col))
+    if(is.factor(col)) levels(col)
     else unique(col)
   }
 

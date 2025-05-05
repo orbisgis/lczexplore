@@ -83,8 +83,9 @@ plotSummarisedRSUs<-function(summarisedSfIn, workflowNames = c("wudapt", "iau", 
       subtitle = "Average log area x Average number of spatial units per LCZ types and workflow",
     caption = "Along the y axis : coarser map, along the x axis, patchworky map ")
   if (plotNow) {print(outPlot)}
-
-  
+  if (nchar(graphPath)>1){ggsave(graphPath, outPlot)}
+  return(outPlot)
+ 
 }
 
 

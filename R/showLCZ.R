@@ -83,8 +83,8 @@ if (repr!= "standard" & repr != "alter"){ stop("the repr argument must be \"stan
 ############################################
 showAlterLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
                             drop = FALSE, useStandCol = FALSE, tryGroup = TRUE,
-                            naAsUnclassified = TRUE, noPercAlter = FALSE, plotNow = TRUE, addBorders = FALSE,
-                           labelType = "long", ...) {
+                            naAsUnclassified = TRUE, noPercAlter = FALSE, addBorders = FALSE,
+                            ...) {
   
 datasetName <- deparse(substitute(sf))
 print(datasetName)
@@ -171,7 +171,7 @@ palter <-
       text_pad = unit(0.05, "cm"),
     ) +
     ggtitle(wtitre)
-  
+  if (addBorders){pstandard<-pstandard+geom_sf(color = "black")}
 return(palter)
 }
 
@@ -184,85 +184,82 @@ return(palter)
 
 
 showStandardLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
-                            repr = "standard", drop = FALSE, useStandCol = FALSE, tryGroup = TRUE,
-                            naAsUnclassified = TRUE, noPercAlter = FALSE, plotNow = TRUE, addBorders = FALSE, labelType = "long",  ...) {
+                            repr = "standard", drop = FALSE, 
+                            naAsUnclassified = TRUE, addBorders = FALSE, labelType = "long",  ...) {
 
   datasetName <- deparse(substitute(sf))
 
 
   try(class(sf)[1] == "sf", stop("Input data must be sf object"))
 
-  if (wf != "") { nomLegende <- paste0("LCZ from ", wf, " workflow") } else { nomLegende <- "Levels" }
-
-  if (repr == 'standard') {
-    typeLevels <- .lczenv$typeLevelsConvert
-    sf[[column]] <- factor(
-      sf[[column]], typeLevels)  #%>%
-    # 
-    if (naAsUnclassified) { sf[[column]] <- forcats::fct_na_value_to_level(sf[[column]], "Unclassified") }
-    else { sf <- drop_na(sf, column)
-    }
-
-    areas <- LCZareas(sf, column, LCZlevels = .lczenv$typeLevelsDefault)
-    colorMap <- .lczenv$colorMapDefault
-
-    etiquettes<-dplyr::case_when(
-      labelType == "very short" ~ paste(.lczenv$veryShortEtiquettesDefault, ": ", areas$area, "%"),
-      labelType == "short" ~ paste(.lczenv$shortEtiquettesDefault, ": ", areas$area, "%"),
-      labelType =="long" ~ paste(.lczenv$etiquettesDefault, ": ", areas$area, "%"),
-      labelType == "no perc" ~ .lczenv$veryShortEtiquettesDefault
-    )
-
-
-
-    if (wf != "") { nomLegende <- paste0("LCZ from ", wf, " workflow") } else { nomLegende <- "LCZ" }
-
-    ###### Shows the geoms with the original values of LCZ as described by Stewardt & Oke, and produced for instance by the GeoClimate workflow
-
-    if (title == "") {
-      if (wf != "") { wtitre <- paste("LCZ from", wf, "workflow, for ", datasetName, "dataset") } else {
-        wtitre <- paste("LCZ from", datasetName, "dataset")
-      }
-    }else {
-      wtitre <- title
-    }
-
-    if (drop) {
-      presentLevels <- levels(droplevels(sf[[column]]))
-      sf [[column]]<-factor(sf [[column]], levels = presentLevels)
-      presentIndices <- match(presentLevels, .lczenv$typeLevelsDefault)
-      print(presentLevels) ; print(unique(names(typeLevels))) ; print(presentIndices)
-      colorMap <- colorMap[presentIndices]
-      etiquettes <- etiquettes[presentIndices]
-    }
-
-    pstandard <- ggplot(sf) + # data
-      geom_sf(data = sf, aes(fill = .data[[column]], color = after_scale(fill)), show.legend = !drop) +
-      scale_fill_manual(values = colorMap, labels = etiquettes, drop = drop) +
-      guides(fill = guide_legend(nomLegende)) +
-      ggspatial::annotation_north_arrow(
-        location = "tl",
-        width = unit(0.5, "cm"),
-        height = unit(0.5, "cm"),
-        pad_x = unit(0.15, "cm"),
-        pad_y = unit(0.15, "cm"),
-        # data = subset(allLocAllWfs[allLocAllWfs$location == aLocation,], wf == "osm"),
-        style = north_arrow_orienteering(
-          text_size = 5,
-        )) +
-      ggspatial::annotation_scale(
-        location = "br",
-        # data = subset(allLocAllWfs[allLocAllWfs$location == aLocation,], wf == "osm"),
-        width_hint = 0.4,
-        height = unit(0.1, "cm"),
-        pad_x = unit(0.35, "in"),
-        pad_y = unit(0.06, "in"),
-        text_cex = 0.5,
-        text_pad = unit(0.05, "cm"),
-      ) +
-      ggtitle(wtitre)
-
-    if (addBorders){pstandard<-pstandard+geom_sf(color = "black")}
+  typeLevels <- .lczenv$typeLevelsConvert
+  sf[[column]] <- factor(
+    sf[[column]], typeLevels)  #%>%
+  # 
+  if (naAsUnclassified) { sf[[column]] <- forcats::fct_na_value_to_level(sf[[column]], "Unclassified") }
+  else { sf <- drop_na(sf, column)
   }
+
+  areas <- LCZareas(sf, column, LCZlevels = .lczenv$typeLevelsDefault)
+  colorMap <- .lczenv$colorMapDefault
+
+  etiquettes<-dplyr::case_when(
+    labelType == "very short" ~ paste(.lczenv$veryShortEtiquettesDefault, ": ", areas$area, "%"),
+    labelType == "short" ~ paste(.lczenv$shortEtiquettesDefault, ": ", areas$area, "%"),
+    labelType =="long" ~ paste(.lczenv$etiquettesDefault, ": ", areas$area, "%"),
+    labelType == "no perc" ~ .lczenv$veryShortEtiquettesDefault
+  )
+
+
+
+  if (wf != "") { nomLegende <- paste0("LCZ from ", wf, " workflow") } else { nomLegende <- "LCZ" }
+
+  ###### Shows the geoms with the original values of LCZ as described by Stewardt & Oke, and produced for instance by the GeoClimate workflow
+
+  if (title == "") {
+    if (wf != "") { wtitre <- paste("LCZ from", wf, "workflow, for ", datasetName, "dataset") } else {
+      wtitre <- paste("LCZ from", datasetName, "dataset")
+    }
+  }else {
+    wtitre <- title
+  }
+
+  if (drop) {
+    presentLevels <- levels(droplevels(sf[[column]]))
+    sf [[column]]<-factor(sf [[column]], levels = presentLevels)
+    presentIndices <- match(presentLevels, .lczenv$typeLevelsDefault)
+    print(presentLevels) ; print(unique(names(typeLevels))) ; print(presentIndices)
+    colorMap <- colorMap[presentIndices]
+    etiquettes <- etiquettes[presentIndices]
+  }
+
+  pstandard <- ggplot(sf) + # data
+    geom_sf(data = sf, aes(fill = .data[[column]], color = after_scale(fill)), show.legend = !drop) +
+    scale_fill_manual(values = colorMap, labels = etiquettes, drop = drop) +
+    guides(fill = guide_legend(nomLegende)) +
+    ggspatial::annotation_north_arrow(
+      location = "tl",
+      width = unit(0.5, "cm"),
+      height = unit(0.5, "cm"),
+      pad_x = unit(0.15, "cm"),
+      pad_y = unit(0.15, "cm"),
+      # data = subset(allLocAllWfs[allLocAllWfs$location == aLocation,], wf == "osm"),
+      style = north_arrow_orienteering(
+        text_size = 5,
+      )) +
+    ggspatial::annotation_scale(
+      location = "br",
+      # data = subset(allLocAllWfs[allLocAllWfs$location == aLocation,], wf == "osm"),
+      width_hint = 0.4,
+      height = unit(0.1, "cm"),
+      pad_x = unit(0.35, "in"),
+      pad_y = unit(0.06, "in"),
+      text_cex = 0.5,
+      text_pad = unit(0.05, "cm"),
+    ) +
+    ggtitle(wtitre)
+
+  if (addBorders){pstandard<-pstandard+geom_sf(color = "black")}
+  
   return(pstandard)
 }

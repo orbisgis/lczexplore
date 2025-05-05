@@ -21,14 +21,14 @@
 #' )
 #' GoussainvilleAllWfs <-  concatAlocationWorkflows(
 #' sfList = sfList,  location = "Goussainville") 
-concatAlocationWorkflows<-function(sfList, location, refCrs = 1){
+concatAlocationWorkflows<-function(sfList, location="location", refCrs = 1){
   if (is.null(location)){
     location<- sfList[[1]]["location"][1]
   }
   concatDf<-data.frame(
     matrix(ncol=4, nrow=0)
   )
-  names(concatDf)<-c("lcz_primary", "location", "wf", "geometry")
+names(concatDf)<-c("lcz_primary", location, "wf", "geometry")
 refCrs<-st_crs(sfList[[refCrs]]$geometry)
   for (i in 1:length(sfList)){
     inSf<-st_transform(

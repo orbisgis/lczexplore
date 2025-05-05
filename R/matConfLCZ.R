@@ -33,7 +33,6 @@ matConfLCZ <- function(sf1, column1, sf2, column2, typeLevels = .lczenv$typeLeve
                        plotNow = FALSE, wf1 = "Reference", wf2 = "Alternative", sfInt = NULL, drop = FALSE, ...) {
 if (is.null(sfInt)){
   # coerce the crs of sf2 to the crs of sf1
-  typeLevelsConvert<-.lczenv$typeLevelsConvert 
   allLevels<-unique(
     c(
       levels(sf1[[column1]]), 
@@ -167,7 +166,7 @@ return(matConfOut)
 completeDT <- function(DT, cols, defs = NULL){
 
   make_vals <- function(col) {
-    if(is.factor(col)) factor(levels(col))
+    if(is.factor(col)) levels(col)
     else unique(col)
   }
 
