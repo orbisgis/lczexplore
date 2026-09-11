@@ -72,20 +72,20 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
                        tryGroup = FALSE, minZeroArea = 0,
                        ...) {
 
-checkedInput <- checkCompareLCZinputs(
-  sf1 = sf1, geomID1 = geomID1, column1 = column1, confid1 = confid1, wf1 = wf1,
-  sf2 = sf2, column2 = column2, geomID2 = geomID2, confid2 = confid2, wf2 = wf2, ref = ref)
-  
-sf1 <- checkedInput$sf1 ; column1 <- checkedInput$column1 ; geomID1<-checkedInput$geomID1
-  confid1 <- checkedInput$confid1 ; wf1  <- checkedInput$wf1
+  checkedInput <- checkCompareLCZinputs(
+    sf1 = sf1, geomID1 = geomID1, column1 = column1, confid1 = confid1, wf1 = wf1,
+    sf2 = sf2, column2 = column2, geomID2 = geomID2, confid2 = confid2, wf2 = wf2, ref = ref)
+
+  sf1 <- checkedInput$sf1; column1 <- checkedInput$column1; geomID1 <- checkedInput$geomID1
+  confid1 <- checkedInput$confid1; wf1 <- checkedInput$wf1
   namesf1 <- checkedInput$namesf1
 
-sf2 <- checkedInput$sf2 ; column2 <- checkedInput$column2 ; geomID2<-checkedInput$geomID2
-  confid2 <- checkedInput$confid2 ; wf2  <- checkedInput$wf2
+  sf2 <- checkedInput$sf2; column2 <- checkedInput$column2; geomID2 <- checkedInput$geomID2
+  confid2 <- checkedInput$confid2; wf2 <- checkedInput$wf2
   namesf2 <- checkedInput$namesf2
 
   if (repr == "standard") {
-    preparedStandard<-prepareStandardCompare(sf1 = sf1, column1 = column1, sf2 = sf2, column2 = column2, ...)
+    preparedStandard <- prepareStandardCompare(sf1 = sf1, column1 = column1, sf2 = sf2, column2 = column2, ...)
     sf1 <- preparedStandard$sf1
     sf2 <- preparedStandard$sf2
     etiquettes <- preparedStandard$etiquettes
@@ -94,13 +94,13 @@ sf2 <- checkedInput$sf2 ; column2 <- checkedInput$column2 ; geomID2<-checkedInpu
   }
 
   if (repr == "alter") {
-    preparedAlter<-prepareAlterInputs(sf1 = sf1, column1 = column1, geomID1 = geomID1, confid1 = confid1,
-                                      sf2 = sf2, column2 = column2, geomID2 = geomID2, confid2 = confid2,
-                                      tryGroup = tryGroup, ...)
-    sf1<-preparedAlter$sf1 ; column1 <- preparedAlter$column1
-    sf2<-preparedAlter$sf2 ; column2 <- preparedAlter$column2
+    preparedAlter <- prepareAlterInputs(sf1 = sf1, column1 = column1, geomID1 = geomID1, confid1 = confid1,
+                                        sf2 = sf2, column2 = column2, geomID2 = geomID2, confid2 = confid2,
+                                        tryGroup = tryGroup, ...)
+    sf1 <- preparedAlter$sf1; column1 <- preparedAlter$column1
+    sf2 <- preparedAlter$sf2; column2 <- preparedAlter$column2
     etiquettes <- preparedAlter$etiquettes
-    typeLevels <- preparedAlter$typeLevels ; LCZlevels <- preparedAlter$LCZlevels
+    typeLevels <- preparedAlter$typeLevels; LCZlevels <- preparedAlter$LCZlevels
   }
 
 
@@ -108,16 +108,16 @@ sf2 <- checkedInput$sf2 ; column2 <- checkedInput$column2 ; geomID2<-checkedInpu
   # # Intersect geometries of both files
   ######################################################
   #intersection of geometries
-  sfList<-list(sf1,sf2)
-  columnVect<-c(column1, column2)
-  if (is.null(wf1)){ wf1 <- namesf1}
-  if (is.null(wf2)){ wf2 <- namesf2}
+  sfList <- list(sf1, sf2)
+  columnVect <- c(column1, column2)
+  if (is.null(wf1)) { wf1 <- namesf1 }
+  if (is.null(wf2)) { wf2 <- namesf2 }
 
-  wf1<-checkWorkflowName(wf1)
-  wf2<-checkWorkflowName(wf2)
-  if (wf1==wf2){
+  wf1 <- checkWorkflowName(wf1)
+  wf2 <- checkWorkflowName(wf2)
+  if (wf1 == wf2) {
     wf1 <- paste0(wf1, ".1")
-    wf2 <- paste0(wf2, ".bis")}
+    wf2 <- paste0(wf2, ".bis") }
   workflowNames <- c(wf1, wf2)
   print(workflowNames)
   print(columnVect)
@@ -175,7 +175,7 @@ sf2 <- checkedInput$sf2 ; column2 <- checkedInput$column2 ; geomID2<-checkedInpu
   # Confusion Matrix
   ###################################################
 
-  matConfOut <- matConfLCZ(sfInt = intersec_sf,  column1 = wf1, column2 = wf2, wf1 = wf1, wf2 = wf2,
+  matConfOut <- matConfLCZ(sfInt = intersec_sf, column1 = wf1, column2 = wf2, wf1 = wf1, wf2 = wf2,
                            repr = repr, typeLevels = LCZlevels, plotNow = FALSE)
   matConfOut$data <- intersec_sfExpo
   matConfLong <- as.data.frame(matConfOut$matConf)
@@ -201,7 +201,6 @@ sf2 <- checkedInput$sf2 ; column2 <- checkedInput$column2 ; geomID2<-checkedInpu
   ################################################
   #  GRAPHICS
   ################################################
-
 
 
   if (plotNow == TRUE) {
@@ -265,13 +264,15 @@ sf2 <- checkedInput$sf2 ; column2 <- checkedInput$column2 ; geomID2<-checkedInpu
       ggtitle(label = titre3, subtitle = paste0("Number of intersected geoms : ", nbgeomInter))
 
 
-    if (confPlot == "sankey"){
+    if (confPlot == "sankey") {
       print("Sankey")
-     preparedSankey <- prepareSankeyLCZ(intersectedDf = intersec_sf, wf1 = workflowNames[1], wf2 = workflowNames[2])
-    plotSankeyfiedLCZ (sankeyfied = preparedSankey, plotNow = TRUE, colorMap = LCZlevels,
-                                              v_space = "auto")
-    }
-    matConfPlot <- matConfOut$matConfPlot
+      print(typeLevels)
+      preparedSankey <- prepareSankeyLCZ(
+        intersectedDf = intersec_sf, wf1 = workflowNames[1], wf2 = workflowNames[2], colorMap = typeLevels)
+      matConfPlot <- plotSankeyfiedLCZ(sankeyfied = preparedSankey, plotNow = TRUE, colorMap = typeLevels,
+                                       v_space = "auto")
+      matConfOut$sankeyPlot <- matConfPlot
+    } else if (confPlot == "matrix") { matConfPlot <- matConfOut$matConfPlot }
 
     if (saveG != "") {
       plotName <- paste0(saveG, ".png")
@@ -290,12 +291,8 @@ sf2 <- checkedInput$sf2 ; column2 <- checkedInput$column2 ; geomID2<-checkedInpu
 }
 
 
-
-
-
-
-checkCompareLCZinputs<-function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "", wf1 = NULL,
-                             sf2, column2 = "LCZ_PRIMARY", geomID2 = "", confid2 = "", wf2 = NULL, ref = 1){
+checkCompareLCZinputs <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "", wf1 = NULL,
+                                  sf2, column2 = "LCZ_PRIMARY", geomID2 = "", confid2 = "", wf2 = NULL, ref = 1) {
 
 
   # store the column names in a way that can be injected in functions A SUPPRIMER ?
@@ -308,8 +305,8 @@ checkCompareLCZinputs<-function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", conf
                 " column of the dataset ", namesf2, "will be compared."))
 
 
-  column1<- checkColnameCase(column1, names(sf1))
-  column2<- checkColnameCase(column2, names(sf2))
+  column1 <- checkColnameCase(column1, names(sf1))
+  column2 <- checkColnameCase(column2, names(sf2))
 
   # handling of different crs for the two datasets
   if (st_crs(sf1) != st_crs(sf2)) {
@@ -370,59 +367,59 @@ checkCompareLCZinputs<-function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", conf
   sf1 <- select(sf1, all_of(nom1)) %>% drop_na(column1)
   sf2 <- select(sf2, all_of(nom2)) %>% drop_na(column2)
   # Prepare the levels of the expected LCZ
-  print("nom1") ; print(nom1)
-  print("names(sf1)") ; print(names(sf1))
+  print("nom1"); print(nom1)
+  print("names(sf1)"); print(names(sf1))
 
   return(list(sf1 = sf1, column1 = column1, confid1 = confid1, wf1 = wf1, geomID1 = geomID1,
               namesf1 = namesf1,
-         sf2 = sf2, column2 = column2, confid2 = confid2, wf2 = wf2, geomID2 = geomID2,
+              sf2 = sf2, column2 = column2, confid2 = confid2, wf2 = wf2, geomID2 = geomID2,
               namesf2 = namesf2
   ))
 
 }
 
 
-prepareStandardCompare<-function(sf1, column1,
-                                 sf2, column2){
+prepareStandardCompare <- function(sf1, column1,
+                                   sf2, column2) {
 
-    uniqueData1 <- sf1[[column1]] %>%
-      unique() # Attention unique outputs a list of length 1
-    uniqueData2 <- sf2[[column2]] %>% unique
+  uniqueData1 <- sf1[[column1]] %>%
+    unique() # Attention unique outputs a list of length 1
+  uniqueData2 <- sf2[[column2]] %>% unique
 
-    LCZlevels <- .lczenv$typeLevelsDefault
-    # print("LCZlevels") ; print(LCZlevels)
-    if (prod(uniqueData1 %in% LCZlevels) == 0) {
-      line1 <- "The column chosen for the first data set doesn't seem to be a standard LCZ encoding. \n"
-      line2 <- "Did you import the data with importLCZvect ? \n"
-      line3 <- " If the LCZ types are not standard, you can try to set repr to alter and specify the levels. \n"
-      errorMessage <- paste(line1, line2, line3)
-      stop(errorMessage) }
-    if (prod(uniqueData2 %in% LCZlevels) == 0) {
-      line1 <- "The column chosen for the second data set doesn't seem to be a standard LCZ encoding. \n"
-      line2 <- "Did you import the data with importLCZvect ? \n"
-      line3 <- " If the LCZ types are not standard, you can try to set repr to alter and specify the levels. \n"
-      errorMessage <- paste(line1, line2, line3)
-      stop(errorMessage) }
+  LCZlevels <- .lczenv$typeLevelsDefault
+  # print("LCZlevels") ; print(LCZlevels)
+  if (prod(uniqueData1 %in% LCZlevels) == 0) {
+    line1 <- "The column chosen for the first data set doesn't seem to be a standard LCZ encoding. \n"
+    line2 <- "Did you import the data with importLCZvect ? \n"
+    line3 <- " If the LCZ types are not standard, you can try to set repr to alter and specify the levels. \n"
+    errorMessage <- paste(line1, line2, line3)
+    stop(errorMessage) }
+  if (prod(uniqueData2 %in% LCZlevels) == 0) {
+    line1 <- "The column chosen for the second data set doesn't seem to be a standard LCZ encoding. \n"
+    line2 <- "Did you import the data with importLCZvect ? \n"
+    line3 <- " If the LCZ types are not standard, you can try to set repr to alter and specify the levels. \n"
+    errorMessage <- paste(line1, line2, line3)
+    stop(errorMessage) }
 
-    typeLevels <- .lczenv$colorMapDefault
+  typeLevels <- .lczenv$colorMapDefault
 
-    etiquettes <- .lczenv$etiquettesDefault
+  etiquettes <- .lczenv$etiquettesDefault
 
-    # print(typeLevels)
-    # names(typeLevels) <- names(.lczenv$typeLevelsDefault)
-    # Classification must be encoded as factors
-    sf1[[column1]] <- factor(sf1[[column1]], levels = .lczenv$typeLevelsDefault)
-    sf2[[column2]] <- factor(sf2[[column2]], levels = .lczenv$typeLevelsDefault)
+  # print(typeLevels)
+  # names(typeLevels) <- names(.lczenv$typeLevelsDefault)
+  # Classification must be encoded as factors
+  sf1[[column1]] <- factor(sf1[[column1]], levels = .lczenv$typeLevelsDefault)
+  sf2[[column2]] <- factor(sf2[[column2]], levels = .lczenv$typeLevelsDefault)
 
-    return(list(
-      sf1 = sf1, sf2 = sf2,
-      typeLevels = typeLevels,
-      etiquettes = etiquettes,
-      LCZlevels = LCZlevels
-    ))
+  return(list(
+    sf1 = sf1, sf2 = sf2,
+    typeLevels = typeLevels,
+    etiquettes = etiquettes,
+    LCZlevels = LCZlevels
+  ))
 }
 
-prepareAlterInputs <- function(sf1, column1, geomID1, confid1, sf2, column2,  geomID2, confid2, tryGroup = tryGroup,  ...){
+prepareAlterInputs <- function(sf1, column1, geomID1, confid1, sf2, column2, geomID2, confid2, tryGroup = tryGroup, ...) {
   # Call levCol to deal with levels and colors
   levCol1 <- levCol(sf1, column1, ...)
   levCol2 <- levCol(sf2, column2, ...)
@@ -484,7 +481,8 @@ prepareAlterInputs <- function(sf1, column1, geomID1, confid1, sf2, column2,  ge
   sf2 <- sf2 %>% dplyr::mutate(!!column2 := factor(subset(sf2, select = column2, drop = T), levels = LCZlevels))
 
   return(list(
-    sf1 = sf1, sf2 = sf2, etiquettes= etiquettes, LCZlevels = LCZlevels, column1 = column1, column2 = column2
-  ))
+    sf1 = sf1, column1 = column1, sf2 = sf2, column2 = column2, etiquettes = etiquettes,
+    LCZlevels = LCZlevels, typeLevels = typeLevels)
+  )
 
 }

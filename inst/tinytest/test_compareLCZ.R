@@ -44,7 +44,7 @@ OsmBdtCompare$percAgg
 expect_message(compareRedonBDTOSM<-
                  compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU", confid1="LCZ_UNIQUENESS_VALUE", wf1="bdt_2",
                             sf2=redonOSM, column2="LCZ_PRIMARY", geomID2 = "ID_RSU", confid2="LCZ_UNIQUENESS_VALUE", wf2="osm",
-                            repr="standard", saveG="", exwrite=FALSE, location="Redon", plotNow = TRUE),
+                            repr="standard", saveG="", exwrite=FALSE, location="Redon", plotNow = TRUE, confPlot = "sankey"),
           "Both sf datasets need to live in the same crs projection \\(srid / epsg\\),")
 
 expect_message(compareRedonBDTOSM<-
@@ -64,7 +64,7 @@ file.remove("bdtopo_2_2_osm.csv")
 expect_message(compareRedonBDTOSM<-
                  compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU", confid1="LCZ_UNIQUENESS_VALUE", wf1="bdtopo_2_2",
                             sf2=redonOSM, column2="LCZ_PRIMARY", geomID2 = "ID_RSU", confid2="LCZ_UNIQUENESS_VALUE", wf2="osm",
-                            repr="standard", ref=2, saveG="", exwrite=TRUE, location="Redon", plotNow = F),
+                            repr="standard", ref=2, saveG="", exwrite=TRUE, location="Redon", plotNow = T, confPlot = "sankey"),
                "\\(redonOSM\\)")
 file.remove("bdtopo_2_2_osm.csv")
 
@@ -142,14 +142,17 @@ redonOSMgrouped <- groupLCZ(
 # useless as it doesn't use grouped columns, could be done from original Redon sf objects
 
 expect_warning(compareRedonBDTOSMgrouped <-
-                 compareLCZ(sf1 = redonBDTgrouped, column1 = "LCZ_PRIMARY", geomID1 = "ID_RSU", confid1 = "LCZ_UNIQUENESS_VALUE", wf1 = "groupedBDT",
-                            sf2 = redonOSM, column2 = "LCZ_PRIMARY", geomID2 = "ID_RSU", confid2 = "LCZ_UNIQUENESS_VALUE", wf2 = "groupedOSM",
+                 compareLCZ(sf1 = redonBDTgrouped, column1 = "LCZ_PRIMARY", geomID1 = "ID_RSU",
+                            confid1 = "LCZ_UNIQUENESS_VALUE", wf1 = "groupedBDT",
+                            sf2 = redonOSM, column2 = "LCZ_PRIMARY", geomID2 = "ID_RSU",
+                            confid2 = "LCZ_UNIQUENESS_VALUE", wf2 = "groupedOSM",
                             repr = "alter", ref = 2, saveG = "", exwrite = FALSE, location = "Redon",
                             urban = c("1", "2", "3", "4", "5", "6", "7", "8", "9"),
                             industry = "10",
                             vegetation = c("101", "102", "103", "104"),
                             impervious = "105", pervious = "106", water = "107",
-                            colors = c("red", "black", "green", "grey", "burlywood", "blue"), tryGroup = TRUE, plotNow = TRUE),
+                            colors = c("red", "black", "green", "grey", "burlywood", "blue"),
+                            tryGroup = TRUE, plotNow = TRUE, confPlot = "sankey"),
                "attribute variables are assumed to be spatially constant throughout all geometries")
 
 # showLCZ(redonBDTgrouped, column = "LCZ_PRIMARY", repr = "standard")

@@ -17,7 +17,7 @@
 #' sankeyfied = testSankey, plotNow=TRUE)
 plotSankeyfiedLCZ <- function(sankeyfied, plotNow = TRUE, colorMap = NULL,
                               v_space = "auto") {
-  if (is.null(colorMap)) {
+  if (is.null(colorMap) | prod(names(colorMap) %in% .lczenv$typeLevelsDefault) == 1) {
     colorMap <- .lczenv$colorMapDefault
     # colorMap<-lczexplore:::.lczenv$colorMapDefault
 
@@ -26,10 +26,10 @@ plotSankeyfiedLCZ <- function(sankeyfied, plotNow = TRUE, colorMap = NULL,
       nchar(names(colorMap)) == 2 ~ paste0("0", names(colorMap)),
       .default = names(colorMap)
     )
+    colorMap <- colorMap[sort(names(colorMap))]
   } else colorMap <- colorMap
 
-  colorMap <- colorMap[sort(names(colorMap))]
-  print(colorMap)
+
 
   sharedPosition <- position_sankey(
     v_space = v_space,

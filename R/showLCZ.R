@@ -38,7 +38,8 @@
 #' 
 showLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
                     repr = "standard", drop = FALSE, useStandCol = FALSE, tryGroup = TRUE,
-                    naAsUnclassified = TRUE, noPercAlter = FALSE, plotNow = TRUE, addBorders = FALSE, labelType = "long", ...) {
+                    naAsUnclassified = TRUE, noPercAlter = FALSE, plotNow = TRUE,
+                    addBorders = FALSE, labelType = "long", ...) {
 
   if (repr != "standard" & repr != "alter") { stop("the repr argument must be \"standard\" or \"alter\" ") }
 
@@ -56,7 +57,8 @@ showLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
   if (repr == 'standard') {
     outPlot <- showStandardLCZ(sf = sf, title = title, wf = wf, column = column,
                                repr = "standard", drop = drop,
-                               naAsUnclassified = TRUE, plotNow = plotNow, addBorders = addBorders, labelType = labelType, ...)
+                               naAsUnclassified = TRUE, plotNow = plotNow, addBorders = addBorders,
+                               labelType = labelType, ...)
   }
   #
 

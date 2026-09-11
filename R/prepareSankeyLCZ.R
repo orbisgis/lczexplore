@@ -4,6 +4,7 @@
 #' and the area of the geometries
 #' @param wf1 is the column name where the LCZ value of the first workflow are stored
 #' @param wf2 wf1 is the column name where the LCZ value of the first workflow are stored
+#' @param colorMap a vector containing colors and whose names are the levels of the data to plot
 #' @return an object to feed plotSankeyLCZ
 #' @importFrom dplyr case_when
 #' @import sf ggplot2 ggsankeyfier
@@ -17,7 +18,7 @@
 #' workflowNames = c("osm","bdt","wudapt"))
 #' testSankey<-prepareSankeyLCZ(intersectedDf = allLocIntersected
 #'  , wf1 = "wudapt", wf2 = "osm")
-prepareSankeyLCZ <- function(intersectedDf, wf1, wf2) {
+prepareSankeyLCZ <- function(intersectedDf, wf1, wf2, colorMap) {
   if ("data.table" %in% class(intersectedDf)) { setDF(intersectedDf) }
   if ("sf" %in% class(intersectedDf)) {
     intersectedDf <- st_drop_geometry(intersectedDf)
@@ -26,7 +27,9 @@ prepareSankeyLCZ <- function(intersectedDf, wf1, wf2) {
   intersectedDf <- intersectedDf[, c(wf1, wf2, "area")]
   uniqueLevels<-unique(c(intersectedDf[[wf1]], intersectedDf[[wf2]]))
 
-  if ( prod(uniqueLevels %in% .lczenv$typeLevelsDefault ) == 1){
+  typeLevelsDefault <- .lczenv$typeLevelsDefault
+
+  if ( prod(uniqueLevels %in% typeLevelsDefault ) == 1){
     internRecode <- function(LCZvect) {
       case_when(
         nchar(as.character(LCZvect)) == 1 ~ paste0("00", LCZvect),
@@ -42,9 +45,12 @@ prepareSankeyLCZ <- function(intersectedDf, wf1, wf2) {
       ordered( levels = rev(
         c("001", "002", "003", "004", "005", "006", "007", "008", "009", "010",
           "101", "102", "103", "104", "105", "106", "107", "Unclassified")))
-  } else {
+  } else if (is.null(colorMap)){
     intersectedDf[[wf1]] <- factor(intersectedDf[[wf1]], levels = uniqueLevels)
     intersectedDf[[wf2]] <- factor(intersectedDf[[wf2]], levels = uniqueLevels)
+  } else {
+    intersectedDf[[wf1]] <- ordered(intersectedDf[[wf1]], levels = names(colorMap))
+    intersectedDf[[wf2]] <- ordered(intersectedDf[[wf2]], levels = names(colorMap))
   }
 
   #   intersectedDf <- aggregate(
@@ -62,11 +68,17 @@ prepareSankeyLCZ <- function(intersectedDf, wf1, wf2) {
     stages_from = c(wf1, wf2),
     values_from = "area"
   )
+  if ( prod(uniqueLevels %in% .lczenv$typeLevelsDefault ) == 1){
   sankeyfied$node <- ordered(
     sankeyfied$node,
     levels = rev(c("001", "002", "003", "004", "005", "006", "007", "008", "009", "010",
                    "101", "102", "103", "104", "105", "106", "107", "Unclassified"))
   )
+
   sankeyfied <- sankeyfied[order(sankeyfied$node),]
+  } else { sankeyfied$node <- ordered(
+    sankeyfied$node,
+    levels = rev(names(colorMap))
+  ) }
   return(sankeyfied)
 }
