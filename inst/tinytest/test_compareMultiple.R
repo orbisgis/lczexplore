@@ -12,8 +12,24 @@ sfList<-loadMultipleSfs(dirPath = paste0(system.file("extdata/multipleWfs/Redon"
 intersected<-createIntersect(sfList = sfList, columns = rep("lcz_primary", 3),
                              workflowNames = c("osm", "bdt", "wudapt"), refCrs = 1)
 multicompare_test<-compareMultipleLCZ(intersected,
-                                      LCZcolumns = c("osm","bdt","wudapt"),
+                                      columns = c("osm","bdt","wudapt"),
                                       trimPerc = 0.0)
+
+aggregMatch<-c("acompact"="Compact", "blessCompact" = "Less Compact", "cfewToNoBuild" = "Few to No Buildings at all",
+               "dunclass" = "Unclassified")
+multicompare_test<-compareMultipleLCZ(intersected,
+                                      columns = c("osm","bdt","wudapt"),
+                                      trimPerc = 0.0,
+                                      labelMatch = aggregMatch,
+                                      acompact = c("1", "2", "3"),
+                                      blessCompact = c("4", "5", "6", "7", "8", "10"),
+                                      cfewToNoBuild = c("9", "101", "102", "103", "104", "105", "106", "107"),
+                                      dunclass = "Unclassified",
+                                      groupColors = c("acompact" = "#8b0101",
+                                                      "blessCompact" = "#ff9856","cfewToNoBuild" = "#bbdb7a",
+                                                      "dunclass" = "grey")
+)
+
 
 testAreas<-workflowAgreeAreas(multicompare_test$sfIntLong)
 testAreas

@@ -1,6 +1,6 @@
 #' Compares several sets of geographical classifications, especially Local Climate Zones classifications
 #' @param sfInt an sf objects with intersected geometries and the LCZ columns for each workflow LCZ
-#' @param LCZcolumns a vector which contains, the name of the columns of the classification to compare
+#' @param columns a vector which contains, the name of the columns of the classification to compare
 #' @param workflowNames a vector of strings which contains the names of the workflows used to produce the sf objects
 #' @param trimPerc this parameters indicates which percentile to drop out of the smallest geometries resulting 
 #' from the intersection of the original sf geometries intersection. 
@@ -25,11 +25,11 @@
 #'  workflowNames = c("osm","bdt","wudapt"))
 #' ArvilleMultipleComparison<-compareMultipleLCZ(
 #'  sfInt = ArvilleIntersect,
-#'  LCZcolumns = c("osm","bdt","wudapt"),
+#'  columns = c("osm","bdt","wudapt"),
 #'  trimPerc = 0.5)
-compareMultipleLCZ <- function(sfInt, LCZcolumns, workflowNames = NULL, trimPerc = 0.05) {
-  if (is.null(LCZcolumns)) {
-    LCZcolumns <- names(sfInt)[!names(sfInt) %in% c("area", "geometry")]
+compareMultipleLCZ <- function(sfInt, columns, workflowNames = NULL, trimPerc = 0.05, labelMatch = NULL, ...) {
+  if (is.null(columns)) {
+    columns <- names(sfInt)[!names(sfInt) %in% c("area", "geometry")]
   }
   sfInt <- sfInt %>% subset(area > quantile(sfInt$area, probs = trimPerc) & !is.na(area))
   # if input intersected file comes from a concatenation, it will have a location column that is not needed
@@ -37,30 +37,30 @@ compareMultipleLCZ <- function(sfInt, LCZcolumns, workflowNames = NULL, trimPerc
 
   sfIntNoGeom <- st_drop_geometry(sfInt)
 
-  if (is.null(workflowNames) | length(workflowNames) != length(LCZcolumns)) { workflowNames <- LCZcolumns }
+  if (is.null(workflowNames) | length(workflowNames) != length(columns)) { workflowNames <- columns }
 
-  allLevels <- sfIntNoGeom[, LCZcolumns] %>%
+  allLevels <- sfIntNoGeom[, columns] %>%
     lapply(levels) %>%
     unlist %>%
     unique()
-  sfIntNoGeom[, LCZcolumns] <- sfIntNoGeom[, LCZcolumns] %>% lapply(function(x) factor(x, levels = allLevels))
+  sfIntNoGeom[, columns] <- sfIntNoGeom[, columns] %>% lapply(function(x) factor(x, levels = allLevels))
 
   # Compute and sums pairwise agreeing surfaces
 
-  for (i in 1:(length(LCZcolumns) - 1)) {
-    for (j in (i + 1):length(LCZcolumns)) {
+  for (i in 1:(length(columns) - 1)) {
+    for (j in (i + 1):length(columns)) {
       compName <- paste0(workflowNames[i], "_", workflowNames[j])
       print(compName)
-      sfIntNoGeom[, compName] <- sfIntNoGeom[, LCZcolumns[i]] == sfIntNoGeom[, LCZcolumns[j]]
+      sfIntNoGeom[, compName] <- sfIntNoGeom[, columns[i]] == sfIntNoGeom[, columns[j]]
     }
   }
-  rangeCol <- (length(LCZcolumns) + 2):ncol(sfIntNoGeom)
+  rangeCol <- (length(columns) + 2):ncol(sfIntNoGeom)
   print(rangeCol)
   # print(names(sfIntnogeom[,rangeCol]))
   sfIntNoGeom$nbAgree <- apply(
     X = sfIntNoGeom[, rangeCol], MARGIN = 1, sum)
   sfIntNoGeom$maxAgree <- apply(
-    X = sfIntNoGeom[, seq_along(LCZcolumns)], MARGIN = 1, function(x) max(table(x), na.rm = TRUE))
+    X = sfIntNoGeom[, seq_along(columns)], MARGIN = 1, function(x) max(table(x), na.rm = TRUE))
   print(head(sfIntNoGeom))
 
   # long format
@@ -75,11 +75,20 @@ compareMultipleLCZ <- function(sfInt, LCZcolumns, workflowNames = NULL, trimPerc
   sfIntLong$LCZvalue <- apply(z, 1, function(x) unlist(st_drop_geometry(sfIntLong)[x[1], x[2]]))
 
   sfInt <- cbind(sfIntNoGeom, sfInt$geometry) %>% st_as_sf()
+
   agreements<-workflowAgreeAreas(sfIntLong)
 
   consensus <- computeConsensus(sfInt, wfNames = workflowNames)
 
-  output <- list(sfInt = sfInt, sfIntLong = sfIntLong, agreements = agreements, consensus = consensus)
+  weightedFlux<-createWeightedFlux(intersectSfWide = sfInt, columns = columns, wfNamesIn = workflowNames,
+                                   typeLevelsDefaultIn = NULL)
+
+  chordDiagram<-drawChordDiagram(weightedFluxIn = weightedFlux, labelMatch = labelMatch,...)
+
+  output <- list(sfInt = sfInt, sfIntLong = sfIntLong,
+                 agreements = agreements, consensus = consensus,
+                 chordDiagram = chordDiagram
+  )
 }
 
 

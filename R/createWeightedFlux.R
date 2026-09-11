@@ -27,7 +27,8 @@ createWeightedFlux <- function(intersectSfWide, columns = NULL, wfNamesIn = NULL
                                typeLevelsDefaultIn = .lczenv$typeLevelsDefault) {
   if (nrow(intersectSfWide) > 100) { message("This function computes how any LCZ type from any workflow
   breaks into the LCZ types of all other workflows: it can take a while") }
-
+ data.table::setDF(intersectSfWide)
+  intersectSfWide <- st_as_sf(intersectSfWide)
   # allowing wfNamesIn or columns to be NULL
   print(columns)
   print(wfNamesIn)
