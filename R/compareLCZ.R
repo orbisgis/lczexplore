@@ -99,7 +99,7 @@ sf2 <- checkedInput$sf2 ; column2 <- checkedInput$column2 ; geomID2<-checkedInpu
                                       tryGroup = tryGroup, ...)
     sf1<-preparedAlter$sf1 ; column1 <- preparedAlter$column1
     sf2<-preparedAlter$sf2 ; column2 <- preparedAlter$column2
-    etiquettes <- preparedAlter$etiquettes ;
+    etiquettes <- preparedAlter$etiquettes
     typeLevels <- preparedAlter$typeLevels ; LCZlevels <- preparedAlter$LCZlevels
   }
 
