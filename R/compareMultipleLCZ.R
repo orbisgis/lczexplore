@@ -74,8 +74,10 @@ compareMultipleLCZ <- function(sfInt, LCZcolumns, workflowNames = NULL, trimPerc
   sfIntLong$LCZvalue <- apply(z, 1, function(x) unlist(st_drop_geometry(sfIntLong)[x[1], x[2]]))
 
   sfInt <- cbind(sfIntNoGeom, sfInt$geometry) %>% st_as_sf()
+  agreements<-workflowAgreeAreas(multicompare_test$sfIntLong)
 
-  output <- list(sfInt = sfInt, sfIntLong = sfIntLong)
+
+  output <- list(sfInt = sfInt, sfIntLong = sfIntLong, agreements = agreements)
 }
 
 

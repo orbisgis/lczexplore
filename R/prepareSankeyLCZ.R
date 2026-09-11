@@ -24,16 +24,28 @@ prepareSankeyLCZ <- function(intersectedDf, wf1, wf2) {
     intersectedDf <- as.data.frame(intersectedDf)
   }
   intersectedDf <- intersectedDf[, c(wf1, wf2, "area")]
+  uniqueLevels<-unique(c(intersectedDf[[wf1]], intersectedDf[[wf2]]))
 
-  internRecode <- function(LCZvect) {
-    case_when(
-      nchar(as.character(LCZvect)) == 1 ~ paste0("00", LCZvect),
-      nchar(as.character(LCZvect)) == 2 ~ paste0("0", LCZvect),
-      .default = as.character(LCZvect))
+  if ( prod(uniqueLevels %in% .lczenv$typeLevelsDefault ) == 1){
+    internRecode <- function(LCZvect) {
+      case_when(
+        nchar(as.character(LCZvect)) == 1 ~ paste0("00", LCZvect),
+        nchar(as.character(LCZvect)) == 2 ~ paste0("0", LCZvect),
+        .default = as.character(LCZvect))
+    }
+
+    intersectedDf[[wf1]] <- internRecode(intersectedDf[[wf1]]) %>%
+      ordered( levels = rev(
+        c("001", "002", "003", "004", "005", "006", "007", "008", "009", "010",
+          "101", "102", "103", "104", "105", "106", "107", "Unclassified")))
+    intersectedDf[[wf2]] <- internRecode(intersectedDf[[wf2]]) %>%
+      ordered( levels = rev(
+        c("001", "002", "003", "004", "005", "006", "007", "008", "009", "010",
+          "101", "102", "103", "104", "105", "106", "107", "Unclassified")))
+  } else {
+    intersectedDf[[wf1]] <- factor(intersectedDf[[wf1]], levels = uniqueLevels)
+    intersectedDf[[wf2]] <- factor(intersectedDf[[wf2]], levels = uniqueLevels)
   }
-
-  intersectedDf[[wf1]] <- internRecode(intersectedDf[[wf1]])
-  intersectedDf[[wf2]] <- internRecode(intersectedDf[[wf2]])
 
   #   intersectedDf <- aggregate(
   #   area ~ get(wf1) + get(wf2),
@@ -50,9 +62,10 @@ prepareSankeyLCZ <- function(intersectedDf, wf1, wf2) {
     stages_from = c(wf1, wf2),
     values_from = "area"
   )
-  sankeyfied$node <- ordered(sankeyfied$node,
-                             levels = c("001", "002", "003", "004", "005", "006", "007", "008", "009", "010",
-                                        "101", "102", "103", "104", "105", "106", "107", "Unclassified")
+  sankeyfied$node <- ordered(
+    sankeyfied$node,
+    levels = rev(c("001", "002", "003", "004", "005", "006", "007", "008", "009", "010",
+                   "101", "102", "103", "104", "105", "106", "107", "Unclassified"))
   )
   sankeyfied <- sankeyfied[order(sankeyfied$node),]
   return(sankeyfied)

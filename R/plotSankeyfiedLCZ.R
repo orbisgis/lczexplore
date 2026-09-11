@@ -15,7 +15,8 @@
 #'  , wf1 = "wudapt", wf2 = "osm")
 #' testSankeyPlot<-plotSankeyfiedLCZ(
 #' sankeyfied = testSankey, plotNow=TRUE)
-plotSankeyfiedLCZ <- function(sankeyfied, plotNow = TRUE, colorMap = NULL, v_space = "auto") {
+plotSankeyfiedLCZ <- function(sankeyfied, plotNow = TRUE, colorMap = NULL,
+                              v_space = "auto") {
   if (is.null(colorMap)) {
     colorMap <- .lczenv$colorMapDefault
     # colorMap<-lczexplore:::.lczenv$colorMapDefault
@@ -29,7 +30,6 @@ plotSankeyfiedLCZ <- function(sankeyfied, plotNow = TRUE, colorMap = NULL, v_spa
 
   colorMap <- colorMap[sort(names(colorMap))]
   print(colorMap)
-
 
   sharedPosition <- position_sankey(
     v_space = v_space,
@@ -52,7 +52,7 @@ plotSankeyfiedLCZ <- function(sankeyfied, plotNow = TRUE, colorMap = NULL, v_spa
       #      alpha  = guide_legend(ncol = 1),
       colour = guide_legend(title = "LCZ type", ncol = 1)) +
     scale_fill_manual(
-      values = rev(colorMap), breaks = rev(names(colorMap))
+      values = colorMap, breaks = names(colorMap)
     ) +
     theme(legend.position = "right") +
     labs(x = paste0(

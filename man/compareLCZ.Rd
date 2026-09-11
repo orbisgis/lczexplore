@@ -22,6 +22,7 @@ compareLCZ(
   outDir = getwd(),
   location = "Your Place",
   plotNow = TRUE,
+  confPlot = "sankey",
   tryGroup = FALSE,
   minZeroArea = 0,
   ...

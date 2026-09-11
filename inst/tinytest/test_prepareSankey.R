@@ -11,8 +11,6 @@ allLocIntersected<-createIntersect(allLocSfList, columns = rep("lcz_primary", 4)
 testSankey<-prepareSankeyLCZ(intersectedDf = allLocIntersected
   , wf1 = "wudapt", wf2 = "osm")
 
-
-
 plotSankeyfiedLCZ(
   sankeyfied = testSankey, plotNow=TRUE)
 
