@@ -45,5 +45,5 @@ columns = c("LCZ_PRIMARY", "LCZ_PRIMARY", "lcz_primary" ))
 intersected<-createIntersect(sfList = sfListFormatted, columns = rep("lcz_primary", 3),
 workflowNames = c("osm", "bdt", "wudapt"))
 multicompare_test<-compareMultipleLCZ(intersected,
-LCZcolumns = c("osm","bdt","wudapt"),trimPerc = 0.5)
+columns = c("osm","bdt","wudapt"),trimPerc = 0.5)
 }

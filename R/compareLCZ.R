@@ -26,6 +26,7 @@
 #' @param minZeroArea allows you to specify a minimal area under which intersected spatial units will be discarded.
 #' It avoids numerical error and can save computing time.
 #' @param plotNow : when FALSE none of the graphics are plotted or saved
+#' @param confPlot default is "matrix", to plot the confusion matrix. "sankey" allows to replaace it with a sankey diagram.
 #' @param saveG : when an empty character string, "", the plots are not saved. Else, the saveG string is used to produce the name of the saved png file.
 #' @param location : the name of the study area, as chosen as the name of the directory on the GeoClimate team cloud.
 #' If the area you wish to analyse is not uploaded yet, please contact the GeoClimate Team.

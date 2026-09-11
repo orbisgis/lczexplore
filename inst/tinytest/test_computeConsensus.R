@@ -16,5 +16,5 @@
                                wfNames = c("bdt","osm", "wudapt"= "wud"))
 
  multicompare_test<-compareMultipleLCZ(intersected,
-                                       LCZcolumns = c("osm","bdt","wudapt"),
+                                       columns = c("osm","bdt","wudapt"),
                                        trimPerc = 0.0)

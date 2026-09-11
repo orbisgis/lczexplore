@@ -7,6 +7,6 @@
   workflowNames = c("osm","bdt","wudapt"))
  ArvilleMultipleComparison<-compareMultipleLCZ(
   sfInt = ArvilleIntersect,
-  LCZcolumns = c("osm","bdt","wudapt"),
+  columns = c("osm","bdt","wudapt"),
   trimPerc = 0.5)
  ArvilleWorkflowAgreement<-workflowAgreeAreas(ArvilleMultipleComparison$sfIntLong)

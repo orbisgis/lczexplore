@@ -202,7 +202,7 @@ the pairwise agreements, and the number of workflows who agree for each geometry
 ```{r, multiple-comparison}
 twoLocsCompared <- compareMultipleLCZ(
   sfInt = twoLocsSfIntersected,
-  LCZcolumns = c("osm","bdt","wudapt"),
+  columns = c("osm","bdt","wudapt"),
   trimPerc = 0)
 ```
 ## Pairwise agreements

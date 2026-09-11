@@ -74,6 +74,8 @@ If the area you wish to analyse is not uploaded yet, please contact the GeoClima
 
 \item{plotNow}{: when FALSE none of the graphics are plotted or saved}
 
+\item{confPlot}{default is "matrix", to plot the confusion matrix. "sankey" allows to replaace it with a sankey diagram.}
+
 \item{tryGroup}{: when TRUE, one can group and compare on-the-fly : if the specified level names
 don't match the data, but the specified levels do, a call to the groupLCZ function will be tried,
 and if it works, the resulting grouping columns wille be compared}

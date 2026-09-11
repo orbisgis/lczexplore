@@ -41,7 +41,7 @@ testMatConf<-matConfLCZ(sf1 = sfList$osm, column1 = "lcz_primary", sf2 = sfList$
 testMatConf$percAgg
 
 multicompare_test<-compareMultipleLCZ(intersected,
-                                      LCZcolumns = c("osm","bdt","wudapt"),
+                                      columns = c("osm","bdt","wudapt"),
                                       trimPerc = 0.5)
 testAreas$percAgree
 testAreas<-workflowAgreeAreas(multicompare_test$sfIntLong)
@@ -55,7 +55,7 @@ sfList2<-loadMultipleSfs(dirPath = paste0(system.file("extdata/multipleWfs/Redon
 intersected2<-createIntersect(sfList = sfList2, columns = rep("lcz_primary", 2),
                              workflowNames = c("osm", "bdt"), refCrs = 1)
 multicompare_test2<-compareMultipleLCZ(intersected2,
-                                      LCZcolumns = c("osm","bdt"),
+                                      columns = c("osm","bdt"),
                                       trimPerc = 0.0)
 testAreas2<-workflowAgreeAreas(multicompare_test2$sfIntLong)
 expect_true(round(testAreas2[1,4],1) == round(testMatConf$percAgg,1))
@@ -84,7 +84,7 @@ intersected<-createIntersect(sfList = test3, columns = rep("lcz_primary", 3),
                              workflowNames = c("osm", "bdt", "wudapt"))
 
 expect_silent(multicompare_test<-compareMultipleLCZ(intersected,
-                                                    LCZcolumns = c("osm","bdt","wudapt"),
+                                                    columns = c("osm","bdt","wudapt"),
                                                     trimPerc = 0.5))
 
 expect_silent(testAreas<-workflowAgreeAreas(multicompare_test$sfIntLong))

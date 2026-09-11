@@ -81,7 +81,7 @@ loadMultipleSfs <- function(
 #' intersected<-createIntersect(sfList = sfListFormatted, columns = rep("lcz_primary", 3),
 #' workflowNames = c("osm", "bdt", "wudapt"))
 #' multicompare_test<-compareMultipleLCZ(intersected,
-#' LCZcolumns = c("osm","bdt","wudapt"),trimPerc = 0.5)
+#' columns = c("osm","bdt","wudapt"),trimPerc = 0.5)
 loadmultipleSfsFromSession <- function(sfList, workflowNames, columns, location, refCRS = 1) {
   refCRS <- st_crs(sfList[[refCRS]])
   sfList <- lapply(sfList, st_transform, crs = refCRS)
