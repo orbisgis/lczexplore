@@ -14,6 +14,7 @@
 #' matConfPlot is a ggplot2 object showing the confusion matrix.
 #' percAgg is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
 #' If saveG is not an empty string, graphics are saved under "saveG.png"
+#' agreements a dtaframe with the pairs of workflows, areas on which they agree, disagree, and the percentage of agreement
 #' @export
 #' @examples
 #' sfList<-loadMultipleSfs(dirPath = 
@@ -74,10 +75,11 @@ compareMultipleLCZ <- function(sfInt, LCZcolumns, workflowNames = NULL, trimPerc
   sfIntLong$LCZvalue <- apply(z, 1, function(x) unlist(st_drop_geometry(sfIntLong)[x[1], x[2]]))
 
   sfInt <- cbind(sfIntNoGeom, sfInt$geometry) %>% st_as_sf()
-  agreements<-workflowAgreeAreas(multicompare_test$sfIntLong)
+  agreements<-workflowAgreeAreas(sfIntLong)
 
+  consensus <- computeConsensus(sfInt, wfNames = workflowNames)
 
-  output <- list(sfInt = sfInt, sfIntLong = sfIntLong, agreements = agreements)
+  output <- list(sfInt = sfInt, sfIntLong = sfIntLong, agreements = agreements, consensus = consensus)
 }
 
 
