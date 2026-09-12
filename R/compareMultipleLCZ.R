@@ -5,7 +5,10 @@
 #' @param trimPerc this parameters indicates which percentile to drop out of the smallest geometries resulting
 #' It allows to account for numeric precision errors and to speed up computations at the cost of not considering the smallest geometries.
 #' @param labelMatch feed matching between levels of the data and some labels
-#' from the intersection of the original sf geometries intersection. 
+#' from the intersection of the original sf geometries intersection.
+#' @param ... areguments to be passed for groupint, in the form of
+#' groupLevel = levels to group to this group level, and a possible groupColors named vectors,
+#' which names are the grouped levels and values are the desired colors.
 #' @importFrom ggplot2 geom_sf guides ggtitle aes
 #' @importFrom tidyr pivot_longer
 #' @import sf forcats units RColorBrewer utils grDevices
