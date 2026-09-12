@@ -21,8 +21,10 @@ compareMultipleLCZ(
 \item{workflowNames}{a vector of strings which contains the names of the workflows used to produce the sf objects}
 
 \item{trimPerc}{this parameters indicates which percentile to drop out of the smallest geometries resulting
-from the intersection of the original sf geometries intersection.
 It allows to account for numeric precision errors and to speed up computations at the cost of not considering the smallest geometries.}
+
+\item{labelMatch}{feed matching between levels of the data and some labels
+from the intersection of the original sf geometries intersection.}
 }
 \value{
 returns graphics of comparison and an object called matConfOut which contains :

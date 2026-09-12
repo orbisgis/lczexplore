@@ -2,9 +2,10 @@
 #' @param sfInt an sf objects with intersected geometries and the LCZ columns for each workflow LCZ
 #' @param columns a vector which contains, the name of the columns of the classification to compare
 #' @param workflowNames a vector of strings which contains the names of the workflows used to produce the sf objects
-#' @param trimPerc this parameters indicates which percentile to drop out of the smallest geometries resulting 
+#' @param trimPerc this parameters indicates which percentile to drop out of the smallest geometries resulting
+#' It allows to account for numeric precision errors and to speed up computations at the cost of not considering the smallest geometries.
+#' @param labelMatch feed matching between levels of the data and some labels
 #' from the intersection of the original sf geometries intersection. 
-#' It allows to account for numeric precision errors and to speed up computations at the cost of not considering the smallest geometries. 
 #' @importFrom ggplot2 geom_sf guides ggtitle aes
 #' @importFrom tidyr pivot_longer
 #' @import sf forcats units RColorBrewer utils grDevices
