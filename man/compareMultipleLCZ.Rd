@@ -25,6 +25,10 @@ It allows to account for numeric precision errors and to speed up computations a
 
 \item{labelMatch}{feed matching between levels of the data and some labels
 from the intersection of the original sf geometries intersection.}
+
+\item{...}{areguments to be passed for groupint, in the form of
+groupLevel = levels to group to this group level, and a possible groupColors named vectors,
+which names are the grouped levels and values are the desired colors.}
 }
 \value{
 returns graphics of comparison and an object called matConfOut which contains :
