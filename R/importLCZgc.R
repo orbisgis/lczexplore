@@ -15,9 +15,9 @@
 #'
 #' @examples
 #' # not run
-#' # bdtTest<-importLCZgc(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/lczfiles/Redon/"),
+#' # bdtTest<-importLCZgc(dirPath=paste0(system.file("extdata", package = "lczexplore"),""/multipleWfs/Redon"/"),
 #' # file = "bdt_lcz.fgb")
-importLCZgc<-function(dirPath,output="sfFile", file = "rsu_lcz.fgb"){
+importLCZgc <- function(dirPath, output = "sfFile", file = "rsu_lcz.fgb") {
   # output can be sfFile, bBox or Contour
 
   # dependancies should be dealt with @import
@@ -30,22 +30,24 @@ importLCZgc<-function(dirPath,output="sfFile", file = "rsu_lcz.fgb"){
   #                        "9"="9","10"="10","101"="101","102"="102","103"="103","104"="104",
   #                        "105"="105","106"="106","107"="107","101"="11","102"="12","103"="13","104"="14",
   #                        "105"="15", "106"="16","107"="17")
-  fileName<-paste0(dirPath,file)
-  sfFile<-st_read(dsn=fileName)
+  fileName <- paste0(dirPath, file)
+  sfFile <- st_read(dsn = fileName)
   #sfFile<-sfFile %>% mutate(LCZ_PRIMARY<-factor(subset(sfFile,select=LCZ_PRIMARY,drop=T),levels=typeLevels))
 
 
-  if(output=="sfFile"){return(sfFile)} else {
-    if(output=="bBox"){bBox<-st_bbox(sfFile,crs=st_crs(sfFile)) %>% st_as_sfc
+  if (output == "sfFile") { return(sfFile) } else {
+    if (output == "bBox") { bBox <- st_bbox(sfFile, crs = st_crs(sfFile)) %>% st_as_sfc
 
-    return(bBox)} else {
-      if(output=="contour"){
+      return(bBox) } else {
+      if (output == "contour") {
         # fileName2<-paste0(dirPath,"zones.geojson")
-        sfContour<-st_read(dsn=fileName) %>% st_geometry %>% st_union()
+        sfContour <- st_read(dsn = fileName) %>%
+          st_geometry %>%
+          st_union()
         return(sfContour)
       }
       else {
-      stop("output must be sfFile to return geoms and LCZ or bBox to return the bounding box")}
+        stop("output must be sfFile to return geoms and LCZ or bBox to return the bounding box") }
     }
   }
 

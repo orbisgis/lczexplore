@@ -9,21 +9,21 @@
 #' @export
 #' @examples
 #' dirList <- list.dirs(paste0(
-#' system.file("extdata", package = "lczexplore"),"/multipleWfs"))[-1]
+#' system.file("extdata", package = "lczexplore"),"/multipleWfs"), recursive = FALSE)
 #' allLocIntersected<-concatIntersectedLocations(
-#' dirList = dirList, locations = c("Blaru", "Arville"))
+#' dirList = dirList, inLocations = c("Arville", "Redon"))
 #' consensus <- computeConsensus(inDf = allLocIntersected,
-#' wfNames = c("bdt","osm", "wudapt", "iau"))
-computeConsensus<-function(inDf, wfNames){
+#' wfNames = c("bdt","osm", "wudapt"= "wud"))
+computeConsensus <- function(inDf, wfNames) {
   setDT(inDf)
-  d1<-CJ(
+  d1 <- CJ(
     names(inDf)[names(inDf) %in% wfNames],
     names(inDf)[names(inDf) %in% wfNames]
-)[V1!=V2]
-  
-  
-  d2<-d1[,list(LCZ_value = inDf[,get(V1)], LCZ_alter = inDf[,get(V2)], area = inDf[,area]),list(V1, V2)][
-    ,list(LCZ_value, LCZ_alter, area, agree = LCZ_value == LCZ_alter), ][
-    ,list(LCZ_value, LCZ_alter, area, agree, agreeArea = agree * area, disagreeArea = (!agree)*area ),]
-  consensus<-d2[,list(percAgree = sum(agreeArea)/(sum(agreeArea)+sum(disagreeArea))),keyby = list(LCZ_value)][order(percAgree),,]
+  )[V1 != V2]
+
+
+  d2 <- d1[, list(LCZ_value = inDf[, get(V1)], LCZ_alter = inDf[, get(V2)], area = inDf[, area]), list(V1, V2)][
+    , list(LCZ_value, LCZ_alter, area, agree = LCZ_value == LCZ_alter),][
+    , list(LCZ_value, LCZ_alter, area, agree, agreeArea = agree * area, disagreeArea = (!agree) * area),]
+  consensus <- d2[, list(percAgree = sum(agreeArea) / (sum(agreeArea) + sum(disagreeArea))), keyby = list(LCZ_value)][order(percAgree), ,]
 }

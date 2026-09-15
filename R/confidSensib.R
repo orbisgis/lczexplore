@@ -35,8 +35,8 @@
 #'                         confid2 ="LCZ_UNIQUENESS_VALUE", exwrite=FALSE, plot=FALSE, saveG="")
 #' confidSensib(inputDf=redonCompare$data,
 #' nPoints=5, wf1="bdtopo_2_2", wf2="osm",
-#' geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
-#' geomID2="ID_RSU.1",column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1",
+#' geomID1="ID_RSU", column1="bdt", confid1="LCZ_UNIQUENESS_VALUE",
+#' geomID2="ID_RSU.1",column2="osm", confid2="LCZ_UNIQUENESS_VALUE.1",
 #' sep=";", repr="standard", plot=TRUE, saveG="")
 confidSensib <- function(inputDf = "", filePath = "", nPoints = 5,
                          wf1 = "bdtopo_2_2", wf2 = "osm",
@@ -47,13 +47,17 @@ confidSensib <- function(inputDf = "", filePath = "", nPoints = 5,
 
   colonnes <- c(geomID1, column1, confid1, geomID2, column2, confid2)
   colonnes <- colonnes[sapply(colonnes, nchar) != 0] %>% c("agree", "area", "location")
+  print("colonnes") ;   print(colonnes)
 
   # Import the data if they are in a csv file or in a R object
   if (filePath != "") {
     echInt <- dplyr::distinct(read.csv(filePath, sep, header = T, stringsAsFactors = T))
     names(echInt) <- colonnes
   } else {
-    if (!is.null(inputDf)) { echInt <- dplyr::distinct(inputDf[, colonnes]) }
+
+    if (!is.null(inputDf)) {
+      print("names inputDf") ; print(names(inputDf))
+      echInt <- dplyr::distinct(inputDf[, colonnes]) }
     else { stop("You must specifiy a file path or the name of the object storing confidence and agreement") }
   }
 
@@ -91,7 +95,7 @@ confidSensib <- function(inputDf = "", filePath = "", nPoints = 5,
     nbDrop <- NULL
 
     for (i in confSeq) {
-         
+
       echIntKeep <- subset(echIntConf, confidMin >= i)
       if (nrow(echIntKeep) > 0) { #print(nrow(echIntKeep))
         percAgrKeep <- c(percAgrKeep,

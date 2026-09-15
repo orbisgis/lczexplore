@@ -9,12 +9,12 @@ compareLCZ(
   geomID1 = "",
   column1 = "LCZ_PRIMARY",
   confid1 = "",
-  wf1 = "bdtopo_2_2",
+  wf1 = NULL,
   sf2,
   column2 = "LCZ_PRIMARY",
   geomID2 = "",
   confid2 = "",
-  wf2 = "osm",
+  wf2 = NULL,
   ref = 1,
   repr = "standard",
   saveG = "",
@@ -22,7 +22,9 @@ compareLCZ(
   outDir = getwd(),
   location = "Your Place",
   plotNow = TRUE,
+  confPlot = "matrix",
   tryGroup = FALSE,
+  minZeroArea = 0,
   ...
 )
 }
@@ -72,9 +74,14 @@ If the area you wish to analyse is not uploaded yet, please contact the GeoClima
 
 \item{plotNow}{: when FALSE none of the graphics are plotted or saved}
 
+\item{confPlot}{default is "matrix", to plot the confusion matrix. "sankey" allows to replaace it with a sankey diagram.}
+
 \item{tryGroup}{: when TRUE, one can group and compare on-the-fly : if the specified level names
 don't match the data, but the specified levels do, a call to the groupLCZ function will be tried,
 and if it works, the resulting grouping columns wille be compared}
+
+\item{minZeroArea}{allows you to specify a minimal area under which intersected spatial units will be discarded.
+It avoids numerical error and can save computing time.}
 
 \item{...}{allow to pass optionnal arguments if repr is set to alter.
 The expected arguments are the name of each level of the variables contained

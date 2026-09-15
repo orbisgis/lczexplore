@@ -44,6 +44,6 @@ Imports Local Climate Zone classifications from a standard geographical file (te
 }
 \examples{
 redonBDTex<-importLCZvectFromFile(dirPath=paste0(system.file("extdata", package = "lczexplore"),
-"/lczfiles/Redon"), file="bdt_lcz.fgb", column="LCZ_PRIMARY",
+"/multipleWfs/Redon"), file="bdt_lcz.fgb", column="LCZ_PRIMARY",
 geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
 }

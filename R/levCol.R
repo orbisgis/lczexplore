@@ -204,7 +204,7 @@ levCol <- function(sf, column, drop = FALSE, useStandCol = FALSE, ...) {
 
       ######## case when vectors not of the same size and more levels than colors
       complement <- length(argLev[[1]]) - length(argCol)
-      typeLevels <- c(argCol,randomcoloR::randomColor(count = complement))
+      typeLevels <- c(argCol, randomcoloR::randomColor(count = complement))
       names(typeLevels) <- argLev[[1]]
       recall <- levCol(sf = sf, column = column, drop = drop, levels = typeLevels)
       typeLevels <- recall$levelsColors

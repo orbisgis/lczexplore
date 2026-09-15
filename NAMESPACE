@@ -7,8 +7,10 @@ export(addMissingRSUs)
 export(aggregateRSUsByLCZ)
 export(areColors)
 export(barplotLCZaLocation)
+export(barplotLCZfromIntersect)
 export(checkColnameCase)
 export(checkDirSlash)
+export(checkWorkflowName)
 export(compareLCZ)
 export(compareMultipleLCZ)
 export(completeDT)
@@ -18,8 +20,10 @@ export(concatAlocationWorkflows)
 export(concatIntersectedLocations)
 export(confidSensib)
 export(createIntersect)
-export(createMultipleMatConf)
+export(createWeightedFlux)
+export(createWeightedFluxFromIntersect)
 export(drawChordDiagram)
+export(drawChordDiagramWithGrouping)
 export(drawSectors)
 export(fetchLCZ)
 export(groupLCZ)
@@ -35,6 +39,7 @@ export(levCol)
 export(loadConcatAllLocsAllWfs)
 export(loadMultipleLocsSfs)
 export(loadMultipleSfs)
+export(loadmultipleSfsFromSession)
 export(makeSectorsAndGroups)
 export(matConfLCZ)
 export(matConfLCZGlob)
@@ -62,53 +67,78 @@ import(sf)
 import(units)
 import(utils)
 importFrom(caret,dummyVars)
-importFrom(circlize,chordDiagram)
-importFrom(circlize,circos.clear)
-importFrom(circlize,circos.text)
-importFrom(circlize,circos.track)
-importFrom(circlize,get.cell.meta.data)
-importFrom(circlize,highlight.sector)
-importFrom(collapse,fselect)
-importFrom(collapse,unlist2d)
-importFrom(dplyr,across)
-importFrom(dplyr,all_of)
-importFrom(dplyr,arrange)
-importFrom(dplyr,case_when)
-importFrom(dplyr,desc)
-importFrom(dplyr,distinct)
-importFrom(dplyr,filter)
-importFrom(dplyr,group_by)
-importFrom(dplyr,group_by_at)
-importFrom(dplyr,mutate)
-importFrom(dplyr,select)
-importFrom(dplyr,summarise)
-importFrom(dplyr,summarize)
-importFrom(dplyr,ungroup)
-importFrom(dplyr,where)
-importFrom(forcats,fct_na_value_to_level)
-importFrom(forcats,fct_recode)
-importFrom(ggplot2,aes)
-importFrom(ggplot2,geom_sf)
-importFrom(ggplot2,ggtitle)
-importFrom(ggplot2,guides)
-importFrom(grDevices,col2rgb)
-importFrom(grDevices,palette.colors)
+importFrom(circlize,
+  chordDiagram,
+  circos.clear,
+  circos.text,
+  circos.track,
+  get.cell.meta.data,
+  highlight.sector
+)
+importFrom(collapse,
+  fgroup_by,
+  fmutate,
+  frename,
+  fselect,
+  fsum,
+  fsummarise,
+  unlist2d
+)
+importFrom(dplyr,
+  across,
+  all_of,
+  arrange,
+  case_when,
+  desc,
+  distinct,
+  filter,
+  group_by,
+  group_by_at,
+  mutate,
+  select,
+  summarise,
+  summarize,
+  ungroup,
+  where
+)
+importFrom(forcats,
+  fct_na_value_to_level,
+  fct_recode
+)
+importFrom(ggplot2,
+  aes,
+  geom_sf,
+  ggtitle,
+  guides
+)
+importFrom(grDevices,
+  col2rgb,
+  palette.colors
+)
 importFrom(graphics,par)
 importFrom(magrittr,"%>%")
 importFrom(randomcoloR,randomColor)
-importFrom(sf,st_crs)
-importFrom(sf,st_drop_geometry)
-importFrom(sf,st_transform)
+importFrom(sf,
+  st_crs,
+  st_drop_geometry,
+  st_transform
+)
 importFrom(shades,complement)
-importFrom(stats,median)
-importFrom(stats,qnorm)
-importFrom(stats,quantile)
-importFrom(stats,sd)
-importFrom(terra,as.polygons)
-importFrom(terra,crop)
-importFrom(terra,rast)
-importFrom(tidyr,crossing)
-importFrom(tidyr,drop_na)
-importFrom(tidyr,pivot_longer)
-importFrom(tidyr,pivot_wider)
-importFrom(tidyr,replace_na)
+importFrom(stats,
+  median,
+  qnorm,
+  quantile,
+  sd
+)
+importFrom(terra,
+  as.polygons,
+  crop,
+  rast
+)
+importFrom(tidyr,
+  crossing,
+  drop_na,
+  pivot_longer,
+  pivot_wider,
+  replace_na
+)

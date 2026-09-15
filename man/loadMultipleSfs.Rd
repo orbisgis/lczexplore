@@ -9,10 +9,10 @@ fileExtension is a fil extension known by sf drivers, like fgb, geojson...}
 \usage{
 loadMultipleSfs(
   dirPath,
-  workflowNames = c("osm", "bdt", "iau", "wudapt"),
+  workflowNames = c("osm", "bdt", "wudapt"),
   inLocation = NA,
   fileExtension = ".fgb",
-  column = "lcz_primary"
+  columns = "lcz_primary"
 )
 }
 \arguments{
@@ -24,7 +24,8 @@ loadMultipleSfs(
 
 \item{fileExtension}{is the extensions of the files to load (.fgb is the recommended format)}
 
-\item{column}{is the name of the column containing the LCZ types, must be the same in all files.}
+\item{columns}{the name (string) of the column containing LCZ types.
+If the different workflows do no use the same column names, a vector of names is passed}
 }
 \value{
 returns graphics of comparison and an object called matConfOut which contains :
@@ -43,5 +44,5 @@ fileExtension is a fil extension known by sf drivers, like fgb, geojson...
 \examples{
 sfList<-loadMultipleSfs(dirPath = paste0(
 system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
-workflowNames = c("osm","bdt","iau","wudapt"), inLocation = "Arville"  )
+workflowNames = c("osm","bdt","wudapt"), inLocation = "Arville", columns = "lcz_primary")
 }

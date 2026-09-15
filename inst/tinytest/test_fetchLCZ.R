@@ -5,7 +5,7 @@
 
 # system.file("extdata/", package = "lczexplore") %>% list.files()
 # system.file("extdata/bdtopo_2_2", package = "lczexplore") %>% list.files()
-# file.exists(system.file("extdata/lczfiles/Redon", package = "lczexplore"))
+# file.exists(system.file("extdata"multipleWfs/Redon"", package = "lczexplore"))
 #
 # system.file("extdata/osm/2022", package = "lczexplore") %>% list.files()
 #

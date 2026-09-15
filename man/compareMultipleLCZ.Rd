@@ -4,26 +4,40 @@
 \alias{compareMultipleLCZ}
 \title{Compares several sets of geographical classifications, especially Local Climate Zones classifications}
 \usage{
-compareMultipleLCZ(sfInt, LCZcolumns, workflowNames = NULL, trimPerc = 0.05)
+compareMultipleLCZ(
+  sfInt,
+  columns,
+  workflowNames = NULL,
+  trimPerc = 0.05,
+  labelMatch = NULL,
+  ...
+)
 }
 \arguments{
 \item{sfInt}{an sf objects with intersected geometries and the LCZ columns for each workflow LCZ}
 
-\item{LCZcolumns}{a vector which contains, the name of the columns of the classification to compare}
+\item{columns}{a vector which contains, the name of the columns of the classification to compare}
 
 \item{workflowNames}{a vector of strings which contains the names of the workflows used to produce the sf objects}
 
 \item{trimPerc}{this parameters indicates which percentile to drop out of the smallest geometries resulting
-from the intersection of the original sf geometries intersection.
 It allows to account for numeric precision errors and to speed up computations at the cost of not considering the smallest geometries.}
+
+\item{labelMatch}{feed matching between levels of the data and some labels
+from the intersection of the original sf geometries intersection.}
+
+\item{...}{areguments to be passed for groupint, in the form of
+groupLevel = levels to group to this group level, and a possible groupColors named vectors,
+which names are the grouped levels and values are the desired colors.}
 }
 \value{
 returns graphics of comparison and an object called matConfOut which contains :
-matConfLong, a confusion matrix in a longer form,
+matConfLong, a confusion matrix in a long form (each line has the percentage of LCZ type i from workflow j
+which is classified in LCZ type i' by workflow j'),
 matConfPlot is a ggplot2 object showing the confusion matrix.
 percAgg is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
-pseudoK is a heuristic estimate of a Cohen's kappa coefficient of agreement between classifications
 If saveG is not an empty string, graphics are saved under "saveG.png"
+agreements a dtaframe with the pairs of workflows, areas on which they agree, disagree, and the percentage of agreement
 }
 \description{
 Compares several sets of geographical classifications, especially Local Climate Zones classifications
@@ -31,12 +45,12 @@ Compares several sets of geographical classifications, especially Local Climate 
 \examples{
 sfList<-loadMultipleSfs(dirPath = 
 paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
-workflowNames = c("osm","bdt","iau","wudapt"), inLocation = "Arville")
+workflowNames = c("osm","bdt","wudapt"), inLocation = "Arville")
 ArvilleIntersect <- createIntersect(
  sfList = sfList, columns = rep("lcz_primary", 4),  
- workflowNames = c("osm","bdt","iau","wudapt"))
+ workflowNames = c("osm","bdt","wudapt"))
 ArvilleMultipleComparison<-compareMultipleLCZ(
  sfInt = ArvilleIntersect,
- LCZcolumns = c("osm","bdt","iau","wudapt"),
+ columns = c("osm","bdt","wudapt"),
  trimPerc = 0.5)
 }

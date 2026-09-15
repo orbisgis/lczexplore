@@ -77,7 +77,7 @@ redonCompare<-compareLCZ(sf1=redonBDT, wf1="bdt", geomID1 = "ID_RSU", column1 ="
                         confid2 ="LCZ_UNIQUENESS_VALUE", exwrite=FALSE, plot=FALSE, saveG="")
 confidSensib(inputDf=redonCompare$data,
 nPoints=5, wf1="bdtopo_2_2", wf2="osm",
-geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
-geomID2="ID_RSU.1",column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1",
+geomID1="ID_RSU", column1="bdt", confid1="LCZ_UNIQUENESS_VALUE",
+geomID2="ID_RSU.1",column2="osm", confid2="LCZ_UNIQUENESS_VALUE.1",
 sep=";", repr="standard", plot=TRUE, saveG="")
 }

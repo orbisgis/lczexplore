@@ -40,9 +40,9 @@
 #'            dimnames = list(rater1 = c("V","N","P"), rater2 = c("V","N","P")) )
 #' # confusion matrix interface
 #' CohenKappa(m, weight="Unweighted")
-CohenKappa <- function (x, y = NULL,
-                        weights = c("Unweighted", "Equal-Spacing", "Fleiss-Cohen"),
-                        conf.level = NA, ...) {
+CohenKappa <- function(x, y = NULL,
+                       weights = c("Unweighted", "Equal-Spacing", "Fleiss-Cohen"),
+                       conf.level = NA, ...) {
 
   if (is.character(weights))
     weights <- match.arg(weights)
@@ -71,24 +71,26 @@ CohenKappa <- function (x, y = NULL,
   d <- diag(x)
   n <- sum(x)
   nc <- ncol(x)
-  colFreqs <- colSums(x)/n
-  rowFreqs <- rowSums(x)/n
+  colFreqs <- colSums(x) / n
+  rowFreqs <- rowSums(x) / n
 
   kappa <- function(po, pc) {
-    (po - pc)/(1 - pc)
+    (po - pc) / (1 - pc)
   }
 
   std <- function(p, pc, k, W = diag(1, ncol = nc, nrow = nc)) {
     sqrt((sum(p * sweep(sweep(W, 1, W %*% colSums(p) * (1 - k)),
                         2, W %*% rowSums(p) * (1 - k))^2) -
-      (k - pc * (1 - k))^2) / crossprod(1 - pc)/n)
+      (k - pc * (1 - k))^2) /
+           crossprod(1 - pc) /
+           n)
   }
 
-  if(identical(weights, "Unweighted")) {
-    po <- sum(d)/n
+  if (identical(weights, "Unweighted")) {
+    po <- sum(d) / n
     pc <- as.vector(crossprod(colFreqs, rowFreqs))
     k <- kappa(po, pc)
-    s <- as.vector(std(x/n, pc, k))
+    s <- as.vector(std(x / n, pc, k))
 
   } else {
 
@@ -96,27 +98,26 @@ CohenKappa <- function (x, y = NULL,
     W <- if (is.matrix(weights))
       weights
     else if (weights == "Equal-Spacing")
-      1 - abs(outer(1:nc, 1:nc, "-"))/(nc - 1)
+      1 - abs(outer(1:nc, 1:nc, "-")) / (nc - 1)
     else # weights == "Fleiss-Cohen"
-      1 - (abs(outer(1:nc, 1:nc, "-"))/(nc - 1))^2
+      1 - (abs(outer(1:nc, 1:nc, "-")) / (nc - 1))^2
 
-    po <- sum(W * x)/n
+    po <- sum(W * x) / n
     pc <- sum(W * colFreqs %o% rowFreqs)
     k <- kappa(po, pc)
-    s <- as.vector(std(x/n, pc, k, W))
+    s <- as.vector(std(x / n, pc, k, W))
   }
 
   if (is.na(conf.level)) {
     res <- k
   } else {
-    ci <- k + c(1, -1) * qnorm((1 - conf.level)/2) * s
+    ci <- k + c(1, -1) * qnorm((1 - conf.level) / 2) * s
     res <- c(kappa = k, lwr.ci = ci[1], upr.ci = ci[2])
   }
 
   return(res)
 
 }
-
 
 
 # KappaTest <- function(x, weights = c("Equal-Spacing", "Fleiss-Cohen"), conf.level = NA) {

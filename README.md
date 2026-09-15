@@ -10,7 +10,7 @@ output: github_document
 <!-- badges: start -->
 <!-- badges: end -->
 
-This is the 0.0.1.0000 version of the package lczexplore.
+This is the 0.0.1.00015 version of the package lczexplore.
 
 # Licence
 
@@ -42,12 +42,6 @@ This package can be installed from github using the install_github function of t
 # library(devtools)
 # devtools::install_github("orbisgis/lczexplore")
 ```
-It can also be installed from the tarball file. 
-```R
-# install.packages("/path/lczexplore_0.0.1.0000.tar.gz ",repos=NULL)
-
-```
-where path is the folder where you download the tarball sources. 
 
 
 # Summary
@@ -71,7 +65,7 @@ In order to compare two LCZ classifications the compareLCZ function proceeds the
 ## Plot the two classifications
 Two maps are produced and allow a visual comparison of the two classifications. 
 
-## Interesect the geometries of both classifications
+## Intersect the geometries of both classifications
 This steps returns geometries on which the two classifications either totally agree either totally disagree, and plot them on a map.
 
 ## Quantify the agreement
@@ -98,10 +92,14 @@ The following functions are the core of this package :
 `confidSensib` : explores how the agreement between two LCZ varies according to a confidence indicator associated for the LCZ value of each geom (sensibility analysis)
 ![Sensibiilty analysis : how the confidence we have in LCZ classifications impacts the agreement betweend classifications](inst/extdata/RedonSensib.png)
 
-# Other (experimental) functions
+# Other functions
 These functions are used in the PAENDORA 2 project but may not be generic enough or robust enough for other uses. 
 `groupLCZ` : allows to group some LCZ levels into a level named by the user (for instance to group all compact LCZ, or all vegetation LCZ...)
-`fetchLCZ` : allows the download and unzip of LCZ files. The user can specify the URL where the function should seek the data. 
+
+# Multiple comparison
+Since version 1.0.0.0015, `lczexplore` includes functions to compare more than 2 maps. 
+It allows to produce pairwise agreements, consensus among workflows for each LCZ type
+and chord diagram to visualize how types of a workflow break up in types of the others. 
 
 
 

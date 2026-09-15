@@ -14,21 +14,21 @@
 #' @examples
 #' sfListAll<-loadMultipleLocsSfs(dirPath = paste0(
 #'  system.file("extdata", package = "lczexplore"),"/multipleWfs/"),
-#'                               workflowNames = c("osm","bdt","iau","wudapt"),
-#'                               inLocation = c("Arville", "Blaru"))
+#'                               workflowNames = c("osm","bdt","wudapt"),
+#'                               inLocation = c("Arville", "Redon"))
 #' allLocsAllWfs <-  concatAllLocsWorkflows(
 #'  sfList = sfListAll)
-concatAllLocsWorkflows<-function(sfList, refCrs = 1){
+concatAllLocsWorkflows <- function(sfList, refCrs = 1) {
 
   locations <- names(sfList)
-  concatSf<-vector(mode = "list", length = length(locations))
-  names(concatSf)<-locations
-  for (loc_i in locations){
+  concatSf <- vector(mode = "list", length = length(locations))
+  names(concatSf) <- locations
+  for (loc_i in locations) {
     concatSf[[loc_i]] <- concatAlocationWorkflows(
       sfList = sfList[[loc_i]], location = loc_i, refCrs = refCrs
     )
   }
-  concatSf<-do.call(rbind, concatSf)
+  concatSf <- do.call(rbind, concatSf)
   # concatSf<-unlist2d(sfList)
   return(concatSf)
 }

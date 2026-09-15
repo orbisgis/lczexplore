@@ -4,10 +4,10 @@
 \alias{groupLCZsuffix}
 \title{Regroups levels of origin and destination of a multiple confusion matrix in long form.}
 \usage{
-groupLCZsuffix(multiMatConfLongIn, ...)
+groupLCZsuffix(weightedFluxIn, ...)
 }
 \arguments{
-\item{multiMatConfLongIn}{is typically the output of the function createMultipleMatConf,
+\item{weightedFluxIn}{is typically the output of the function createWeightedFlux,
 and is expected to contain the following columns orig, dest and weightedFlux,
 whose names are quite self explanatory : orig is the origin LCZ type, dest is the destination LCZ type
 and weightedFlux is the percentage of area transfered from orig to dest}

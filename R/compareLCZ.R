@@ -23,7 +23,10 @@
 #' @param repr "standard" means that standard values of LCZ are expected,
 #'  "alter" means other values are expected, like grouped values of LCZ or other qualitative variable.
 #'  In the latter case, the ... arguments can contain the expected levels and a color vector.
+#' @param minZeroArea allows you to specify a minimal area under which intersected spatial units will be discarded.
+#' It avoids numerical error and can save computing time.
 #' @param plotNow : when FALSE none of the graphics are plotted or saved
+#' @param confPlot default is "matrix", to plot the confusion matrix. "sankey" allows to replaace it with a sankey diagram.
 #' @param saveG : when an empty character string, "", the plots are not saved. Else, the saveG string is used to produce the name of the saved png file.
 #' @param location : the name of the study area, as chosen as the name of the directory on the GeoClimate team cloud.
 #' If the area you wish to analyse is not uploaded yet, please contact the GeoClimate Team.
@@ -63,180 +66,42 @@
  #' # or in a long form :
  #' comparisonBDT_OSM$matConf
  #'  # Examples for non LCZ variables are available in the importQualVar function examples.
-compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "", wf1 = "bdtopo_2_2",
-                       sf2, column2 = "LCZ_PRIMARY", geomID2 = "", confid2 = "", wf2 = "osm", ref = 1,
+compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "", wf1 = NULL,
+                       sf2, column2 = "LCZ_PRIMARY", geomID2 = "", confid2 = "", wf2 = NULL, ref = 1,
                        repr = "standard", saveG = "", exwrite = FALSE, outDir = getwd(),
-                       location = "Your Place", plotNow = TRUE, tryGroup = FALSE, ...) {
+                       location = "Your Place", plotNow = TRUE, confPlot = "matrix",
+                       tryGroup = FALSE, minZeroArea = 0,
+                       ...) {
 
+  checkedInput <- checkCompareLCZinputs(
+    sf1 = sf1, geomID1 = geomID1, column1 = column1, confid1 = confid1, wf1 = wf1,
+    sf2 = sf2, column2 = column2, geomID2 = geomID2, confid2 = confid2, wf2 = wf2, ref = ref)
 
-  # store the column names in a way that can be injected in functions A SUPPRIMER ?
+  sf1 <- checkedInput$sf1; column1 <- checkedInput$column1; geomID1 <- checkedInput$geomID1
+  confid1 <- checkedInput$confid1; wf1 <- checkedInput$wf1
+  namesf1 <- checkedInput$namesf1
 
-  # column2Init<-column2 in case of column1==column2, this will be used to call levCol
-  namesf1 <- deparse(substitute(sf1))
-  namesf2 <- deparse(substitute(sf2))
-  message(paste(" The column ", column1, " of the dataset", namesf1,
-                "is the reference against which the ", column2,
-                " column of the dataset ", namesf2, "will be compared."))
-
-  # handling of different crs for the two datasets
-  if (st_crs(sf1) != st_crs(sf2)) {
-    # if (ref!=""){crsOpt=ref} else {
-    message("Both sf datasets need to live in the same crs projection (srid / epsg),")
-
-    if (ref == 1) {
-      message(paste0("they will be coerced to the specified reference (", namesf1, ")"))
-      sf2 <- sf2 %>% st_transform(crs = st_crs(sf1)) }
-    else if (ref == 2) {
-      message(paste0("they will be coerced to the specified reference (", namesf2, ")"))
-      sf1 <- sf1 %>% st_transform(crs = st_crs(sf2)) }
-    else {
-      warning("the ref argument is unclear (should be either 1 or 2), so the files will be coerced to the crs of", namesf1, " file")
-      sf2 <- sf2 %>% st_transform(crs = st_crs(sf1))
-    }
-    # }
-  }
-
-
-  # In order not to "carry" the whole file, keep only the column of interest (LCZ)
-
-  # If LCZ name is the same in both input sf files we rename column2
-  if (column1 == column2 & nchar(column1)!= 0) {
-    column2 <- paste0(column1, ".1")
-    sf2[[column2]] <- sf2[[column1]]
-    sf2[[column1]] <- NULL
-  }
-  # If geomID name is the same in both input sf files we rename column2
-
-  if (geomID1 == geomID2 & nchar(geomID1)!= 0) {
-    geomID2 <- paste0(geomID1, ".1")
-    sf2[[geomID2]] <- sf2[[geomID1]]
-    sf2[[geomID1]] <- NULL
-  }
-  # If confid name is the same in both input sf files we rename column2
-
-  if (confid1 == confid2 & nchar(confid1)!= 0) {
-    confid2 <- paste0(confid1, ".1")
-    sf2[[confid2]] <- sf2[[confid1]]
-    sf2[[confid1]] <- NULL
-  }
-
-
-  # Check the input file class
-
-  try(class(sf1)[1] == "sf", stop("Input data must be sf objects"))
-  try(class(sf1)[1] == "sf", stop("Input data must be sf objects"))
-  try(st_crs(sf1) == st_crs(sf2), stop("Input sf objects must have the same SRID"))
-
-
-  nom1 <- c(geomID1, column1, confid1)
-  nom1 <- nom1[sapply(nom1, nchar) != 0]
-  nom2 <- c(geomID2, column2, confid2)
-  nom2 <- nom2[sapply(nom2, nchar) != 0]
-
-
-
-  sf1 <- select(sf1, all_of(nom1)) %>% drop_na(column1)
-  sf2 <- select(sf2, all_of(nom2)) %>% drop_na(column2)
-  # Prepare the levels of the expected LCZ
+  sf2 <- checkedInput$sf2; column2 <- checkedInput$column2; geomID2 <- checkedInput$geomID2
+  confid2 <- checkedInput$confid2; wf2 <- checkedInput$wf2
+  namesf2 <- checkedInput$namesf2
 
   if (repr == "standard") {
-
-    uniqueData1 <- sf1[[column1]] %>%
-      unique() # Attention unique outputs a list of length 1
-
-    uniqueData2 <- sf2[[column2]] %>% unique
-
-
-    LCZlevels <- .lczenv$typeLevelsDefault
-    # print("LCZlevels") ; print(LCZlevels)
-    if (prod(uniqueData1 %in% LCZlevels) == 0) {
-      line1 <- "The column chosen for the first data set doesn't seem to be a standard LCZ encoding. \n"
-      line2 <- "Did you import the data with importLCZvect ? \n"
-      line3 <- " If the LCZ types are not standard, you can try to set repr to alter and specify the levels. \n"
-      errorMessage <- paste(line1, line2, line3)
-      stop(errorMessage) }
-    if (prod(uniqueData2 %in% LCZlevels) == 0) {
-      line1 <- "The column chosen for the second data set doesn't seem to be a standard LCZ encoding. \n"
-      line2 <- "Did you import the data with importLCZvect ? \n"
-      line3 <- " If the LCZ types are not standard, you can try to set repr to alter and specify the levels. \n"
-      errorMessage <- paste(line1, line2, line3)
-      stop(errorMessage) }
-
-    typeLevels <- .lczenv$colorMapDefault
-
-    etiquettes <- .lczenv$etiquettesDefault
-
-    # print(typeLevels)
-    # names(typeLevels) <- names(.lczenv$typeLevelsDefault)
-    # Classification must be encoded as factors
-    sf1[[column1]] <- factor(sf1[[column1]], levels = .lczenv$typeLevelsDefault)
-    sf2[[column2]] <- factor(sf2[[column2]], levels = .lczenv$typeLevelsDefault)
-    
- 
+    preparedStandard <- prepareStandardCompare(sf1 = sf1, column1 = column1, sf2 = sf2, column2 = column2, ...)
+    sf1 <- preparedStandard$sf1
+    sf2 <- preparedStandard$sf2
+    etiquettes <- preparedStandard$etiquettes
+    typeLevels <- preparedStandard$typeLevels
+    LCZlevels <- preparedStandard$LCZlevels
   }
 
-
-  if (repr == "alter")
-  {
-
-    # Call levCol to deal with levels and colors
-    levCol1 <- levCol(sf1, column1, ...)
-    levCol2 <- levCol(sf2, column2, ...)
-    levColCase1 <- levCol1$case
-    levColCase2 <- levCol2$case
-    temporaire3 <- c(levCol1$levelsColors, levCol2$levelsColors)
-    typeLevels <- temporaire3[unique(names(temporaire3))]
-    LCZlevels <- names(typeLevels)
-
-    # if there are several parameters to specify grouping levels
-    # and their names don't cover the values in column, and if tryGroup is TRUE
-    # then we try to call groupLCZ And procede to grouping accordingly
-
-    if (tryGroup == TRUE && (length(grep("14: ", levColCase1)) != 0 || length(grep("15: ", levColCase1)) != 0)) {
-      message("Level names in your 1st dataset didn't match original data.
-      As tryGroup=TRUE, the function groupLCZ will try to create a \"grouped\" column with level names and levels specified in (...).
-      If this doesn't work, compareLCZ function may fail.")
-      sfNew1 <- groupLCZ(sf1, column = column1, ...)
-      #sf1[column1]<-sfNew1["grouped"]
-      sf1 <- sfNew1 %>% dplyr::mutate(!!column1 := subset(sfNew1, select = "grouped", drop = TRUE))
-      # print(summary(sf1))
-      levCol1 <- levCol(sf1, column1, ...)
-
-      rm(sfNew1)
-    }
-
-    if (tryGroup == TRUE && (length(grep("14: ", levColCase2)) != 0 || length(grep("15: ", levColCase2)) != 0)) {
-      message("As tryGroup=TRUE, the function groupLCZ will try to create a \"grouped\" column with level names and levels specified in (...).
-      If this doesn't work, compareLCZ function may fail.")
-      sfNew2 <- groupLCZ(sf2, column = column2, ...)
-      #sf2[column2]<-sfNew2["grouped"]
-      sf2 <- sfNew2 %>% dplyr::mutate(!!column2 := subset(sfNew2, select = "grouped", drop = TRUE))
-      # print(summary(sf2))
-      levCol2 <- levCol(sf2, column2, ...)
-      rm(sfNew2)
-    }
-
-    # print(summary(sf1))
-    # print(summary(sf2))
-    temporaire3 <- c(levCol1$levelsColors, levCol2$levelsColors)
-    typeLevels <- temporaire3[unique(names(temporaire3))]
-    LCZlevels <- names(typeLevels)
-    etiquettes <- LCZlevels
-
-    nom1 <- c(geomID1, column1, confid1)
-    nom1 <- nom1[sapply(nom1, nchar) != 0]
-    nom2 <- c(geomID2, column2, confid2)
-    nom2 <- nom2[sapply(nom2, nchar) != 0]
-
-
-    sf1 <- select(sf1, nom1) %>% drop_na(column1)
-    sf2 <- select(sf2, nom2) %>% drop_na(column2)
-
-    # this illustrates how silly it was to store levels and colors in the same vector as names and values.
-    # Classification must be encoded as factors
-
-    sf1 <- sf1 %>% dplyr::mutate(!!column1 := factor(subset(sf1, select = column1, drop = T), levels = LCZlevels))
-    sf2 <- sf2 %>% dplyr::mutate(!!column2 := factor(subset(sf2, select = column2, drop = T), levels = LCZlevels))
+  if (repr == "alter") {
+    preparedAlter <- prepareAlterInputs(sf1 = sf1, column1 = column1, geomID1 = geomID1, confid1 = confid1,
+                                        sf2 = sf2, column2 = column2, geomID2 = geomID2, confid2 = confid2,
+                                        tryGroup = tryGroup, ...)
+    sf1 <- preparedAlter$sf1; column1 <- preparedAlter$column1
+    sf2 <- preparedAlter$sf2; column2 <- preparedAlter$column2
+    etiquettes <- preparedAlter$etiquettes
+    typeLevels <- preparedAlter$typeLevels; LCZlevels <- preparedAlter$LCZlevels
   }
 
 
@@ -244,20 +109,26 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
   # # Intersect geometries of both files
   ######################################################
   #intersection of geometries
-  intersec_sf <- st_intersection(x = sf1[, nom1], y = sf2[, nom2]) %>%
-    st_buffer(0) %>%
-    dplyr::mutate(area = drop_units(st_area(geometry)))
-  nbNoSurf <- nrow(subset(intersec_sf, area == 0))
-  if (nbNoSurf > 0) {
-    message(paste0(
-      "The intersection of the two data set geometries return ",
-      nbNoSurf, " geometries with an null area. They will be discarded."))
-    intersec_sf <- subset(intersec_sf, area != 0)
-  }
+  sfList <- list(sf1, sf2)
+  columnVect <- c(column1, column2)
+  if (is.null(wf1)) { wf1 <- namesf1 }
+  if (is.null(wf2)) { wf2 <- namesf2 }
 
+  wf1 <- checkWorkflowName(wf1)
+  wf2 <- checkWorkflowName(wf2)
+  if (wf1 == wf2) {
+    wf1 <- paste0(wf1, ".1")
+    wf2 <- paste0(wf2, ".bis") }
+  workflowNames <- c(wf1, wf2)
+  print(workflowNames)
+  print(columnVect)
+
+  intersec_sf <- createIntersect(sfList = sfList, columns = columnVect, refCrs = ref, workflowNames = workflowNames,
+                                 minZeroArea = minZeroArea)
 
   # checks if the two LCZ classifications agree
-  intersec_sf$agree <- subset(intersec_sf, select = column1, drop = T) == subset(intersec_sf, select = column2, drop = T)
+  print(names(intersec_sf))
+  intersec_sf$agree <- intersec_sf[[wf1]] == intersec_sf[[wf2]]
 
 
   ######################################################
@@ -305,17 +176,17 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
   # Confusion Matrix
   ###################################################
 
-  matConfOut <- matConfLCZ(sf1 = sf1, column1 = column1, sf2 = sf2, column2 = column2,
+  matConfOut <- matConfLCZ(sfInt = intersec_sf, column1 = wf1, column2 = wf2, wf1 = wf1, wf2 = wf2,
                            repr = repr, typeLevels = LCZlevels, plotNow = FALSE)
   matConfOut$data <- intersec_sfExpo
   matConfLong <- as.data.frame(matConfOut$matConf)
 
-  matConfLarge <- tidyr::pivot_wider(matConfLong, names_from = column2, values_from = .data$agreePercArea)
+  matConfLarge <- tidyr::pivot_wider(matConfLong, names_from = wf2, values_from = .data$agreePercArea)
   matConfLarge <- matConfLarge %>% as.data.frame()
   row.names(matConfLarge) <- matConfLarge[, 1] %>% as.character
   matConfLarge <- matConfLarge[, -1]
   matConfLarge <- as.matrix(matConfLarge)
-  matConfOut$matConfLarge<-matConfLarge
+  matConfOut$matConfLarge <- matConfLarge
 
 
   # Add pseudo Kappa Statistic to output to   
@@ -331,23 +202,15 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
   ################################################
   #  GRAPHICS
   ################################################
+
+
   if (plotNow == TRUE) {
     if (repr == 'standard') { titrou <- "LCZ" } else { titrou <- "Levels" }
 
-    if (wf1 == "bdtopo_2_2") { adtitre1 <- " BDTOPO V2.2" } else
-      if (wf1 == "osm") { adtitre1 <- " OSM " } else
-        if (wf1 == "wudapt") { adtitre1 <- " WUDAPT" }else { adtitre1 <- wf1 }
-
-
-    if (wf2 == "bdtopo_2_2") { adtitre2 <- " BDTOPO V2.2" } else
-      if (wf2 == "osm") { adtitre2 <- " OSM " } else
-        if (wf2 == "wudapt") { adtitre2 <- " WUDAPT" }else { adtitre2 <- wf2 }
-
-
-    titre1 <- paste(titrou, "from ", adtitre1)
-    titre2 <- paste(titrou, "from", adtitre2)
+    titre1 <- paste(titrou, "from ", wf1)
+    titre2 <- paste(titrou, "from", wf2)
     titre3 <- "Agreement between classifications"
-    titre4 <- paste(" Distribution of", adtitre1, " levels \n into levels of", adtitre2)
+    titre4 <- paste(" Distribution of", wf1, " levels \n into levels of", wf2)
 
 
     # ypos<-if (repr=="standard"){ypos=5} else {ypos=2}
@@ -373,13 +236,13 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
     nbgeomInter <- nrow(intersec_sf)
 
     # Plot the first classification
-    l1Plot <- 
+    l1Plot <-
       # ggplot2::ggplot(boundary) + 
       showLCZ(sf = sf1, column = column1, wf = wf1, plotNow = FALSE, repr = repr,
-              useStandCol = TRUE, , noPercAlter = FALSE, 
-                tryGroup = tryGroup, labelType = "long",
-             ...) +
-      ggtitle(titre1, subtitle = paste0("Number of RSU : ",nbgeom1))
+              useStandCol = TRUE, , noPercAlter = FALSE,
+              tryGroup = tryGroup, labelType = "long",
+              ...) +
+        ggtitle(titre1, subtitle = paste0("Number of RSU : ", nbgeom1))
     #
 
     # Plot the second classification
@@ -388,10 +251,10 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
       showLCZ(sf = sf2, column = column2, wf = wf2, labelType = "very short",
               plotNow = FALSE, repr = repr,
               useStandCol = TRUE,
-              tryGroup =tryGroup, 
+              tryGroup = tryGroup,
               ...) +
-        ggtitle(titre2, subtitle = paste0("Number of RSU : ",nbgeom2))
-    
+        ggtitle(titre2, subtitle = paste0("Number of RSU : ", nbgeom2))
+
     # Plot areas where classifications agree
     agreePlot <- ggplot(boundary) +
       geom_sf(data = boundary, fill = NA, lty = 'blank') +
@@ -401,37 +264,226 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
                           "The two classifications agree for \n ", percAgg, " % of the area Agreement")) +
       ggtitle(label = titre3, subtitle = paste0("Number of intersected geoms : ", nbgeomInter))
 
-    # Plot how the LCZ each level of the first classification is split into levels of the second classification
-    coordRef <- length(typeLevels) + 1
 
-    # matConfPlot <- ggplot(data = matConfLong, aes(x = get(column1), y = get(column2), fill = agree)) +
-    #   geom_tile(color = "white", lwd = 1.2, linetype = 1) +
-    #   labs(x = titre1, y = titre2) +
-    #   scale_fill_gradient2(low = "lightgrey", mid = "cyan", high = "blue",
-    #                        midpoint = 50, limit = c(0, 100), space = "Lab",
-    #                        name = "% area") +
-    #   geom_text(data = matConfLong[matConfLong$agree != 0,], aes(label = round(agree, digits = 0)),
-    #             color = "black") +
-    #   coord_fixed() +
-    #   theme(axis.text.x = element_text(angle = 70, hjust = 1),
-    #         panel.background = element_rect(fill = "grey")) +
-    #   geom_tile(datatemp, mapping = aes(x = a, y = coordRef, fill = percArea1, height = 0.8, width = 0.8)) +
-    #   geom_tile(datatemp, mapping = aes(x = coordRef, y = a, fill = percArea2, height = 0.8, width = 0.8)) +
-    #   ggtitle(titre4, subtitle = "Percentage inferior to 0.5 are rounded to 0")
-    matConfPlot <- matConfOut$matConfPlot
-    
+    if (confPlot == "sankey") {
+      print("Sankey")
+      print(typeLevels)
+      preparedSankey <- prepareSankeyLCZ(
+        intersectedDf = intersec_sf, wf1 = workflowNames[1], wf2 = workflowNames[2], colorMap = typeLevels)
+      matConfPlot <- plotSankeyfiedLCZ(sankeyfied = preparedSankey, plotNow = TRUE, colorMap = typeLevels,
+                                       v_space = "auto")
+      matConfOut$sankeyPlot <- matConfPlot
+    } else if (confPlot == "matrix") { matConfPlot <- matConfOut$matConfPlot }
+
     if (saveG != "") {
       plotName <- paste0(saveG, ".png")
       png(filename = plotName, width = 1200, height = 900)
-      outPlot<-(l1Plot + l2Plot)/ (agreePlot+matConfPlot)
+      outPlot <- (l1Plot + l2Plot) / (agreePlot + matConfPlot)
       print(outPlot)
       dev.off()
     } else {
-      outPlot<-(l1Plot + l2Plot)/ (agreePlot+matConfPlot)
+      outPlot <- (l1Plot + l2Plot) / (agreePlot + matConfPlot)
       print(outPlot)
+    }
   }
-  }
-    else { message("Plot set to FALSE, no plots created") }
+  else { message("Plot set to FALSE, no plots created") }
 
   matConfOut <- matConfOut
+}
+
+
+checkCompareLCZinputs <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "", wf1 = NULL,
+                                  sf2, column2 = "LCZ_PRIMARY", geomID2 = "", confid2 = "", wf2 = NULL, ref = 1) {
+
+
+  # store the column names in a way that can be injected in functions A SUPPRIMER ?
+
+  # column2Init<-column2 in case of column1==column2, this will be used to call levCol
+  namesf1 <- deparse(substitute(sf1))
+  namesf2 <- deparse(substitute(sf2))
+  message(paste(" The column ", column1, " of the dataset", namesf1,
+                "is the reference against which the ", column2,
+                " column of the dataset ", namesf2, "will be compared."))
+
+
+  column1 <- checkColnameCase(column1, names(sf1))
+  column2 <- checkColnameCase(column2, names(sf2))
+
+  # handling of different crs for the two datasets
+  if (st_crs(sf1) != st_crs(sf2)) {
+    # if (ref!=""){crsOpt=ref} else {
+    message("Both sf datasets need to live in the same crs projection (srid / epsg),")
+
+    if (ref == 1) {
+      message(paste0("they will be coerced to the specified reference (", namesf1, ")"))
+      sf2 <- sf2 %>% st_transform(crs = st_crs(sf1)) }
+    else if (ref == 2) {
+      message(paste0("they will be coerced to the specified reference (", namesf2, ")"))
+      sf1 <- sf1 %>% st_transform(crs = st_crs(sf2)) }
+    else {
+      warning("the ref argument is unclear (should be either 1 or 2), so the files will be coerced to the crs of", namesf1, " file")
+      ref <- 1
+      sf2 <- sf2 %>% st_transform(crs = st_crs(sf1))
+    }
+    # }
+  }
+
+
+  # In order not to "carry" the whole file, keep only the column of interest (LCZ)
+
+  # If LCZ name is the same in both input sf files we rename column2
+  if (column1 == column2 & nchar(column1) != 0) {
+    column2 <- paste0(column1, ".1")
+    sf2[[column2]] <- sf2[[column1]]
+    sf2[[column1]] <- NULL
+  }
+  # If geomID name is the same in both input sf files we rename column2
+
+  if (geomID1 == geomID2 & nchar(geomID1) != 0) {
+    geomID2 <- paste0(geomID1, ".1")
+    sf2[[geomID2]] <- sf2[[geomID1]]
+    sf2[[geomID1]] <- NULL
+  }
+  # If confid name is the same in both input sf files we rename column2
+
+  if (confid1 == confid2 & nchar(confid1) != 0) {
+    confid2 <- paste0(confid1, ".1")
+    sf2[[confid2]] <- sf2[[confid1]]
+    sf2[[confid1]] <- NULL
+  }
+
+
+  # Check the input file class
+
+  try(class(sf1)[1] == "sf", stop("Input data must be sf objects"))
+  try(class(sf1)[1] == "sf", stop("Input data must be sf objects"))
+  try(st_crs(sf1) == st_crs(sf2), stop("Input sf objects must have the same SRID"))
+
+  nom1 <- c(geomID1, column1, confid1)
+  nom1 <- nom1[sapply(nom1, nchar) != 0]
+  nom2 <- c(geomID2, column2, confid2)
+  nom2 <- nom2[sapply(nom2, nchar) != 0]
+
+
+  sf1 <- select(sf1, all_of(nom1)) %>% drop_na(column1)
+  sf2 <- select(sf2, all_of(nom2)) %>% drop_na(column2)
+  # Prepare the levels of the expected LCZ
+  print("nom1"); print(nom1)
+  print("names(sf1)"); print(names(sf1))
+
+  return(list(sf1 = sf1, column1 = column1, confid1 = confid1, wf1 = wf1, geomID1 = geomID1,
+              namesf1 = namesf1,
+              sf2 = sf2, column2 = column2, confid2 = confid2, wf2 = wf2, geomID2 = geomID2,
+              namesf2 = namesf2
+  ))
+
+}
+
+
+prepareStandardCompare <- function(sf1, column1,
+                                   sf2, column2) {
+
+  uniqueData1 <- sf1[[column1]] %>%
+    unique() # Attention unique outputs a list of length 1
+  uniqueData2 <- sf2[[column2]] %>% unique
+
+  LCZlevels <- .lczenv$typeLevelsDefault
+  # print("LCZlevels") ; print(LCZlevels)
+  if (prod(uniqueData1 %in% LCZlevels) == 0) {
+    line1 <- "The column chosen for the first data set doesn't seem to be a standard LCZ encoding. \n"
+    line2 <- "Did you import the data with importLCZvect ? \n"
+    line3 <- " If the LCZ types are not standard, you can try to set repr to alter and specify the levels. \n"
+    errorMessage <- paste(line1, line2, line3)
+    stop(errorMessage) }
+  if (prod(uniqueData2 %in% LCZlevels) == 0) {
+    line1 <- "The column chosen for the second data set doesn't seem to be a standard LCZ encoding. \n"
+    line2 <- "Did you import the data with importLCZvect ? \n"
+    line3 <- " If the LCZ types are not standard, you can try to set repr to alter and specify the levels. \n"
+    errorMessage <- paste(line1, line2, line3)
+    stop(errorMessage) }
+
+  typeLevels <- .lczenv$colorMapDefault
+
+  etiquettes <- .lczenv$etiquettesDefault
+
+  # print(typeLevels)
+  # names(typeLevels) <- names(.lczenv$typeLevelsDefault)
+  # Classification must be encoded as factors
+  sf1[[column1]] <- factor(sf1[[column1]], levels = .lczenv$typeLevelsDefault)
+  sf2[[column2]] <- factor(sf2[[column2]], levels = .lczenv$typeLevelsDefault)
+
+  return(list(
+    sf1 = sf1, sf2 = sf2,
+    typeLevels = typeLevels,
+    etiquettes = etiquettes,
+    LCZlevels = LCZlevels
+  ))
+}
+
+prepareAlterInputs <- function(sf1, column1, geomID1, confid1, sf2, column2, geomID2, confid2, tryGroup = tryGroup, ...) {
+  # Call levCol to deal with levels and colors
+  levCol1 <- levCol(sf1, column1, ...)
+  levCol2 <- levCol(sf2, column2, ...)
+  levColCase1 <- levCol1$case
+  levColCase2 <- levCol2$case
+  temporaire3 <- c(levCol1$levelsColors, levCol2$levelsColors)
+  typeLevels <- temporaire3[unique(names(temporaire3))]
+  LCZlevels <- names(typeLevels)
+
+  # if there are several parameters to specify grouping levels
+  # and their names don't cover the values in column, and if tryGroup is TRUE
+  # then we try to call groupLCZ And procede to grouping accordingly
+
+  if (tryGroup && (length(grep("14: ", levColCase1)) != 0 || length(grep("15: ", levColCase1)) != 0)) {
+    message("Level names in your 1st dataset didn't match original data.
+      As tryGroup=TRUE, the function groupLCZ will try to create a \"grouped\" column with level names and levels specified in (...).
+      If this doesn't work, compareLCZ function may fail.")
+    sfNew1 <- groupLCZ(sf1, column = column1, ...)
+    #sf1[column1]<-sfNew1["grouped"]
+    sf1 <- sfNew1 %>% dplyr::mutate(!!column1 := subset(sfNew1, select = "grouped", drop = TRUE))
+    # print(summary(sf1))
+    levCol1 <- levCol(sf1, column1, ...)
+
+    rm(sfNew1)
+  }
+
+  if (tryGroup == TRUE && (length(grep("14: ", levColCase2)) != 0 || length(grep("15: ", levColCase2)) != 0)) {
+    message("As tryGroup=TRUE, the function groupLCZ will try to create a \"grouped\" column with level names and levels specified in (...).
+      If this doesn't work, compareLCZ function may fail.")
+    sfNew2 <- groupLCZ(sf2, column = column2, ...)
+    #sf2[column2]<-sfNew2["grouped"]
+    sf2 <- sfNew2 %>% dplyr::mutate(!!column2 := subset(sfNew2, select = "grouped", drop = TRUE))
+    # print(summary(sf2))
+    levCol2 <- levCol(sf2, column2, ...)
+    rm(sfNew2)
+  }
+
+  # print(summary(sf1))
+  # print(summary(sf2))
+  temporaire3 <- c(levCol1$levelsColors, levCol2$levelsColors)
+  typeLevels <- temporaire3[unique(names(temporaire3))]
+  LCZlevels <- names(typeLevels)
+  etiquettes <- LCZlevels
+
+  nom1 <- c(geomID1, column1, confid1)
+  nom1 <- nom1[sapply(nom1, nchar) != 0]
+  nom2 <- c(geomID2, column2, confid2)
+  nom2 <- nom2[sapply(nom2, nchar) != 0]
+
+
+  sf1 <- select(sf1, nom1) %>% drop_na(column1)
+  sf2 <- select(sf2, nom2) %>% drop_na(column2)
+
+
+  # this illustrates how silly it was to store levels and colors in the same vector as names and values.
+  # Classification must be encoded as factors
+
+  sf1 <- sf1 %>% dplyr::mutate(!!column1 := factor(subset(sf1, select = column1, drop = T), levels = LCZlevels))
+  sf2 <- sf2 %>% dplyr::mutate(!!column2 := factor(subset(sf2, select = column2, drop = T), levels = LCZlevels))
+
+  return(list(
+    sf1 = sf1, column1 = column1, sf2 = sf2, column2 = column2, etiquettes = etiquettes,
+    LCZlevels = LCZlevels, typeLevels = typeLevels)
+  )
+
 }

@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        r-version: ['4.4.1']
+        r-version: ['4.5.2']
     steps:
       - uses: actions/checkout@v4
       - name: Set up R ${{ matrix.r-version }}
@@ -28,7 +28,7 @@ jobs:
             pandoc
       - name: Install dependencies
         run: |
-          install.packages(c("remotes", "rcmdcheck", "rmarkdown"), repos = "http://cran.us.r-project.org")
+          install.packages(c("remotes", "rcmdcheck", "rmarkdown"), repos = "https://cloud.r-project.org/")
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
       - uses: r-lib/actions/setup-tinytex@v2

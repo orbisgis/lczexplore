@@ -4,7 +4,7 @@
 \alias{prepareSankeyLCZ}
 \title{Prepares the data to produce a sankey graph between two LCZ workflows}
 \usage{
-prepareSankeyLCZ(intersectedDf, wf1, wf2)
+prepareSankeyLCZ(intersectedDf, wf1, wf2, colorMap)
 }
 \arguments{
 \item{intersectedDf}{is an sf object or a data frame which contains lcz values for
@@ -14,6 +14,8 @@ and the area of the geometries}
 \item{wf1}{is the column name where the LCZ value of the first workflow are stored}
 
 \item{wf2}{wf1 is the column name where the LCZ value of the first workflow are stored}
+
+\item{colorMap}{a vector containing colors and whose names are the levels of the data to plot}
 }
 \value{
 an object to feed plotSankeyLCZ
@@ -25,9 +27,9 @@ Prepares the data to produce a sankey graph between two LCZ workflows
 dirPath<-paste0(
 system.file("extdata", package = "lczexplore"),"/multipleWfs")
 allLocConcatenated<-loadMultipleLocsSfs(
-  dirPath = dirPath, inLocations = c("Blaru", "Arville"))
+  dirPath = dirPath, inLocations = c("Arville", "Redon"))
 allLocIntersected<-createIntersect(allLocConcatenated, columns = rep("lcz_primary", 4),
-workflowNames = c("osm","bdt","iau","wudapt"))
+workflowNames = c("osm","bdt","wudapt"))
 testSankey<-prepareSankeyLCZ(intersectedDf = allLocIntersected
  , wf1 = "wudapt", wf2 = "osm")
 }

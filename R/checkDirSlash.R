@@ -5,9 +5,9 @@
 #' @examples
 #' dirPathTest<-"test"
 #' checkDirSlash(dirPathTest)
-checkDirSlash<-function(dirPath){
-  if ( substring(dirPath, nchar(dirPath), nchar(dirPath)) != "/"){
-    dirPath<-paste0(dirPath, "/")
+checkDirSlash <- function(dirPath) {
+  if (substring(dirPath, nchar(dirPath), nchar(dirPath)) != "/") {
+    dirPath <- paste0(dirPath, "/")
   }
   return(dirPath)
 }

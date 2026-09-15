@@ -31,152 +31,152 @@
 #' #produceAnalysis(location="Redon", outDir=paste0(system.file(package="lczexplore"),"/tinytest"),
 #' #wf1="bdtopo_2_2", wf2="osm", refYear1="2022", refYear2="2022", repr="standard", saveG="")
 #' #wf1="bdtopo_2_2", wf2="osm", refYear1="2022", refYear2="2022", repr="standard", saveG="")
-produceAnalysis<-function(location="Redon",
-                          outDir=getwd(),
-                          wf1="bdtopo_2_2",
-                          wf2="osm",refYear1="2022",refYear2="2022",repr="standard",saveG=location,...)
+produceAnalysis <- function(location = "Redon",
+                            outDir = getwd(),
+                            wf1 = "bdtopo_2_2",
+                            wf2 = "osm", refYear1 = "2022", refYear2 = "2022", repr = "standard", saveG = location, ...)
 {
- 
-  args<-list(...)
-  indSep<-names(args)
-  indCol<-grep(x=indSep,pattern="colors")
-  args2<-args[indSep[-indCol]]
+
+  args <- list(...)
+  indSep <- names(args)
+  indCol <- grep(x = indSep, pattern = "colors")
+  args2 <- args[indSep[-indCol]]
   str(args2)
-  typeLevels<-args[indSep[indCol]] %>% unlist %>% as.vector()
+  typeLevels <- args[indSep[indCol]] %>% unlist %>% as.vector()
   str(typeLevels)
- if(length(args2)!=length(typeLevels)) stop("You must specify as many colors as there are groups")
+  if (length(args2) != length(typeLevels)) stop("You must specify as many colors as there are groups")
 
-  output<-list()
+  output <- list()
 
-# Download and import the first/reference dataset
-if (wf1=="bdtopo_2_2"){
-  fetchLCZ(location=location,outDir=outDir,wf=wf1)
-  inDir<-paste0(outDir,"/",wf1,"/",location,"/")
-  print("inDir");print(inDir)
-  df1<-importLCZvect(dirPath=inDir,file="rsu_lcz.geojson",column="LCZ_PRIMARY",
-                    geomID="ID_RSU", confid="LCZ_UNIQUENESS_VALUE",output="sfFile")
-  print("df1");print(df1)
+  # Download and import the first/reference dataset
+  if (wf1 == "bdtopo_2_2") {
+    fetchLCZ(location = location, outDir = outDir, wf = wf1)
+    inDir <- paste0(outDir, "/", wf1, "/", location, "/")
+    print("inDir"); print(inDir)
+    df1 <- importLCZvect(dirPath = inDir, file = "rsu_lcz.geojson", column = "LCZ_PRIMARY",
+                         geomID = "ID_RSU", confid = "LCZ_UNIQUENESS_VALUE", output = "sfFile")
+    print("df1"); print(df1)
   }
 
-if (wf1=="osm"){
-  fetchLCZ(location=location,outDir=outDir,wf=wf1,refYear=refYear1)
-  inDir<-paste0(outDir,"/",wf1,"/",refYear1,"/",location,"/")
-  df1<-importLCZvect(dirPath=inDir,file="rsu_lcz.geojson",column="LCZ_PRIMARY",
-                    geomID="ID_RSU", confid="LCZ_UNIQUENESS_VALUE",output="sfFile")
-}
-
-if (wf1=="wudapt"){
-  fetchLCZ(location=location,outDir=outDir,wf="bd_topo_v2",
-           refYear = refYear1)
-  inDirCont<-paste0(outDir,"/",wf1,"/",location,"/")
-  dfBDTcontour<-importLCZgc(dirPath=inDirCont,output="contour")
-  inDir<-paste0(outDir,"/",wf1,"/",refYear1,"/",location)
-  df1<-importLCZraster(getwd(),
-                       bBox=dfBDTcontour)
-}
-
-# Import and download the second/alternative dataset
-  if (wf2=="bdtopo_2_2"){
-    fetchLCZ(location=location,outDir=outDir,wf=wf2)
-    inDir<-paste0(outDir,"/",wf2,"/",location,"/")
-    df2<-importLCZvect(dirPath=inDir,file="rsu_lcz.geojson",column="LCZ_PRIMARY",
-                      geomID="ID_RSU", confid="LCZ_UNIQUENESS_VALUE",output="sfFile")
+  if (wf1 == "osm") {
+    fetchLCZ(location = location, outDir = outDir, wf = wf1, refYear = refYear1)
+    inDir <- paste0(outDir, "/", wf1, "/", refYear1, "/", location, "/")
+    df1 <- importLCZvect(dirPath = inDir, file = "rsu_lcz.geojson", column = "LCZ_PRIMARY",
+                         geomID = "ID_RSU", confid = "LCZ_UNIQUENESS_VALUE", output = "sfFile")
   }
 
-  if (wf2=="osm"){
-    fetchLCZ(location=location,outDir=outDir,
-             wf=wf2,refYear = refYear2)
-    inDir<-paste0(outDir,"/",wf2,"/",refYear2,"/",location,"/")
-    df2<-importLCZvect(dirPath=inDir,file="rsu_lcz.geojson",column="LCZ_PRIMARY",
-                      geomID="ID_RSU", confid="LCZ_UNIQUENESS_VALUE",output="sfFile")
+  if (wf1 == "wudapt") {
+    fetchLCZ(location = location, outDir = outDir, wf = "bd_topo_v2",
+             refYear = refYear1)
+    inDirCont <- paste0(outDir, "/", wf1, "/", location, "/")
+    dfBDTcontour <- importLCZgc(dirPath = inDirCont, output = "contour")
+    inDir <- paste0(outDir, "/", wf1, "/", refYear1, "/", location)
+    df1 <- importLCZraster(getwd(),
+                           bBox = dfBDTcontour)
   }
 
-  if (wf2=="wudapt"){
-    fetchLCZ(location=location,outDir=outDir,wf="bd_topo_v2")
-    inDirCont<-paste0(outDir,"/",wf2,"/",location,"/")
-    dfBDTcontour<-importLCZgc(dirPath=inDir,output="contour")
-    inDir<-paste0(outDir,"/",wf2,"/",refYear1,"/",location,"/")
-    df2<-importLCZraster(getwd(),
-                         bBox=dfBDTcontour)
+  # Import and download the second/alternative dataset
+  if (wf2 == "bdtopo_2_2") {
+    fetchLCZ(location = location, outDir = outDir, wf = wf2)
+    inDir <- paste0(outDir, "/", wf2, "/", location, "/")
+    df2 <- importLCZvect(dirPath = inDir, file = "rsu_lcz.geojson", column = "LCZ_PRIMARY",
+                         geomID = "ID_RSU", confid = "LCZ_UNIQUENESS_VALUE", output = "sfFile")
   }
 
-if(repr=="standard"){
-  print("standard loop entered")
-      #name of output Graph
-          nameG<-paste0(location,"_",wf1,"_",wf2,"_",repr)
+  if (wf2 == "osm") {
+    fetchLCZ(location = location, outDir = outDir,
+             wf = wf2, refYear = refYear2)
+    inDir <- paste0(outDir, "/", wf2, "/", refYear2, "/", location, "/")
+    df2 <- importLCZvect(dirPath = inDir, file = "rsu_lcz.geojson", column = "LCZ_PRIMARY",
+                         geomID = "ID_RSU", confid = "LCZ_UNIQUENESS_VALUE", output = "sfFile")
+  }
 
-      # Compare LCZ
-      
-      if((wf1=="osm" | wf1=="bdtopo_2_2") & (wf2=="bdtopo_2_2" | wf2=="osm")){
-        print("compareLCZ called")
-        
-          output$compare<-compareLCZ(sf1=df1, geomID1="ID_RSU", confid1="LCZ_UNIQUENESS_VALUE",
-                     column1="LCZ_PRIMARY", wf1=wf1,
-                     sf2=df2,
-                     column2="LCZ_PRIMARY", geomID2="ID_RSU", confid2="LCZ_UNIQUENESS_VALUE",wf2=wf2,
-                     ref=1,
-                     repr="standard", saveG=nameG, exwrite=TRUE,outDir=outDir,location=location)
-               
+  if (wf2 == "wudapt") {
+    fetchLCZ(location = location, outDir = outDir, wf = "bd_topo_v2")
+    inDirCont <- paste0(outDir, "/", wf2, "/", location, "/")
+    dfBDTcontour <- importLCZgc(dirPath = inDir, output = "contour")
+    inDir <- paste0(outDir, "/", wf2, "/", refYear1, "/", location, "/")
+    df2 <- importLCZraster(getwd(),
+                           bBox = dfBDTcontour)
+  }
 
-      }
+  if (repr == "standard") {
+    print("standard loop entered")
+    #name of output Graph
+    nameG <- paste0(location, "_", wf1, "_", wf2, "_", repr)
 
-      if(wf1=="wudapt"&& (wf2=="osm"|wf2=="bdtopo_v2")){
+    # Compare LCZ
 
-        output$compare<-compareLCZ(sf1=df1,
-                   column1="EU_LCZ_map",
-                   sf2=df2,
-                   column2='LCZ_PRIMARY',
-                   saveG=nameG,repr=repr,wf1=wf1,wf2=wf2,exwrite=TRUE,outDir=outDir,location=location,...)
-      }
+    if ((wf1 == "osm" | wf1 == "bdtopo_2_2") & (wf2 == "bdtopo_2_2" | wf2 == "osm")) {
+      print("compareLCZ called")
 
-      if(wf2=="wudapt"&& (wf1=="osm"|wf1=="bdtopo_v2")){
+      output$compare <- compareLCZ(sf1 = df1, geomID1 = "ID_RSU", confid1 = "LCZ_UNIQUENESS_VALUE",
+                                   column1 = "LCZ_PRIMARY", wf1 = wf1,
+                                   sf2 = df2,
+                                   column2 = "LCZ_PRIMARY", geomID2 = "ID_RSU", confid2 = "LCZ_UNIQUENESS_VALUE", wf2 = wf2,
+                                   ref = 1,
+                                   repr = "standard", saveG = nameG, exwrite = TRUE, outDir = outDir, location = location)
 
-        output$compare<-compareLCZ(sf1=df1,
-                     column1='LCZ_PRIMARY',
-                     sf2=df2,
-                     column2="EU_LCZ_map",
-                     saveG=nameG,repr=repr,wf1=wf1,wf2=wf2,exwrite=TRUE,outDir=outDir,location=location,...)
-      }
-}
-  if(repr=='alter'){
+
+    }
+
+    if (wf1 == "wudapt" && (wf2 == "osm" | wf2 == "bdtopo_v2")) {
+
+      output$compare <- compareLCZ(sf1 = df1,
+                                   column1 = "EU_LCZ_map",
+                                   sf2 = df2,
+                                   column2 = 'LCZ_PRIMARY',
+                                   saveG = nameG, repr = repr, wf1 = wf1, wf2 = wf2, exwrite = TRUE, outDir = outDir, location = location, ...)
+    }
+
+    if (wf2 == "wudapt" && (wf1 == "osm" | wf1 == "bdtopo_v2")) {
+
+      output$compare <- compareLCZ(sf1 = df1,
+                                   column1 = 'LCZ_PRIMARY',
+                                   sf2 = df2,
+                                   column2 = "EU_LCZ_map",
+                                   saveG = nameG, repr = repr, wf1 = wf1, wf2 = wf2, exwrite = TRUE, outDir = outDir, location = location, ...)
+    }
+  }
+  if (repr == 'alter') {
 
     print("alter loop")
 
-    nameG<-paste0(location,"_",wf1,"_",wf2,"_",repr)
+    nameG <- paste0(location, "_", wf1, "_", wf2, "_", repr)
 
-    if((wf1=="osm"& wf2=="bdtopo_2_2")|(wf2=="osm" & wf1=="bdtopo_2_2")){
+    if ((wf1 == "osm" & wf2 == "bdtopo_2_2") | (wf2 == "osm" & wf1 == "bdtopo_2_2")) {
 
-      df1<-groupLCZ(df1,column="LCZ_PRIMARY",...)
-      df2<-groupLCZ(df2,column="LCZ_PRIMARY",...)
-      output$compare<-compareLCZ(sf1=df1,
-                 column1='grouped',
-                 sf2=df2,
-                 column2='grouped',
-                 ref=1,saveG=nameG,repr=repr,wf1=wf1,wf2=wf2,exwrite=TRUE,outDir=outDir,location=location,...)
-      }
-
-    if(wf1=="wudapt"&(wf2=="osm"|wf2=="bdtopo_2_2")){
-      df1<-groupLCZ(df1,column="EU_LCZ_map",...)
-      df2<-groupLCZ(df2,column="LCZ_PRIMARY",...)
-      output$compare<-compareLCZ(sf1=df1,
-                 column1='grouped',
-                 sf2=df2,
-                 column2='grouped',
-                 saveG=nameG,repr=repr,wf1=wf1,wf2=wf2,location=location,exwrite=TRUE,outDir=outDir,...)
+      df1 <- groupLCZ(df1, column = "LCZ_PRIMARY", ...)
+      df2 <- groupLCZ(df2, column = "LCZ_PRIMARY", ...)
+      output$compare <- compareLCZ(sf1 = df1,
+                                   column1 = 'grouped',
+                                   sf2 = df2,
+                                   column2 = 'grouped',
+                                   ref = 1, saveG = nameG, repr = repr, wf1 = wf1, wf2 = wf2, exwrite = TRUE, outDir = outDir, location = location, ...)
     }
-    if(wf2=="wudapt"&(wf1=="osm"|wf1=="bdtopo_2_2")){
-      df1<-groupLCZ(df1,column="LCZ_PRIMARY",...)
-      df2<-groupLCZ(df2,column="EU_LCZ_map",...)
-      output$compare<-compareLCZ(sf1=df1,
-                 column1='grouped',
-                 sf2=df2,
-                 column2='grouped',
-                 saveG=nameG,repr=repr,wf1=wf1,wf2=wf2,location=location,exwrite=TRUE,outDir=outDir,...)
+
+    if (wf1 == "wudapt" & (wf2 == "osm" | wf2 == "bdtopo_2_2")) {
+      df1 <- groupLCZ(df1, column = "EU_LCZ_map", ...)
+      df2 <- groupLCZ(df2, column = "LCZ_PRIMARY", ...)
+      output$compare <- compareLCZ(sf1 = df1,
+                                   column1 = 'grouped',
+                                   sf2 = df2,
+                                   column2 = 'grouped',
+                                   saveG = nameG, repr = repr, wf1 = wf1, wf2 = wf2, location = location, exwrite = TRUE, outDir = outDir, ...)
+    }
+    if (wf2 == "wudapt" & (wf1 == "osm" | wf1 == "bdtopo_2_2")) {
+      df1 <- groupLCZ(df1, column = "LCZ_PRIMARY", ...)
+      df2 <- groupLCZ(df2, column = "EU_LCZ_map", ...)
+      output$compare <- compareLCZ(sf1 = df1,
+                                   column1 = 'grouped',
+                                   sf2 = df2,
+                                   column2 = 'grouped',
+                                   saveG = nameG, repr = repr, wf1 = wf1, wf2 = wf2, location = location, exwrite = TRUE, outDir = outDir, ...)
     }
 
   }
- #  setwd(wd)
-  output$df1<-df1
-  output$df2<-df2
+  #  setwd(wd)
+  output$df1 <- df1
+  output$df2 <- df2
   return(output)
 }

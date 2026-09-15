@@ -7,9 +7,8 @@ resource_files:
   - vignettes/Redon.png
 vignette: >
     %\VignetteIndexEntry{Raster_vector_comparison}
-    %\VignetteEngine{knitr::knitr}
+    %\VignetteEngine{knitr::rmarkdown}
     %\VignetteEncoding{UTF-8}
-    \usepackage[UTF-8]{inputenc}
 ---
 
 ```{r, setup, include = FALSE}
@@ -53,7 +52,7 @@ Any bounding box of the bounding box class of the package `sf` can be used to cr
 
 ```{r, import, eval = TRUE, echo = TRUE}
 redonBbox<-importLCZvect(dirPath=paste0(system.file("extdata", package = "lczexplore"),
-"/lczfiles/Redon"), file="osm_lcz.fgb",column="LCZ_PRIMARY",output="bBox")
+"/multipleWfs/Redon"), file="osm_lcz.fgb",column="LCZ_PRIMARY",output="bBox")
 
 
 # Example with osmdata function getbb, not run, to avoid installation of the package
@@ -63,14 +62,14 @@ redonBbox<-importLCZvect(dirPath=paste0(system.file("extdata", package = "lczexp
 
 The second step is to import the raster map and use the previous bounding box to crop the territory of interest.
 The importLCZraster function performs this in a simple call:
-```{r, import raster, eval = TRUE, echo = TRUE}
+```{r, import-raster, eval = TRUE, echo = TRUE}
 redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
 fileName="redonWudapt.tif", bBox=redonBbox)
 
 ```
 The resulting object is an sf file, the pixels of the geotiff have been transformed into geometries. The input file must be a geotiff, whose CRS will be read by the function.
 
-```{r, import sf for CRS, eval = TRUE, echo = TRUE}
+```{r, import-sf-for-CRS, eval = TRUE, echo = TRUE}
 library(sf)
 st_crs(redonWudapt)
 ```
@@ -108,11 +107,9 @@ The following code shows an example of color choice.
 These data are embedded in `lczexplore`. On can import them using the `importLCZvect` function.
 This function allows to load geojson or shp files, and one must specify the name of the column containing the LCZ types.
 
-```{r, import OSM, eval = TRUE, echo = TRUE}
-# Path to embedded Data
-dirPath<-paste0(system.file("extdata",package="lczexplore"),"/")
+```{r, import-OSM, eval = TRUE, echo = TRUE}
 # Path to OSM data specifically
-dirPathOSM<-paste0(dirPath,"lczfiles/Redon/")
+dirPathOSM<-system.file("extdata/multipleWfs/Redon",package="lczexplore")
 # loading Redon Data produced with GeoClimate on OSM input Data
 redonOSM<-importLCZvect(dirPath=dirPathOSM,file="osm_lcz.fgb",column = "LCZ_PRIMARY", drop=TRUE)
 summary(redonOSM$LCZ_PRIMARY)
@@ -120,7 +117,7 @@ summary(redonOSM$LCZ_PRIMARY)
 ```
 ## Visualize the resulting LCZ types with the function showLCZ
 The resulting object is an sf object and can therefore also be visualized with the showLCZ function.
-```{r, show standard, fig.dim = c(8, 6), echo = TRUE }
+```{r, show-standard, fig.dim = c(8, 6), echo = TRUE }
 map2<-showLCZ(sf = redonOSM, repr="standard")
 
 ```
@@ -141,7 +138,7 @@ compareLCZ(sf1 = redonWudapt, column1 = "EU_LCZ_map", wf1="WUDAPT",
            ref=1 ,exwrite=FALSE,saveG = "comparisonR" )
 ```
 
-```{r, prettier graph, out.width = "680px"}
+```{r, prettier-graph, out.width = "680px"}
 
 knitr::include_graphics("comparisonR.png", error=FALSE)
 
@@ -181,7 +178,7 @@ compareLCZ(sf1 = redonWudaptGrouped, column1 = "Regrouped", wf1 = "Wudapt",
 
 ```
 
-```{r, show grouped prettier, out.width = "680px"}
+```{r, show-grouped-prettier, out.width = "680px"}
 
 knitr::include_graphics("comparisonGroupedR.png", error=FALSE)
 
@@ -194,63 +191,3 @@ The confusion matrix compare percentage of areas, so if the global area concerne
 
 For more details on the package, browse other vignettes. 
 
-# Several bands in a raster source file
-
-In some case, the source file is a raster with several bands (also called layers).
-the function `importLCZraster` allows to choose the layer which contains the LCZ values, and when useful 
-a layer of confidence value. Notice one band was selected by its order in the raster stack, the other by its name, as the function allows both ways.  
-
-
-This allows to also perform a confidence analysis on the agreement between two maps according to the level of confidence one allows to the LCZ value for each pixel. 
-The data used for this example come from Demuzere, M., Kittner, J., Bechtel, B. (2021). LCZ Generator: a web application to create Local Climate Zone maps. Frontiers in Environmental Science 9:637455. https://doi.org/10.3389/fenvs.2021.637455
-
-```{r, sidney 1, echo=TRUE, fig.show="hide"}
-# Dedicated files were integrated to demonstrate the whole workflow on an area of Sidney
-
-# importation of LCZ map prduced using GeoClimate with OpenStreetMap data
-sidneyOSM<-importLCZvect(
-dirPath = system.file("extdata/lczfiles/Sidney/", package = "lczexplore"), file="sidney_rsu_lcz.fgb",
-column="LCZ_PRIMARY",
-confid="LCZ_UNIQUENESS_VALUE",
-geomID="ID_RSU")
-
-# Creation of the bounding box of this area to crop the raster file produced using the WUDAPT platform
-sidneyBbox<-importLCZvect(
-system.file("extdata/lczfiles/Sidney", package = "lczexplore"), file="sidney_rsu_lcz.fgb",
-,output = "bBox")
-
-# Import of the raster filed, cropped to the bounbding box of the area of interest.
-sidneyWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
-fileName="rasterMD.tif", LCZband=1,  LCZcolumn = "LCZraster",
-                              confidenceBand = 3, confidenceColumn = "confidence",
-                              bBox = sidneyBbox )
-# Make raster confidence value between 0 and 1
-
-sidneyWudapt$confidence<-sidneyWudapt$confidence/100
-
-sidneyComparison<-compareLCZ(
-  sf1=sidneyOSM, geomID1="ID_RSU", column1="LCZ_PRIMARY", wf1="BD TOPO v2.2", confid1 = "LCZ_UNIQUENESS_VALUE",
-  sf2=sidneyWudapt, geomID2="geomID", column2="LCZraster", wf2="Open Street Map", confid2="confidence",
-  ref=1,repr="standard",exwrite=F, location="Part of Sidney")
-
-confidSidney<-confidSensib(inputDf=sidneyComparison$data, nPoints=5,
-                          wf1="GC on OSM", wf2="WUDAPT",
-                          geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
-                          geomID2="geomID",column2="LCZraster", confid2="confidence",
-                          sep=";", repr="standard",
-                          plot=TRUE, saveG = ".")
-```
-
-```{r, sensib plot, out.width = "680px"}
-path1<-system.file("extdata/vignettes/", package = "lczexplore")
-knitr::include_graphics("GeneralUniquenessSensib.png",  error=FALSE)
-
-```
-
-One can also explore the evolution of this agreement according to the confidence LCZ type by LCZ type. 
-
-```{r, out.width = "680px"}
-path2<-system.file("extdata/vignettes/", package = "lczexplore")
-knitr::include_graphics("byLCZUniquenessSensib.png", error=FALSE)
-
-```

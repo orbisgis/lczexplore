@@ -1,9 +1,8 @@
-
 .onLoad <- function(libname, pkgname) {
   utils::globalVariables(c("fill", "wf", "lcz_primary", "area", "V1", "V2", "LCZ_value",
                            "LCZ_alter", "agreeArea", "disagreeArea", "percAgree", "colorMap", "sectors"))
 }
-..cols <- node <- connector <- edge_id <- lcz_primary.1 <- NULL
+..cols <- node <- connector <- edge_id <- lcz_primary.1 <- pct <- sumArea <- NULL
 
 .lczenv<-new.env()
 

@@ -1,15 +1,16 @@
 Package: lczexplore
-Title: lczexplore
-Version: 1.0.0.0014
+Title:  Imports, visualizes, compares and explores maps of Local Climate Zones
+Version: 1.0.0.0016
 Authors@R: c(
     person("Matthieu", "Gousseff", , "matthieu.gousseff@univ-ubs.fr", role = c("aut", "cre")),
     person(, "Centre National de la Recherche Scientifique, Lab-STICC", role = "cph", comment = c(ORCID = "0000-0002-7106-2677"))
   )
-Description: This lczexplore package automatize the comparison of sets of local climate zone classifications. It was developed thanks to the project PAENDORA2 (Pour la gestion du confort estival : Donnees, Outils et Recherche-Action) (2022 -2025), funded by ADEME.
+Description: Easily import and visualize local climate zone maps with standard encoding.
+    Compare two or more maps, and group some LCZ types according.
+    Explore their differences through circular visualization and indicators.
 License: LGPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
 Imports: caret,
           circlize,
           collapse,
@@ -40,4 +41,5 @@ Suggests:
 VignetteBuilder: knitr
 LazyData: true
 Depends: 
-    R (>= 2.10)
+    R (>= 3.5.0)
+Config/roxygen2/version: 8.1.0

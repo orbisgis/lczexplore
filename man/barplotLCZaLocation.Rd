@@ -4,15 +4,16 @@
 \alias{barplotLCZaLocation}
 \title{in a given directory, if several LCZ files are present, plots the repartition
 of LCZ regarding of their source (workflow)
-NOTE: to represent the map of LCZ for a given fil, use \code{showLCZ} function instead}
+NOTE: to represent the map of LCZ for a given file, use \code{showLCZ} function instead}
 \usage{
 barplotLCZaLocation(
   dirPath,
   inLocation,
-  workflowNames = c("osm", "bdt", "iau", "wudapt"),
+  workflowNames = c("osm", "bdt", "wudapt"),
   refWf = NULL,
   refLCZ = NA,
   residualLCZvalue = NA,
+  missingGeom = "osm",
   plotNow = FALSE,
   plotSave = "\\tmp"
 )
@@ -31,18 +32,20 @@ where workflow is on of the values in workflowNames vector}
 
 \item{residualLCZvalue}{a LCZ default type, passed to the function addMissingRSUs when needed}
 
+\item{missingGeom}{allows to indicate which workflow is supposed to have missing geometries
+(not used most of the time)}
+
 \item{plotNow}{If TRUE, the boxplot of the repartition will be printed}
 
 \item{plotSave}{If TRUE, the plot will be saved in the directory pointed by dirPath}
 }
 \value{
-Cramer's V between pairs of levels, in a matrix (cramerMatrix) or long form (cramerLong),
-and a dataframe with the nbOutAssociation most significant association
+A barplot of LCZ area percentage by LCZ type and workflow
 }
 \description{
 in a given directory, if several LCZ files are present, plots the repartition
 of LCZ regarding of their source (workflow)
-NOTE: to represent the map of LCZ for a given fil, use \code{showLCZ} function instead
+NOTE: to represent the map of LCZ for a given file, use \code{showLCZ} function instead
 }
 \examples{
 barplotLCZaLocation(

@@ -6,7 +6,7 @@
 \usage{
 plotSummarisedRSUs(
   summarisedSfIn,
-  workflowNames = c("wudapt", "iau", "osm", "bdt"),
+  workflowNames = c("wudapt", "osm", "bdt"),
   plotNow = TRUE,
   graphPath = ""
 )
@@ -34,14 +34,14 @@ dirPath<-paste0(
 system.file("extdata", package = "lczexplore"),"/multipleWfs")
 allLocAllWfs<-loadConcatAllLocsAllWfs(
  dirPath = dirPath,
-    locations = c("Blaru", "Arville"),
-    workflowNames = c("osm","bdt","iau","wudapt"),
- missingGeomsWf = "iau",
+    locations = c("Redon", "Arville"),
+    workflowNames = c("osm","bdt","wudapt"),
+ missingGeomsWf= "osm",
  refWf = NULL,
  refLCZ = "Unclassified",
  residualLCZvalue = "Unclassified",
  column = "lcz_primary"
-)
+ )
 summarisedRSUs<-summariseRSUs(allLocAllWfs, aggregatingColumns = c("wf", "lcz_primary"))
-plotSummarisedRSUs(summarisedSfIn = summarisedRSUs)
+plotSummarisedRSUs(summarisedSfIn = summarisedRSUs, workflowNames = c("wudapt"= "wud", "osm", "bdt"))
 }

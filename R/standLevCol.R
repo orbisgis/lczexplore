@@ -50,7 +50,7 @@ standLevCol <- function(levels, colors = "", useStandCol = FALSE) {
 
     levelsColors[isStandardIndex] <- colorMapDefault[
       match(standardLevels, names(colorMapDefault))]
-    
+
     levelsColors
   }
 

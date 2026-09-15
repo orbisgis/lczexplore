@@ -19,23 +19,23 @@
 #' @export
 #' @examples
 #' # deprecated : use concatIntersectedLocations with the proper arguments
-intersectAlocation<-function(dirPath, workflowNames = c("osm","bdt","iau","wudapt"), location,
-                             addMissingRSUs = TRUE,
-                             missingGeomsWf="iau", refWf = NULL, refLCZ = "Unclassified",
-                             residualLCZvalue = "Unclassified",
-                             column = "lcz_primary"){
-  dirPath<-checkDirSlash(dirPath)
-  zoneSfPath<-paste0(dirPath, "zone.fgb")
-  zoneSf<-read_sf(zoneSfPath)
+intersectAlocation <- function(dirPath, workflowNames = c("osm", "bdt", "wudapt"), location,
+                               addMissingRSUs = TRUE,
+                               missingGeomsWf = "osm", refWf = NULL, refLCZ = "Unclassified",
+                               residualLCZvalue = "Unclassified",
+                               column = "lcz_primary") {
+  dirPath <- checkDirSlash(dirPath)
+  zoneSfPath <- paste0(dirPath, "zone.fgb")
+  zoneSf <- read_sf(zoneSfPath)
 
-  sfList<-loadMultipleSfs(dirPath = dirPath, workflowNames = c("osm","bdt","iau","wudapt"), inLocation = location )
-  sfList<-addMissingRSUs(sfList = sfList,
-                         missingGeomsWf="iau", zoneSf =zoneSf, refWf = refWf, refLCZ = refLCZ,
-                         residualLCZvalue = residualLCZvalue,
-                         column = "lcz_primary")
-  intersecSf<-createIntersect(sfList=sfList, columns=rep("lcz_primary", length(workflowNames)),
-                              refCrs=NULL, workflowNames=workflowNames, minZeroArea=0.0001)
-  if ("character"%in%class(location)) {intersecSf$location<-location}
-return(intersecSf)
+  sfList <- loadMultipleSfs(dirPath = dirPath, workflowNames = c("osm", "bdt", "wudapt"), inLocation = location)
+  sfList <- addMissingRSUs(sfList = sfList,
+                           missingGeomsWf = missingGeomsWf, zoneSf = zoneSf, refWf = refWf, refLCZ = refLCZ,
+                           residualLCZvalue = residualLCZvalue,
+                           column = "lcz_primary")
+  intersecSf <- createIntersect(sfList = sfList, columns = rep("lcz_primary", length(workflowNames)),
+                                refCrs = NULL, workflowNames = workflowNames, minZeroArea = 0.0001)
+  if ("character" %in% class(location)) { intersecSf$location <- location }
+  return(intersecSf)
 }
 

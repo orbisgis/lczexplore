@@ -70,8 +70,8 @@ realMatConfLargeHeteroClean<-matConfLargeHetero[
   orderedNames] %>% as.matrix
 
 diagHetero<-round(diag(realMatConfLargeHeteroClean), 2)
-diagHeteroRef<-c(0.00, 89.17, 6.35, 0.00, 0.00, 65.14,  0.00, 83.55, 66.84,  0.00, 48.19,
-                 1.02,  0.00, 87.57, 29.93,  0.00, 89.46)
+diagHeteroRef<-c(0.00, 95.47, 0.00, 0.00, 0.00, 88.18, 0.00, 63.15, 54.65, 0.00, 8.23, 8.40, 0.00,
+                 82.54, 25.80, 0.00, 66.22)
 
 testHetero<-prod((diag(realMatConfLargeHeteroClean)==100)|(diag(realMatConfLargeHeteroClean)==0))
 
@@ -83,7 +83,27 @@ expect_equal(diagHetero,diagHeteroRef)
 expect_equal(names(matConfRedonBDTOSM),c("matConf","matConfPlot","areas","percAgg"))
 
 
+oneLocDir<-paste0(
+  system.file("extdata", package = "lczexplore"),"/multipleWfs/Redon")
+oneLocSfList<-loadMultipleSfs(dirPath = oneLocDir, workflowNames = c("osm","bdt","wudapt"),
+                              inLocation = "Redon")
+oneLocSfIntersected <- createIntersect(sfList = oneLocSfList, columns = rep("lcz_primary", 4),
+                                       refCrs=NULL, workflowNames=c("osm", "bdt", "wudapt"), minZeroArea=0.001)
+redon_bdt<-oneLocSfList$bdt
+redo_osm<-oneLocSfList$osm
 
+showLCZ(redon_bdt, column = "lcz_primary")
+showLCZ(redon_osm, column = "lcz_primary")
+
+testComp<-compareLCZ(sf1 = redon_bdt, column1 = "lcz_primary",
+           sf2 = redon_osm, column2 = "lcz_primary" )
+testComp$matConfLarge
+# MatConfLarge semble OK
+testComp$areas
+
+
+redon_osm<-oneLocSfList$osm
+redon_wud<-oneLocSfList$wud
 
 
 

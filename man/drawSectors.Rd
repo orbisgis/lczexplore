@@ -4,13 +4,7 @@
 \alias{drawSectors}
 \title{Draws sectors and groups inside the drawChordDiagram function}
 \usage{
-drawSectors(
-  sector_id,
-  sectorsIn = sectors,
-  colorMapIn = colorMap,
-  textMatch,
-  facing = "clockwise"
-)
+drawSectors(sector_id, sectorsIn = sectors, colorMapIn = colorMap, textMatch)
 }
 \arguments{
 \item{sector_id}{ar the ideitnfiers of sectors as returned by the makeSectorsAndGroups function}
@@ -18,12 +12,10 @@ drawSectors(
 \item{sectorsIn}{are the values of a sectors as returned by the makeSectorsAndGroups function}
 
 \item{colorMapIn}{is a named vector whose names must contain the values of sectorsIn and
-whose values are the desired colors}
-
-\item{textMatch}{is}
-
-\item{facing}{defines the way labels of sectors are plotted, the default is "clockwise",
+whose values are the desired colors
 see drawChorDiagram function for details}
+
+\item{textMatch}{is fed by drawChordDiagram to provide labels for sectors}
 }
 \value{
 a list containing vectors and groups for a chord diagram

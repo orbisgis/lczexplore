@@ -53,7 +53,7 @@ https://figshare.com/articles/dataset/European_LCZ_map/13322450
 }
 \examples{
 redonBbox<-importLCZvect(dirPath=paste0(system.file("extdata", package = "lczexplore"),
-"/lczfiles/Redon"), file="bdt_lcz.fgb", column="LCZ_PRIMARY", output="bBox")
+"/multipleWfs/Redon"), file="bdt_lcz.fgb", column="LCZ_PRIMARY", output="bBox")
 
 redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
 fileName="redonWudapt.tif",bBox=redonBbox)

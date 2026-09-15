@@ -29,6 +29,6 @@ Use the more generic importLCZvect function
 }
 \examples{
 # not run
-# bdtTest<-importLCZgc(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/lczfiles/Redon/"),
+# bdtTest<-importLCZgc(dirPath=paste0(system.file("extdata", package = "lczexplore"),""/multipleWfs/Redon"/"),
 # file = "bdt_lcz.fgb")
 }

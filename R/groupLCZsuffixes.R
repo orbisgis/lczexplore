@@ -1,6 +1,6 @@
 #' Regroups levels of origin and destination of a multiple confusion matrix in long form.
 #'
-#' @param multiMatConfLongIn is typically the output of the function createMultipleMatConf,
+#' @param weightedFluxIn is typically the output of the function createWeightedFlux,
 #' and is expected to contain the following columns orig, dest and weightedFlux,
 #' whose names are quite self explanatory : orig is the origin LCZ type, dest is the destination LCZ type
 #' and weightedFlux is the percentage of area transfered from orig to dest
@@ -9,50 +9,48 @@
 #' it will regroup.
 #' @return a list containing vectors and groups for a chord diagram
 #' @export
-groupLCZsuffix<-function(multiMatConfLongIn, ...) {
+groupLCZsuffix <- function(weightedFluxIn, ...) {
   #require(forcats)
-  origPref <- sub("(.*)(_)(.*)", "\\1\\2", multiMatConfLongIn$orig)
-  destPref <- sub("(.*)(_)(.*)", "\\1\\2", multiMatConfLongIn$dest)
-  origSuff<-gsub("(.*)(_)(.*)", "\\3", multiMatConfLongIn$orig)
-  destSuff<-gsub("(.*)(_)(.*)", "\\3", multiMatConfLongIn$dest)
-  
-  # ensure all the LCZ levels are present in the imported column
-  uniqueSuff<-unique(c(origSuff, destSuff)) %>% as.character # Attention unique outputs a list of length 1
+  origPref <- sub("(.*)(_)(.*)", "\\1\\2", weightedFluxIn$orig)
+  destPref <- sub("(.*)(_)(.*)", "\\1\\2", weightedFluxIn$dest)
+  origSuff <- gsub("(.*)(_)(.*)", "\\3", weightedFluxIn$orig)
+  destSuff <- gsub("(.*)(_)(.*)", "\\3", weightedFluxIn$dest)
+
 
   # get the grouping levels as passed by ..., but without keeping arguments about colours
-  args<-list(...)[names(list(...))!="groupColors"]
-  indSep<-names(args)
-  indCol<-grep(x=indSep, pattern="groupColors")
-  print(names(args))
+  args <- list(...) #[names(list(...)) != "groupColors"]
+  print(args)
+  indSep <- names(args)
+  # print(names(args))
 
-  args<-append(list(origSuff),args)
+  args <- append(list(origSuff), args)
   # temp<-do.call(fct_collapse,args)
-  origSuffOut<-
-    tryCatch(expr=do.call(fct_collapse,args),
-             warning=function(w){
+  origSuffOut <-
+    tryCatch(expr = do.call(fct_collapse, args),
+             warning = function(w) {
                message("One of the specified levels to group doesn't exist in the data, if it is a mispelled level of the data,
-             this level will be kept as ungrouped",w)
+             this level will be kept as ungrouped ", w)
                return(
-                 do.call(fct_collapse,args)
+                 do.call(fct_collapse, args)
                )
              })
 
-multiMatConfLongIn$orig<-paste0(origPref, origSuffOut)
+  weightedFluxIn$orig <- paste0(origPref, origSuffOut)
 
-  args<-append(list(destSuff),args)
+  args <- append(list(destSuff), args)
   # temp<-do.call(fct_collapse,args)
-  destSuffOut<-
-    tryCatch(expr=do.call(fct_collapse,args),
-             warning=function(w){
+  destSuffOut <-
+    tryCatch(expr = do.call(fct_collapse, args),
+             warning = function(w) {
                message("One of the specified levels to group doesn't exist in the data, if it is a mispelled level of the data,
-             this level will be kept as ungrouped",w)
+             this level will be kept as ungrouped ", w)
                return(
-                 do.call(fct_collapse,args)
+                 do.call(fct_collapse, args)
                )
              })
 
 
-  multiMatConfLongIn$dest<-paste0(destPref, destSuffOut)
+  weightedFluxIn$dest <- paste0(destPref, destSuffOut)
 
-  return(multiMatConfLongIn)
+  return(weightedFluxIn)
 }

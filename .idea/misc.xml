@@ -38,6 +38,14 @@
             </RMarkdownRenderProfile>
           </value>
         </entry>
+        <entry key="file://$PROJECT_DIR$/vignettes/lczexplore_multiple_workflows.qmd">
+          <value>
+            <RMarkdownRenderProfile>
+              <option name="lastOutput" value="$PROJECT_DIR$/vignettes/lczexplore_multiple_workflows.html" />
+              <option name="outputDirectoryUrl" value="file://$PROJECT_DIR$/vignettes" />
+            </RMarkdownRenderProfile>
+          </value>
+        </entry>
         <entry key="file://$PROJECT_DIR$/vignettes/lczexplore_raster_vector.Rmd">
           <value>
             <RMarkdownRenderProfile>

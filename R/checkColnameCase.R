@@ -11,24 +11,24 @@
 #' dataColNames<-c("ID", "LCZ_PRIMARY")
 #' checkColnameCase(userColNames, dataColNames)
 #' dataColNames<-c("ID", "lcz_primary")
-checkColnameCase<-function(userColNames, dataColNames){
+checkColnameCase <- function(userColNames, dataColNames) {
   inCol <- userColNames %in% dataColNames
   badCol <- userColNames[!inCol]
   colErr <- c("It seems that some of the columns you try to import do not exist in the source file,
               are you sure you meant ",
               paste(badCol), "?")
   if (prod(inCol) == 0) {
-    if(prod(tolower(badCol)%in%dataColNames)==0){
+    if (prod(tolower(badCol) %in% dataColNames) == 0) {
       message(paste0(badCol,
                      " do-es-n't seem to be a column-s of your dataset, but ",
                      tolower(badCol),
                      " is/are and was/were loaded instead. If this was not the desired column, please check your source data. "))
-      userColNames[userColNames %in% badCol]<-tolower(badCol)
+      userColNames[userColNames %in% badCol] <- tolower(badCol)
     } else {
       stop(colErr)
     }
   }
-  
+
   return(userColNames)
-  
+
 }

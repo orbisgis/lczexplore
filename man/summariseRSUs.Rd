@@ -9,7 +9,7 @@ summariseRSUs(sfIn, aggregatingColumns = "lcz_primary", trimValue = 0)
 \arguments{
 \item{sfIn}{an sf objects that contains the geometry and LCZ levels}
 
-\item{aggregatingColumns}{tshould be the name of the LCZ types column, but can be any factor variable names}
+\item{aggregatingColumns}{should be the name of the LCZ types column, but can be any factor variable names}
 
 \item{trimValue}{a trim parameter to feed the mean function in order to avoid letting artifially small or big
 geometries to influence the average area results}
@@ -26,13 +26,22 @@ For a given LCZ sf object, returns the number of geometries and their mean area 
 dirPath<-paste0(
 system.file("extdata", package = "lczexplore"),"/multipleWfs")
 allLocAllWfs<-loadConcatAllLocsAllWfs(
- dirPath = dirPath, locations = c("Blaru", "Arville"),
-workflowNames = c("osm","bdt","iau","wudapt"),
- missingGeomsWf = "iau",
+ dirPath = dirPath, locations = c("Redon", "Arville"),
+workflowNames = c("osm","bdt","wudapt"),
+ missingGeomsWf= "osm",
  refWf = NULL,
  refLCZ = "Unclassified",
  residualLCZvalue = "Unclassified",
  column = "lcz_primary"
 )
-summarisedRSUs<-summariseRSUs(allLocAllWfs, aggregatingColumns = "wf")
+summarisedRSUs<-summariseRSUs(allLocAllWfs, aggregatingColumns = c("wf", "lcz_primary"))
+
+# After aggregating adjacent RSU of same LCZ type
+ASUallLocAllWfs <- aggregateRSUsByLCZ(
+ allLocAllWfs,
+ LCZcolumn = "lcz_primary", wfColumn = "wf", locationColumn = "location", aggregateBufferSize = 0.5)
+summarisedASUs<-summariseRSUs(ASUallLocAllWfs, aggregatingColumns = c("wf", "lcz_primary"))
+
+plotSummarisedRSUs(summarisedSfIn = summarisedASUs, workflowNames = c("wud" = "wudapt", "osm", "bdt"))
+
 }

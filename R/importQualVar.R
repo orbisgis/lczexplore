@@ -30,100 +30,100 @@
 #' file="osm_utrf_area.fgb", column="TYPO_MAJ",geomID="ID_RSU",confid="UNIQUENESS_VALUE")
 #' # One can now compare these 2 classifications and store the result in an object...
 #' utrfComparison<-compareLCZ(
-#'  sf1=utrfRedonBDT, column1="TYPO_MAJ", wf1=" UTRF BDT",
-#'  sf2=utrfRedonOSM, column2="TYPO_MAJ", wf2 = " UTRF OSM",
+#'  sf1=utrfRedonBDT, column1="TYPO_MAJ", wf1="UTRF.BDT",
+#'  sf2=utrfRedonOSM, column2="TYPO_MAJ", wf2 = "UTRF.OSM",
 #' location = " Redon",exwrite=FALSE,repr="alter")
 #'  # ... then plot the confusion matrix of these two classifications  
 #' print(utrfComparison$matConfPlot)
 #' 
 #' 
-importQualVar<-function(dirPath = paste0(system.file("extdata", package = "lczexplore"),
-                                         "/utrfFiles"),
-                        file="bdt_utrf_area.fgb", output="sfFile", column="TYPO_MAJ",
-                       geomID="ID_RSU", confid="UNIQUENESS_VALUE",
-                       typeLevels="",
-                       drop=T, verbose=TRUE){
-  if (!file.exists(dirPath)){stop(message="The directory set in dirPath doesn't seem to exist")}
+importQualVar <- function(dirPath = paste0(system.file("extdata", package = "lczexplore"),
+                                           "/utrfFiles"),
+                          file = "bdt_utrf_area.fgb", output = "sfFile", column = "TYPO_MAJ",
+                          geomID = "ID_RSU", confid = "UNIQUENESS_VALUE",
+                          typeLevels = "",
+                          drop = T, verbose = TRUE) {
+  if (!file.exists(dirPath)) { stop(message = "The directory set in dirPath doesn't seem to exist") }
 
 
-  filePath<-paste0(dirPath,"/",file)
+  filePath <- paste0(dirPath, "/", file)
   # select only the needed column, that is the unempty strings among column, geomID and confid
-  colonnes<-c(geomID,column,confid)
-  colonnes<-colonnes[sapply(colonnes,nchar)!=0]
+  colonnes <- c(geomID, column, confid)
+  colonnes <- colonnes[sapply(colonnes, nchar) != 0]
 
   extension <- gsub(pattern = "(.+?)(\\.[^.]*$|$)", x = file, replacement = "\\2")
 
-  if (extension != ".fgb"){
-      # Check if all the desired columns are present in the source file and only loads the file if the columns exist
-      nom<-gsub(pattern="(.+?)(\\.[^.]*$|$)",x=file,replacement="\\1")
-      query<-paste0("select * from ",nom," limit 0")
-      sourceCol<-st_read(dsn=filePath,query=query) %>% names
-      inCol<-colonnes%in%sourceCol
-      badCol<-colonnes[!inCol]
-      colErr<-c("It seems that some of the columns you try to import do not exist in the source file,
+  if (extension != ".fgb") {
+    # Check if all the desired columns are present in the source file and only loads the file if the columns exist
+    nom <- gsub(pattern = "(.+?)(\\.[^.]*$|$)", x = file, replacement = "\\1")
+    query <- paste0("select * from ", nom, " limit 0")
+    sourceCol <- st_read(dsn = filePath, query = query) %>% names
+    inCol <- colonnes %in% sourceCol
+    badCol <- colonnes[!inCol]
+    colErr <- c("It seems that some of the columns you try to import do not exist in the source file,
                 are you sure you meant ",
-                paste(badCol)," ?")
-      if (prod(inCol)==0){ stop(colErr) } else { sfFile<-st_read(dsn=filePath)[,colonnes] }
-      } else
-      {
-        sfFile<-st_read(dsn=filePath)
-        sourceCol<-names(sfFile)
-        inCol<-colonnes%in%sourceCol
-        badCol<-colonnes[!inCol]
-        colErr<-c("It seems that some of the columns you try to import do not exist in the source file,
+                paste(badCol), " ?")
+    if (prod(inCol) == 0) { stop(colErr) } else { sfFile <- st_read(dsn = filePath)[, colonnes] }
+  } else
+  {
+    sfFile <- st_read(dsn = filePath)
+    sourceCol <- names(sfFile)
+    inCol <- colonnes %in% sourceCol
+    badCol <- colonnes[!inCol]
+    colErr <- c("It seems that some of the columns you try to import do not exist in the source file,
             are you sure you meant ",
-            paste(badCol)," ?")
-    if (prod(inCol)==0){ stop(colErr)
+                paste(badCol), " ?")
+    if (prod(inCol) == 0) { stop(colErr)
+    }
   }
-  }
 
-  if (column!=""){
-    if(drop==T){sfFile<-subset(sfFile,select=colonnes)}
+  if (column != "") {
+    if (drop == T) { sfFile <- subset(sfFile, select = colonnes) }
 
-    
-  # if typeLevels is empty
-  if (length(typeLevels)<=1){
-    typeLevels<-unique(subset(sfFile,select=column,drop=TRUE))
-    names(typeLevels)<-typeLevels
-  }
- else { 
 
-    prov<-as.character(unique((st_drop_geometry(subset(sfFile,select=column,drop=T)))))
-    names(prov)<-prov
+    # if typeLevels is empty
+    if (length(typeLevels) <= 1) {
+      typeLevels <- unique(subset(sfFile, select = column, drop = TRUE))
+      names(typeLevels) <- typeLevels
+    }
+    else {
 
-    if( prod(prov%in%typeLevels)==0 ){
-      if (verbose==T){
-        print("levels in typeLevels are : ")
-        print(typeLevels)
-        print("levels in the original dataset are ")
-        print(unique(subset(sfFile,select=column,drop=T)))
-      }
-      warning("The levels you specified with the typeLevels argument don't cover the values in the column of your source file.
+      prov <- as.character(unique((st_drop_geometry(subset(sfFile, select = column, drop = T)))))
+      names(prov) <- prov
+
+      if (prod(prov %in% typeLevels) == 0) {
+        if (verbose == T) {
+          print("levels in typeLevels are : ")
+          print(typeLevels)
+          print("levels in the original dataset are ")
+          print(unique(subset(sfFile, select = column, drop = T)))
+        }
+        warning("The levels you specified with the typeLevels argument don't cover the values in the column of your source file.
               Some geoms have been dropped,this could seriously alter your analysis, please check the levels or enter an empty string as typeLevels")
 
+      }
+      if (sum(prov %in% typeLevels) == 0) {
+        stop(
+          paste0("none of the levels present in ", column,
+                 " is covered by the levels you specified.",
+                 "Check your choice of column and your choice of levels"))
+      }
     }
-    if( sum(prov%in%typeLevels)==0 ){
-      stop(
-        paste0("none of the levels present in ",column,
-               " is covered by the levels you specified.",
-               "Check your choice of column and your choice of levels"))
-    }
-  }
 
 
-    sfFile[[column]]<-factor(sfFile[[column]],levels=typeLevels)
-      sfFile<-drop_na(sfFile, column)
+    sfFile[[column]] <- factor(sfFile[[column]], levels = typeLevels)
+    sfFile <- drop_na(sfFile, column)
   }
-  else {stop("You must specify the column containing your qualitative variable")}
+  else { stop("You must specify the column containing your qualitative variable") }
 
 
   #sfFile <- sfFile%>% mutate(!!column:=fct_recode(subset(sfFile,select=column,drop=T),!!!typeLevels))
 
-  if(output=="sfFile"){return(sfFile)} else {
-    if(output=="bBox"){bBox<-st_bbox(sfFile,crs=st_crs(sfFile)) %>% st_as_sfc
-      return(bBox)}
+  if (output == "sfFile") { return(sfFile) } else {
+    if (output == "bBox") { bBox <- st_bbox(sfFile, crs = st_crs(sfFile)) %>% st_as_sfc
+      return(bBox) }
     else {
-      stop("Output must be sfFile to return geoms and qualitative variable or bBox to return the bounding box")}
+      stop("Output must be sfFile to return geoms and qualitative variable or bBox to return the bounding box") }
 
   }
 }

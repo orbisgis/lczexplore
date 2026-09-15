@@ -27,7 +27,7 @@
 # file.remove("Redon_bdtopo_2_2_osm_standard.png")
 # file.remove("bdtopo_2_2_osm.csv")
 # file.remove(paste0(
-#   system.file(package="lczexplore"),"/tinytest/lczfiles/Redon/rsu_lcz.geojson"))
+#   system.file(package="lczexplore"),"/tinytest"/multipleWfs/Redon"/rsu_lcz.geojson"))
 # 
 # # expect_message(
 # #   produceAnalysis(location="Redon",
@@ -39,10 +39,10 @@
 # # )
 # # 
 # # file.remove(paste0(
-# #   system.file(package="lczexplore"),"/tinytest/lczfiles/Redon/rsu_lcz.geojson"))
+# #   system.file(package="lczexplore"),"/tinytest"/multipleWfs/Redon"/rsu_lcz.geojson"))
 # # 
 # # file.remove(paste0(
-# #   system.file(package="lczexplore"),"/tinytest/lczfiles/Redon/Redon.zip"))
+# #   system.file(package="lczexplore"),"/tinytest"/multipleWfs/Redon"/Redon.zip"))
 # 
 # expect_message(
 #   produceAnalysis(location="Redon",
@@ -55,10 +55,10 @@
 # 
 # 
 # file.remove(paste0(
-#   system.file(package="lczexplore"),"/tinytest/lczfiles/Redon/Redon.zip"))
+#   system.file(package="lczexplore"),"/tinytest"/multipleWfs/Redon"/Redon.zip"))
 # file.remove("Redon_bdtopo_2_2_osm_standard.png")
 # file.remove("bdtopo_2_2_osm.csv")
 # file.remove(paste0(
-#   system.file(package="lczexplore"),"/tinytest/lczfiles/Redon/rsu_lcz.geojson"))
+#   system.file(package="lczexplore"),"/tinytest"/multipleWfs/Redon"/rsu_lcz.geojson"))
 # file.remove("Redon_bdtopo_2_2_osm_standard.png")
 # file.remove("bdtopo_2_2_osm.csv")

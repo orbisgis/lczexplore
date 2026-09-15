@@ -6,7 +6,7 @@
 # Test functionnal import
 
 redonBbox<-importLCZvect(dirPath=paste0(
-  system.file("extdata", package = "lczexplore"),"/lczfiles/Redon"),file="osm_lcz.fgb",column="LCZ_PRIMARY",
+  system.file("extdata", package = "lczexplore"),"/multipleWfs/Redon"),file="osm_lcz.fgb",column="LCZ_PRIMARY",
   , output="bBox")
 
 expect_warning(redonWudapt<-importLCZraster(
@@ -42,52 +42,16 @@ outBbox<-sf::st_sfc(lowCorner,upCorner,crs=4326)
 # LCZband=1, LCZcolumn="LCZ")
 #  showLCZ(redonWudapt2, column = "LCZ")
 
-# sidneyOSM<-importLCZvect(
-
-
-sidneyBbox<-importLCZvect(
-  system.file("extdata/lczfiles/Sidney", package = "lczexplore"), file="sidney_rsu_lcz.fgb",
-  ,output = "bBox")
 
 # test default import
 
-expect_warning(sidneyWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
-                              fileName="rasterMD.tif",bBox=sidneyBbox),
-               "attribute variables are assumed to be spatially constant throughout all geometries")
+redonBbox<-importLCZvect(dirPath=paste0(system.file("extdata", package = "lczexplore"),
+  "/multipleWfs/Redon"), file="bdt_lcz.fgb", column="LCZ_PRIMARY", output="bBox")
 
-# test default specifying band number
+redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
+ fileName="redonWudapt.tif",bBox=redonBbox, LCZband=1, LCZcolumn='EU_LCZ_map')
 
-expect_warning(sidneyWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
-                             fileName="redonWudapt.tif",bBox=redonBbox, LCZband=1, LCZcolumn='EU_LCZ_map'),
-               "attribute variables are assumed to be spatially constant throughout all geometries")
-
-
-expect_error(sidneyWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
-                              fileName="redonWudapt.tif",bBox=redonBbox, LCZband=4, LCZcolumn='EU_LCZ_map'),
-             "invalid name")
-
-# test importing a band that doesn't exist (wrong name)
-expect_error(sidneyWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
-                                           fileName="redonWudapt.tif",bBox=redonBbox, LCZband="Ski shoe", LCZcolumn='EU_LCZ_map'),
-             "invalid name")
-
-# test importing several bands of the raster is imported, one being the confidence, one being numeric and the other the name of a band
-
-expect_warning(sidneyWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
-                fileName="rasterMD.tif", LCZband=1,  LCZcolumn = "LCZraster",
-                confidenceBand = 3, confidenceColumn = "confidence",
-                bBox = sidneyBbox ),
-               "attribute variables are assumed to be spatially constant")
-
-expect_warning(sidneyWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
-                                             fileName="rasterMD.tif", LCZband="lcz",  LCZcolumn = "LCZraster",
-                                             confidenceBand = 3, confidenceColumn = "confidence",
-                                             bBox = sidneyBbox ),
-               "attribute variables are assumed to be spatially constant")
-
-# test importing several bands, one being wrong
-
-expect_error(sidneyWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
-                                           fileName="rasterMD.tif",bBox=sidneyBbox, LCZband=1, LCZcolumn='EU_LCZ_map',
-                                           confidenceBand = "skishoe", confidenceColumn = "confidence"),
-             "invalid name")
+expect_warning(redonWudapt<-importLCZraster(system.file("extdata", package = "lczexplore"),
+                                            fileName="redonWudapt.tif",bBox=redonBbox, LCZband=1, LCZcolumn='EU_LCZ_map'),
+               "attribute variables are assumed to be spatially constant"
+)

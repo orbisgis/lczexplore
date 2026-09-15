@@ -6,9 +6,9 @@ output: rmarkdown::html_vignette
 resource_files:
   - vignettes/Redon.png
 vignette: >
- %\VignetteIndexEntry{lczexplore_fr}
- %\VignetteEngine{knitr::knitr}
- %\VignetteEncoding{UTF-8}
+    %\VignetteIndexEntry{lczexplore_fr}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}
 ---
 
 
@@ -70,10 +70,10 @@ un raster, par exemple).
 
 
 
-```{r, import des fichiers, eval = TRUE, echo = TRUE}
-dirPath<-system.file("extdata/lczfiles/Redon",package="lczexplore")
-redonOSM<-importLCZvect(dirPath=dirPath,file="osm_lcz.fgb",column = "LCZ_PRIMARY", verbose=FALSE)
-redonBDT<-importLCZvect(dirPath=dirPath,file="bdt_lcz.fgb",column = "LCZ_PRIMARY", verbose = FALSE)
+```{r, import-des-fichiers, eval = TRUE, echo = TRUE}
+dirPath <- system.file("extdata/multipleWfs/Redon", package = "lczexplore")
+redonOSM <- importLCZvect(dirPath = dirPath, file = "osm_lcz.fgb", column = "LCZ_PRIMARY", verbose = FALSE)
+redonBDT <- importLCZvect(dirPath = dirPath, file = "bdt_lcz.fgb", column = "LCZ_PRIMARY", verbose = FALSE)
 ```
 ## Représenter les LCZ avec la fonction showLCZ
 
@@ -97,7 +97,7 @@ de cartes où les niveaux présents ne sont pas les mêmes.
 Si on souhaite ne représenter que les niveaux présents dans les données, il suffit de préciser `drop=TRUE` et les 
 niveaux absents ne seront pas représentés. 
 
-```{r, show drop, fig.dim = c(8, 6), echo = FALSE}
+```{r, show-drop, fig.dim = c(8, 6), echo = FALSE}
 map2<-showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="standard",drop=TRUE)
 ```
 
@@ -117,7 +117,7 @@ Si `repr=alter` et que `LCZlvels` et `colors` ne sont pas renseignés les couleu
 sont choisies au sein de la palette "Polychrome 36" du package grDevice, 
 et les niveaux déduits des valeurs présentes.
 
-```{r, show alter, fig.dim = c(8, 6), eval = TRUE, echo = TRUE}
+```{r, show-alter, fig.dim = c(8, 6), eval = TRUE, echo = TRUE}
 # Choix d'un vecteur de couleurs alternatif aléatoire
 testCol <- palette.colors(n=17, palette="Polychrome 36")
 map3<-showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter",colors=testCol, useStandCol = FALSE)
@@ -129,7 +129,7 @@ L'argument `LCZlevels` permet de spécifier les niveaux qui se trouvent dans les
 Dans l'exemple ci-dessous, on force la prise en compte d'un niveau "10" 
 qui n'est pas présent dans les données, et on laisse la fonction choisir des couleurs aléatoires. 
 
-```{r, niveau vide, fig.dim = c(8, 6), eval = TRUE, echo = TRUE}
+```{r, niveau-vide, fig.dim = c(8, 6), eval = TRUE, echo = TRUE}
 
 LCZlevels<-c(2, 3, 5, 6, 8, 9, 10, 101, 102, 104, 105, 107)
 map4<-showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter", LCZlevels = LCZlevels,drop=FALSE)
@@ -138,7 +138,7 @@ map4<-showLCZ(sf=redonOSM,wf="OSM",column="LCZ_PRIMARY",repr="alter", LCZlevels 
 On peut également renseigner le vecteur des couleurs qu'on souhaite utiliser en renseignant l'argument`colors`.
 On peut renseigner les noms de couleurs connues de R ou un code RGB.  
 
-```{r, couleurs nommees, fig.dim = c(8, 6), eval = TRUE, echo = TRUE}
+```{r, couleurs-nommees, fig.dim = c(8, 6), eval = TRUE, echo = TRUE}
 # Choix de couleurs prises au hasard
 
 # Après une première représentation on constate qu'il n'y a que les typeLevels 2, 3, 5, 6, 8, 9, 101, 102, 104, 105, 107.
@@ -213,7 +213,7 @@ dirPath<-paste0(system.file("extdata",package="lczexplore"),"/")
 
 Lecture du fichier correctement zoomé et enregistré en png.
 
-```{r, comparaison image jolie, out.width = "680px"}
+```{r, comparaison-image-jolie, out.width = "680px"}
 path <- system.file('extdata/RedonCompare.png',package="lczexplore")
 knitr::include_graphics(path, error=FALSE)
 
@@ -233,7 +233,7 @@ Ce coefficient permet de prendre en compte la part d'accord entre les classifica
 Enfin, si l'argument `exwrite=TRUE` la fonction compareLCZ exporte les données 
 qui ont servi à produire la matrice de confusion dans un fichier csv. 
 Ce fichier peut ensuite être chargé dans R pour d'autres analyses.
-```{r, valeurs numeriques, eval = TRUE, echo = TRUE}
+```{r, valeurs-numeriques, eval = TRUE, echo = TRUE}
 comparaison$percAgg
 comparaison$pseudoK
 ```
@@ -253,8 +253,8 @@ Cette uniqueness peut donc être vue comme une mesure de confiance.
 ## Prise en compte des géométries et des valeurs de confiance lors de l'import des fichiers.
 
 La fonction `importLCZvect` permet d'indiquer quelles colonnes du geojson contiennent l'identifiant de la géométrie (`geomID`) et l'indicateur de confiance associé (`confid`) nécessaires à l'analyse de sensibilité. 
-```{r, analyse sensibilite, eval = TRUE, echo = TRUE }
-dirPath<-paste0(system.file("extdata",package="lczexplore"),"/lczfiles/Redon")
+```{r, analyse-sensibilite, eval = TRUE, echo = TRUE }
+dirPath<-paste0(system.file("extdata",package="lczexplore"),"/multipleWfs/Redon")
 
 redonOSM<-importLCZvect(dirPath=dirPath,file="osm_lcz.fgb",column = "LCZ_PRIMARY",geomID = "ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
 
@@ -268,19 +268,19 @@ redonCompare<-compareLCZ(sf1=redonBDT,wf1="bdt", geomID1 = "ID_RSU",column1 ="LC
 
 À chaque unité de référence spatiale (RSU, une géométrie) est maintenant associé un type de LCZ et un niveau de confiance. 
 
-```{r, comparaison avec confiance, echo = TRUE, fig.show="hide"}
+```{r, comparaison-avec-confiance, echo = TRUE, fig.show="hide"}
 redonCompare<-compareLCZ(sf1=redonBDT,wf1="bdt", geomID1 = "ID_RSU",column1 ="LCZ_PRIMARY",
                          confid1 = "LCZ_UNIQUENESS_VALUE",
                          sf2=redonOSM,wf2="osm",geomID2 = "ID_RSU",column2="LCZ_PRIMARY",confid2 ="LCZ_UNIQUENESS_VALUE",exwrite=FALSE, saveG="comparaison")
 # redonInputSensib<-read.csv()
 ```
-```{r, sortie jolie, out.width = "680px"}
+```{r, sortie-jolie, out.width = "680px"}
 
 knitr::include_graphics("comparaison.png", error=FALSE)
 
 ```
-Il est important de noter que si les colonnes des deux fichiers ont le même nom `compareLCZ` 
-renomme les colonnes du deuxième fichier en leur concaténant '.1'
+Il est important de noter que les colonnes contenant les LCZ en entrée sont renommées à partir des
+noms de workflow en sortie, pour éviter des renommages du type lcz_primary et lcz_primary.1.
 
 La question à laquelle cette fonction permet de répondre est : 
 **est-ce que l'accord entre les deux classifications LCZ augmente si on ne conserve 
@@ -296,24 +296,24 @@ et le représente en bleu sur le graphique final.
 On représente aussi, en magenta, l'accord entre les géométries dont la valeur de confiance était inférieure au seuil.
 
 
-```{r, analyse sensibilite 2, fig.dim = c(12,9), fig.show="hide"}
+```{r, analyse-sensibilite-2, fig.dim = c(12,9), fig.show="hide"}
 names(redonCompare$data)
 confidRedon<-confidSensib(inputDf=redonCompare$data,filePath="", nPoints=10,
              wf1="bdtopo_2_2", wf2="osm",
-             geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
-             geomID2="ID_RSU.1",column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1",
+             geomID1="ID_RSU", column1="bdt", confid1="LCZ_UNIQUENESS_VALUE",
+             geomID2="ID_RSU.1",column2="osm", confid2="LCZ_UNIQUENESS_VALUE.1",
              sep=";", repr="standard",
              plot=TRUE, saveG = ".")
 
 ```
-```{r, sortie sensibilite jolie, out.width = "680px"}
+```{r, sortie-sensibilite-jolie, out.width = "680px"}
 
 knitr::include_graphics("GeneralUniquenessSensib.png", error=FALSE)
 
 ```
 La fonction `confidSensib` propose également cette analyse par type de LCZ. 
 
-```{r, sensibilite par type de LCZ, out.width = "680px"}
+```{r, sensibilite-par-type-de LCZ, out.width = "680px"}
 
 knitr::include_graphics("byLCZUniquenessSensib.png", error=FALSE)
 

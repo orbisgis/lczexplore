@@ -21,67 +21,66 @@
 #' @examples
 #' sfList<-loadMultipleSfs(dirPath = paste0(
 #' system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
-#'  workflowNames = c("osm","bdt","iau","wudapt"), inLocation = "Arville"  )
+#'  workflowNames = c("osm","bdt","wudapt"), inLocation = "Arville"  )
 #' zoneSf <- sf::read_sf(
 #'   paste0(
 #'    system.file("extdata", package = "lczexplore"),
 #'    "/multipleWfs/Arville/zone.fgb")
 #' )
-#' SfList<-addMissingRSUs(
+#' sfList<-addMissingRSUs(
 #' sfList, zoneSf = zoneSf, refWf = NULL,
 #'  refLCZ = "Unclassified", residualLCZvalue = "Unclassified")
-addMissingRSUs<-function(sfList, missingGeomsWf="iau", zoneSf, refWf = "bdt", refLCZ = "107", residualLCZvalue="105",
-                           column = "lcz_primary"){
-  refCRS<-st_crs(sfList[[missingGeomsWf]])
-  zoneSf<-st_transform(zoneSf,
-                       crs=refCRS)
-  sfList[[missingGeomsWf]][[column]]<-factor(sfList[[missingGeomsWf]][[column]], 
-                                             levels = unique(c(
-    levels(sfList[[missingGeomsWf]][[column]]), refLCZ, residualLCZvalue)))
-  missingDiff<-st_difference(
+addMissingRSUs <- function(sfList, missingGeomsWf = "osm", zoneSf, refWf = "bdt", refLCZ = "107", residualLCZvalue = "105",
+                           column = "lcz_primary") {
+  refCRS <- st_crs(sfList[[missingGeomsWf]])
+  zoneSf <- st_transform(zoneSf,
+                         crs = refCRS)
+  sfList[[missingGeomsWf]][[column]] <- factor(sfList[[missingGeomsWf]][[column]],
+                                               levels = unique(c(
+                                                 levels(sfList[[missingGeomsWf]][[column]]), refLCZ, residualLCZvalue)))
+  missingDiff <- st_difference(
     st_union(zoneSf),
     st_union(sfList[[missingGeomsWf]])) %>% st_as_sf
-    st_set_geometry(missingDiff, missingDiff$x)
-  names(missingDiff)[names(missingDiff)=="x"]<-"geometry"
-  st_geometry(missingDiff)<-"geometry"
-  
+  st_set_geometry(missingDiff, missingDiff$x)
+  names(missingDiff)[names(missingDiff) == "x"] <- "geometry"
+  st_geometry(missingDiff) <- "geometry"
 
 
-  if(length(missingDiff)==0){stop("st_difference returns no missing features, maybe the function was already applied to your dataset ?")}
-  
-  if (is.null(refWf)){
-    missingDiff[[column]]<-residualLCZvalue
-    missingDiff[["location"]]<-unique(sfList[[missingGeomsWf]][["location"]])
-    missingDiff[["wf"]]<-missingGeomsWf
-    missingDiff<-missingDiff[,c(column, "location", "wf", "geometry")]
-    sfList[[missingGeomsWf]]<-rbind(sfList[[missingGeomsWf]], missingDiff)
-    }
+  if (length(missingDiff) == 0) { stop("st_difference returns no missing features, maybe the function was already applied to your dataset ?") }
+
+  if (is.null(refWf)) {
+    missingDiff[[column]] <- residualLCZvalue
+    missingDiff[["location"]] <- unique(sfList[[missingGeomsWf]][["location"]])
+    missingDiff[["wf"]] <- missingGeomsWf
+    missingDiff <- missingDiff[, c(column, "location", "wf", "geometry")]
+    sfList[[missingGeomsWf]] <- rbind(sfList[[missingGeomsWf]], missingDiff)
+  }
   else {
-    refSf<-sfList[[refWf]]
-    LCZref<-refSf[ refSf[[column]] == refLCZ , ] %>% st_transform(crs=refCRS)
-  
-    LCZnew<-st_intersection(missingDiff, LCZref)%>% st_as_sf
+    refSf <- sfList[[refWf]]
+    LCZref <- refSf[refSf[[column]] == refLCZ,] %>% st_transform(crs = refCRS)
+
+    LCZnew <- st_intersection(missingDiff, LCZref) %>% st_as_sf
     st_set_geometry(LCZnew, LCZnew$x)
-    names(LCZnew)[names(LCZnew)=="x"]<-"geometry"
-    st_geometry(LCZnew)<-"geometry"
-  
-    residualDiff<-st_difference(
+    names(LCZnew)[names(LCZnew) == "x"] <- "geometry"
+    st_geometry(LCZnew) <- "geometry"
+
+    residualDiff <- st_difference(
       st_union(missingDiff),
       st_union(LCZnew)) %>% st_as_sf
     st_set_geometry(residualDiff, residualDiff$x)
-    names(residualDiff)[names(residualDiff)=="x"]<-"geometry"
-    st_geometry(residualDiff)<-"geometry"
-    
-    residualDiff[[column]]<-residualLCZvalue
-    residualDiff[["location"]]<-unique(LCZref[["location"]])
-    residualDiff[["wf"]]<-missingGeomsWf
-    
-    residualDiff<-residualDiff[,c(column, "location", "wf", "geometry")]
-  
-    sfList[[missingGeomsWf]]<-rbind(sfList[[missingGeomsWf]], LCZnew)
-    sfList[[missingGeomsWf]]<-rbind(sfList[[missingGeomsWf]],residualDiff)
+    names(residualDiff)[names(residualDiff) == "x"] <- "geometry"
+    st_geometry(residualDiff) <- "geometry"
+
+    residualDiff[[column]] <- residualLCZvalue
+    residualDiff[["location"]] <- unique(LCZref[["location"]])
+    residualDiff[["wf"]] <- missingGeomsWf
+
+    residualDiff <- residualDiff[, c(column, "location", "wf", "geometry")]
+
+    sfList[[missingGeomsWf]] <- rbind(sfList[[missingGeomsWf]], LCZnew)
+    sfList[[missingGeomsWf]] <- rbind(sfList[[missingGeomsWf]], residualDiff)
   }
- 
- return(sfList)
+
+  return(sfList)
 
 }

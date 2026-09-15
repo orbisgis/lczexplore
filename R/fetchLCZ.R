@@ -18,51 +18,50 @@
 #' # fetchLCZ(location="Allaire",
 #' # outDir=system.file("extdata", package = "lczexplore"),
 #' # wf="bdtopo_2_2",refYear="2022")
-fetchLCZ<-function(location,outDir,wf="bdtopo_2_2",refYear="2022",
-                   baseURL="https://cloud.geomanum.org/index.php/s/geoclimate/download?path=%2F",...){
+fetchLCZ <- function(location, outDir, wf = "bdtopo_2_2", refYear = "2022",
+                     baseURL = "https://cloud.geomanum.org/index.php/s/geoclimate/download?path=%2F", ...) {
 
-      #wd<-getwd()
+  #wd<-getwd()
 
 
+  if (wf == "bdtopo_2_2") {
+    folder <- paste0(paste0(outDir, "/", wf, "/", location))
+    url <- paste0(baseURL,
+                  wf, "&files=", location, ".zip")
+  } else if (wf == "osm") {
+    folder <- paste0(outDir, "/", wf, "/", refYear, "/", location)
+    url <- paste0(baseURL,
+                  wf, "%2F", refYear, "&files=", location, ".zip")
+  }
 
-      if(wf=="bdtopo_2_2"){
-        folder<-paste0(paste0(outDir,"/",wf,"/",location))
-        url<-paste0(baseURL,
-                    wf,"&files=",location,".zip")
-      } else if(wf=="osm"){
-        folder<-paste0(outDir,"/",wf,"/",refYear,"/",location)
-        url<-paste0(baseURL,
-                    wf,"%2F",refYear,"&files=", location,".zip")
-      }
+  destFile <- paste0(folder, "/", location, ".zip")
+  destLCZfile <- paste0(folder, "/", "rsu_lcz.geojson")
+  cat("folder= ", folder, "\n")
+  cat("url= ", url, "\n")
 
-    destFile<-paste0(folder,"/",location,".zip")
-    destLCZfile<-paste0(folder,"/","rsu_lcz.geojson")
-    cat("folder= ",folder,"\n")
-    cat("url= ",url,"\n")
+  if (file.exists(folder)) {
+    message('The folder already exists. \n')
+  } else {
+    message('The proper folder doesn\'t already exist and wille be created \n')
+    dir.create(folder, recursive = T)
+    folderToken <- 1
+  }
 
-    if(file.exists(folder)){
-      message('The folder already exists. \n')
+  if (file.exists(destLCZfile)) { message(' An rsu_lcz.geojson already exists in this directory. \n If you think it is not the proper file
+              try deleting it and re-running the fetchLCZ function.') } else
+  { if (file.exists(destFile)) {
+    message('The zip file already exists and will be unzipped now.')
+    unzip(destFile, exdir = folder) }
+  else {
+    message('The zip file doesn\'t exist in the directory \n it will be downloaded and unzipped.')
+    try_fetch <- try(download.file(url = url, method = "auto", destfile = destFile))
+    if (is(try_fetch, "try-error")) {
+      warning("The file couldn't be downloaded, maybe the location wasn't proceeded by the GeoClimate team ?")
+      if (folderToken == 1) { unlink(folder, recursive = T) }
     } else {
-      message('The proper folder doesn\'t already exist and wille be created \n')
-      dir.create(folder,recursive=T)
-      folderToken<-1
-    }
-
-  if (file.exists(destLCZfile)){message(' An rsu_lcz.geojson already exists in this directory. \n If you think it is not the proper file
-              try deleting it and re-running the fetchLCZ function.')} else
-  { if(file.exists(destFile)) {
-      message('The zip file already exists and will be unzipped now.')
-        unzip(destFile,exdir=folder)}
-     else {
-      message('The zip file doesn\'t exist in the directory \n it will be downloaded and unzipped.')
-        try_fetch<-try(download.file(url=url,method="auto",destfile=destFile))
-        if(is(try_fetch,"try-error")){
-         warning("The file couldn't be downloaded, maybe the location wasn't proceeded by the GeoClimate team ?")
-          if (folderToken==1){unlink(folder,recursive=T)}
-        } else{
-        download.file(url=url,destfile=destFile)
-        unzip(destFile,exdir=folder)}
-      }
+      download.file(url = url, destfile = destFile)
+      unzip(destFile, exdir = folder) }
+  }
   }
 }
 

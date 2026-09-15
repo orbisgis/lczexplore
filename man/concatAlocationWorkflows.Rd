@@ -5,7 +5,12 @@
 \title{Take a list of sf files with lcz_primary and wf columns, and concatenates them in a single sf object,
 adding a column for location and workflow names}
 \usage{
-concatAlocationWorkflows(sfList, location = NA, refCrs = 1)
+concatAlocationWorkflows(
+  sfList,
+  location = NA,
+  refCrs = 1,
+  columns = "lcz_primary"
+)
 }
 \arguments{
 \item{sfList}{the list of LCZ sf objects}
@@ -13,6 +18,9 @@ concatAlocationWorkflows(sfList, location = NA, refCrs = 1)
 \item{location}{the name of the location at which all LCZ are created}
 
 \item{refCrs}{a number telling which sf of the sfList will be the reference in termes of Coordinate Reference System}
+
+\item{columns}{contains the names of the columns where LCZ types are stored. If it contains only one string, it
+will be repeated for all workflows}
 }
 \value{
 returns graphics of comparison and an object called matConfOut which contains :
@@ -29,7 +37,7 @@ adding a column for location and workflow names
 \examples{
 sfList<-loadMultipleSfs(dirPath = paste0(
 system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
-workflowNames = c("osm","bdt","iau","wudapt"), inLocation = "Arville"  )
+workflowNames = c("osm","bdt","wudapt"), inLocation = "Arville"  )
 zoneSf <- sf::read_sf(
 paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville/zone.fgb")
 )

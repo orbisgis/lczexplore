@@ -24,19 +24,19 @@
 #' system.file("extdata", package = "lczexplore"),
 #' "/multipleWfs")
 #' allLocAllWfs<-loadConcatAllLocsAllWfs(
-#'  dirPath = dirPath, locations = c("Blaru", "Arville"),
-#' workflowNames = c("osm","bdt","iau","wudapt"),
-#'  missingGeomsWf = "iau",
+#'  dirPath = dirPath, locations = c("Redon", "Arville"),
+#' workflowNames = c("osm","bdt","wudapt"),
+#'  missingGeomsWf= "osm",
 #'  refWf = NULL,
 #'  refLCZ = "Unclassified",
 #'  residualLCZvalue = "Unclassified",
 #'  column = "lcz_primary"
-#')
-loadConcatAllLocsAllWfs<-function(dirPath, locations = NA, workflowNames = c("osm", "bdt", "iau", "wudapt"),
-                                  missingGeomsWf = "iau", refWf = NULL, refLCZ = NA,
-                                  residualLCZvalue = NA, column = "lcz_primary"){
+#' )
+loadConcatAllLocsAllWfs <- function(dirPath, locations = NA, workflowNames = c("osm", "bdt", "wud"),
+                                    missingGeomsWf = "osm", refWf = NULL, refLCZ = NA,
+                                    residualLCZvalue = NA, column = "lcz_primary") {
   # allLocAllWfSf<-matrix(ncol = 5, nrow = 0)
-  dirList<-list.dirs(dirPath, recursive = FALSE)
+  dirList <- list.dirs(dirPath, recursive = FALSE)
   if (is.null(locations) || (length(locations) == 1 && is.na(locations))) {
     locations <- gsub(pattern = "(.*)(/)(.+)(/$|/{0})", replacement = "\\3", x = dirList)
   } else {
@@ -47,34 +47,34 @@ loadConcatAllLocsAllWfs<-function(dirPath, locations = NA, workflowNames = c("os
 
 
   tmp <- st_sfc()
-  class(tmp)[1] <- "sfc_POLYGON" 
-  allLocAllWfSf<- data.frame(
-    lcz_primary=character(0),location=character(0),
-  wf=character(0), area=numeric(0)) %>% 
-  st_as_sf(geometry = st_sfc(),  # Initialize with an empty geometry column
-           crs = 4326)
+  class(tmp)[1] <- "sfc_POLYGON"
+  allLocAllWfSf <- data.frame(
+    lcz_primary = character(0), location = character(0),
+    wf = character(0), area = numeric(0)) %>%
+    st_as_sf(geometry = st_sfc(),  # Initialize with an empty geometry column
+             crs = 4326)
 
-for( i in seq_along(dirList)){
-    dirPath<-dirList[i]
-    if (substring(text = dirPath, first = nchar(dirPath))!="/"){dirPath<-paste0(dirPath, "/")} 
-    aLocation<-locations[i]
+  for (i in seq_along(dirList)) {
+    dirPath <- dirList[i]
+    if (substring(text = dirPath, first = nchar(dirPath)) != "/") { dirPath <- paste0(dirPath, "/") }
+    aLocation <- locations[i]
     print(aLocation)
-    sfList<-loadMultipleSfs(dirPath = dirPath,
-                            workflowNames = workflowNames , inLocation = aLocation )
-    if(substr(dirPath, nchar(dirPath), nchar(dirPath))!="/"){dirPath<-paste0(dirPath, "/")}
-    zoneSfPath<-paste0(dirPath,"zone.fgb")
-    zoneSf<-read_sf(zoneSfPath)
-    sfList<-addMissingRSUs(sfList = sfList,
-                           missingGeomsWf="iau", zoneSf, refWf = refWf, refLCZ = refLCZ, 
-                           residualLCZvalue = residualLCZvalue,
-                           column = "lcz_primary")
-    concatSf<-concatAlocationWorkflows(sfList = sfList,
-                                       location = aLocation, refCrs = 1)
-  if(i==1 && st_crs(allLocAllWfSf)!=st_crs(concatSf)){
-    allLocAllWfSf<-st_transform(allLocAllWfSf, crs = st_crs(concatSf))
+    sfList <- loadMultipleSfs(dirPath = dirPath,
+                              workflowNames = workflowNames, inLocation = aLocation)
+    if (substr(dirPath, nchar(dirPath), nchar(dirPath)) != "/") { dirPath <- paste0(dirPath, "/") }
+    zoneSfPath <- paste0(dirPath, "zone.fgb")
+    zoneSf <- read_sf(zoneSfPath)
+    sfList <- addMissingRSUs(sfList = sfList,
+                             missingGeomsWf = missingGeomsWf, zoneSf, refWf = refWf, refLCZ = refLCZ,
+                             residualLCZvalue = residualLCZvalue,
+                             column = "lcz_primary")
+    concatSf <- concatAlocationWorkflows(sfList = sfList,
+                                         location = aLocation, refCrs = 1)
+    if (st_crs(allLocAllWfSf) != st_crs(concatSf)) {
+      allLocAllWfSf <- st_transform(allLocAllWfSf, crs = st_crs(concatSf))
     }
-  allLocAllWfSf<-rbind(allLocAllWfSf, concatSf)
+    allLocAllWfSf <- rbind(allLocAllWfSf, concatSf)
   }
-return(allLocAllWfSf)
+  return(allLocAllWfSf)
 }
 
