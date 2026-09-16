@@ -19,7 +19,7 @@
 #' If saveG is not an empty string, graphics are saved under "saveG.png"
 #' @export
 #' @examples
-#' sfList<-loadMultipleSfs(dirPath = paste0(
+#' sfList<-importMultipleLCZvect(dirPath = paste0(
 #' system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
 #'  workflowNames = c("osm","bdt","wudapt"), location = "Arville"  )
 #' zoneSf <- sf::read_sf(

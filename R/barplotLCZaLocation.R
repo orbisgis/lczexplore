@@ -40,7 +40,7 @@ barplotLCZaLocation <- function(dirPath, location, workflowNames = c("osm", "bdt
                       "LCZ E: Bare rock or paved", "LCZ F: Bare soil or sand",
                       "LCZ G: Water", "Unclassified"))
 
-  sfList <- loadMultipleSfs(dirPath = dirPath,
+  sfList <- importMultipleLCZvect(dirPath = dirPath,
                             workflowNames = workflowNames, location = location)
   if (substr(dirPath, nchar(dirPath), nchar(dirPath)) != "/") { dirPath <- paste0(dirPath, "/") }
   zoneSfPath <- paste0(dirPath, "zone.fgb")

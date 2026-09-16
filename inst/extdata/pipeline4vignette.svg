@@ -269,7 +269,7 @@
        <g id="id26">
         <rect class="BoundingBox" stroke="none" fill="none" x="5079" y="9040" width="11869" height="1286"/>
         <path fill="none" stroke="rgb(52,101,164)" d="M 5689,9041 L 5690,9041 C 5583,9041 5478,9069 5385,9123 5292,9176 5215,9253 5162,9346 5108,9439 5080,9544 5080,9651 L 5080,9714 5080,9714 C 5080,9821 5108,9926 5162,10019 5215,10112 5292,10189 5385,10242 5478,10296 5583,10324 5690,10324 L 16336,10324 16336,10324 C 16443,10324 16548,10296 16641,10242 16734,10189 16811,10112 16864,10019 16918,9926 16946,9821 16946,9714 L 16946,9650 16946,9651 16946,9651 C 16946,9544 16918,9439 16864,9346 16811,9253 16734,9176 16641,9123 16548,9069 16443,9041 16336,9041 L 5689,9041 Z "/>
-        <text class="SVGTextShape"><tspan class="TextParagraph"><tspan class="TextPosition" x="5524" y="9903"><tspan font-family="Liberation Sans, sans-serif" font-size="635px" font-weight="400" lengthAdjust="spacingAndGlyphs" textLength="10977" fill="rgb(0,0,0)" stroke="none" style="white-space: pre">loadMultipleLocsSfs(‘root_folder_path’)</tspan></tspan></tspan></text>
+        <text class="SVGTextShape"><tspan class="TextParagraph"><tspan class="TextPosition" x="5524" y="9903"><tspan font-family="Liberation Sans, sans-serif" font-size="635px" font-weight="400" lengthAdjust="spacingAndGlyphs" textLength="10977" fill="rgb(0,0,0)" stroke="none" style="white-space: pre">importMultipleLocsLCZvect(‘root_folder_path’)</tspan></tspan></tspan></text>
        </g>
       </g>
       <g class="com.sun.star.drawing.CustomShape">

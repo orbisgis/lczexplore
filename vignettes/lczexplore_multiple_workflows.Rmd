@@ -120,7 +120,7 @@ Pairwise agreement between workflow and consensus value for each LCZ type quanti
 
 ## Importing maps from several locations and several workflows
 
-In case of several workflows and several locations, the function `loadMultipleLocsSfs` allow to load all the
+In case of several workflows and several locations, the function `importMultipleLocsLCZvect` allow to load all the
 data in a list.
 
 In the data structure from above section, the function would be applied
@@ -137,13 +137,13 @@ Arville and Redon, for which three LCZ maps are available, produced by the follo
 require(lczexplore)
 twoLocsDir<-paste0(
   system.file("extdata", package = "lczexplore"),"/multipleWfs")
-twoLocsSfList<-loadMultipleLocsSfs(dirPath = twoLocsDir, workflowNames = c("osm","bdt","wudapt"),
+twoLocsSfList<-importMultipleLocsLCZvect(dirPath = twoLocsDir, workflowNames = c("osm","bdt","wudapt"),
                                    location = c("Arville", "Redon"))
 ```
 
-The function `loadMultipleLocsSfs` loads all the input .fgb files in a list.
+The function `importMultipleLocsLCZvect` loads all the input .fgb files in a list.
 
-When comparing maps for only one location use the similar function `loadMultipleSfs`.
+When comparing maps for only one location use the similar function `importMultipleLCZvect`.
 
 ## Intersecting geometries from the different workflows
 The spatial units
@@ -237,7 +237,7 @@ drawChordDiagram(weightedFluxIn = twoLocsFlow)
 
 ### An advanced fonction
 When, for a location, some workflows have missing geometries, i.e. don't map some area and leave them as holes,
-one can put a zone.fgb file in the directory, and the function `loadConcatAllLocsAllWfs` will allow to use it
+one can put a zone.fgb file in the directory, and the function `importConcatMultipleLocsLCZvect` will allow to use it
 and create the missing geometries and assign them a given type.
 Feed the name of the workflow whose geometries are missing to the `missingGeomWf` argument, and
 the function will intersect it with the `zone.fgb` geometries.
@@ -248,7 +248,7 @@ In this case, one can choose another workflow as a reference (through `refWf`) a
 twoLocsDir<-paste0(
   system.file("extdata", package = "lczexplore"),"/multipleWfs")
 
-# allWfsAllLocs<-loadConcatAllLocsAllWfs(twoLocsDir, locations = NA, workflowNames = c("osm", "bdt", "wudapt"),
+# allWfsAllLocs<-importConcatMultipleLocsLCZvect(twoLocsDir, locations = NA, workflowNames = c("osm", "bdt", "wudapt"),
 #                                        missingGeomsWf= "osm", refWf = NULL, refLCZ = NA,
 #                                        residualLCZvalue = NA, column = "lcz_primary")
 ```

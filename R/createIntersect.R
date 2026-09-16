@@ -17,7 +17,7 @@
 #' are assigned to geometries resulting from intersection of all input geometries
 #' @export
 #' @examples
-#' sfList<-loadMultipleSfs(
+#' sfList<-importMultipleLCZvect(
 #' dirPath = paste0(
 #' system.file("extdata", package = "lczexplore"),
 #' "/multipleWfs/Arville"),
@@ -26,7 +26,7 @@
 #'  sfList = sfList, columns = rep("lcz_primary", 4),  
 #'  workflowNames = c("osm","bdt","wudapt"))
 #' # Two Locations
-#' sfList2<-loadMultipleLocsSfs(
+#' sfList2<-importMultipleLocsLCZvect(
 #'  dirPath = paste0(
 #'      system.file("extdata", package = "lczexplore"),
 #'      "/multipleWfs"),

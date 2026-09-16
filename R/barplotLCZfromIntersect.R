@@ -19,7 +19,7 @@
 #' @examples
 #'
 #' # Two Locations
-#' sfList2<-loadMultipleLocsSfs(
+#' sfList2<-importMultipleLocsLCZvect(
 #'  dirPath = paste0(
 #'      system.file("extdata", package = "lczexplore"),
 #'      "/multipleWfs"),

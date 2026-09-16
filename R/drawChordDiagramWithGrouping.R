@@ -21,7 +21,7 @@
 #' @export
 #' @examples
 #' twoLocsDir<-paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs")
-#' twoLocsSfList<-loadMultipleLocsSfs(dirPath = twoLocsDir, workflowNames = c("osm","bdt","wudapt"),
+#' twoLocsSfList<-importMultipleLocsLCZvect(dirPath = twoLocsDir, workflowNames = c("osm","bdt","wudapt"),
 #' location = c("Arville", "Redon"))
 #' twoLocsSfIntersected <- createIntersect(sfList = twoLocsSfList, columns = rep("lcz_primary", 4),
 #' refCrs=NULL, workflowNames=c("osm", "bdt", "wudapt"), minZeroArea=0.001)

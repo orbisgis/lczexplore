@@ -6,7 +6,7 @@
  consensus <- computeConsensus(inDf = allLocIntersected,
  wfNames = c("bdt","osm", "wudapt"= "wud"))
 
- fList<-loadMultipleSfs(dirPath = paste0(system.file("extdata/multipleWfs/Redon", package = "lczexplore")),
+ fList<-importMultipleLCZvect(dirPath = paste0(system.file("extdata/multipleWfs/Redon", package = "lczexplore")),
                         workflowNames = c("osm","bdt","wudapt"), location = "Redon"  )
 
  intersected<-createIntersect(sfList = sfList, columns = rep("lcz_primary", 3),

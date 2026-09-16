@@ -35,7 +35,7 @@ Take a list of sf files with lcz_primary and wf columns, and concatenates them i
 adding a column for location and workflow names
 }
 \examples{
-sfList<-loadMultipleSfs(dirPath = paste0(
+sfList<-importMultipleLCZvect(dirPath = paste0(
 system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
 workflowNames = c("osm","bdt","wudapt"), location = "Arville"  )
 zoneSf <- sf::read_sf(

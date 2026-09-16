@@ -25,7 +25,7 @@ concatIntersectedLocations <- function(dirList, workflowNames = c("osm", "bdt", 
   intersectedList <- list()
 
   for (i in seq_along(dirList)) {
-    intersectedList[[i]] <- loadMultipleSfs(
+    intersectedList[[i]] <- importMultipleLCZvect(
       dirPath = dirList[i],
       workflowNames = c("osm", "bdt", "wudapt"),
       location = locations[i], columns = columns[i]) %>%

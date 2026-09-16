@@ -32,7 +32,7 @@ For a given LCZ sf object, plots the number of geometries and an average area in
 \examples{
 dirPath<-paste0(
 system.file("extdata", package = "lczexplore"),"/multipleWfs")
-allLocAllWfs<-loadConcatAllLocsAllWfs(
+allLocAllWfs<-importConcatMultipleLocsLCZvect(
  dirPath = dirPath,
     locations = c("Redon", "Arville"),
     workflowNames = c("osm","bdt","wudapt"),

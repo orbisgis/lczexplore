@@ -21,7 +21,7 @@
 #' agreements a dtaframe with the pairs of workflows, areas on which they agree, disagree, and the percentage of agreement
 #' @export
 #' @examples
-#' sfList<-loadMultipleSfs(dirPath = 
+#' sfList<-importMultipleLCZvect(dirPath =
 #' paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
 #' workflowNames = c("osm","bdt","wudapt"), location = "Arville")
 #' ArvilleIntersect <- createIntersect(

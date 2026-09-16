@@ -19,10 +19,10 @@
 #' If saveG is not an empty string, graphics are saved under "saveG.png"
 #' @export
 #' @examples
-#' sfList<-loadMultipleLocsSfs(dirPath = paste0(
+#' sfList<-importMultipleLocsLCZvect(dirPath = paste0(
 #' system.file("extdata", package = "lczexplore"),"/multipleWfs/"),
 #' workflowNames = c("osm","bdt","wudapt"), location = c("Arville", "Redon"))
-loadMultipleLocsSfs <- function(
+importMultipleLocsLCZvect <- function(
   dirPath = paste0(
     system.file("extdata", package = "lczexplore"), "/multipleWfs/"),
   workflowNames = c("osm", "bdt", "wudapt"), locations = c("Arville", "Redon"),
@@ -48,7 +48,7 @@ loadMultipleLocsSfs <- function(
   names(allLocAllWfs) <- locations
   for (loc_i in seq_along(dirList)) {
     allLocAllWfs[[locations[loc_i]]] <-
-      loadMultipleSfs(
+      importMultipleLCZvect(
         dirPath = dirList[loc_i],
         location = locations[loc_i],
         workflowNames = workflowNames, fileExtension = fileExtension, columns = columns[loc_i]
@@ -57,6 +57,6 @@ loadMultipleLocsSfs <- function(
   return(allLocAllWfs)
 }
 
-# sfListAll<-loadMultipleLocsSfs(dirPath = paste0(
+# sfListAll<-importMultipleLocsLCZvect(dirPath = paste0(
 # system.file("extdata", package = "lczexplore"),"/multipleWfs/"),
 # workflowNames = c("osm","bdt","wudapt"), locations = c(NA, "Redon"))

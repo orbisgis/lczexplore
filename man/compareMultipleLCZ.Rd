@@ -43,7 +43,7 @@ agreements a dtaframe with the pairs of workflows, areas on which they agree, di
 Compares several sets of geographical classifications, especially Local Climate Zones classifications
 }
 \examples{
-sfList<-loadMultipleSfs(dirPath = 
+sfList<-importMultipleLCZvect(dirPath =
 paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
 workflowNames = c("osm","bdt","wudapt"), location = "Arville")
 ArvilleIntersect <- createIntersect(

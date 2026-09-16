@@ -6,7 +6,7 @@
 # library(ggplot2)
 # library(forcats)
 
-sfList<-loadMultipleSfs(dirPath = paste0(system.file("extdata/multipleWfs/Redon", package = "lczexplore")),
+sfList<-importMultipleLCZvect(dirPath = paste0(system.file("extdata/multipleWfs/Redon", package = "lczexplore")),
                         workflowNames = c("osm","bdt","wudapt"), location = "Redon"  )
 
 intersected<-createIntersect(sfList = sfList, columns = rep("lcz_primary", 3),
@@ -49,7 +49,7 @@ testAreas<-workflowAgreeAreas(multicompare_test$sfIntLong)
 expect_false(round(testAreas[1,4],1) == round(testMatConf$percAgg,1))
 
 # They differ because there are 3 workflows. Now let's test with only 2.
-sfList2<-loadMultipleSfs(dirPath = paste0(system.file("extdata/multipleWfs/Redon", package = "lczexplore")),
+sfList2<-importMultipleLCZvect(dirPath = paste0(system.file("extdata/multipleWfs/Redon", package = "lczexplore")),
                         workflowNames = c("osm","bdt"), location = "Redon"  )
 
 intersected2<-createIntersect(sfList = sfList2, columns = rep("lcz_primary", 2),
@@ -75,7 +75,7 @@ wudapt<-importLCZvect(dirPath = paste0(system.file("extdata", package = "lczexpl
 
 sfList2<-list(osm = osm, bdt = bdt, wudapt = wudapt)
 
-test3<- loadmultipleSfsFromSession(sfList = sfList2,
+test3<- importMultipleLCZvectFromSession(sfList = sfList2,
                                    workflowNames = c("osm", "bdt", "wudapt"),
                                    location = "Redon",
                                    columns = c("LCZ_PRIMARY", "LCZ_PRIMARY", "lcz_primary" ))

@@ -19,10 +19,10 @@
 #' If saveG is not an empty string, graphics are saved under "saveG.png"
 #' @export
 #' @examples
-#' sfList<-loadMultipleSfs(dirPath = paste0(
+#' sfList<-importMultipleLCZvect(dirPath = paste0(
 #' system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
 #' workflowNames = c("osm","bdt","wudapt"), location = "Arville", columns = "lcz_primary")
-loadMultipleSfs <- function(
+importMultipleLCZvect <- function(
   dirPath, workflowNames = c("osm", "bdt", "wudapt"),
   location = NA,
   fileExtension = ".fgb",
@@ -75,14 +75,14 @@ loadMultipleSfs <- function(
 #' wudapt<-importLCZvect(dirPath = paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
 #' file = "wudapt_lcz.fgb", column = "lcz_primary")
 #' sfList<-list(osm = osm, bdt = bdt, wudapt = wudapt)
-#' sfListFormatted<- loadmultipleSfsFromSession(sfList = sfList,
+#' sfListFormatted<- importMultipleLCZvectFromSession(sfList = sfList,
 #' workflowNames = c("osm", "bdt", "wudapt"),location = "Arville",
 #' columns = c("LCZ_PRIMARY", "LCZ_PRIMARY", "lcz_primary" ))
 #' intersected<-createIntersect(sfList = sfListFormatted, columns = rep("lcz_primary", 3),
 #' workflowNames = c("osm", "bdt", "wudapt"))
 #' multicompare_test<-compareMultipleLCZ(intersected,
 #' columns = c("osm","bdt","wudapt"),trimPerc = 0.5)
-loadmultipleSfsFromSession <- function(sfList, workflowNames, columns, location, refCRS = 1) {
+importMultipleLCZvectFromSession <- function(sfList, workflowNames, columns, location, refCRS = 1) {
   refCRS <- st_crs(sfList[[refCRS]])
   sfList <- lapply(sfList, st_transform, crs = refCRS)
   locations <- rep(location, length(workflowNames))

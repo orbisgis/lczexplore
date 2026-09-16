@@ -1,6 +1,6 @@
 dirPath<-paste0(
   system.file("extdata", package = "lczexplore"),"/multipleWfs")
-allLocSfList<-loadMultipleLocsSfs(
+allLocSfList<-importMultipleLocsLCZvect(
   dirPath = dirPath, locations = c("Arville", "Redon"), workflowNames = c("osm","bdt","wudapt"))
 
 # test<-concatAllLocsWorkflows(allLocSfList)
@@ -14,7 +14,7 @@ testSankey<-prepareSankeyLCZ(intersectedDf = allLocIntersected
 plotSankeyfiedLCZ(
   sankeyfied = testSankey, plotNow=TRUE)
 
-sfList<-loadMultipleSfs(
+sfList<-importMultipleLCZvect(
   dirPath = paste0(
     system.file("extdata", package = "lczexplore"),
     "/multipleWfs/Arville"),
@@ -30,7 +30,7 @@ plotSankeyfiedLCZ(
 
 dirPath<-paste0(
   system.file("extdata", package = "lczexplore"),"/multipleWfs")
-allLocConcatenated<-loadMultipleLocsSfs(
+allLocConcatenated<-importMultipleLocsLCZvect(
   dirPath = dirPath, locations = c("Arville", "Redon"))
 allLocIntersected<-createIntersect(allLocConcatenated, columns = rep("lcz_primary", 4),
                                    workflowNames = c("osm", "bdt", "wudapt") )

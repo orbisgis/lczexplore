@@ -14,7 +14,7 @@
 #' @examples
 #' dirPath<-paste0(
 #' system.file("extdata", package = "lczexplore"),"/multipleWfs")
-#' allLocAllWfs<-loadConcatAllLocsAllWfs(
+#' allLocAllWfs<-importConcatMultipleLocsLCZvect(
 #'  dirPath = dirPath,
 #'     locations = c("Redon", "Arville"),
 #'     workflowNames = c("osm","bdt","wudapt"),

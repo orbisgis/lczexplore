@@ -39,7 +39,7 @@ the second being the workflow. In this case, the output will still be a single s
 concatenating the workflows and locations as columns
 }
 \examples{
-sfList<-loadMultipleSfs(
+sfList<-importMultipleLCZvect(
 dirPath = paste0(
 system.file("extdata", package = "lczexplore"),
 "/multipleWfs/Arville"),
@@ -48,7 +48,7 @@ ArvilleIntersect <- createIntersect(
  sfList = sfList, columns = rep("lcz_primary", 4),  
  workflowNames = c("osm","bdt","wudapt"))
 # Two Locations
-sfList2<-loadMultipleLocsSfs(
+sfList2<-importMultipleLocsLCZvect(
  dirPath = paste0(
      system.file("extdata", package = "lczexplore"),
      "/multipleWfs"),

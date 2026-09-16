@@ -1,4 +1,4 @@
-#' loadConcatAllLocsAllWfs is recommended instead as it loadsand concatenate input files
+#' importConcatMultipleLocsLCZvect is recommended instead as it loadsand concatenate input files
 #' and can even fill missing geometries with "unclassified" type.
 #' But if maps are already loaded in a List, concatAllLocsWorkflows is
 #' the equivalent of concatenateAlocationWorkflows, but for several Locations
@@ -12,7 +12,7 @@
 #' lcz types in the column lcz_primary
 #' @export
 #' @examples
-#' sfListAll<-loadMultipleLocsSfs(dirPath = paste0(
+#' sfListAll<-importMultipleLocsLCZvect(dirPath = paste0(
 #'  system.file("extdata", package = "lczexplore"),"/multipleWfs/"),
 #'                               workflowNames = c("osm","bdt","wudapt"),
 #'                               location = c("Arville", "Redon"))

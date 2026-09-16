@@ -23,7 +23,7 @@
 #' dirPath<-paste0(
 #' system.file("extdata", package = "lczexplore"),
 #' "/multipleWfs")
-#' allLocAllWfs<-loadConcatAllLocsAllWfs(
+#' allLocAllWfs<-importConcatMultipleLocsLCZvect(
 #'  dirPath = dirPath, locations = c("Redon", "Arville"),
 #' workflowNames = c("osm","bdt","wudapt"),
 #'  missingGeomsWf= "osm",
@@ -32,7 +32,7 @@
 #'  residualLCZvalue = "Unclassified",
 #'  column = "lcz_primary"
 #' )
-loadConcatAllLocsAllWfs <- function(dirPath, locations = NA, workflowNames = c("osm", "bdt", "wud"),
+importConcatMultipleLocsLCZvect <- function(dirPath, locations = NA, workflowNames = c("osm", "bdt", "wud"),
                                     missingGeomsWf = "osm", refWf = NULL, refLCZ = NA,
                                     residualLCZvalue = NA, column = "lcz_primary") {
   # allLocAllWfSf<-matrix(ncol = 5, nrow = 0)
@@ -59,7 +59,7 @@ loadConcatAllLocsAllWfs <- function(dirPath, locations = NA, workflowNames = c("
     if (substring(text = dirPath, first = nchar(dirPath)) != "/") { dirPath <- paste0(dirPath, "/") }
     aLocation <- locations[i]
     print(aLocation)
-    sfList <- loadMultipleSfs(dirPath = dirPath,
+    sfList <- importMultipleLCZvect(dirPath = dirPath,
                               workflowNames = workflowNames, location = aLocation)
     if (substr(dirPath, nchar(dirPath), nchar(dirPath)) != "/") { dirPath <- paste0(dirPath, "/") }
     zoneSfPath <- paste0(dirPath, "zone.fgb")
