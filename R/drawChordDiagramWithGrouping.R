@@ -82,7 +82,7 @@ drawChordDiagramWithGrouping<-function(weightedFluxIn,
 
   sectorsAndGroups <- makeSectorsAndGroups(weightedFluxIn, labelMatch)
   sectors<-sectorsAndGroups$sectors
-  sector_ids <- strsplit(sectors, "_") %>%
+  sectorIDs <- strsplit(sectors, "_") %>%
     unlist2d() %>%
     fselect("V2") %>%
     as.vector %>%
@@ -139,7 +139,7 @@ drawChordDiagramWithGrouping<-function(weightedFluxIn,
   par(cex = 1.5)
   sectorsIn<-unique(c(diagramme$rn, diagramme$cn))
 
-  lapply(sector_ids, drawSectors, sectorsIn = sectorsIn,
+  lapply(sectorIDs, drawSectors, sectorsIn = sectorsIn,
          colorMapIn = colorMapIn, textMatch = labelMatch)
 }
 

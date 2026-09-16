@@ -98,7 +98,7 @@ drawChordDiagram <- function(weightedFluxIn, colorMapIn = NULL,
   # Labels, sectors and groups management
   sectors <- makeSectorsAndGroups(weightedFluxIn)$sectors
 
-  sector_ids <- strsplit(sectors, "_") %>%
+  sectorIDs <- strsplit(sectors, "_") %>%
     unlist2d() %>%
     fselect("V2") %>%
     as.vector %>%
@@ -108,7 +108,7 @@ drawChordDiagram <- function(weightedFluxIn, colorMapIn = NULL,
   df.groups <- makeSectorsAndGroups(weightedFluxIn)$df.groups
 
   if (is.null(labelMatch)) {
-      labelMatch<-sector_ids
+      labelMatch<-sectorIDs
       names(labelMatch <- labelMatch)
   }
 
@@ -189,7 +189,7 @@ drawChordDiagram <- function(weightedFluxIn, colorMapIn = NULL,
      # here set bg.border to NA is important
   par(cex = 1.5)
   sectorsIn<-unique(c(diagramme$rn, diagramme$cn))
-  lapply(sector_ids, drawSectors, sectorsIn = sectorsIn,
+  lapply(sectorIDs, drawSectors, sectorsIn = sectorsIn,
          colorMapIn = colorMapIn, textMatch = labelMatch)
   }
 }

@@ -4,10 +4,10 @@
 \alias{drawSectors}
 \title{Draws sectors and groups inside the drawChordDiagram function}
 \usage{
-drawSectors(sector_id, sectorsIn = sectors, colorMapIn = colorMap, textMatch)
+drawSectors(sectorID, sectorsIn = sectors, colorMapIn = colorMap, textMatch)
 }
 \arguments{
-\item{sector_id}{ar the ideitnfiers of sectors as returned by the makeSectorsAndGroups function}
+\item{sectorID}{ar the identifiers of sectors as returned by the makeSectorsAndGroups function}
 
 \item{sectorsIn}{are the values of a sectors as returned by the makeSectorsAndGroups function}
 
