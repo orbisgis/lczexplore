@@ -2,7 +2,6 @@
 #' @param sfList a list which contains the classifications to compare, as sf objects
 #' @param columns a vector which contains, for each sf of sfList,
 #' the name of the columns of the classification to compare
-#' @param keepAllColumns if TRUE all columns are kept, not only the ones containing LCZ types
 #' @param refCrs a number which indicates which sf object from sfList will provide
 #' the CRS in which all the sf objects will be projected before comparison
 #' By defautl the first sf object CRs is applied to all sf objects.

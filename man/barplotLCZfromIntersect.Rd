@@ -6,7 +6,7 @@
 from an sf object containing all spatial units and LCZ value, typically the output of createIntersect}
 \usage{
 barplotLCZfromIntersect(
-  sfIn,
+  sfInt,
   workflowNames = NULL,
   columns = NULL,
   stat = "perc",
@@ -14,7 +14,7 @@ barplotLCZfromIntersect(
 )
 }
 \arguments{
-\item{sfIn}{is the file containing the spatial units and LCZ type per workflow}
+\item{sfInt}{is the file containing the spatial units and LCZ type per workflow}
 
 \item{workflowNames}{is a vector of prefixes. The LCZ files must be named workflow_rsu.fgb
 where workflow is on of the values in workflowNames vector}
@@ -46,7 +46,7 @@ sfList2<-loadMultipleLocsSfs(
 twoLocsIntersect <- createIntersect(
  sfList = sfList2, columns = rep("lcz_primary", 3),
  workflowNames = c("osm","bdt","wudapt"))
-example<-barplotLCZfromIntersect(sfIn = twoLocsIntersect,
+example<-barplotLCZfromIntersect(sfInt = twoLocsIntersect,
                               columns = c("osm", "bdt", "wudapt"),
                             workflowNames = c("osm", "bdt", "wudapt"))
 }

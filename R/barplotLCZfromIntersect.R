@@ -1,6 +1,6 @@
 #' plots the repartition of LCZ types regarding of their source (map/workflow)
 #' from an sf object containing all spatial units and LCZ value, typically the output of createIntersect
-#' @param sfIn is the file containing the spatial units and LCZ type per workflow
+#' @param sfInt is the file containing the spatial units and LCZ type per workflow
 #' @param workflowNames is a vector of prefixes. The LCZ files must be named workflow_rsu.fgb
 #' where workflow is on of the values in workflowNames vector
 #' @param columns is the vector of names of the columns containing the LCZ types. If not specified, the function
@@ -28,19 +28,19 @@
 #' twoLocsIntersect <- createIntersect(
 #'  sfList = sfList2, columns = rep("lcz_primary", 3),
 #'  workflowNames = c("osm","bdt","wudapt"))
-#' example<-barplotLCZfromIntersect(sfIn = twoLocsIntersect,
+#' example<-barplotLCZfromIntersect(sfInt = twoLocsIntersect,
 #'                               columns = c("osm", "bdt", "wudapt"),
 #'                             workflowNames = c("osm", "bdt", "wudapt"))
-barplotLCZfromIntersect <- function(sfIn, workflowNames = NULL, columns = NULL, stat = "perc", plotNow = TRUE) {
-  checkedWfCol <- checkColumnWorkflowNames(columns = columns, workflowNames = workflowNames, sfIn = sfIn)
+barplotLCZfromIntersect <- function(sfInt, workflowNames = NULL, columns = NULL, stat = "perc", plotNow = TRUE) {
+  checkedWfCol <- checkColumnWorkflowNames(columns = columns, workflowNames = workflowNames, sfInt = sfInt)
   columns <- checkedWfCol$columns
   workflowNames <- checkedWfCol$workflowNames
 
 
-  if (!("area" %in% names(sfIn))) {
-    concatSf$area <- st_area(sfIn)
+  if (!("area" %in% names(sfInt))) {
+    concatSf$area <- st_area(sfInt)
   }
-  df <- st_drop_geometry(sfIn)
+  df <- st_drop_geometry(sfInt)
 
   if (stat == "perc") {
     percSurf <- lapply(seq_along(columns), function(g) {
@@ -93,7 +93,7 @@ barplotLCZfromIntersect <- function(sfIn, workflowNames = NULL, columns = NULL, 
 }
 
 
-checkColumnWorkflowNames <- function(columns, workflowNames, sfIn) {
+checkColumnWorkflowNames <- function(columns, workflowNames, sfInt) {
   if (
     (is.null(columns) | prod(!is.na(columns)) == 0) &
       (!is.null(workflowNames)) &
@@ -117,7 +117,7 @@ checkColumnWorkflowNames <- function(columns, workflowNames, sfIn) {
     message(paste0("The names of the workflows and of the columns are missing.",
                    "Will try to replace them with names of columns other than location, area and geometry,",
                    "but this is hazardous."))
-    workflowNames <- columns <- names(sfIn)[!names(sfIn) %in% c("location", "area", "geometry")]
+    workflowNames <- columns <- names(sfInt)[!names(sfInt) %in% c("location", "area", "geometry")]
   }
   output <- list(columns = columns, workflowNames = workflowNames)
   return(output)
