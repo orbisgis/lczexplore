@@ -33,6 +33,9 @@
 addMissingRSUs <- function(sfList, missingGeomsWf = "osm", zoneSf, refWf = "bdt", refLCZ = "107", residualLCZvalue = "105",
                            column = "lcz_primary") {
   refCRS <- st_crs(sfList[[missingGeomsWf]])
+  if (is.null(zoneSf)) {
+    zoneSf <- st_union(sfList[[refWf]])
+  }
   zoneSf <- st_transform(zoneSf,
                          crs = refCRS)
   sfList[[missingGeomsWf]][[column]] <- factor(sfList[[missingGeomsWf]][[column]],

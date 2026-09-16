@@ -1,7 +1,7 @@
 #' For an sf object containing LCZ types, aggregates touching geometries with same value of LCZ 
 #' @param sf contains the geometry and LCZ levels
 #' @param LCZcolumn the name of the column coontaining LCZ types
-#' @param wfColumn is the column where the workflow used to produce lcz is precised. 
+#' @param wfColumn is the column where the workflow used to produce LCZ classif is precised.
 #' @param aggregateBufferSize is the size of a buffer you can add to the geometries before agregation. 
 #' Useful when you suspect numeric precision to create false disjunction of geometries.
 #' @param locationColumn is the name of the column where the location is stored
