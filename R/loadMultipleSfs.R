@@ -4,7 +4,7 @@
 #' fileExtension is a fil extension known by sf drivers, like fgb, geojson...
 #' @param dirPath is the place where the files are
 #' @param workflowNames sets the names of workflows
-#' @param inLocation is the name of the location at which all LCZ are created
+#' @param location is the name of the location at which all LCZ are created
 #' @param fileExtension is the extensions of the files to load (.fgb is the recommended format)
 #' @param columns the name (string) of the column containing LCZ types.
 #' If the different workflows do no use the same column names, a vector of names is passed
@@ -21,10 +21,10 @@
 #' @examples
 #' sfList<-loadMultipleSfs(dirPath = paste0(
 #' system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
-#' workflowNames = c("osm","bdt","wudapt"), inLocation = "Arville", columns = "lcz_primary")
+#' workflowNames = c("osm","bdt","wudapt"), location = "Arville", columns = "lcz_primary")
 loadMultipleSfs <- function(
   dirPath, workflowNames = c("osm", "bdt", "wudapt"),
-  inLocation = NA,
+  location = NA,
   fileExtension = ".fgb",
   columns = "lcz_primary") {
   typeLevels <- c("1" = "1", "2" = "2", "3" = "3", "4" = "4", "5" = "5", "6" = "6", "7" = "7", "8" = "8",
@@ -32,11 +32,11 @@ loadMultipleSfs <- function(
                   "101" = "101", "102" = "102", "103" = "103", "104" = "104", "105" = "105", "106" = "106", "107" = "107",
                   "101" = "11", "102" = "12", "103" = "13", "104" = "14", "105" = "15", "106" = "16", "107" = "17",
                   "101" = "A", "102" = "B", "103" = "C", "104" = "D", "105" = "E", "106" = "F", "107" = "G")
-  if (is.null(inLocation) | prod(!is.na(inLocation)) == 0) {
+  if (is.null(location) | prod(!is.na(location)) == 0) {
     print("location")
-    print(inLocation)
-    inLocation <- gsub(pattern = "(.*)(/)(.+)(/$)", replacement = "\\3", x = dirPath)
-    print(inLocation)
+    print(location)
+    location <- gsub(pattern = "(.*)(/)(.+)(/$)", replacement = "\\3", x = dirPath)
+    print(location)
   }
   if (length(columns) == 1) { columns <- rep(columns, length(workflowNames)) }
   dirPath <- checkDirSlash(dirPath)
@@ -50,7 +50,7 @@ loadMultipleSfs <- function(
 
     inSf <- select(inSf, lcz_primary) %>% mutate(
       lcz_primary = factor(lcz_primary, levels = typeLevels))
-    inSf <- dplyr::mutate(inSf, wf = workflowNames[i], location = inLocation, .before = geometry)
+    inSf <- dplyr::mutate(inSf, wf = workflowNames[i], location = location, .before = geometry)
     inSf[[columns[i]]] <- forcats::fct_recode(inSf[[columns[i]]], !!!typeLevels)
     sfList[[workflowNames[i]]] <- inSf
   }

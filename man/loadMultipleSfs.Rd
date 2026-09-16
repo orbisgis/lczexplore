@@ -10,7 +10,7 @@ fileExtension is a fil extension known by sf drivers, like fgb, geojson...}
 loadMultipleSfs(
   dirPath,
   workflowNames = c("osm", "bdt", "wudapt"),
-  inLocation = NA,
+  location = NA,
   fileExtension = ".fgb",
   columns = "lcz_primary"
 )
@@ -20,7 +20,7 @@ loadMultipleSfs(
 
 \item{workflowNames}{sets the names of workflows}
 
-\item{inLocation}{is the name of the location at which all LCZ are created}
+\item{location}{is the name of the location at which all LCZ are created}
 
 \item{fileExtension}{is the extensions of the files to load (.fgb is the recommended format)}
 
@@ -44,5 +44,5 @@ fileExtension is a fil extension known by sf drivers, like fgb, geojson...
 \examples{
 sfList<-loadMultipleSfs(dirPath = paste0(
 system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
-workflowNames = c("osm","bdt","wudapt"), inLocation = "Arville", columns = "lcz_primary")
+workflowNames = c("osm","bdt","wudapt"), location = "Arville", columns = "lcz_primary")
 }

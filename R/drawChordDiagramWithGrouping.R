@@ -22,7 +22,7 @@
 #' @examples
 #' twoLocsDir<-paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs")
 #' twoLocsSfList<-loadMultipleLocsSfs(dirPath = twoLocsDir, workflowNames = c("osm","bdt","wudapt"),
-#' inLocation = c("Arville", "Redon"))
+#' location = c("Arville", "Redon"))
 #' twoLocsSfIntersected <- createIntersect(sfList = twoLocsSfList, columns = rep("lcz_primary", 4),
 #' refCrs=NULL, workflowNames=c("osm", "bdt", "wudapt"), minZeroArea=0.001)
 #' twoLocsWeightedFlux<-createWeightedFlux(twoLocsSfIntersected, wfNamesIn = c("osm","bdt","wudapt"))
@@ -139,8 +139,6 @@ drawChordDiagramWithGrouping<-function(weightedFluxIn,
   par(cex = 1.5)
   sectorsIn<-unique(c(diagramme$rn, diagramme$cn))
 
-  if( max(nchar(sector_ids))> 3){sectorFacing <- "bending"} else
-  {sectorFacing <- "clockwise"}
   lapply(sector_ids, drawSectors, sectorsIn = sectorsIn,
          colorMapIn = colorMapIn, textMatch = labelMatch)
 }

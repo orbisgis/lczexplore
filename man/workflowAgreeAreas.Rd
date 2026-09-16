@@ -19,7 +19,7 @@ From the output of compare multiple, cmputes which workflows agree the most rega
 sfList<-loadMultipleSfs(dirPath = paste0(
 system.file("extdata", package = "lczexplore"),
 "/multipleWfs/Arville"),
-workflowNames = c("osm","bdt","wudapt"), inLocation = "Arville")
+workflowNames = c("osm","bdt","wudapt"), location = "Arville")
 ArvilleIntersect <- createIntersect(
  sfList = sfList, columns = rep("lcz_primary", 4),  
  workflowNames = c("osm","bdt","wudapt"))

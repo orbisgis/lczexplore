@@ -60,7 +60,7 @@ loadConcatAllLocsAllWfs <- function(dirPath, locations = NA, workflowNames = c("
     aLocation <- locations[i]
     print(aLocation)
     sfList <- loadMultipleSfs(dirPath = dirPath,
-                              workflowNames = workflowNames, inLocation = aLocation)
+                              workflowNames = workflowNames, location = aLocation)
     if (substr(dirPath, nchar(dirPath), nchar(dirPath)) != "/") { dirPath <- paste0(dirPath, "/") }
     zoneSfPath <- paste0(dirPath, "zone.fgb")
     zoneSf <- read_sf(zoneSfPath)

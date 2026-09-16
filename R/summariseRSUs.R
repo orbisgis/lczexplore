@@ -28,7 +28,7 @@
 #' # After aggregating adjacent RSU of same LCZ type
 #' ASUallLocAllWfs <- aggregateRSUsByLCZ(
 #'  allLocAllWfs,
-#'  LCZcolumn = "lcz_primary", wfColumn = "wf", locationColumn = "location", aggregateBufferSize = 0.5)
+#'  column = "lcz_primary", wfColumn = "wf", locationColumn = "location", aggregateBufferSize = 0.5)
 #' summarisedASUs<-summariseRSUs(ASUallLocAllWfs, aggregatingColumns = c("wf", "lcz_primary"))
 #'
 #' plotSummarisedRSUs(summarisedSfIn = summarisedASUs, workflowNames = c("wud" = "wudapt", "osm", "bdt"))

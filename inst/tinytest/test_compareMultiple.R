@@ -7,7 +7,7 @@
 # library(forcats)
 
 sfList<-loadMultipleSfs(dirPath = paste0(system.file("extdata/multipleWfs/Redon", package = "lczexplore")),
-                        workflowNames = c("osm","bdt","wudapt"), inLocation = "Redon"  )
+                        workflowNames = c("osm","bdt","wudapt"), location = "Redon"  )
 
 intersected<-createIntersect(sfList = sfList, columns = rep("lcz_primary", 3),
                              workflowNames = c("osm", "bdt", "wudapt"), refCrs = 1)
@@ -50,7 +50,7 @@ expect_false(round(testAreas[1,4],1) == round(testMatConf$percAgg,1))
 
 # They differ because there are 3 workflows. Now let's test with only 2.
 sfList2<-loadMultipleSfs(dirPath = paste0(system.file("extdata/multipleWfs/Redon", package = "lczexplore")),
-                        workflowNames = c("osm","bdt"), inLocation = "Redon"  )
+                        workflowNames = c("osm","bdt"), location = "Redon"  )
 
 intersected2<-createIntersect(sfList = sfList2, columns = rep("lcz_primary", 2),
                              workflowNames = c("osm", "bdt"), refCrs = 1)

@@ -4,7 +4,7 @@ require(lczexplore)
 oneLocDir<-paste0(
   system.file("extdata", package = "lczexplore"),"/multipleWfs/Redon")
 oneLocSfList<-loadMultipleSfs(dirPath = oneLocDir, workflowNames = c("osm","bdt","wudapt"),
-                                   inLocation = "Redon")
+                                   location = "Redon")
 oneLocSfIntersected <- createIntersect(sfList = oneLocSfList, columns = rep("lcz_primary", 4),
                                         refCrs=NULL, workflowNames=c("osm", "bdt", "wudapt"), minZeroArea=0.001)
 redon_bdt<-oneLocSfList$bdt
@@ -32,7 +32,7 @@ drawChordDiagram(oneLocWeightedFlux, colorMapIn = NULL, labelMatch = NULL)
 twoLocsDir<-paste0(
   system.file("extdata", package = "lczexplore"),"/multipleWfs")
 twoLocsSfList<-loadMultipleLocsSfs(dirPath = twoLocsDir, workflowNames = c("osm","bdt","wudapt"),
-                                   inLocation = c("Arville", "Redon"))
+                                   location = c("Arville", "Redon"))
 
 
 

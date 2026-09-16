@@ -22,7 +22,7 @@
 #' dirPath = paste0(
 #' system.file("extdata", package = "lczexplore"),
 #' "/multipleWfs/Arville"),
-#' workflowNames = c("osm","bdt","wudapt"), inLocation = "Arville")
+#' workflowNames = c("osm","bdt","wudapt"), location = "Arville")
 #' ArvilleIntersect <- createIntersect(
 #'  sfList = sfList, columns = rep("lcz_primary", 4),  
 #'  workflowNames = c("osm","bdt","wudapt"))
@@ -37,8 +37,7 @@
 #'  sfList = sfList2, columns = rep("lcz_primary", 3),
 #'  workflowNames = c("osm","bdt","wudapt"))
 createIntersect <- function(sfList, columns, refCrs = NULL,
-                            workflowNames = NULL, minZeroArea = 0.000,
-                                keepAllColumns = TRUE) {
+                            workflowNames = NULL, minZeroArea = 0.000) {
 
   if (is.null(columns) | prod(!is.na(columns) == 0)) {
     message("You didn't specify the name of the LCZ columns, an attempt with lcz_primary is tried")

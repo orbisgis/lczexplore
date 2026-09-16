@@ -4,10 +4,10 @@
 
  sfList<-loadMultipleSfs(dirPath = paste0(
  system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
- workflowNames = c("osm","bdt","wudapt"), inLocation = "Arville"  )
+ workflowNames = c("osm","bdt","wudapt"), location = "Arville"  )
 
 expect_silent(
   sfList<-loadMultipleSfs(dirPath = paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
                           workflowNames = c("osm","bdt","wudapt"),
-                          inLocation = "Arville", column = "lcz_primary")
+                          location = "Arville", column = "lcz_primary")
 )

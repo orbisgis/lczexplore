@@ -2,7 +2,7 @@
 #' of LCZ regarding of their source (workflow)
 #' NOTE: to represent the map of LCZ for a given file, use `showLCZ` function instead
 #' @param dirPath is the path where the datasets are stored
-#' @param inLocation is the name of the locations for the plot is produced
+#' @param location is the name of the locations for the plot is produced
 #' @param refWf is a reference workflow name, passed to the function addMissingRSUs when needed
 #' @param missingGeom allows to indicate which workflow is supposed to have missing geometries
 #' (not used most of the time)
@@ -23,8 +23,8 @@
 #' barplotLCZaLocation(
 #' dirPath = paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
 #' refWf = NULL, refLCZ = NA, residualLCZvalue = "Unclassified",
-#' inLocation = "Arville", plotSave = "/tmp", plotNow = TRUE)
-barplotLCZaLocation <- function(dirPath, inLocation, workflowNames = c("osm", "bdt", "wudapt"),
+#' location = "Arville", plotSave = "/tmp", plotNow = TRUE)
+barplotLCZaLocation <- function(dirPath, location, workflowNames = c("osm", "bdt", "wudapt"),
                                 refWf = NULL, refLCZ = NA, residualLCZvalue = NA, missingGeom = "osm",
                                 plotNow = FALSE, plotSave = "\tmp") {
   colorMap <- rev(c("#8b0101", "#cc0200", "#fc0001", "#be4c03", "#ff6602", "#ff9856",
@@ -41,7 +41,7 @@ barplotLCZaLocation <- function(dirPath, inLocation, workflowNames = c("osm", "b
                       "LCZ G: Water", "Unclassified"))
 
   sfList <- loadMultipleSfs(dirPath = dirPath,
-                            workflowNames = workflowNames, inLocation = inLocation)
+                            workflowNames = workflowNames, location = location)
   if (substr(dirPath, nchar(dirPath), nchar(dirPath)) != "/") { dirPath <- paste0(dirPath, "/") }
   zoneSfPath <- paste0(dirPath, "zone.fgb")
   zoneSf <- read_sf(zoneSfPath)
@@ -49,7 +49,7 @@ barplotLCZaLocation <- function(dirPath, inLocation, workflowNames = c("osm", "b
                            refLCZ = refLCZ,
                            residualLCZvalue = residualLCZvalue, column = "lcz_primary")
   concatSf <- concatAlocationWorkflows(sfList = sfList,
-                                       location = inLocation, refCrs = 1)
+                                       location = location, refCrs = 1)
 
   if (!("area" %in% names(concatSf))) {
     concatSf$area <- st_area(concatSf)
@@ -60,9 +60,9 @@ barplotLCZaLocation <- function(dirPath, inLocation, workflowNames = c("osm", "b
     dplyr::mutate(lcz_primary = factor(lcz_primary, levels = names(colorMap))) %>%
     dplyr::mutate(lcz_primary = tidyr::replace_na(lcz_primary, "Unclassified")) %>%
     dplyr::group_by(wf, lcz_primary) %>%
-    dplyr::summarise(area = drop_units(sum(area)), location = unique(inLocation))
+    dplyr::summarise(area = drop_units(sum(area)), location = unique(location))
 
-  inLocation <- unique(surfaces$location)
+  location <- unique(surfaces$location)
 
   #utils::globalVariables(c("fill")) # Trick to avoid R CMD check to raise a note a bout no binding for glob var fill
 
@@ -73,7 +73,7 @@ barplotLCZaLocation <- function(dirPath, inLocation, workflowNames = c("osm", "b
       values = colorMap,
       breaks = names(colorMap),
       labels = etiquettes, na.value = "ghostwhite") +
-    ggtitle(paste0("LCZ repartition by workflow for ", inLocation))
+    ggtitle(paste0("LCZ repartition by workflow for ", location))
 
 
   if (is.logical(plotSave) && plotSave) {
@@ -83,7 +83,7 @@ barplotLCZaLocation <- function(dirPath, inLocation, workflowNames = c("osm", "b
   if (is.character(plotSave)) {
     if (substring(plotSave, first = nchar(plotSave), last = nchar(plotSave)) != "/") {
       plotSave <- paste0(plotSave, "/") }
-    plotName <- paste0(plotSave, inLocation, "_LCZbyWfBarplot.png")
+    plotName <- paste0(plotSave, location, "_LCZbyWfBarplot.png")
     ggsave(plotName, outPlot)
   }
   if (plotNow) { print(outPlot) }

@@ -15,7 +15,7 @@
 #' sfListAll<-loadMultipleLocsSfs(dirPath = paste0(
 #'  system.file("extdata", package = "lczexplore"),"/multipleWfs/"),
 #'                               workflowNames = c("osm","bdt","wudapt"),
-#'                               inLocation = c("Arville", "Redon"))
+#'                               location = c("Arville", "Redon"))
 #' allLocsAllWfs <-  concatAllLocsWorkflows(
 #'  sfList = sfListAll)
 concatAllLocsWorkflows <- function(sfList, refCrs = 1) {

@@ -138,7 +138,7 @@ require(lczexplore)
 twoLocsDir<-paste0(
   system.file("extdata", package = "lczexplore"),"/multipleWfs")
 twoLocsSfList<-loadMultipleLocsSfs(dirPath = twoLocsDir, workflowNames = c("osm","bdt","wudapt"),
-                                   inLocation = c("Arville", "Redon"))
+                                   location = c("Arville", "Redon"))
 ```
 
 The function `loadMultipleLocsSfs` loads all the input .fgb files in a list.

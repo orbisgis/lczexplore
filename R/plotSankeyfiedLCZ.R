@@ -10,7 +10,7 @@
 #' dirList<-list.dirs(paste0(
 #' system.file("extdata", package = "lczexplore"),"/multipleWfs"))[-1]
 #' allLocIntersected<-concatIntersectedLocations(
-#' dirList = dirList, inLocations = c("Redon", "Arville"))
+#' dirList = dirList, locations = c("Redon", "Arville"))
 #' testSankey<-prepareSankeyLCZ(intersectedDf = allLocIntersected
 #'  , wf1 = "wudapt", wf2 = "osm")
 #' testSankeyPlot<-plotSankeyfiedLCZ(

@@ -11,4 +11,4 @@
 )
  ASUallLocAllWfs <- aggregateRSUsByLCZ(
  allLocAllWfs,
- LCZcolumn = "lcz_primary", wfColumn = "wf", locationColumn = "location", aggregateBufferSize = 0.5)
+column = "lcz_primary", wfColumn = "wf", locationColumn = "location", aggregateBufferSize = 0.5)
