@@ -1,8 +1,10 @@
 Package: lczexplore
-Title:  Imports, visualizes, compares and explores maps of Local Climate Zones
+Title:  Imports, Visualizes, Compares and Explores Maps of Local Climate Zones
 Version: 1.0.0.0016
+Author: Matthieu Gousseff
+Maintainer: Matthieu Gousseff <matthieu.gousseff@cnrs.fr>
 Authors@R: c(
-    person("Matthieu", "Gousseff", , "matthieu.gousseff@univ-ubs.fr", role = c("aut", "cre")),
+    person("Matthieu", "Gousseff", , "matthieu.gousseff@cnrs.fr", role = c("aut", "cre")),
     person(, "Centre National de la Recherche Scientifique, Lab-STICC", role = "cph", comment = c(ORCID = "0000-0002-7106-2677"))
   )
 Description: Easily import and visualize local climate zone maps with standard encoding.
