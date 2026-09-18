@@ -22,7 +22,8 @@ importMultipleLCZvectFromSession(
 
 \item{location}{the name of the location, all files from sfList must regard the same location}
 
-\item{refCRS}{a number telling which sf of the sfList will be the reference in termes of Coordinate Reference System}
+\item{refCRS}{a number telling which sf
+of the sfList will be the reference in termes of Coordinate Reference System}
 }
 \value{
 returns a list of sf objects, each of them has columns lcz_primary, wf and location
@@ -32,12 +33,15 @@ Take a list of sf objects within the session and format them to allow
 the use of createIntersect and multipleCompare functions.
 }
 \examples{
-osm<-importLCZvect(dirPath = paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
-file = "osm_lcz.fgb")
-bdt<-importLCZvect(dirPath = paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
-file = "bdt_lcz.fgb")
-wudapt<-importLCZvect(dirPath = paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
-file = "wudapt_lcz.fgb", column = "lcz_primary")
+osm<-importLCZvect(dirPath = paste0(
+     system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
+     file = "osm_lcz.fgb")
+bdt<-importLCZvect(dirPath = paste0(
+     system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
+ file = "bdt_lcz.fgb")
+wudapt<-importLCZvect(dirPath = paste0(
+     system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
+ file = "wudapt_lcz.fgb", column = "lcz_primary")
 sfList<-list(osm = osm, bdt = bdt, wudapt = wudapt)
 sfListFormatted<- importMultipleLCZvectFromSession(sfList = sfList,
 workflowNames = c("osm", "bdt", "wudapt"),location = "Arville",

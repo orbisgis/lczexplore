@@ -4,7 +4,7 @@
 \alias{importMultipleLCZvect}
 \title{In a given directory (or a list of directories) the function looks for LCZ datafiles
 and load them in a list. In each directory, files must have names built as follow :
-\if{html}{\out{<wf>}}_lcz.\if{html}{\out{<fileExtension>}}, where wf are the values specified in workflowNames parameter and
+wf_lcz.\if{html}{\out{<fileExtension>}}, where wf are the values specified in workflowNames parameter and
 fileExtension is a fil extension known by sf drivers, like fgb, geojson...}
 \usage{
 importMultipleLCZvect(
@@ -28,17 +28,12 @@ importMultipleLCZvect(
 If the different workflows do no use the same column names, a vector of names is passed}
 }
 \value{
-returns graphics of comparison and an object called matConfOut which contains :
-matConfLong, a confusion matrix in a longer form,
-matConfPlot is a ggplot2 object showing the confusion matrix.
-percAgg is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
-pseudoK is a heuristic estimate of a Cohen's kappa coefficient of agreement between classifications
-If saveG is not an empty string, graphics are saved under "saveG.png"
+returns a list containing one sf by workflow
 }
 \description{
 In a given directory (or a list of directories) the function looks for LCZ datafiles
 and load them in a list. In each directory, files must have names built as follow :
-\if{html}{\out{<wf>}}_lcz.\if{html}{\out{<fileExtension>}}, where wf are the values specified in workflowNames parameter and
+wf_lcz.\if{html}{\out{<fileExtension>}}, where wf are the values specified in workflowNames parameter and
 fileExtension is a fil extension known by sf drivers, like fgb, geojson...
 }
 \examples{
