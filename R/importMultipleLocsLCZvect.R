@@ -1,7 +1,7 @@
 #' In a given directory the function looks different locations as subdirectories and LCZ datafiles
 #' in each subdirectory, and load them in a list
 #' In each directory, files must have names built as follow :
-#' wf_lcz.<fileExtension>, where wf are the values specified in workflowNames parameter and
+#' wf_lcz.fileExtension, where wf are the values specified in workflowNames parameter and
 #' fileExtension is a file extension known by sf drivers, like fgb, geojson...
 #' @param dirPath is the place where the files are
 #' @param workflowNames sets the names of workflows

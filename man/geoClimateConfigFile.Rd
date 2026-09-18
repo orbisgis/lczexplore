@@ -61,10 +61,12 @@ c("BUILDING_FRACTION",
 "ROAD_FRACTION",
 "IMPERVIOUS_FRACTION","LCZ_PRIMARY","LCZ_FRACTION","UTRF")}
 
-\item{outConfigDir}{is the folder were the resulting JSON file will be put, the folder where GeoClimate will read it from
+\item{outConfigDir}{is the folder were the resulting JSON file will be put,
+the folder where GeoClimate will read it from
 (different from out outFolder, where GeoClimates will put its geoJSON ouputs), default is "/tmp"}
 
-\item{outConfigFile}{is the name of your configuration file, if and empty string, a name will be created from location
+\item{outConfigFile}{is the name of your configuration file,
+if and empty string, a name will be created from location
 and workflow parameters.}
 
 \item{BDTinFolder}{the path of the folder where are the BDTOPO needed by geoclimate}
@@ -96,6 +98,7 @@ test <- geoClimateConfigFile(
 # jarFilePath = "path/to/Geoclimate/geoclimate-0.0.2-SNAPSHOT.jar",
 # configFilePath = "/tmp/RedonOSM2022.json", wf = "OSM")
 # rsuIndics = c("LCZ","TEB","UTRF"),
-# gridIndics = c("BUILDING_FRACTION","BUILDING_HEIGHT","WATER_FRACTION","VEGETATION_FRACTION","ROAD_FRACTION",
+# gridIndics = c("BUILDING_FRACTION","BUILDING_HEIGHT",
+# "WATER_FRACTION","VEGETATION_FRACTION","ROAD_FRACTION",
 # "IMPERVIOUS_FRACTION","LCZ_PRIMARY","LCZ_FRACTION","UTRF"))
 }

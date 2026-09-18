@@ -5,7 +5,7 @@
 \title{In a given directory the function looks different locations as subdirectories and LCZ datafiles
 in each subdirectory, and load them in a list
 In each directory, files must have names built as follow :
-wf_lcz.\if{html}{\out{<fileExtension>}}, where wf are the values specified in workflowNames parameter and
+wf_lcz.fileExtension, where wf are the values specified in workflowNames parameter and
 fileExtension is a file extension known by sf drivers, like fgb, geojson...}
 \usage{
 importMultipleLocsLCZvect(
@@ -35,7 +35,7 @@ each of the containing one sf per werkflow
 In a given directory the function looks different locations as subdirectories and LCZ datafiles
 in each subdirectory, and load them in a list
 In each directory, files must have names built as follow :
-wf_lcz.\if{html}{\out{<fileExtension>}}, where wf are the values specified in workflowNames parameter and
+wf_lcz.fileExtension, where wf are the values specified in workflowNames parameter and
 fileExtension is a file extension known by sf drivers, like fgb, geojson...
 }
 \examples{

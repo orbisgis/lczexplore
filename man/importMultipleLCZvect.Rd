@@ -4,8 +4,8 @@
 \alias{importMultipleLCZvect}
 \title{In a given directory (or a list of directories) the function looks for LCZ datafiles
 and load them in a list. In each directory, files must have names built as follow :
-wf_lcz.\if{html}{\out{<fileExtension>}}, where wf are the values specified in workflowNames parameter and
-fileExtension is a fil extension known by sf drivers, like fgb, geojson...}
+wf_lcz.fileExtension, where wf are the values specified in workflowNames parameter and
+fileExtension is a file extension known by sf drivers, like fgb, geojson...}
 \usage{
 importMultipleLCZvect(
   dirPath,
@@ -33,8 +33,8 @@ returns a list containing one sf by workflow
 \description{
 In a given directory (or a list of directories) the function looks for LCZ datafiles
 and load them in a list. In each directory, files must have names built as follow :
-wf_lcz.\if{html}{\out{<fileExtension>}}, where wf are the values specified in workflowNames parameter and
-fileExtension is a fil extension known by sf drivers, like fgb, geojson...
+wf_lcz.fileExtension, where wf are the values specified in workflowNames parameter and
+fileExtension is a file extension known by sf drivers, like fgb, geojson...
 }
 \examples{
 sfList<-importMultipleLCZvect(dirPath = paste0(

@@ -23,10 +23,10 @@
 #' barplotLCZaLocation(
 #' dirPath = paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
 #' refWf = NULL, refLCZ = NA, residualLCZvalue = "Unclassified",
-#' location = "Arville", plotSave = "/tmp", plotNow = TRUE)
+#' location = "Arville", plotSave = FALSE, plotNow = TRUE)
 barplotLCZaLocation <- function(dirPath, location, workflowNames = c("osm", "bdt", "wudapt"),
                                 refWf = NULL, refLCZ = NA, residualLCZvalue = NA, missingGeom = "osm",
-                                plotNow = FALSE, plotSave = "\tmp") {
+                                plotNow = FALSE, plotSave = "/tmp") {
   colorMap <- rev(c("#8b0101", "#cc0200", "#fc0001", "#be4c03", "#ff6602", "#ff9856",
                     "#fbed08", "#bcbcba", "#ffcca7", "#57555a", "#006700", "#05aa05",
                     "#648423", "#bbdb7a", "#010101", "#fdf6ae", "#6d67fd", "ghostwhite"))

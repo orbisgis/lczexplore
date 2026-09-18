@@ -15,7 +15,7 @@ barplotLCZaLocation(
   residualLCZvalue = NA,
   missingGeom = "osm",
   plotNow = FALSE,
-  plotSave = "\\tmp"
+  plotSave = "/tmp"
 )
 }
 \arguments{
@@ -51,5 +51,5 @@ NOTE: to represent the map of LCZ for a given file, use \code{showLCZ} function 
 barplotLCZaLocation(
 dirPath = paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
 refWf = NULL, refLCZ = NA, residualLCZvalue = "Unclassified",
-location = "Arville", plotSave = "/tmp", plotNow = TRUE)
+location = "Arville", plotSave = FALSE, plotNow = TRUE)
 }

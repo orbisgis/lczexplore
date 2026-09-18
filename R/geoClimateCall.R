@@ -18,7 +18,7 @@
 #'          "BUILDING_FRACTION", "BUILDING_HEIGHT", "WATER_FRACTION",
 #'          "VEGETATION_FRACTION", "ROAD_FRACTION",
 #'          "IMPERVIOUS_FRACTION", "LCZ_PRIMARY", "LCZ_FRACTION", "UTRF"),
-#'          writeNow = TRUE)
+#'          writeNow = FALSE)
 #' # not run as geoclimate jar source needed
 #' # geoClimateCall(
 #' # jarFilePath = "path/to/Geoclimate/geoclimate-0.0.2-SNAPSHOT.jar",

@@ -22,9 +22,11 @@
 #' "VEGETATION_FRACTION",
 #' "ROAD_FRACTION",
 #' "IMPERVIOUS_FRACTION","LCZ_PRIMARY","LCZ_FRACTION","UTRF")
-#' @param outConfigDir is the folder were the resulting JSON file will be put, the folder where GeoClimate will read it from
+#' @param outConfigDir is the folder were the resulting JSON file will be put,
+#' the folder where GeoClimate will read it from
 #' (different from out outFolder, where GeoClimates will put its geoJSON ouputs), default is "/tmp"
-#' @param outConfigFile is the name of your configuration file, if and empty string, a name will be created from location
+#' @param outConfigFile is the name of your configuration file,
+#' if and empty string, a name will be created from location
 #' and workflow parameters.
 #' @param forceSRID some BD TOPO input file may not have an srid, this forces srid to be 2154
 #' @param writeNow if TRUE, the resulting config file is written using the outConfigDir and outConfigFile parameters
@@ -41,13 +43,14 @@
 #'      rsuIndics = c("LCZ", "TEB", "UTRF"),
 #'      gridIndics = c("BUILDING_FRACTION", "BUILDING_HEIGHT",
 #'          "WATER_FRACTION", "VEGETATION_FRACTION", "ROAD_FRACTION",
-#'          "IMPERVIOUS_FRACTION", "LCZ_PRIMARY", "LCZ_FRACTION", "UTRF"), writeNow = TRUE)
+#'          "IMPERVIOUS_FRACTION", "LCZ_PRIMARY", "LCZ_FRACTION", "UTRF"), writeNow = FALSE)
 #' # not run as geoclimate jar source needed
 #' # geoClimateCall(
 #' # jarFilePath = "path/to/Geoclimate/geoclimate-0.0.2-SNAPSHOT.jar",
 #' # configFilePath = "/tmp/RedonOSM2022.json", wf = "OSM")
 #' # rsuIndics = c("LCZ","TEB","UTRF"),
-#' # gridIndics = c("BUILDING_FRACTION","BUILDING_HEIGHT","WATER_FRACTION","VEGETATION_FRACTION","ROAD_FRACTION",
+#' # gridIndics = c("BUILDING_FRACTION","BUILDING_HEIGHT",
+#' # "WATER_FRACTION","VEGETATION_FRACTION","ROAD_FRACTION",
 #' # "IMPERVIOUS_FRACTION","LCZ_PRIMARY","LCZ_FRACTION","UTRF"))
 geoClimateConfigFile<-function(wf, locations, forceSRID=FALSE,
                                outFolder = "/tmp",

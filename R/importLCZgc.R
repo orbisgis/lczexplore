@@ -19,7 +19,7 @@
 #'
 #' @examples
 #' # not run
-#' # bdtTest<-importLCZgc(dirPath=paste0(system.file("extdata", package = "lczexplore"),""/multipleWfs/Redon"/"),
+#' # bdtTest <- importLCZgc(dirPath = system.file("extdata/multipleWfs/Redon", package = "lczexplore"),
 #' # file = "bdt_lcz.fgb")
 importLCZgc <- function(dirPath, output = "sfFile", file = "rsu_lcz.fgb") {
   # output can be sfFile, bBox or Contour
