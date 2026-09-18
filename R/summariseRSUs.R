@@ -1,7 +1,9 @@
 #' For a given LCZ sf object, returns the number of geometries and their mean area per LCZ type
 #' @param sfIn an sf objects that contains the geometry and LCZ levels
-#' @param aggregatingColumns should be the name of the LCZ types column, but can be any factor variable names
-#' @param trimValue a trim parameter to feed the mean function in order to avoid letting artifially small or big
+#' @param aggregatingColumns should be the name of the LCZ types column,
+#' but can be any factor variable names
+#' @param trimValue a trim parameter to feed the mean function
+#' in order to avoid letting artificially small or big
 #' geometries to influence the average area results
 #' @importFrom ggplot2 geom_sf guides ggtitle aes
 #' @import sf units
@@ -27,11 +29,14 @@
 #'
 #' # After aggregating adjacent RSU of same LCZ type
 #' ASUallLocAllWfs <- aggregateRSUsByLCZ(
-#'  allLocAllWfs,
-#'  column = "lcz_primary", wfColumn = "wf", locationColumn = "location", aggregateBufferSize = 0.5)
+#'      allLocAllWfs,
+#'      column = "lcz_primary", wfColumn = "wf",
+#'      locationColumn = "location", aggregateBufferSize = 0.5)
 #' summarisedASUs<-summariseRSUs(ASUallLocAllWfs, aggregatingColumns = c("wf", "lcz_primary"))
 #'
-#' plotSummarisedRSUs(summarisedSfIn = summarisedASUs, workflowNames = c("wud" = "wudapt", "osm", "bdt"))
+#' plotSummarisedRSUs(
+#'      summarisedSfIn = summarisedASUs,
+#'      workflowNames = c("wud" = "wudapt", "osm", "bdt"))
 #'
 summariseRSUs <- function(sfIn, aggregatingColumns = "lcz_primary", trimValue = 0) {
   if (!"sf" %in% class(sfIn)) { sfIn <- st_as_sf(sfIn) }

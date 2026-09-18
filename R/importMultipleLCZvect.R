@@ -1,6 +1,6 @@
 #' In a given directory (or a list of directories) the function looks for LCZ datafiles
 #' and load them in a list. In each directory, files must have names built as follow :
-#' <wf>_lcz.<fileExtension>, where wf are the values specified in workflowNames parameter and
+#' wf_lcz.<fileExtension>, where wf are the values specified in workflowNames parameter and
 #' fileExtension is a fil extension known by sf drivers, like fgb, geojson...
 #' @param dirPath is the place where the files are
 #' @param workflowNames sets the names of workflows
@@ -11,12 +11,7 @@
 #' @importFrom forcats fct_recode
 #' @importFrom dplyr mutate
 #' @import sf units RColorBrewer utils grDevices
-#' @return returns graphics of comparison and an object called matConfOut which contains :
-#' matConfLong, a confusion matrix in a longer form, 
-#' matConfPlot is a ggplot2 object showing the confusion matrix.
-#' percAgg is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
-#' pseudoK is a heuristic estimate of a Cohen's kappa coefficient of agreement between classifications
-#' If saveG is not an empty string, graphics are saved under "saveG.png"
+#' @return returns a list containing one sf by workflow
 #' @export
 #' @examples
 #' sfList<-importMultipleLCZvect(dirPath = paste0(
@@ -61,19 +56,23 @@ importMultipleLCZvect <- function(
 #' the use of createIntersect and multipleCompare functions.
 #' @param sfList the list of LCZ sf objects
 #' @param location the name of the location, all files from sfList must regard the same location
-#' @param refCRS a number telling which sf of the sfList will be the reference in termes of Coordinate Reference System
+#' @param refCRS a number telling which sf
+#' of the sfList will be the reference in termes of Coordinate Reference System
 #' @param workflowNames a vector containing the workflow names of each sf object of sfList
 #' @param columns contain the names of the columns where the sf objects of sfList are stored
 #' @importFrom sf st_transform st_crs st_drop_geometry
 #' @return returns a list of sf objects, each of them has columns lcz_primary, wf and location
 #' @export
 #' @examples
-#' osm<-importLCZvect(dirPath = paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
-#' file = "osm_lcz.fgb")
-#' bdt<-importLCZvect(dirPath = paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
-#' file = "bdt_lcz.fgb")
-#' wudapt<-importLCZvect(dirPath = paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
-#' file = "wudapt_lcz.fgb", column = "lcz_primary")
+#' osm<-importLCZvect(dirPath = paste0(
+#'      system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
+#'      file = "osm_lcz.fgb")
+#' bdt<-importLCZvect(dirPath = paste0(
+#'      system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
+#'  file = "bdt_lcz.fgb")
+#' wudapt<-importLCZvect(dirPath = paste0(
+#'      system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
+#'  file = "wudapt_lcz.fgb", column = "lcz_primary")
 #' sfList<-list(osm = osm, bdt = bdt, wudapt = wudapt)
 #' sfListFormatted<- importMultipleLCZvectFromSession(sfList = sfList,
 #' workflowNames = c("osm", "bdt", "wudapt"),location = "Arville",

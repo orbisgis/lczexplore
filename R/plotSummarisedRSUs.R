@@ -24,8 +24,12 @@
 #'  residualLCZvalue = "Unclassified",
 #'  column = "lcz_primary"
 #'  )
-#' summarisedRSUs<-summariseRSUs(allLocAllWfs, aggregatingColumns = c("wf", "lcz_primary"))
-#' plotSummarisedRSUs(summarisedSfIn = summarisedRSUs, workflowNames = c("wudapt"= "wud", "osm", "bdt"))
+#' summarisedRSUs<-summariseRSUs(
+#'      allLocAllWfs,
+#'      aggregatingColumns = c("wf", "lcz_primary"))
+#' plotSummarisedRSUs(
+#'      summarisedSfIn = summarisedRSUs,
+#'      workflowNames = c("wudapt"= "wud", "osm", "bdt"))
 plotSummarisedRSUs <- function(summarisedSfIn, workflowNames = c("wudapt", "osm", "bdt"),
                                plotNow = TRUE, graphPath = "") {
 

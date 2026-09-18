@@ -10,17 +10,24 @@
 #' JSON configuration file.
 #' @export
 #' @examples
-#' test <- geoClimateConfigFile(outConfigFile = "", wf = "OSM", outFolder = "/tmp", locations = "Redon",
-#' rsuIndics = c("LCZ", "TEB", "UTRF"),
-#' gridIndics = c("BUILDING_FRACTION", "BUILDING_HEIGHT", "WATER_FRACTION", "VEGETATION_FRACTION", "ROAD_FRACTION",
-#' "IMPERVIOUS_FRACTION", "LCZ_PRIMARY", "LCZ_FRACTION", "UTRF"), writeNow = TRUE)
+#' test <- geoClimateConfigFile(
+#'      outConfigFile = "",
+#'      wf = "OSM", outFolder = "/tmp", locations = "Redon",
+#'      rsuIndics = c("LCZ", "TEB", "UTRF"),
+#'      gridIndics = c(
+#'          "BUILDING_FRACTION", "BUILDING_HEIGHT", "WATER_FRACTION",
+#'          "VEGETATION_FRACTION", "ROAD_FRACTION",
+#'          "IMPERVIOUS_FRACTION", "LCZ_PRIMARY", "LCZ_FRACTION", "UTRF"),
+#'          writeNow = TRUE)
 #' # not run as geoclimate jar source needed
 #' # geoClimateCall(
 #' # jarFilePath = "path/to/Geoclimate/geoclimate-0.0.2-SNAPSHOT.jar",
 #' # configFilePath = "/tmp/RedonOSM2022.json", wf = "OSM")
 #' # rsuIndics = c("LCZ","TEB","UTRF"),
-#' # gridIndics = c("BUILDING_FRACTION","BUILDING_HEIGHT","WATER_FRACTION","VEGETATION_FRACTION","ROAD_FRACTION",
-#' # "IMPERVIOUS_FRACTION","LCZ_PRIMARY","LCZ_FRACTION","UTRF"))
+#' # gridIndics = c(
+#' #        "BUILDING_FRACTION","BUILDING_HEIGHT",
+#' #        "WATER_FRACTION","VEGETATION_FRACTION","ROAD_FRACTION",
+#' #        "IMPERVIOUS_FRACTION","LCZ_PRIMARY","LCZ_FRACTION","UTRF"))
 geoClimateCall<-function(jarFilePath, configFilePath, wf="OSM") {
   command<-paste0(
     "java -jar ", jarFilePath, " -f '", configFilePath, "' -w ", toupper(wf))

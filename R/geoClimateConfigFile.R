@@ -36,10 +36,12 @@
 #' @return returns a JSON configuration file to be fed to GeoClimate
 #' @export
 #' @examples
-#' test <- geoClimateConfigFile(outConfigFile = "", wf = "OSM", outFolder = "/tmp", locations = "Redon",
-#' rsuIndics = c("LCZ", "TEB", "UTRF"),
-#' gridIndics = c("BUILDING_FRACTION", "BUILDING_HEIGHT", "WATER_FRACTION", "VEGETATION_FRACTION", "ROAD_FRACTION",
-#' "IMPERVIOUS_FRACTION", "LCZ_PRIMARY", "LCZ_FRACTION", "UTRF"), writeNow = TRUE)
+#' test <- geoClimateConfigFile(
+#'      outConfigFile = "", wf = "OSM", outFolder = "/tmp", locations = "Redon",
+#'      rsuIndics = c("LCZ", "TEB", "UTRF"),
+#'      gridIndics = c("BUILDING_FRACTION", "BUILDING_HEIGHT",
+#'          "WATER_FRACTION", "VEGETATION_FRACTION", "ROAD_FRACTION",
+#'          "IMPERVIOUS_FRACTION", "LCZ_PRIMARY", "LCZ_FRACTION", "UTRF"), writeNow = TRUE)
 #' # not run as geoclimate jar source needed
 #' # geoClimateCall(
 #' # jarFilePath = "path/to/Geoclimate/geoclimate-0.0.2-SNAPSHOT.jar",

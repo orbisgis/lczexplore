@@ -21,12 +21,16 @@
 #' @importFrom graphics par
 #' @export
 #' @examples
-#' twoLocsDir<-paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs")
-#' twoLocsSfList<-importMultipleLocsLCZvect(dirPath = twoLocsDir, workflowNames = c("osm","bdt","wudapt"),
-#' location = c("Arville", "Redon"))
-#' twoLocsSfIntersected <- createIntersect(sfList = twoLocsSfList, columns = rep("lcz_primary", 4),
-#' refCrs=NULL, workflowNames=c("osm", "bdt", "wudapt"), minZeroArea=0.001)
-#' twoLocsWeightedFlux<-createWeightedFlux(twoLocsSfIntersected, wfNamesIn = c("osm","bdt","wudapt"))
+#' twoLocsDir<-paste0(
+#'  system.file("extdata", package = "lczexplore"),"/multipleWfs")
+#' twoLocsSfList<-importMultipleLocsLCZvect(
+#'  dirPath = twoLocsDir, workflowNames = c("osm","bdt","wudapt"),
+#'  location = c("Arville", "Redon"))
+#' twoLocsSfIntersected <- createIntersect(
+#'  sfList = twoLocsSfList, columns = rep("lcz_primary", 4),
+#'  refCrs=NULL, workflowNames=c("osm", "bdt", "wudapt"), minZeroArea=0.001)
+#' twoLocsWeightedFlux<-createWeightedFlux(
+#'  twoLocsSfIntersected, wfNamesIn = c("osm","bdt","wudapt"))
 #' # Subsetting and grouping allow further exploration. Playing on grouping names and alphabetical order allows
 #' # to choose the order of the sectors
 #' twoLocsWeightedFluxNo104no101<-subset(twoLocsWeightedFlux,
@@ -34,7 +38,10 @@
 #'      !grepl("104", twoLocsWeightedFlux$orig) &
 #'      !grepl("101", twoLocsWeightedFlux$dest) &
 #'      !grepl("104", twoLocsWeightedFlux$dest))
-#' aggregMatch<-c("acompact"="Compact", "blessCompact" = "Less Compact", "cfewToNoBuild" = "Few to No Buildings",
+#' aggregMatch<-c(
+#'     "acompact"="Compact",
+#'      "blessCompact" = "Less Compact",
+#'     "cfewToNoBuild" = "Few to No Buildings",
 #'     "dunclass" = "Unclassified")
 #' drawChordDiagram(twoLocsWeightedFluxNo104no101, labelMatch = aggregMatch,
 #'     acompact = c("1", "2", "3"),
