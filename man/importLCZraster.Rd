@@ -23,8 +23,10 @@ importLCZraster(
 \arguments{
 \item{dirPath}{is the path to the directory where the}
 
-\item{bBox}{bBox is the bounding box needed to crop the raster file.
-It can be produced bu the importLCZvect function. It can either be of class bBox or of class sfc}
+\item{bBox}{bBox is a mask to crop the raster file. It can be a bounding box
+or any single geometry which contains the desired zone.
+It can be produced by the importLCZvect function. It can either be of class bBox or of class sfc, like the geometry column
+of an sf object.}
 
 \item{fileName}{is the name of the raster file (tif or geotif), by default \'EU_LCZ_map.tif\'.}
 

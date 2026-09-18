@@ -25,6 +25,8 @@ export(drawChordDiagram)
 export(drawChordDiagramWithGrouping)
 export(drawSectors)
 export(fetchLCZ)
+export(geoClimateCall)
+export(geoClimateConfigFile)
 export(groupLCZ)
 export(groupLCZsuffix)
 export(importConcatMultipleLocsLCZvect)
@@ -115,6 +117,10 @@ importFrom(grDevices,
   palette.colors
 )
 importFrom(graphics,par)
+importFrom(jsonlite,
+  toJSON,
+  unbox
+)
 importFrom(magrittr,"%>%")
 importFrom(randomcoloR,randomColor)
 importFrom(sf,

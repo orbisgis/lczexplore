@@ -14,8 +14,10 @@
 #' @param confidenceColumn the name of the column of the output sf File in which the confidence values will be stored
 #' (default = "", no confidence value specified)
 #' @param typeLevels indicates a named vector of the unique values contained in LCZcolumn,
-#' @param bBox bBox is the bounding box needed to crop the raster file.
-#' It can be produced bu the importLCZvect function. It can either be of class bBox or of class sfc
+#' @param bBox bBox is a mask to crop the raster file. It can be a bounding box
+#' or any single geometry which contains the desired zone.
+#' It can be produced by the importLCZvect function. It can either be of class bBox or of class sfc, like the geometry column
+#' of an sf object.
 #' @return an sf file containing the geom and LCZ levels from theraster tiff within the bBox bounding box
 #' @import sf
 #' @importFrom magrittr "%>%"
