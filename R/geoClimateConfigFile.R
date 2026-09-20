@@ -38,12 +38,16 @@
 #' @return returns a JSON configuration file to be fed to GeoClimate
 #' @export
 #' @examples
-#' test <- geoClimateConfigFile(
-#'      outConfigFile = "", wf = "OSM", outFolder = "/tmp", locations = "Redon",
-#'      rsuIndics = c("LCZ", "TEB", "UTRF"),
-#'      gridIndics = c("BUILDING_FRACTION", "BUILDING_HEIGHT",
-#'          "WATER_FRACTION", "VEGETATION_FRACTION", "ROAD_FRACTION",
-#'          "IMPERVIOUS_FRACTION", "LCZ_PRIMARY", "LCZ_FRACTION", "UTRF"), writeNow = FALSE)
+#' # not run as they write files
+#' # test <- geoClimateConfigFile(
+#' #     outConfigFile = "",
+#' #     wf = "OSM", outFolder = "", locations = "Redon",
+#' #     rsuIndics = c("LCZ", "TEB", "UTRF"),
+#' #     gridIndics = c(
+#' #         "BUILDING_FRACTION", "BUILDING_HEIGHT", "WATER_FRACTION",
+#' #         "VEGETATION_FRACTION", "ROAD_FRACTION",
+#' #         "IMPERVIOUS_FRACTION", "LCZ_PRIMARY", "LCZ_FRACTION", "UTRF"),
+#'          writeNow = FALSE)
 #' # not run as geoclimate jar source needed
 #' # geoClimateCall(
 #' # jarFilePath = "path/to/Geoclimate/geoclimate-0.0.2-SNAPSHOT.jar",
@@ -78,7 +82,7 @@ geoClimateConfigFile<-function(wf, locations, forceSRID=FALSE,
     }
   }
 
-  outFolder<-tryCatch( # This hideous tryCatch deals with weird shinyDirChoose behavior
+  outFolder<-tryCatch(
     {
       list(folder=jsonlite::unbox(outFolder)) },
     error=function(e){
@@ -146,7 +150,7 @@ if(grid_x_size!=0 & grid_y_size!=0){
 
 if (outConfigFile=="") { outConfigFile<-paste0(locations,wf) }
 
-if (writeNow == TRUE){
+if (writeNow){
 write(output,
 file = gsub(
   pattern = "\\s | ,", replacement = "_", 

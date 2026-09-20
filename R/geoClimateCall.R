@@ -1,4 +1,5 @@
-#' Calls GeoClimate and feeds it a configuration file by building a command an using system (only tested on linux)
+#' Calls GeoClimate jar file  and feeds it a configuration file
+#' by building a command an using system (only tested on linux)
 #' @param jarFilePath tells where the geoclimate jar file is, default points to the embedded jar file,
 #' i.e. the latest snapshot version when the package was built.
 #' Versions can be downloaded from https://github.com/orbisgis/geoclimate/wiki/Download
@@ -10,14 +11,15 @@
 #' JSON configuration file.
 #' @export
 #' @examples
-#' test <- geoClimateConfigFile(
-#'      outConfigFile = "",
-#'      wf = "OSM", outFolder = "/tmp", locations = "Redon",
-#'      rsuIndics = c("LCZ", "TEB", "UTRF"),
-#'      gridIndics = c(
-#'          "BUILDING_FRACTION", "BUILDING_HEIGHT", "WATER_FRACTION",
-#'          "VEGETATION_FRACTION", "ROAD_FRACTION",
-#'          "IMPERVIOUS_FRACTION", "LCZ_PRIMARY", "LCZ_FRACTION", "UTRF"),
+#' # not run as they write files
+#' # test <- geoClimateConfigFile(
+#' #     outConfigFile = "",
+#' #     wf = "OSM", outFolder = "", locations = "Redon",
+#' #     rsuIndics = c("LCZ", "TEB", "UTRF"),
+#' #     gridIndics = c(
+#' #         "BUILDING_FRACTION", "BUILDING_HEIGHT", "WATER_FRACTION",
+#' #         "VEGETATION_FRACTION", "ROAD_FRACTION",
+#' #         "IMPERVIOUS_FRACTION", "LCZ_PRIMARY", "LCZ_FRACTION", "UTRF"),
 #'          writeNow = FALSE)
 #' # not run as geoclimate jar source needed
 #' # geoClimateCall(
