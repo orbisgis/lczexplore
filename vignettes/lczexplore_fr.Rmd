@@ -319,3 +319,9 @@ knitr::include_graphics("byLCZUniquenessSensib.png", error=FALSE)
 
 ```
 Les principales fonctions ont été évoquées ici, pour plus d'information consulter les fichiers d'aide de chacune des fonctions.
+
+```{R cleanup}
+if (file.exists("byLCZUniquenessSensib.png")){file.remove("byLCZUniquenessSensib.png")}
+if (file.exists("GeneralUniquenessSensib.png")){file.remove("GeneralUniquenessSensib.png")}
+if (file.exists("comparison.png")){file.remove("comparison.png")}
+```
