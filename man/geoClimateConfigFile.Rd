@@ -87,12 +87,16 @@ GeoClimate with the geoClimateCall function, provided that user has downloaded a
 from the official repository https://github.com/orbisgis/geoclimate
 }
 \examples{
-test <- geoClimateConfigFile(
-     outConfigFile = "", wf = "OSM", outFolder = "/tmp", locations = "Redon",
-     rsuIndics = c("LCZ", "TEB", "UTRF"),
-     gridIndics = c("BUILDING_FRACTION", "BUILDING_HEIGHT",
-         "WATER_FRACTION", "VEGETATION_FRACTION", "ROAD_FRACTION",
-         "IMPERVIOUS_FRACTION", "LCZ_PRIMARY", "LCZ_FRACTION", "UTRF"), writeNow = TRUE)
+# not run as they write files
+# test <- geoClimateConfigFile(
+#     outConfigFile = "",
+#     wf = "OSM", outFolder = "", locations = "Redon",
+#     rsuIndics = c("LCZ", "TEB", "UTRF"),
+#     gridIndics = c(
+#         "BUILDING_FRACTION", "BUILDING_HEIGHT", "WATER_FRACTION",
+#         "VEGETATION_FRACTION", "ROAD_FRACTION",
+#         "IMPERVIOUS_FRACTION", "LCZ_PRIMARY", "LCZ_FRACTION", "UTRF"),
+#        writeNow = FALSE)
 # not run as geoclimate jar source needed
 # geoClimateCall(
 # jarFilePath = "path/to/Geoclimate/geoclimate-0.0.2-SNAPSHOT.jar",

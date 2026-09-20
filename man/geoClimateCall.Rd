@@ -2,7 +2,8 @@
 % Please edit documentation in R/geoClimateCall.R
 \name{geoClimateCall}
 \alias{geoClimateCall}
-\title{Calls GeoClimate and feeds it a configuration file by building a command an using system (only tested on linux)}
+\title{Calls GeoClimate jar file  and feeds it a configuration file
+by building a command an using system (only tested on linux)}
 \usage{
 geoClimateCall(jarFilePath, configFilePath, wf = "OSM")
 }
@@ -22,18 +23,20 @@ returns nothing but files will be created by GeoClimate in the folder specified 
 JSON configuration file.
 }
 \description{
-Calls GeoClimate and feeds it a configuration file by building a command an using system (only tested on linux)
+Calls GeoClimate jar file  and feeds it a configuration file
+by building a command an using system (only tested on linux)
 }
 \examples{
-test <- geoClimateConfigFile(
-     outConfigFile = "",
-     wf = "OSM", outFolder = "/tmp", locations = "Redon",
-     rsuIndics = c("LCZ", "TEB", "UTRF"),
-     gridIndics = c(
-         "BUILDING_FRACTION", "BUILDING_HEIGHT", "WATER_FRACTION",
-         "VEGETATION_FRACTION", "ROAD_FRACTION",
-         "IMPERVIOUS_FRACTION", "LCZ_PRIMARY", "LCZ_FRACTION", "UTRF"),
-         writeNow = TRUE)
+# not run as they write files
+# test <- geoClimateConfigFile(
+#     outConfigFile = "",
+#     wf = "OSM", outFolder = "", locations = "Redon",
+#     rsuIndics = c("LCZ", "TEB", "UTRF"),
+#     gridIndics = c(
+#         "BUILDING_FRACTION", "BUILDING_HEIGHT", "WATER_FRACTION",
+#         "VEGETATION_FRACTION", "ROAD_FRACTION",
+#         "IMPERVIOUS_FRACTION", "LCZ_PRIMARY", "LCZ_FRACTION", "UTRF"),
+#        writeNow = FALSE)
 # not run as geoclimate jar source needed
 # geoClimateCall(
 # jarFilePath = "path/to/Geoclimate/geoclimate-0.0.2-SNAPSHOT.jar",

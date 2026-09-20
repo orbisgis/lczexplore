@@ -47,7 +47,7 @@
 #' #         "BUILDING_FRACTION", "BUILDING_HEIGHT", "WATER_FRACTION",
 #' #         "VEGETATION_FRACTION", "ROAD_FRACTION",
 #' #         "IMPERVIOUS_FRACTION", "LCZ_PRIMARY", "LCZ_FRACTION", "UTRF"),
-#'          writeNow = FALSE)
+#' #        writeNow = FALSE)
 #' # not run as geoclimate jar source needed
 #' # geoClimateCall(
 #' # jarFilePath = "path/to/Geoclimate/geoclimate-0.0.2-SNAPSHOT.jar",
@@ -162,12 +162,3 @@ file = gsub(
 return(output)
 
 }
-#
-# library(jsonlite)
-# test<-geoClimateConfigFile(outConfigFile="", wf="BDTOPO_V2.2",outFolder=list(folder="/tmp",srid=2154),locations="Allaire",
-#  rsuIndics = c("LCZ","TEB","UTRF"),
-#  gridIndics = c("BUILDING_FRACTION","BUILDING_HEIGHT","WATER_FRACTION","VEGETATION_FRACTION","ROAD_FRACTION",
-#  "IMPERVIOUS_FRACTION","LCZ_PRIMARY","LCZ_FRACTION","UTRF"))
-#  test
-# gsub(pattern = "\\s", replacement = "_", 
-# x = "/home/gousseff/Documents/0_DocBiblioTutosPublis/0_ArticlesScientEtThèses/ArticleComparaisonLCZGCWUDAPTEXPERTS/Le Tartre-GaudranOSM2011.json")
