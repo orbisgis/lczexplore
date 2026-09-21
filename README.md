@@ -21,7 +21,8 @@ https://www.r-project.org/Licenses/LGPL-3
 # Fundings
 
 The lczexplore library has been originally developed within the following research projects:
-* PAENDORA2 (Pour la gestion du confort estival : Donnees, Outils et Recherche-Action) (2022 -2025), funded by [ADEME](https://www.ademe.fr/)
+* PAENDORA2 (Pour la gestion du confort estival : Donnees, Outils et Recherche-Action) (2022 -2025), 
+* funded by ADEME
 
 # Reference paper
 
