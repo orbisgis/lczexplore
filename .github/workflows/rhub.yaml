@@ -36,11 +36,11 @@ jobs:
       platforms: ${{ steps.rhub-setup.outputs.platforms }}
 
     steps:
-    # NO NEED TO CHECKOUT HERE
-    - uses: r-hub/actions/setup@v1
-      with:
-        config: ${{ github.event.inputs.config }}
-      id: rhub-setup
+      # NO NEED TO CHECKOUT HERE
+      - uses: r-hub/actions/setup@v1
+        with:
+          config: ${{ github.event.inputs.config }}
+        id: rhub-setup
 
   linux-containers:
     needs: setup
@@ -86,22 +86,19 @@ jobs:
           job-config: ${{ matrix.config.job-config }}
           token: ${{ secrets.RHUB_TOKEN }}
 
-      # 👇 ADD THIS TO FIX THE S2 COMPILATION BUG 👇
-      - name: Update Homebrew
-        if: runner.os == 'macOS'
-        run: brew update
-
-      - name: Install system dependencies for s2/sf
-        if: runner.os == 'macOS'
-        run: brew install cmake openssl abseil
-
-      - name: Set PKG_CONFIG_PATH
-        if: runner.os == 'macOS'
-        run: echo "PKG_CONFIG_PATH=$(brew --prefix openssl)/lib/pkgconfig:$(brew --prefix abseil)/lib/pkgconfig" >> $GITHUB_ENV
-
       - uses: r-hub/actions/setup-r-sysreqs@v1
         with:
           arch: ${{ matrix.config.arch }}
+
+      # =====================================================================
+      # FIX FOR MACOS: Explicitly install cmake and abseil via Homebrew.
+      # The s2 package requires these to build its vendored abseil-cpp
+      # if a system version isn't found, and r-hub's sysreqs resolver
+      # currently misses this mapping on macOS.
+      # =====================================================================
+      - name: Install cmake and abseil on macOS
+        if: runner.os == 'macOS'
+        run: brew install cmake abseil
 
       - uses: r-hub/actions/platform-info@v1
         with:
