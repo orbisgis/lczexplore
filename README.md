@@ -37,11 +37,19 @@ If you are kind enough to cite this package, please check in the /inst directory
 
 
 # Installation
-This package can be installed from github using the install_github function of the devtools package. 
+
+## Github version
+This package can be installed from github using the install_github 
+function of the devtools package. 
 ```R
 # library(devtools)
 # devtools::install_github("orbisgis/lczexplore")
 ```
+## macOS Users
+This package relies on the `sf` and `s2` spatial libraries, which require 
+external system tools to compile on macOS. 
+Before installing `lczexplore`, please ensure you have the 
+following dependencies installed : cmake, openssl abseil. 
 
 
 # Summary
