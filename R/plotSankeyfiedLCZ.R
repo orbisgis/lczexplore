@@ -3,7 +3,7 @@
 #' @param colorMap is a vector of colors whose names cover the valus of the nodes in sankeyfied
 #' @param plotNow is set to TRUE by default, if set to FAULT the graph is not plotted.
 #' @param v_space allows a separation between LCZ type bars
-#' @return returns a sanky plot of LCZ workflows on the same areas
+#' @return returns a sankey plot of LCZ workflows on the same areas
 #' @import sf ggplot2 ggsankeyfier
 #' @export
 #' @examples

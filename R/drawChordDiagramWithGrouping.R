@@ -14,7 +14,7 @@
 #' @param ... allows the user to do on-the-fly grouping. These must be passed as groupName = groupValues
 #' where groupName is the name of a resulting group and groupValues a vector of the initial values
 #' it will regroup.
-#' @return a vector of booleans indicting if the elements of x define a color in R (TRUE) or don't (FALSE)
+#' @return a chord diagram after LCZ types are grouped according to ... arguments
 #' @importFrom circlize circos.clear circos.track circos.text chordDiagram get.cell.meta.data
 #' @importFrom collapse unlist2d fselect
 #' @importFrom graphics par

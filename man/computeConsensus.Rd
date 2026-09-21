@@ -15,6 +15,9 @@ a column area which contains the area of each spatial unit}
 \item{wfNames}{a vector of strings containing the name of the workflows. The columns
 containing the LCZ type for each workflow bare the same names.}
 }
+\value{
+Returns the values of consensus indicator per LCZ types
+}
 \description{
 Compute an indicator of consensus among workflows for each LCZ type
 }

@@ -30,7 +30,7 @@ where groupName is the name of a resulting group and groupValues a vector of the
 it will regroup.}
 }
 \value{
-a vector of booleans indicting if the elements of x define a color in R (TRUE) or don't (FALSE)
+a chord diagram after LCZ types are grouped according to ... arguments
 }
 \description{
 Draws how LCZ types from several workflows break up into LCZ types of one another when some grouping is precised in the arguments

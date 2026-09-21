@@ -28,7 +28,7 @@ importMultipleLCZvect(
 If the different workflows do no use the same column names, a vector of names is passed}
 }
 \value{
-returns a list containing one sf by workflow
+returns a list containing one sf by workflow for a given locations
 }
 \description{
 In a given directory (or a list of directories) the function looks for LCZ datafiles

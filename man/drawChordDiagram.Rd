@@ -32,8 +32,7 @@ where groupName is the name of a resulting group and groupValues a vector of the
 it will regroup.}
 }
 \value{
-a vector of booleans indicting if the elements
-of x define a color in R (TRUE) or don't (FALSE)
+a chord diagram of how LCZ types of a workflow break up into types of the other workflows
 }
 \description{
 Draws how LCZ types from several workflows break up into LCZ types of one another

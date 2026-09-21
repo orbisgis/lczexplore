@@ -10,8 +10,8 @@
 #' If the different workflows do no use the same column names, a vector of names is passed
 #' @importFrom forcats fct_recode
 #' @importFrom dplyr mutate
-#' @import sf units RColorBrewer utils grDevices
-#' @return returns a list containing one sf by workflow
+#' @import sf units
+#' @return returns a list containing one sf by workflow for a given locations
 #' @export
 #' @examples
 #' sfList<-importMultipleLCZvect(dirPath = paste0(

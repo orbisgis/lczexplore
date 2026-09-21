@@ -5,6 +5,7 @@
 #' a column area which contains the area of each spatial unit
 #' @param wfNames a vector of strings containing the name of the workflows. The columns
 #' containing the LCZ type for each workflow bare the same names.
+#' @return Returns the values of consensus indicator per LCZ types
 #' @import data.table
 #' @export
 #' @examples

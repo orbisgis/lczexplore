@@ -23,12 +23,7 @@ concatAlocationWorkflows(
 will be repeated for all workflows}
 }
 \value{
-returns graphics of comparison and an object called matConfOut which contains :
-matConfLong, a confusion matrix in a longer form,
-matConfPlot is a ggplot2 object showing the confusion matrix.
-percAgg is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
-pseudoK is a heuristic estimate of a Cohen's kappa coefficient of agreement between classifications
-If saveG is not an empty string, graphics are saved under "saveG.png"
+returns an sf with values of LCZ for all workflows for a given location
 }
 \description{
 Take a list of sf files with lcz_primary and wf columns, and concatenates them in a single sf object,

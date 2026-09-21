@@ -10,9 +10,9 @@
 #' @param columns contains the names of the columns containing the LCZ types
 #' @importFrom forcats fct_recode
 #' @importFrom dplyr mutate
-#' @import sf units RColorBrewer utils grDevices
+#' @import sf units
 #' @return a list of sf, containing one element per location,
-#' each of the containing one sf per werkflow
+#' each of which containing one sf per werkflow
 #' @export
 #' @examples
 #' sfList<-importMultipleLocsLCZvect(dirPath = paste0(

@@ -7,7 +7,7 @@
 #' geoClimateConfigFile function
 #' @param wf is the workflow to use with GeoClimate, the default is OSM for OpenStreetMap.
 #' The other possible value is "BDTOPO_V2". Other values will be added (e.g. for BDTOPO_V3) when tested.
-#' @return returns nothing but files will be created by GeoClimate in the folder specified in the
+#' @return returns nothing but executes GeoClimate in the folder specified in the
 #' JSON configuration file.
 #' @export
 #' @examples

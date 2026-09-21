@@ -19,7 +19,7 @@ geoClimateConfigFile function}
 The other possible value is "BDTOPO_V2". Other values will be added (e.g. for BDTOPO_V3) when tested.}
 }
 \value{
-returns nothing but files will be created by GeoClimate in the folder specified in the
+returns nothing but executes GeoClimate in the folder specified in the
 JSON configuration file.
 }
 \description{

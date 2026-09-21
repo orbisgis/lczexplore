@@ -29,7 +29,7 @@ importMultipleLocsLCZvect(
 }
 \value{
 a list of sf, containing one element per location,
-each of the containing one sf per werkflow
+each of which containing one sf per werkflow
 }
 \description{
 In a given directory the function looks different locations as subdirectories and LCZ datafiles

@@ -21,7 +21,7 @@ plotSankeyfiedLCZ(
 \item{v_space}{allows a separation between LCZ type bars}
 }
 \value{
-returns a sanky plot of LCZ workflows on the same areas
+returns a sankey plot of LCZ workflows on the same areas
 }
 \description{
 Plots a sankey graph between two LCZ workflows
