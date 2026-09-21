@@ -1,11 +1,4 @@
-# R-hub's generic GitHub Actions workflow file. It's canonical location is at
-# https://github.com/r-hub/actions/blob/v1/workflows/rhub.yaml
-# You can update this file to a newer version using the rhub2 package:
-#
-# rhub::rhub_setup()
-#
-# It is unlikely that you need to modify this file manually.
-
+# R-hub's generic GitHub Actions workflow file.
 name: R-hub
 run-name: >-
   ${{ github.event.inputs.id || format('Manual run by @{0}', github.triggering_actor) }}:
@@ -36,7 +29,6 @@ jobs:
       platforms: ${{ steps.rhub-setup.outputs.platforms }}
 
     steps:
-      # NO NEED TO CHECKOUT HERE
       - uses: r-hub/actions/setup@v1
         with:
           config: ${{ github.event.inputs.config }}
@@ -91,14 +83,19 @@ jobs:
           arch: ${{ matrix.config.arch }}
 
       # =====================================================================
-      # FIX FOR MACOS: Explicitly install cmake and abseil via Homebrew.
-      # The s2 package requires these to build its vendored abseil-cpp
-      # if a system version isn't found, and r-hub's sysreqs resolver
-      # currently misses this mapping on macOS.
+      # FIX FOR MACOS:
+      # 1. Install cmake, make (as gmake), and abseil via Homebrew.
+      # 2. The default macOS 'make' is GNU Make 3.81 (from 2006), which is
+      #    known to fail when building modern abseil-cpp via CMake.
+      # 3. We force the use of 'gmake' (GNU Make 4.x) and try to use the
+      #    system abseil first to avoid the bundled build entirely.
       # =====================================================================
-      - name: Install cmake and abseil on macOS
+      - name: Install modern build tools on macOS
         if: runner.os == 'macOS'
-        run: brew install cmake abseil
+        run: |
+          brew install cmake make abseil
+          echo "MAKE=gmake" >> $GITHUB_ENV
+          echo "S2_FORCE_BUNDLED_ABSEIL=false" >> $GITHUB_ENV
 
       - uses: r-hub/actions/platform-info@v1
         with:
