@@ -85,6 +85,15 @@ jobs:
         with:
           job-config: ${{ matrix.config.job-config }}
           token: ${{ secrets.RHUB_TOKEN }}
+
+      # 👇 ADD THIS TO FIX THE S2 COMPILATION BUG 👇
+      - name: Install macOS system dependencies for s2/sf
+        if: runner.os == 'macOS'
+        run:
+         brew update
+         brew install cmake openssl abseil
+         echo "PKG_CONFIG_PATH=$(brew --prefix openssl)/lib/pkgconfig:$(brew --prefix abseil)/lib/pkgconfig" >> $GITHUB_ENV
+
       - uses: r-hub/actions/setup-r-sysreqs@v1
         with:
           arch: ${{ matrix.config.arch }}
