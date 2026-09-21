@@ -5,6 +5,11 @@ Authors@R: person(given = "Matthieu", family = "Gousseff", email =  "matthieu.go
 Description: Easily import and visualize local climate zone maps with standard encoding.
     Compare two or more maps, and group some LCZ types according.
     Explore their differences through circular visualization and indicators.
+    Gousseff, M., Bocher, E., Bernard, J., Le Saux Wiederhold, E.,
+    lczexplore: an R package to explore Local Climate Zone classifications,
+    <doi:10.21105/joss.05445>.
+
+
 License: LGPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
