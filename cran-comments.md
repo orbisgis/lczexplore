@@ -1,6 +1,11 @@
-## R CMD check results
+## R CMD check --as-cran results
 
-0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 2 note
+* checking CRAN incoming feasibility ... NOTE
+  Maintainer: ‘Matthieu Gousseff <matthieu.gousseff@cnrs.fr>’ 
+* checking for future file timestamps ... NOTE
+    unable to verify current time
+
 
 * This is a new release.
 
@@ -13,5 +18,4 @@
 * All R versions on GitHub Actions windows-latest
 * All R versions on GitHub Actions macos-15, ASAN + UBSAN on macOS BUT with a modified yaml due to deal with s2 abseil and make
 
-## R CMD check --as-cran 
 
