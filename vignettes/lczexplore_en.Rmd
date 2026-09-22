@@ -189,14 +189,18 @@ the compareLCZ function will concatenate a ".1" string to the column names of th
 *The graphical output includes 4 graphs and is easier to read after zooming or exporting.*
 
 ```{r, compare, fig.dim = c(12,9 ), echo = TRUE, fig.show="hide"}
-comparison <- compareLCZ(sf1 = redonBDT, column1 = "LCZ_PRIMARY", wf1 = "BD TOPO v2.2",
-                         sf2 = redonOSM, column2 = "LCZ_PRIMARY", wf2 = "Open Street Map", ref = 1,
-                         repr = "standard", exwrite = F, location = "Redon", saveG = "comparison")
+
+path <- system.file('extdata/redonCompare',package="lczexplore")
+redonCompare <- compareLCZ(sf1 = redonBDT, wf1 = "bdt", geomID1 = "ID_RSU", column1 = "LCZ_PRIMARY",
+                           confid1 = "LCZ_UNIQUENESS_VALUE",
+                           sf2 = redonOSM, wf2 = "osm", geomID2 = "ID_RSU", column2 = "LCZ_PRIMARY",
+                           confid2 = "LCZ_UNIQUENESS_VALUE", exwrite = FALSE, saveG = path)
 ```
 
 ```{r, import-compare-plot-prettier, out.width = "680px"}
 
-knitr::include_graphics("comparison.png", error=FALSE)
+path <- system.file('extdata/GeneralUniquenessSensib.png',package="lczexplore")
+knitr::include_graphics(path, error=FALSE)
 
 ```
 

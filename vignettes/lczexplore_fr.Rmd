@@ -273,7 +273,8 @@ redonCompare <- compareLCZ(sf1 = redonBDT, wf1 = "bdt", geomID1 = "ID_RSU", colu
 path <- system.file('extdata/redonCompare',package="lczexplore")
 redonCompare <- compareLCZ(sf1 = redonBDT, wf1 = "bdt", geomID1 = "ID_RSU", column1 = "LCZ_PRIMARY",
                            confid1 = "LCZ_UNIQUENESS_VALUE",
-                           sf2 = redonOSM, wf2 = "osm", geomID2 = "ID_RSU", column2 = "LCZ_PRIMARY", confid2 = "LCZ_UNIQUENESS_VALUE", exwrite = FALSE, saveG = path)
+                           sf2 = redonOSM, wf2 = "osm", geomID2 = "ID_RSU", column2 = "LCZ_PRIMARY",
+                           confid2 = "LCZ_UNIQUENESS_VALUE", exwrite = FALSE, saveG = path)
 # redonInputSensib<-read.csv()
 ```
 ```{r, sortie-jolie, out.width = "680px"}
@@ -328,6 +329,6 @@ if (file.exists(path)){file.remove(path)}
 
 path <- system.file("extdata/GeneralUniquenessSensib.png", package = "lczexplore")
 if (file.exists(path)){file.remove(path)}
-path <- system.file("extdata/comparison.png", package = "lczexplore")
+path <- system.file("extdata/redonCompare.png", package = "lczexplore")
 if (file.exists(path)){file.remove(path)}
 ```
