@@ -205,4 +205,5 @@ drawChordDiagram <- function(weightedFluxIn, colorMapIn = NULL,
   lapply(sectorIDs, drawSectors, sectorsIn = sectorsIn,
          colorMapIn = colorMapIn, textMatch = labelMatch)
   }
+
 }

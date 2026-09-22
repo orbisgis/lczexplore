@@ -211,7 +211,6 @@ defined as the sum (or percentage) of the area on which two workflows agree.
 It is also directly given as an output of compareMultipleLCZ()
 
 ```{r, multiple-pairwise-agreement}
-workflowAgreement<-workflowAgreeAreas(twoLocsCompared$sfIntLong)
 twoLocsCompared$agreements
 ```
 
@@ -226,15 +225,10 @@ twoLocsFlow<-createWeightedFlux(twoLocsSfIntersected, wfNamesIn = c("osm","bdt",
 To avoid exploring all the pairwise possible matrices, we can explore these correspondences through
 a circular chord diagram, using the function `drawChordDiagram`.
 
-```{r, chord-diagram, fig.width=8, fig.height=5}
+```{r, chord-diagram, fig.width=16, fig.height=10}
 drawChordDiagram(weightedFluxIn = twoLocsFlow)
 ```
-This treatment is also directly done in compareMultipleLCZ.
-
-```{R chordFromCompareMultipleLCZ,  fig.width=16, fig.height=10}
-plot(twoLocsCompared$chordDiagram)
-```
-
+This treatment is also directly done in compareMultipleLCZ, but as circlize doesn't create an object (like ggplot2 does) it can not be exported as an object, so you have to recall `drawChordDiagram`.
 
 ### A very specific case of missing geometries
 When, for a location, some workflows have missing geometries, i.e. don't map some area and leave them as holes,
