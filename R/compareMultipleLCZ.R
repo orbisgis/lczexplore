@@ -90,7 +90,7 @@ compareMultipleLCZ <- function(sfInt, columns, workflowNames = NULL, trimPerc = 
   drawChordDiagram(weightedFluxIn = weightedFlux, labelMatch = labelMatch,...)
 
   output <- list(sfInt = sfInt, sfIntLong = sfIntLong,
-                 agreements = agreements, consensus = consensus
+                 agreements = agreements, consensus = consensus, weightedFlux = weightedFlux
   )
 }
 

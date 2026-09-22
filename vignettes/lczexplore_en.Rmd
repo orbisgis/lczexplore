@@ -216,16 +216,17 @@ redonBDTgrouped <- groupLCZ(redonBDT, column = "LCZ_PRIMARY",
                             industry = "10",
                             vegetation = c("101", "102", "103", "104"),
                             impervious = "105", pervious = "106", water = "107", colors = c("red", "black", "green", "grey", "burlywood", "blue"))
+path <- paste0(system.file("extdata/", package = "lczexplore"), "/groupedComparison")
 comparisonGrouped <- compareLCZ(sf1 = redonOSMgrouped, column1 = "grouped",
                                 sf2 = redonBDTgrouped, column2 = "grouped",
                                 repr = "alter",
                                 levels = c("urban", "industry", "vegetation", "impervious", "pervious", "water"),
-                                colors = c("red", "black", "green", "grey", "burlywood", "blue"), saveG = "comparisonGrouped")
+                                colors = c("red", "black", "green", "grey", "burlywood", "blue"), saveG = path)
 ```
 
 ```{r, compare-grouped-plot-prettier, out.width = "680px"}
-
-knitr::include_graphics("comparisonGrouped.png", error=FALSE)
+path <- paste0(system.file("extdata/", package = "lczexplore"), "/groupedComparison.png")
+knitr::include_graphics(path, error=FALSE)
 
 ```
 
@@ -259,7 +260,7 @@ At last: it `exWrite=TRUE` the data are exported to a .csv file whose name
 is created from the argument `wf1` and `wf2`. It can then be loaded for further analysis.  
 
 ```{r, values}
-comparison$percAgg
+comparisonGrouped$percAgg
 comparisonGrouped$areas
 ```
 
@@ -312,13 +313,12 @@ confidRedon <- confidSensib(inputDf = redonCompare$data, filePath = "", nPoints 
                             geomID1 = "ID_RSU", column1 = "bdt", confid1 = "LCZ_UNIQUENESS_VALUE",
                             geomID2 = "ID_RSU.1", column2 = "osm", confid2 = "LCZ_UNIQUENESS_VALUE.1",
                             sep = ";", repr = "standard",
-                            plot = TRUE, saveG = ".")
+                            plot = TRUE, saveG = system.file("extdata/", package = "lczexplore"))
 
 ```
 ```{r, show-sensitivity-prettier, out.width = "680px"}
-
-knitr::include_graphics("GeneralUniquenessSensib.png", error=FALSE)
-
+path <- paste0(system.file("extdata/GeneralUniquenessSensib",package="lczexplore"), ".png")
+knitr::include_graphics(path, error=FALSE)
 ```
 
 One can see that the agreement between classifications using BDTOPO and OpenStreetMap tends to increase when the confidence of the LCZ we keep increases (except for the open low LCZ !).
