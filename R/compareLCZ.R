@@ -83,7 +83,6 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
   sf1 <- checkedInput$sf1; column1 <- checkedInput$column1; geomID1 <- checkedInput$geomID1
   confid1 <- checkedInput$confid1; wf1 <- checkedInput$wf1
 
-
   sf2 <- checkedInput$sf2; column2 <- checkedInput$column2; geomID2 <- checkedInput$geomID2
   confid2 <- checkedInput$confid2; wf2 <- checkedInput$wf2
 
@@ -266,7 +265,6 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
 
     if (confPlot == "sankey") {
       print("Sankey")
-      print(typeLevels)
       preparedSankey <- prepareSankeyLCZ(
         intersectedDf = intersec_sf, wf1 = workflowNames[1], wf2 = workflowNames[2], colorMap = typeLevels)
       matConfPlot <- plotSankeyfiedLCZ(sankeyfied = preparedSankey, plotNow = TRUE, colorMap = typeLevels,
