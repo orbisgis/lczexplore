@@ -16,15 +16,17 @@
 #' consensus <- computeConsensus(inDf = allLocIntersected,
 #' wfNames = c("bdt","osm", "wudapt"= "wud"))
 computeConsensus <- function(inDf, wfNames) {
-  setDT(inDf)
+  inDfDT<-as.data.table(inDf)
   d1 <- CJ(
-    names(inDf)[names(inDf) %in% wfNames],
-    names(inDf)[names(inDf) %in% wfNames]
+    names(inDfDT)[names(inDfDT) %in% wfNames],
+    names(inDfDT)[names(inDfDT) %in% wfNames]
   )[V1 != V2]
 
 
-  d2 <- d1[, list(LCZ_value = inDf[, get(V1)], LCZ_alter = inDf[, get(V2)], area = inDf[, area]), list(V1, V2)][
+  d2 <- d1[, list(LCZ_value = inDfDT[, get(V1)], LCZ_alter = inDfDT[, get(V2)], area = inDfDT[, area]), list(V1, V2)][
     , list(LCZ_value, LCZ_alter, area, agree = LCZ_value == LCZ_alter),][
     , list(LCZ_value, LCZ_alter, area, agree, agreeArea = agree * area, disagreeArea = (!agree) * area),]
   consensus <- d2[, list(percAgree = sum(agreeArea) / (sum(agreeArea) + sum(disagreeArea))), keyby = list(LCZ_value)][order(percAgree), ,]
+  remove(inDfDT)
+  return(consensus)
 }

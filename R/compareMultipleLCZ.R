@@ -35,7 +35,8 @@ compareMultipleLCZ <- function(sfInt, columns, workflowNames = NULL, trimPerc = 
   if (is.null(columns)) {
     columns <- names(sfInt)[!names(sfInt) %in% c("area", "geometry")]
   }
-  sfInt <- sfInt %>% subset(area > quantile(sfInt$area, probs = trimPerc) & !is.na(area))
+  sfInt <- sfInt[sfInt$area > quantile(sfInt$area, probs = trimPerc) & !is.na(sfInt$area),]
+
   # if input intersected file comes from a concatenation, it will have a location column that is not needed
   if ("location" %in% names(sfInt)) { sfInt <- sfInt[, !names(sfInt) == "location"] }
 
@@ -77,15 +78,20 @@ compareMultipleLCZ <- function(sfInt, columns, workflowNames = NULL, trimPerc = 
   z <- data.frame(indRow, whichLCZagree)
 
   sfIntLong$LCZvalue <- apply(z, 1, function(x) unlist(st_drop_geometry(sfIntLong)[x[1], x[2]]))
-
+  sfIntClass<-class(sfInt)
   sfInt <- cbind(sfIntNoGeom, sfInt$geometry) %>% st_as_sf()
+  sfIntClass<-class(sfInt)
 
   agreements<-workflowAgreeAreas(sfIntLong)
 
   consensus <- computeConsensus(sfInt, wfNames = workflowNames)
 
+  sfIntClass<-class(sfInt)
+
   weightedFlux<-createWeightedFlux(intersectSfWide = sfInt, columns = columns, wfNamesIn = workflowNames,
                                    typeLevelsDefaultIn = NULL)
+
+  sfIntClass<-class(sfInt)
 
   chordDiagram<-drawChordDiagram(weightedFluxIn = weightedFlux, labelMatch = labelMatch,...)
 
