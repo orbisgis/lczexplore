@@ -13,3 +13,4 @@
 ^bdtopo_2_2_osm\.csv$
 ^compareMultipleLCZ\.R$
 ^createIntersect\.R$
+^cran-comments\.md$
