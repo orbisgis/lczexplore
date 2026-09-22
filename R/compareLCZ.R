@@ -73,17 +73,20 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
                        tryGroup = FALSE, minZeroArea = 0,
                        ...) {
 
+  if (is.null(wf1)) wf1 <- deparse(substitute(sf1))
+  if (is.null(wf2)) wf2 <- deparse(substitute(sf2))
+
   checkedInput <- checkCompareLCZinputs(
     sf1 = sf1, geomID1 = geomID1, column1 = column1, confid1 = confid1, wf1 = wf1,
     sf2 = sf2, column2 = column2, geomID2 = geomID2, confid2 = confid2, wf2 = wf2, ref = ref)
 
   sf1 <- checkedInput$sf1; column1 <- checkedInput$column1; geomID1 <- checkedInput$geomID1
   confid1 <- checkedInput$confid1; wf1 <- checkedInput$wf1
-  namesf1 <- checkedInput$namesf1
+
 
   sf2 <- checkedInput$sf2; column2 <- checkedInput$column2; geomID2 <- checkedInput$geomID2
   confid2 <- checkedInput$confid2; wf2 <- checkedInput$wf2
-  namesf2 <- checkedInput$namesf2
+
 
   if (repr == "standard") {
     preparedStandard <- prepareStandardCompare(sf1 = sf1, column1 = column1, sf2 = sf2, column2 = column2, ...)
@@ -111,11 +114,6 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
   #intersection of geometries
   sfList <- list(sf1, sf2)
   columnVect <- c(column1, column2)
-  if (is.null(wf1)) { wf1 <- namesf1 }
-  if (is.null(wf2)) { wf2 <- namesf2 }
-
-  wf1 <- checkWorkflowName(wf1)
-  wf2 <- checkWorkflowName(wf2)
   if (wf1 == wf2) {
     wf1 <- paste0(wf1, ".1")
     wf2 <- paste0(wf2, ".bis") }
@@ -259,7 +257,8 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
     agreePlot <- ggplot(boundary) +
       geom_sf(data = boundary, fill = NA, lty = 'blank') +
       geom_sf(data = intersec_sf, aes(fill = agree), lwd = 0, colour = NA) +
-      scale_fill_manual(values = c("red", "green"),
+      scale_fill_manual(breaks = c(FALSE, TRUE),
+                        values = c("red", "green"),
                         name = paste0(
                           "The two classifications agree for \n ", percAgg, " % of the area Agreement")) +
       ggtitle(label = titre3, subtitle = paste0("Number of intersected geoms : ", nbgeomInter))
@@ -299,12 +298,15 @@ checkCompareLCZinputs <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", co
   # store the column names in a way that can be injected in functions A SUPPRIMER ?
 
   # column2Init<-column2 in case of column1==column2, this will be used to call levCol
-  namesf1 <- deparse(substitute(sf1))
-  namesf2 <- deparse(substitute(sf2))
+  call<-match.call()
+  namesf1 <- deparse(call$sf1)
+  namesf2 <- deparse(call$sf2)
   message(paste(" The column ", column1, " of the dataset", namesf1,
                 "is the reference against which the ", column2,
                 " column of the dataset ", namesf2, "will be compared."))
 
+  wf1 <- checkWorkflowName(wf1)
+  wf2 <- checkWorkflowName(wf2)
 
   column1 <- checkColnameCase(column1, names(sf1))
   column2 <- checkColnameCase(column2, names(sf2))

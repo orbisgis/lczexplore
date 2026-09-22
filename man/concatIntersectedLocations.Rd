@@ -8,7 +8,7 @@ intersects them and return a dataset with intersected geometries and LCZ values 
 concatIntersectedLocations(
   dirList,
   workflowNames = c("osm", "bdt", "wudapt"),
-  inLocations,
+  locations,
   columns = "lcz_primary"
 )
 }
@@ -18,7 +18,7 @@ concatIntersectedLocations(
 \item{workflowNames}{sets the names of workflows and define the name of the files
 which will be loaded and intersected}
 
-\item{inLocations}{: for each diretory from dirList, a location name must be fed to the function}
+\item{locations}{: for each diretory from dirList, a location name must be fed to the function}
 
 \item{columns}{the name (string) of the column containing LCZ types.
 If the different workflows do no use the same column names, a vector of names is passed}
@@ -34,5 +34,5 @@ intersects them and return a dataset with intersected geometries and LCZ values 
 dirList<-list.dirs(paste0(
 system.file("extdata", package = "lczexplore"),"/multipleWfs"), recursive = FALSE)
 allLocIntersected<-concatIntersectedLocations(
- dirList = dirList, inLocations = c("Arville", "Redon"), columns = "lcz_primary")
+ dirList = dirList, locations = c("Arville", "Redon"), columns = "lcz_primary")
 }

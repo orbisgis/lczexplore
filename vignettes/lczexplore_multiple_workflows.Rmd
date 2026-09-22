@@ -120,7 +120,7 @@ Pairwise agreement between workflow and consensus value for each LCZ type quanti
 
 ## Importing maps from several locations and several workflows
 
-In case of several workflows and several locations, the function `loadMultipleLocsSfs` allow to load all the
+In case of several workflows and several locations, the function `importMultipleLocsLCZvect` allow to load all the
 data in a list.
 
 In the data structure from above section, the function would be applied
@@ -137,13 +137,13 @@ Arville and Redon, for which three LCZ maps are available, produced by the follo
 require(lczexplore)
 twoLocsDir<-paste0(
   system.file("extdata", package = "lczexplore"),"/multipleWfs")
-twoLocsSfList<-loadMultipleLocsSfs(dirPath = twoLocsDir, workflowNames = c("osm","bdt","wudapt"),
-                                   inLocation = c("Arville", "Redon"))
+twoLocsSfList<-importMultipleLocsLCZvect(dirPath = twoLocsDir, workflowNames = c("osm","bdt","wudapt"),
+                                   location = c("Arville", "Redon"))
 ```
 
-The function `loadMultipleLocsSfs` loads all the input .fgb files in a list.
+The function `importMultipleLocsLCZvect` loads all the input .fgb files in a list.
 
-When comparing maps for only one location use the similar function `loadMultipleSfs`.
+When comparing maps for only one location use the similar function `importMultipleLCZvect`.
 
 ## Intersecting geometries from the different workflows
 The spatial units
@@ -208,9 +208,10 @@ twoLocsCompared <- compareMultipleLCZ(
 ## Pairwise agreements
 From this sfInt object, the function `workflowAgreeAreas` compute pairwise agreement between workflows,
 defined as the sum (or percentage) of the area on which two workflows agree.
+It is also directly given as an output of compareMultipleLCZ()
 
 ```{r, multiple-pairwise-agreement}
-workflowAgreement<-workflowAgreeAreas(twoLocsCompared$sfIntLong)
+twoLocsCompared$agreements
 ```
 
 ## Repartition from one workflow to another and data visualisations
@@ -224,20 +225,14 @@ twoLocsFlow<-createWeightedFlux(twoLocsSfIntersected, wfNamesIn = c("osm","bdt",
 To avoid exploring all the pairwise possible matrices, we can explore these correspondences through
 a circular chord diagram, using the function `drawChordDiagram`.
 
-```{r, chord-diagram, fig.width=8, fig.height=5}
+```{r, chord-diagram, fig.width=16, fig.height=10}
 drawChordDiagram(weightedFluxIn = twoLocsFlow)
 ```
+This treatment is also directly done in compareMultipleLCZ, but as circlize doesn't create an object (like ggplot2 does) it can not be exported as an object, so you have to recall `drawChordDiagram`.
 
-
-
-### General repartitions of types from one workflow to another
-
-
-
-
-### An advanced fonction
+### A very specific case of missing geometries
 When, for a location, some workflows have missing geometries, i.e. don't map some area and leave them as holes,
-one can put a zone.fgb file in the directory, and the function `loadConcatAllLocsAllWfs` will allow to use it
+one can put a zone.fgb file in the directory, and the function `importConcatMultipleLocsLCZvect` will allow to use it
 and create the missing geometries and assign them a given type.
 Feed the name of the workflow whose geometries are missing to the `missingGeomWf` argument, and
 the function will intersect it with the `zone.fgb` geometries.
@@ -248,7 +243,7 @@ In this case, one can choose another workflow as a reference (through `refWf`) a
 twoLocsDir<-paste0(
   system.file("extdata", package = "lczexplore"),"/multipleWfs")
 
-# allWfsAllLocs<-loadConcatAllLocsAllWfs(twoLocsDir, locations = NA, workflowNames = c("osm", "bdt", "wudapt"),
+# allWfsAllLocs<-importConcatMultipleLocsLCZvect(twoLocsDir, locations = NA, workflowNames = c("osm", "bdt", "wudapt"),
 #                                        missingGeomsWf= "osm", refWf = NULL, refLCZ = NA,
 #                                        residualLCZvalue = NA, column = "lcz_primary")
 ```

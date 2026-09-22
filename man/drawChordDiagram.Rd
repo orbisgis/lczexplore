@@ -9,44 +9,57 @@ drawChordDiagram(weightedFluxIn, colorMapIn = NULL, labelMatch = NULL, ...)
 \arguments{
 \item{weightedFluxIn}{is typically the output of the function createWeightedFlux,
 and is expected to contain the following columns orig, dest and weightedFlux,
-whose names are quite self explanatory : orig is the origin LCZ type, dest is the destination LCZ type
+whose names are quite self explanatory : orig is the origin LCZ type,
+dest is the destination LCZ type
 and weightedFlux is the percentage of area transfered from orig to dest}
 
-\item{colorMapIn}{is a named vector whose names are the unique values of orig and dest columns of weightedFluxIn
-and values are the associated colors. In cas of grouping, these values are overwritten by the groupCols argument,
+\item{colorMapIn}{is a named vector whose names are the unique values
+of orig and dest columns of weightedFluxIn
+and values are the associated colors. In cas of grouping,
+these values are overwritten by the groupCols argument,
 see the ... parameters}
 
 \item{labelMatch}{allox to match a level of dest or orig from weightedFluxIn and a label.
 It also allows to change the order in which they are visualized (default is alphabetical order).
-It is then possible to prefixe values of Levels by a letter to force this order and use LabelMatch to
+It is then possible to prefixe values of Levels by a letter
+to force this order and use LabelMatch to
 use original names.
 When using grouping vectors, they are visualized in the order they are specified.}
 
-\item{...}{allows the user to do on-the-fly grouping. These must be passed as groupName = groupValues
+\item{...}{allows the user to do on-the-fly grouping.
+These must be passed as groupName = groupValues
 where groupName is the name of a resulting group and groupValues a vector of the initial values
 it will regroup.}
 }
 \value{
-a vector of booleans indicting if the elements of x define a color in R (TRUE) or don't (FALSE)
+a chord diagram of how LCZ types of a workflow break up into types of the other workflows
 }
 \description{
 Draws how LCZ types from several workflows break up into LCZ types of one another
 }
 \examples{
-twoLocsDir<-paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs")
-twoLocsSfList<-loadMultipleLocsSfs(dirPath = twoLocsDir, workflowNames = c("osm","bdt","wudapt"),
-inLocation = c("Arville", "Redon"))
-twoLocsSfIntersected <- createIntersect(sfList = twoLocsSfList, columns = rep("lcz_primary", 4),
-refCrs=NULL, workflowNames=c("osm", "bdt", "wudapt"), minZeroArea=0.001)
-twoLocsWeightedFlux<-createWeightedFlux(twoLocsSfIntersected, wfNamesIn = c("osm","bdt","wudapt"))
-# Subsetting and grouping allow further exploration. Playing on grouping names and alphabetical order allows
+twoLocsDir<-paste0(
+ system.file("extdata", package = "lczexplore"),"/multipleWfs")
+twoLocsSfList<-importMultipleLocsLCZvect(
+ dirPath = twoLocsDir, workflowNames = c("osm","bdt","wudapt"),
+ location = c("Arville", "Redon"))
+twoLocsSfIntersected <- createIntersect(
+ sfList = twoLocsSfList, columns = rep("lcz_primary", 4),
+ refCrs=NULL, workflowNames=c("osm", "bdt", "wudapt"), minZeroArea=0.001)
+twoLocsWeightedFlux<-createWeightedFlux(
+ twoLocsSfIntersected, wfNamesIn = c("osm","bdt","wudapt"))
+# Subsetting and grouping allow further exploration.
+# Playing on grouping names and alphabetical order allows
 # to choose the order of the sectors
 twoLocsWeightedFluxNo104no101<-subset(twoLocsWeightedFlux,
      !grepl("101", twoLocsWeightedFlux$orig) &
      !grepl("104", twoLocsWeightedFlux$orig) &
      !grepl("101", twoLocsWeightedFlux$dest) &
      !grepl("104", twoLocsWeightedFlux$dest))
-aggregMatch<-c("acompact"="Compact", "blessCompact" = "Less Compact", "cfewToNoBuild" = "Few to No Buildings",
+aggregMatch<-c(
+    "acompact"="Compact",
+     "blessCompact" = "Less Compact",
+    "cfewToNoBuild" = "Few to No Buildings",
     "dunclass" = "Unclassified")
 drawChordDiagram(twoLocsWeightedFluxNo104no101, labelMatch = aggregMatch,
     acompact = c("1", "2", "3"),

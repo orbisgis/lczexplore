@@ -1,6 +1,6 @@
  dirPath<-paste0(
  system.file("extdata", package = "lczexplore"),"/multipleWfs")
- allLocAllWfs<-loadConcatAllLocsAllWfs(
+ allLocAllWfs<-importConcatMultipleLocsLCZvect(
   dirPath = dirPath, locations = c("Arville", "Redon"),
  workflowNames = c("osm","bdt","wudapt"),
   missingGeomsWf= "osm",
@@ -11,4 +11,4 @@
 )
  ASUallLocAllWfs <- aggregateRSUsByLCZ(
  allLocAllWfs,
- LCZcolumn = "lcz_primary", wfColumn = "wf", locationColumn = "location", aggregateBufferSize = 0.5)
+column = "lcz_primary", wfColumn = "wf", locationColumn = "location", aggregateBufferSize = 0.5)

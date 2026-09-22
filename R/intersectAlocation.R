@@ -28,7 +28,7 @@ intersectAlocation <- function(dirPath, workflowNames = c("osm", "bdt", "wudapt"
   zoneSfPath <- paste0(dirPath, "zone.fgb")
   zoneSf <- read_sf(zoneSfPath)
 
-  sfList <- loadMultipleSfs(dirPath = dirPath, workflowNames = c("osm", "bdt", "wudapt"), inLocation = location)
+  sfList <- importMultipleLCZvect(dirPath = dirPath, workflowNames = c("osm", "bdt", "wudapt"), location = location)
   sfList <- addMissingRSUs(sfList = sfList,
                            missingGeomsWf = missingGeomsWf, zoneSf = zoneSf, refWf = refWf, refLCZ = refLCZ,
                            residualLCZvalue = residualLCZvalue,

@@ -9,6 +9,10 @@ LCZlevelToOrderedString(LCZlevels)
 \arguments{
 \item{LCZlevels}{a vector containing LCZlevels from 1 to 10 and 101 to 107}
 }
+\value{
+the input with leading zeros for standard LCZ types, in order to respect alphabetical
+order in graphs
+}
 \description{
 To make LCZ types appear in the proper order, it can be useful ton convert them into strings with added zeros
 }

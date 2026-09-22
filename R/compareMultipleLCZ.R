@@ -21,9 +21,9 @@
 #' agreements a dtaframe with the pairs of workflows, areas on which they agree, disagree, and the percentage of agreement
 #' @export
 #' @examples
-#' sfList<-loadMultipleSfs(dirPath = 
+#' sfList<-importMultipleLCZvect(dirPath =
 #' paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
-#' workflowNames = c("osm","bdt","wudapt"), inLocation = "Arville")
+#' workflowNames = c("osm","bdt","wudapt"), location = "Arville")
 #' ArvilleIntersect <- createIntersect(
 #'  sfList = sfList, columns = rep("lcz_primary", 4),  
 #'  workflowNames = c("osm","bdt","wudapt"))
@@ -35,7 +35,8 @@ compareMultipleLCZ <- function(sfInt, columns, workflowNames = NULL, trimPerc = 
   if (is.null(columns)) {
     columns <- names(sfInt)[!names(sfInt) %in% c("area", "geometry")]
   }
-  sfInt <- sfInt %>% subset(area > quantile(sfInt$area, probs = trimPerc) & !is.na(area))
+  sfInt <- sfInt[sfInt$area > quantile(sfInt$area, probs = trimPerc) & !is.na(sfInt$area),]
+
   # if input intersected file comes from a concatenation, it will have a location column that is not needed
   if ("location" %in% names(sfInt)) { sfInt <- sfInt[, !names(sfInt) == "location"] }
 
@@ -77,7 +78,6 @@ compareMultipleLCZ <- function(sfInt, columns, workflowNames = NULL, trimPerc = 
   z <- data.frame(indRow, whichLCZagree)
 
   sfIntLong$LCZvalue <- apply(z, 1, function(x) unlist(st_drop_geometry(sfIntLong)[x[1], x[2]]))
-
   sfInt <- cbind(sfIntNoGeom, sfInt$geometry) %>% st_as_sf()
 
   agreements<-workflowAgreeAreas(sfIntLong)
@@ -87,11 +87,10 @@ compareMultipleLCZ <- function(sfInt, columns, workflowNames = NULL, trimPerc = 
   weightedFlux<-createWeightedFlux(intersectSfWide = sfInt, columns = columns, wfNamesIn = workflowNames,
                                    typeLevelsDefaultIn = NULL)
 
-  chordDiagram<-drawChordDiagram(weightedFluxIn = weightedFlux, labelMatch = labelMatch,...)
+  drawChordDiagram(weightedFluxIn = weightedFlux, labelMatch = labelMatch,...)
 
   output <- list(sfInt = sfInt, sfIntLong = sfIntLong,
-                 agreements = agreements, consensus = consensus,
-                 chordDiagram = chordDiagram
+                 agreements = agreements, consensus = consensus, weightedFlux = weightedFlux
   )
 }
 

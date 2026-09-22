@@ -7,7 +7,7 @@
 aggregateRSUsByLCZ(
   sf,
   aggregateBufferSize = 0,
-  LCZcolumn,
+  column,
   wfColumn,
   locationColumn = "location"
 )
@@ -18,9 +18,9 @@ aggregateRSUsByLCZ(
 \item{aggregateBufferSize}{is the size of a buffer you can add to the geometries before agregation.
 Useful when you suspect numeric precision to create false disjunction of geometries.}
 
-\item{LCZcolumn}{the name of the column coontaining LCZ types}
+\item{column}{the name of the column containing LCZ types}
 
-\item{wfColumn}{is the column where the workflow used to produce lcz is precised.}
+\item{wfColumn}{is the column where the workflow used to produce LCZ classif is precised.}
 
 \item{locationColumn}{is the name of the column where the location is stored}
 }
@@ -34,7 +34,7 @@ For an sf object containing LCZ types, aggregates touching geometries with same 
 \examples{
 dirPath<-paste0(
 system.file("extdata", package = "lczexplore"),"/multipleWfs")
-allLocAllWfs<-loadConcatAllLocsAllWfs(
+allLocAllWfs<-importConcatMultipleLocsLCZvect(
  dirPath = dirPath, locations = c("Redon", "Arville"),
 workflowNames = c("osm","bdt","wudapt"),
  missingGeomsWf= "osm",
@@ -45,5 +45,5 @@ workflowNames = c("osm","bdt","wudapt"),
 )
 ASUallLocAllWfs <- aggregateRSUsByLCZ(
 allLocAllWfs,
-LCZcolumn = "lcz_primary", wfColumn = "wf", locationColumn = "location", aggregateBufferSize = 0.5)
+column = "lcz_primary", wfColumn = "wf", locationColumn = "location", aggregateBufferSize = 0.5)
 }

@@ -9,8 +9,7 @@ createIntersect(
   columns,
   refCrs = NULL,
   workflowNames = NULL,
-  minZeroArea = 0,
-  keepAllColumns = TRUE
+  minZeroArea = 0
 )
 }
 \arguments{
@@ -26,8 +25,6 @@ By defautl the first sf object CRs is applied to all sf objects.}
 \item{workflowNames}{a vector of strings which contains the names of the workflows used to produce the sf objects}
 
 \item{minZeroArea}{all geometries smaller than this value are discarded (avoids numeric precision problems)}
-
-\item{keepAllColumns}{if TRUE all columns are kept, not only the ones containing LCZ types}
 }
 \value{
 a single sf file with values of LCZ from all the input
@@ -42,16 +39,16 @@ the second being the workflow. In this case, the output will still be a single s
 concatenating the workflows and locations as columns
 }
 \examples{
-sfList<-loadMultipleSfs(
+sfList<-importMultipleLCZvect(
 dirPath = paste0(
 system.file("extdata", package = "lczexplore"),
 "/multipleWfs/Arville"),
-workflowNames = c("osm","bdt","wudapt"), inLocation = "Arville")
+workflowNames = c("osm","bdt","wudapt"), location = "Arville")
 ArvilleIntersect <- createIntersect(
  sfList = sfList, columns = rep("lcz_primary", 4),  
  workflowNames = c("osm","bdt","wudapt"))
 # Two Locations
-sfList2<-loadMultipleLocsSfs(
+sfList2<-importMultipleLocsLCZvect(
  dirPath = paste0(
      system.file("extdata", package = "lczexplore"),
      "/multipleWfs"),

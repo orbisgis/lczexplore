@@ -14,21 +14,26 @@
 #' @param ... allows the user to do on-the-fly grouping. These must be passed as groupName = groupValues
 #' where groupName is the name of a resulting group and groupValues a vector of the initial values
 #' it will regroup.
-#' @return a vector of booleans indicting if the elements of x define a color in R (TRUE) or don't (FALSE)
+#' @return a chord diagram after LCZ types are grouped according to ... arguments
 #' @importFrom circlize circos.clear circos.track circos.text chordDiagram get.cell.meta.data
 #' @importFrom collapse unlist2d fselect
 #' @importFrom graphics par
 #' @export
 #' @examples
 #' twoLocsDir<-paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs")
-#' twoLocsSfList<-loadMultipleLocsSfs(dirPath = twoLocsDir, workflowNames = c("osm","bdt","wudapt"),
-#' inLocation = c("Arville", "Redon"))
-#' twoLocsSfIntersected <- createIntersect(sfList = twoLocsSfList, columns = rep("lcz_primary", 4),
-#' refCrs=NULL, workflowNames=c("osm", "bdt", "wudapt"), minZeroArea=0.001)
-#' twoLocsWeightedFlux<-createWeightedFlux(twoLocsSfIntersected, wfNamesIn = c("osm","bdt","wudapt"))
-#' # Subsetting and grouping allow further exploration. Playing on grouping names and alphabetical order allows
+#' twoLocsSfList<-importMultipleLocsLCZvect(
+#' dirPath = twoLocsDir, workflowNames = c("osm","bdt","wudapt"),
+#'  location = c("Arville", "Redon"))
+#' twoLocsSfIntersected <- createIntersect(
+#'  sfList = twoLocsSfList, columns = rep("lcz_primary", 4),
+#'  refCrs=NULL, workflowNames=c("osm", "bdt", "wudapt"), minZeroArea=0.001)
+#' twoLocsWeightedFlux<-createWeightedFlux(
+#'  twoLocsSfIntersected, wfNamesIn = c("osm","bdt","wudapt"))
+#' # Subsetting and grouping allow further exploration.
+#' # Playing on grouping names and alphabetical order allows
 #' # to choose the order of the sectors
-#' #' # Subsetting and grouping allow further exploration. Playing on grouping names and alphabetical order allows
+#' # Subsetting and grouping allow further exploration.
+#' # Playing on grouping names and alphabetical order allows
 #' # to choose the order of the sectors
 #' twoLocsWeightedFluxNo104no101<-subset(twoLocsWeightedFlux,
 #'      !grepl("101", twoLocsWeightedFlux$orig) &
@@ -82,7 +87,7 @@ drawChordDiagramWithGrouping<-function(weightedFluxIn,
 
   sectorsAndGroups <- makeSectorsAndGroups(weightedFluxIn, labelMatch)
   sectors<-sectorsAndGroups$sectors
-  sector_ids <- strsplit(sectors, "_") %>%
+  sectorIDs <- strsplit(sectors, "_") %>%
     unlist2d() %>%
     fselect("V2") %>%
     as.vector %>%
@@ -139,9 +144,7 @@ drawChordDiagramWithGrouping<-function(weightedFluxIn,
   par(cex = 1.5)
   sectorsIn<-unique(c(diagramme$rn, diagramme$cn))
 
-  if( max(nchar(sector_ids))> 3){sectorFacing <- "bending"} else
-  {sectorFacing <- "clockwise"}
-  lapply(sector_ids, drawSectors, sectorsIn = sectorsIn,
+  lapply(sectorIDs, drawSectors, sectorsIn = sectorsIn,
          colorMapIn = colorMapIn, textMatch = labelMatch)
 }
 

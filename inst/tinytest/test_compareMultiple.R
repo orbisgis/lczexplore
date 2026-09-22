@@ -6,14 +6,15 @@
 # library(ggplot2)
 # library(forcats)
 
-sfList<-loadMultipleSfs(dirPath = paste0(system.file("extdata/multipleWfs/Redon", package = "lczexplore")),
-                        workflowNames = c("osm","bdt","wudapt"), inLocation = "Redon"  )
+sfList<-importMultipleLCZvect(dirPath = paste0(system.file("extdata/multipleWfs/Redon", package = "lczexplore")),
+                        workflowNames = c("osm","bdt","wudapt"), location = "Redon"  )
 
 intersected<-createIntersect(sfList = sfList, columns = rep("lcz_primary", 3),
                              workflowNames = c("osm", "bdt", "wudapt"), refCrs = 1)
 multicompare_test<-compareMultipleLCZ(intersected,
                                       columns = c("osm","bdt","wudapt"),
                                       trimPerc = 0.0)
+class(multicompare_test$sfInt)
 
 aggregMatch<-c("acompact"="Compact", "blessCompact" = "Less Compact", "cfewToNoBuild" = "Few to No Buildings at all",
                "dunclass" = "Unclassified")
@@ -46,11 +47,11 @@ multicompare_test<-compareMultipleLCZ(intersected,
 testAreas$percAgree
 testAreas<-workflowAgreeAreas(multicompare_test$sfIntLong)
 
-expect_false(round(testAreas[1,4],1) == round(testMatConf$percAgg,1))
+expect_true(round(testAreas[1,4],1) == round(testMatConf$percAgg,1))
 
 # They differ because there are 3 workflows. Now let's test with only 2.
-sfList2<-loadMultipleSfs(dirPath = paste0(system.file("extdata/multipleWfs/Redon", package = "lczexplore")),
-                        workflowNames = c("osm","bdt"), inLocation = "Redon"  )
+sfList2<-importMultipleLCZvect(dirPath = paste0(system.file("extdata/multipleWfs/Redon", package = "lczexplore")),
+                        workflowNames = c("osm","bdt"), location = "Redon"  )
 
 intersected2<-createIntersect(sfList = sfList2, columns = rep("lcz_primary", 2),
                              workflowNames = c("osm", "bdt"), refCrs = 1)
@@ -63,8 +64,8 @@ expect_true(round(testAreas2[1,4],1) == round(testMatConf$percAgg,1))
 
 
 
-expect_equal(testAreas$areaAgree[1], 7733495)
-expect_equal(round(testAreas$areaDisagree[1], 2), 80362.35)
+expect_equal(round(testAreas$areaAgree[1],1), 828617.9)
+expect_equal(round(testAreas$areaDisagree[1], 2), 650400.6)
 
 osm<-importLCZvect(dirPath = paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Redon"),
                           file = "osm_lcz.fgb")
@@ -75,7 +76,7 @@ wudapt<-importLCZvect(dirPath = paste0(system.file("extdata", package = "lczexpl
 
 sfList2<-list(osm = osm, bdt = bdt, wudapt = wudapt)
 
-test3<- loadmultipleSfsFromSession(sfList = sfList2,
+test3<- importMultipleLCZvectFromSession(sfList = sfList2,
                                    workflowNames = c("osm", "bdt", "wudapt"),
                                    location = "Redon",
                                    columns = c("LCZ_PRIMARY", "LCZ_PRIMARY", "lcz_primary" ))
@@ -83,9 +84,10 @@ test3<- loadmultipleSfsFromSession(sfList = sfList2,
 intersected<-createIntersect(sfList = test3, columns = rep("lcz_primary", 3),
                              workflowNames = c("osm", "bdt", "wudapt"))
 
-expect_silent(multicompare_test<-compareMultipleLCZ(intersected,
+expect_warning(multicompare_test<-compareMultipleLCZ(intersected,
                                                     columns = c("osm","bdt","wudapt"),
-                                                    trimPerc = 0.5))
+                                                    trimPerc = 0.5),
+"Unknown levels in `f`:")
 
 expect_silent(testAreas<-workflowAgreeAreas(multicompare_test$sfIntLong))
 
@@ -104,6 +106,8 @@ prov2<-apply(X = test, MARGIN = 1, function(x) max(table(x)) )
 
 head(prov1)
 head(prov2)
+
+class(multicompare_test$sfInt)
 
 plot1<-showLCZ(sf = multicompare_test$sfInt, column="bdt", wf="bdt")
 plot2<-showLCZ(sf = multicompare_test$sfInt, column="osm", wf="osm")

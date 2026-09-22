@@ -12,8 +12,8 @@
 #' @examples
 #' dirPath<-paste0(
 #' system.file("extdata", package = "lczexplore"),"/multipleWfs")
-#' allLocConcatenated<-loadMultipleLocsSfs(
-#'   dirPath = dirPath, inLocations = c("Arville", "Redon"))
+#' allLocConcatenated<-importMultipleLocsLCZvect(
+#'   dirPath = dirPath, locations = c("Arville", "Redon"))
 #' allLocIntersected<-createIntersect(allLocConcatenated, columns = rep("lcz_primary", 4),
 #' workflowNames = c("osm","bdt","wudapt"))
 #' testSankey<-prepareSankeyLCZ(intersectedDf = allLocIntersected

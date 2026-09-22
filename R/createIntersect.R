@@ -2,7 +2,6 @@
 #' @param sfList a list which contains the classifications to compare, as sf objects
 #' @param columns a vector which contains, for each sf of sfList,
 #' the name of the columns of the classification to compare
-#' @param keepAllColumns if TRUE all columns are kept, not only the ones containing LCZ types
 #' @param refCrs a number which indicates which sf object from sfList will provide
 #' the CRS in which all the sf objects will be projected before comparison
 #' By defautl the first sf object CRs is applied to all sf objects.
@@ -18,16 +17,16 @@
 #' are assigned to geometries resulting from intersection of all input geometries
 #' @export
 #' @examples
-#' sfList<-loadMultipleSfs(
+#' sfList<-importMultipleLCZvect(
 #' dirPath = paste0(
 #' system.file("extdata", package = "lczexplore"),
 #' "/multipleWfs/Arville"),
-#' workflowNames = c("osm","bdt","wudapt"), inLocation = "Arville")
+#' workflowNames = c("osm","bdt","wudapt"), location = "Arville")
 #' ArvilleIntersect <- createIntersect(
 #'  sfList = sfList, columns = rep("lcz_primary", 4),  
 #'  workflowNames = c("osm","bdt","wudapt"))
 #' # Two Locations
-#' sfList2<-loadMultipleLocsSfs(
+#' sfList2<-importMultipleLocsLCZvect(
 #'  dirPath = paste0(
 #'      system.file("extdata", package = "lczexplore"),
 #'      "/multipleWfs"),
@@ -37,8 +36,7 @@
 #'  sfList = sfList2, columns = rep("lcz_primary", 3),
 #'  workflowNames = c("osm","bdt","wudapt"))
 createIntersect <- function(sfList, columns, refCrs = NULL,
-                            workflowNames = NULL, minZeroArea = 0.000,
-                                keepAllColumns = TRUE) {
+                            workflowNames = NULL, minZeroArea = 0.000) {
 
   if (is.null(columns) | prod(!is.na(columns) == 0)) {
     message("You didn't specify the name of the LCZ columns, an attempt with lcz_primary is tried")

@@ -21,7 +21,8 @@ https://www.r-project.org/Licenses/LGPL-3
 # Fundings
 
 The lczexplore library has been originally developed within the following research projects:
-* PAENDORA2 (Pour la gestion du confort estival : Donnees, Outils et Recherche-Action) (2022 -2025), funded by [ADEME](https://www.ademe.fr/)
+* PAENDORA2 (Pour la gestion du confort estival : Donnees, Outils et Recherche-Action) (2022 -2025), 
+* funded by ADEME
 
 # Reference paper
 
@@ -37,11 +38,19 @@ If you are kind enough to cite this package, please check in the /inst directory
 
 
 # Installation
-This package can be installed from github using the install_github function of the devtools package. 
+
+## Github version
+This package can be installed from github using the install_github 
+function of the devtools package. 
 ```R
 # library(devtools)
 # devtools::install_github("orbisgis/lczexplore")
 ```
+## macOS Users
+This package relies on the `sf` and `s2` spatial libraries, which require 
+external system tools to compile on macOS. 
+Before installing `lczexplore`, please ensure you have the 
+following dependencies installed : cmake, openssl, abseil. 
 
 
 # Summary
@@ -75,7 +84,7 @@ The areas of all the geometries where the classifications agree are summed and g
 A confusion matrix shows how a given level of LCZ for the first classification is broken down 
 into the levels of the other classification. 
 
-![Comparison result for twho workflows on Redon data](inst/extdata/RedonCompare.png)
+![Comparison result for twho workflows on Redon data](inst/extdata/redonCompare.png)
 
 # Sensibility analysis
 Some LCZ classifications come with a confidence level for each spatial unit. For instance, the GeoClimate toolbox
@@ -86,20 +95,32 @@ The lczexplore package allows to see how this confidence value impacts the gener
 # Main functions
 The following functions are the core of this package : 
 `importLCZvect` : imports the LCZ layer from a GIS (tested with geojson and shapefile files)
+
 `importLCZwudapt` : imports LCZ from the wudapt Europe Tiff. You'll have to use `importLCZvect` first to create the Bounding box of your zone of interest
+
 `showLCZ` : plots the map of your LCZ
+
 `compareLCZ` : compares two LCZ classifications of the same areas, output plots and data if this comparison
+
 `confidSensib` : explores how the agreement between two LCZ varies according to a confidence indicator associated for the LCZ value of each geom (sensibility analysis)
-![Sensibiilty analysis : how the confidence we have in LCZ classifications impacts the agreement betweend classifications](inst/extdata/RedonSensib.png)
+![Sensibiilty analysis : how the confidence we have in LCZ classifications impacts the agreement betweend classifications](inst/extdata/GeneralUniquenessSensib.png)
+
 
 # Other functions
 These functions are used in the PAENDORA 2 project but may not be generic enough or robust enough for other uses. 
 `groupLCZ` : allows to group some LCZ levels into a level named by the user (for instance to group all compact LCZ, or all vegetation LCZ...)
+See example and vignettes to allow on-the-fly LCZ types grouping. 
 
 # Multiple comparison
-Since version 1.0.0.0015, `lczexplore` includes functions to compare more than 2 maps. 
+Since version 0.1.0, `lczexplore` includes functions to compare more than 2 maps. 
 It allows to produce pairwise agreements, consensus among workflows for each LCZ type
-and chord diagram to visualize how types of a workflow break up in types of the others. 
+and a chord diagram to visualize how types of a workflow break up in types of the others.
+`importMultipleLCZvect`import LCZ layers from multiple maps. Its use require a given folder tree. 
+`createIntersect` intersects the geometries (spatial units) of all maps, and allows
+more control before comparison. 
+`compareMultipleLCZ` compare the multiple maps and produce pairwise agreements, 
+a consensus indicator among workflows for each LCZ type and a chord diagram to
+visualize the correspondences between workflows. 
 
 
 

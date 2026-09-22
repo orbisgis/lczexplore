@@ -19,9 +19,9 @@
 #' If saveG is not an empty string, graphics are saved under "saveG.png"
 #' @export
 #' @examples
-#' sfList<-loadMultipleSfs(dirPath = paste0(
+#' sfList<-importMultipleLCZvect(dirPath = paste0(
 #' system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
-#'  workflowNames = c("osm","bdt","wudapt"), inLocation = "Arville"  )
+#'  workflowNames = c("osm","bdt","wudapt"), location = "Arville"  )
 #' zoneSf <- sf::read_sf(
 #'   paste0(
 #'    system.file("extdata", package = "lczexplore"),
@@ -33,6 +33,9 @@
 addMissingRSUs <- function(sfList, missingGeomsWf = "osm", zoneSf, refWf = "bdt", refLCZ = "107", residualLCZvalue = "105",
                            column = "lcz_primary") {
   refCRS <- st_crs(sfList[[missingGeomsWf]])
+  if (is.null(zoneSf)) {
+    zoneSf <- st_union(sfList[[refWf]])
+  }
   zoneSf <- st_transform(zoneSf,
                          crs = refCRS)
   sfList[[missingGeomsWf]][[column]] <- factor(sfList[[missingGeomsWf]][[column]],

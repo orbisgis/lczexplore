@@ -1,0 +1,38 @@
+#' Calls GeoClimate jar file  and feeds it a configuration file
+#' by building a command an using system (only tested on linux)
+#' @param jarFilePath tells where the geoclimate jar file is, default points to the embedded jar file,
+#' i.e. the latest snapshot version when the package was built.
+#' Versions can be downloaded from https://github.com/orbisgis/geoclimate/wiki/Download
+#' @param configFilePath points to the configuration JSON file for GeoClimate, typically a file created with the
+#' geoClimateConfigFile function
+#' @param wf is the workflow to use with GeoClimate, the default is OSM for OpenStreetMap.
+#' The other possible value is "BDTOPO_V2". Other values will be added (e.g. for BDTOPO_V3) when tested.
+#' @return returns nothing but executes GeoClimate in the folder specified in the
+#' JSON configuration file.
+#' @export
+#' @examples
+#' # not run as they write files
+#' # test <- geoClimateConfigFile(
+#' #     outConfigFile = "",
+#' #     wf = "OSM", outFolder = "", locations = "Redon",
+#' #     rsuIndics = c("LCZ", "TEB", "UTRF"),
+#' #     gridIndics = c(
+#' #         "BUILDING_FRACTION", "BUILDING_HEIGHT", "WATER_FRACTION",
+#' #         "VEGETATION_FRACTION", "ROAD_FRACTION",
+#' #         "IMPERVIOUS_FRACTION", "LCZ_PRIMARY", "LCZ_FRACTION", "UTRF"),
+#' #        writeNow = FALSE)
+#' # not run as geoclimate jar source needed
+#' # geoClimateCall(
+#' # jarFilePath = "path/to/Geoclimate/geoclimate-0.0.2-SNAPSHOT.jar",
+#' # configFilePath = "/tmp/RedonOSM2022.json", wf = "OSM")
+#' # rsuIndics = c("LCZ","TEB","UTRF"),
+#' # gridIndics = c(
+#' #        "BUILDING_FRACTION","BUILDING_HEIGHT",
+#' #        "WATER_FRACTION","VEGETATION_FRACTION","ROAD_FRACTION",
+#' #        "IMPERVIOUS_FRACTION","LCZ_PRIMARY","LCZ_FRACTION","UTRF"))
+geoClimateCall<-function(jarFilePath, configFilePath, wf="OSM") {
+  command<-paste0(
+    "java -jar ", jarFilePath, " -f '", configFilePath, "' -w ", toupper(wf))
+  print(command)
+  system(command)
+}

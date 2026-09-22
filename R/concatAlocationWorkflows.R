@@ -6,17 +6,12 @@
 #' @param columns contains the names of the columns where LCZ types are stored. If it contains only one string, it
 #' will be repeated for all workflows
 #' @importFrom sf st_transform st_crs st_drop_geometry
-#' @return returns graphics of comparison and an object called matConfOut which contains :
-#' matConfLong, a confusion matrix in a longer form, 
-#' matConfPlot is a ggplot2 object showing the confusion matrix.
-#' percAgg is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
-#' pseudoK is a heuristic estimate of a Cohen's kappa coefficient of agreement between classifications
-#' If saveG is not an empty string, graphics are saved under "saveG.png"
+#' @return returns an sf with values of LCZ for all workflows for a given location
 #' @export
 #' @examples
-#' sfList<-loadMultipleSfs(dirPath = paste0(
+#' sfList<-importMultipleLCZvect(dirPath = paste0(
 #' system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
-#' workflowNames = c("osm","bdt","wudapt"), inLocation = "Arville"  )
+#' workflowNames = c("osm","bdt","wudapt"), location = "Arville"  )
 #' zoneSf <- sf::read_sf(
 #' paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville/zone.fgb")
 #' )

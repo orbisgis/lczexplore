@@ -14,13 +14,16 @@
 #' @examples
 #' twoLocsDir<-paste0(
 #'  system.file("extdata", package = "lczexplore"),"/multipleWfs")
-#' twoLocsSfList<-loadMultipleLocsSfs(dirPath = twoLocsDir, workflowNames = c("osm","bdt","wudapt"),
-#'                                   inLocation = c("Arville", "Redon"))
+#' twoLocsSfList<-importMultipleLocsLCZvect(
+#'  dirPath = twoLocsDir, workflowNames = c("osm","bdt","wudapt"),
+#'  location = c("Arville", "Redon"))
 #'
-#' twoLocsSfIntersected <- createIntersect(sfList = twoLocsSfList, columns = rep("lcz_primary", 4),
-#'                                        refCrs=NULL, workflowNames=c("osm", "bdt", "wudapt"), minZeroArea=0.001)
+#' twoLocsSfIntersected <- createIntersect(
+#'  sfList = twoLocsSfList, columns = rep("lcz_primary", 4),
+#'  refCrs=NULL, workflowNames=c("osm", "bdt", "wudapt"), minZeroArea=0.001)
 #'
-#' twoLocsWeightedFlux<-createWeightedFlux(twoLocsSfIntersected, wfNamesIn = c("osm","bdt","wudapt"))
+#' twoLocsWeightedFlux<-createWeightedFlux(
+#' twoLocsSfIntersected, wfNamesIn = c("osm","bdt","wudapt"))
 #'
 #' @export
 createWeightedFlux <- function(intersectSfWide, columns = NULL, wfNamesIn = NULL,
@@ -53,8 +56,6 @@ createWeightedFlux <- function(intersectSfWide, columns = NULL, wfNamesIn = NULL
 
   for (i in 1:(length(columns) - 1)) {
     for (j in (i + 1):length(columns)) {
-      sf1 <- intersectSfWide[,i]
-      sf2 <- intersectSfWide[,j]
       compareName <- paste0(wfNamesIn[i], "_", wfNamesIn[j])
       assign(compareName,
              matConfLCZ(
@@ -92,8 +93,6 @@ createWeightedFlux <- function(intersectSfWide, columns = NULL, wfNamesIn = NULL
 
   for (i in (length(columns):2)) {
     for (j in 1:(i - 1)) {
-      sf1 <- intersectSfWide[,i]
-      sf2 <- intersectSfWide[,j]
       compareName <- paste0(wfNamesIn[i], "_", wfNamesIn[j])
       assign(compareName,
              matConfLCZ(

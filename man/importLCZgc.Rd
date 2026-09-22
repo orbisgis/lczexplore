@@ -2,7 +2,7 @@
 % Please edit documentation in R/importLCZgc.R
 \name{importLCZgc}
 \alias{importLCZgc}
-\title{Imports the \if{html}{\out{<wf>}}_lcz fgb file produced by GeoClimate.
+\title{Imports the wf_lcz fgb file produced by GeoClimate.
 Not recommended.
 Use the more generic importLCZvect function}
 \usage{
@@ -11,24 +11,28 @@ importLCZgc(dirPath, output = "sfFile", file = "rsu_lcz.fgb")
 \arguments{
 \item{dirPath}{: the path where the rsu_lcz.geojson file is.}
 
-\item{output}{: if sfFile the rsu_lcz.geojson is imported as an sf file, if bBox, a bounding box of the area is returned}
+\item{output}{: if sfFile the rsu_lcz.geojson is imported as an sf file,
+if bBox, a bounding box of the area is returned}
 
-\item{file}{: name of the file to load. Default is rsu_lcz.fgb, as it is the output of GeoClimate when the
+\item{file}{: name of the file to load.
+Default is rsu_lcz.fgb, as it is the output of GeoClimate when the
 the rsu indicators are specified (as opposed to grid indicators).}
 }
 \value{
-: if output is set to sfFile, the function returns an sf objects containing all the colums
+: if output is set to sfFile,
+the function returns an sf objects containing all the colums
 of the rsu_lcz.geojson found in the dirPath directory.
-If output is bBox a bounding box (seef sf package) of the area contained in the rsu_lcz file in the dirPath directory is returned.
+If output is bBox a bounding box (seef sf package) of the area
+contained in the rsu_lcz file in the dirPath directory is returned.
 This is useful to select geoms analysed in other sf objects.
 }
 \description{
-Imports the \if{html}{\out{<wf>}}_lcz fgb file produced by GeoClimate.
+Imports the wf_lcz fgb file produced by GeoClimate.
 Not recommended.
 Use the more generic importLCZvect function
 }
 \examples{
 # not run
-# bdtTest<-importLCZgc(dirPath=paste0(system.file("extdata", package = "lczexplore"),""/multipleWfs/Redon"/"),
+# bdtTest <- importLCZgc(dirPath = system.file("extdata/multipleWfs/Redon", package = "lczexplore"),
 # file = "bdt_lcz.fgb")
 }

@@ -30,21 +30,26 @@ where groupName is the name of a resulting group and groupValues a vector of the
 it will regroup.}
 }
 \value{
-a vector of booleans indicting if the elements of x define a color in R (TRUE) or don't (FALSE)
+a chord diagram after LCZ types are grouped according to ... arguments
 }
 \description{
 Draws how LCZ types from several workflows break up into LCZ types of one another when some grouping is precised in the arguments
 }
 \examples{
 twoLocsDir<-paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs")
-twoLocsSfList<-loadMultipleLocsSfs(dirPath = twoLocsDir, workflowNames = c("osm","bdt","wudapt"),
-inLocation = c("Arville", "Redon"))
-twoLocsSfIntersected <- createIntersect(sfList = twoLocsSfList, columns = rep("lcz_primary", 4),
-refCrs=NULL, workflowNames=c("osm", "bdt", "wudapt"), minZeroArea=0.001)
-twoLocsWeightedFlux<-createWeightedFlux(twoLocsSfIntersected, wfNamesIn = c("osm","bdt","wudapt"))
-# Subsetting and grouping allow further exploration. Playing on grouping names and alphabetical order allows
+twoLocsSfList<-importMultipleLocsLCZvect(
+dirPath = twoLocsDir, workflowNames = c("osm","bdt","wudapt"),
+ location = c("Arville", "Redon"))
+twoLocsSfIntersected <- createIntersect(
+ sfList = twoLocsSfList, columns = rep("lcz_primary", 4),
+ refCrs=NULL, workflowNames=c("osm", "bdt", "wudapt"), minZeroArea=0.001)
+twoLocsWeightedFlux<-createWeightedFlux(
+ twoLocsSfIntersected, wfNamesIn = c("osm","bdt","wudapt"))
+# Subsetting and grouping allow further exploration.
+# Playing on grouping names and alphabetical order allows
 # to choose the order of the sectors
-#' # Subsetting and grouping allow further exploration. Playing on grouping names and alphabetical order allows
+# Subsetting and grouping allow further exploration.
+# Playing on grouping names and alphabetical order allows
 # to choose the order of the sectors
 twoLocsWeightedFluxNo104no101<-subset(twoLocsWeightedFlux,
      !grepl("101", twoLocsWeightedFlux$orig) &

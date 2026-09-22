@@ -204,17 +204,18 @@ Le dernier graphique représente cette information.
 *Le graphique produit contient quatre graphiques, il est plus lisible zoomé.*
 
 ```{r, comparaison, fig.dim = c(16,12 ), eval = TRUE, echo = FALSE}
-comparaison<-compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", wf1="BD TOPO v2.2",
-                        sf2=redonOSM, column2="LCZ_PRIMARY", wf2="Open Street Map", ref=1,
-                        repr="standard", exwrite=F, location="Redon", saveG="comparison")
-dirPath<-paste0(system.file("extdata",package="lczexplore"),"/")
+path <- paste0(system.file("extdata/", package = "lczexplore"), "/redonCompare")
+comparaison <- compareLCZ(sf1 = redonBDT, column1 = "LCZ_PRIMARY", wf1 = "BD TOPO v2.2",
+                          sf2 = redonOSM, column2 = "LCZ_PRIMARY", wf2 = "Open Street Map", ref = 1,
+                          repr = "standard", exwrite = F, location = "Redon",
+                          saveG = path)
 
 ```
 
 Lecture du fichier correctement zoomé et enregistré en png.
 
 ```{r, comparaison-image-jolie, out.width = "680px"}
-path <- system.file('extdata/RedonCompare.png',package="lczexplore")
+path <- system.file('extdata/redonCompare.png',package="lczexplore")
 knitr::include_graphics(path, error=FALSE)
 
 ```
@@ -254,29 +255,31 @@ Cette uniqueness peut donc être vue comme une mesure de confiance.
 
 La fonction `importLCZvect` permet d'indiquer quelles colonnes du geojson contiennent l'identifiant de la géométrie (`geomID`) et l'indicateur de confiance associé (`confid`) nécessaires à l'analyse de sensibilité. 
 ```{r, analyse-sensibilite, eval = TRUE, echo = TRUE }
-dirPath<-paste0(system.file("extdata",package="lczexplore"),"/multipleWfs/Redon")
+dirPath <- paste0(system.file("extdata", package = "lczexplore"), "/multipleWfs/Redon")
 
-redonOSM<-importLCZvect(dirPath=dirPath,file="osm_lcz.fgb",column = "LCZ_PRIMARY",geomID = "ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
+redonOSM <- importLCZvect(dirPath = dirPath, file = "osm_lcz.fgb", column = "LCZ_PRIMARY", geomID = "ID_RSU", confid = "LCZ_UNIQUENESS_VALUE")
 
-redonBDT<-importLCZvect(dirPath=dirPath,file="bdt_lcz.fgb",column = "LCZ_PRIMARY",geomID = "ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
+redonBDT <- importLCZvect(dirPath = dirPath, file = "bdt_lcz.fgb", column = "LCZ_PRIMARY", geomID = "ID_RSU", confid = "LCZ_UNIQUENESS_VALUE")
 
-redonCompare<-compareLCZ(sf1=redonBDT,wf1="bdt", geomID1 = "ID_RSU",column1 ="LCZ_PRIMARY",
-                         confid1 = "LCZ_UNIQUENESS_VALUE",
-                         sf2=redonOSM,wf2="osm",geomID2 = "ID_RSU",column2="LCZ_PRIMARY",confid2 ="LCZ_UNIQUENESS_VALUE",exwrite=FALSE,plot=FALSE)
+redonCompare <- compareLCZ(sf1 = redonBDT, wf1 = "bdt", geomID1 = "ID_RSU", column1 = "LCZ_PRIMARY",
+                           confid1 = "LCZ_UNIQUENESS_VALUE",
+                           sf2 = redonOSM, wf2 = "osm", geomID2 = "ID_RSU", column2 = "LCZ_PRIMARY", confid2 = "LCZ_UNIQUENESS_VALUE", exwrite = FALSE, plot = FALSE)
 
 ```
 
 À chaque unité de référence spatiale (RSU, une géométrie) est maintenant associé un type de LCZ et un niveau de confiance. 
 
 ```{r, comparaison-avec-confiance, echo = TRUE, fig.show="hide"}
-redonCompare<-compareLCZ(sf1=redonBDT,wf1="bdt", geomID1 = "ID_RSU",column1 ="LCZ_PRIMARY",
-                         confid1 = "LCZ_UNIQUENESS_VALUE",
-                         sf2=redonOSM,wf2="osm",geomID2 = "ID_RSU",column2="LCZ_PRIMARY",confid2 ="LCZ_UNIQUENESS_VALUE",exwrite=FALSE, saveG="comparaison")
+path <- system.file('extdata/redonCompare',package="lczexplore")
+redonCompare <- compareLCZ(sf1 = redonBDT, wf1 = "bdt", geomID1 = "ID_RSU", column1 = "LCZ_PRIMARY",
+                           confid1 = "LCZ_UNIQUENESS_VALUE",
+                           sf2 = redonOSM, wf2 = "osm", geomID2 = "ID_RSU", column2 = "LCZ_PRIMARY",
+                           confid2 = "LCZ_UNIQUENESS_VALUE", exwrite = FALSE, saveG = path)
 # redonInputSensib<-read.csv()
 ```
 ```{r, sortie-jolie, out.width = "680px"}
-
-knitr::include_graphics("comparaison.png", error=FALSE)
+path <- system.file('extdata/GeneralUniquenessSensib.png',package="lczexplore")
+knitr::include_graphics(path, error=FALSE)
 
 ```
 Il est important de noter que les colonnes contenant les LCZ en entrée sont renommées à partir des
@@ -298,24 +301,34 @@ On représente aussi, en magenta, l'accord entre les géométries dont la valeur
 
 ```{r, analyse-sensibilite-2, fig.dim = c(12,9), fig.show="hide"}
 names(redonCompare$data)
-confidRedon<-confidSensib(inputDf=redonCompare$data,filePath="", nPoints=10,
-             wf1="bdtopo_2_2", wf2="osm",
-             geomID1="ID_RSU", column1="bdt", confid1="LCZ_UNIQUENESS_VALUE",
-             geomID2="ID_RSU.1",column2="osm", confid2="LCZ_UNIQUENESS_VALUE.1",
-             sep=";", repr="standard",
-             plot=TRUE, saveG = ".")
+confidRedon <- confidSensib(inputDf = redonCompare$data, filePath = "", nPoints = 10,
+                            wf1 = "bdtopo_2_2", wf2 = "osm",
+                            geomID1 = "ID_RSU", column1 = "bdt", confid1 = "LCZ_UNIQUENESS_VALUE",
+                            geomID2 = "ID_RSU.1", column2 = "osm", confid2 = "LCZ_UNIQUENESS_VALUE.1",
+                            sep = ";", repr = "standard",
+                            plot = TRUE, saveG = system.file("extdata/", package = "lczexplore"))
 
 ```
 ```{r, sortie-sensibilite-jolie, out.width = "680px"}
-
-knitr::include_graphics("GeneralUniquenessSensib.png", error=FALSE)
+path <- paste0(system.file("extdata/GeneralUniquenessSensib",package="lczexplore"), ".png")
+knitr::include_graphics(path, error=FALSE)
 
 ```
 La fonction `confidSensib` propose également cette analyse par type de LCZ. 
 
 ```{r, sensibilite-par-type-de LCZ, out.width = "680px"}
-
-knitr::include_graphics("byLCZUniquenessSensib.png", error=FALSE)
+path <- paste0(system.file("extdata/byLCZUniquenessSensib", package = "lczexplore"), ".png")
+knitr::include_graphics(path, error = FALSE)
 
 ```
 Les principales fonctions ont été évoquées ici, pour plus d'information consulter les fichiers d'aide de chacune des fonctions.
+
+```{R cleanup}
+path <- system.file("extdata/byLCZUniquenessSensib.png", package = "lczexplore")
+if (file.exists(path)){file.remove(path)}
+
+path <- system.file("extdata/GeneralUniquenessSensib.png", package = "lczexplore")
+if (file.exists(path)){file.remove(path)}
+path <- system.file("extdata/redonCompare.png", package = "lczexplore")
+if (file.exists(path)){file.remove(path)}
+```

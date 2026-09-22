@@ -1,7 +1,7 @@
 #' For an sf object containing LCZ types, aggregates touching geometries with same value of LCZ 
 #' @param sf contains the geometry and LCZ levels
-#' @param LCZcolumn the name of the column coontaining LCZ types
-#' @param wfColumn is the column where the workflow used to produce lcz is precised. 
+#' @param column the name of the column containing LCZ types
+#' @param wfColumn is the column where the workflow used to produce LCZ classif is precised.
 #' @param aggregateBufferSize is the size of a buffer you can add to the geometries before agregation. 
 #' Useful when you suspect numeric precision to create false disjunction of geometries.
 #' @param locationColumn is the name of the column where the location is stored
@@ -14,7 +14,7 @@
 #' @examples
 #' dirPath<-paste0(
 #' system.file("extdata", package = "lczexplore"),"/multipleWfs")
-#' allLocAllWfs<-loadConcatAllLocsAllWfs(
+#' allLocAllWfs<-importConcatMultipleLocsLCZvect(
 #'  dirPath = dirPath, locations = c("Redon", "Arville"),
 #' workflowNames = c("osm","bdt","wudapt"),
 #'  missingGeomsWf= "osm",
@@ -25,10 +25,10 @@
 #' )
 #' ASUallLocAllWfs <- aggregateRSUsByLCZ(
 #' allLocAllWfs,
-#' LCZcolumn = "lcz_primary", wfColumn = "wf", locationColumn = "location", aggregateBufferSize = 0.5)
-aggregateRSUsByLCZ <- function(sf, aggregateBufferSize = 0, LCZcolumn, wfColumn, locationColumn = "location") {
-  groupCols <- as.list(environment())[c("wfColumn", "locationColumn", "LCZcolumn")]
-  presentColArgs <- !c(missing(wfColumn), missing(locationColumn), missing(LCZcolumn))
+#' column = "lcz_primary", wfColumn = "wf", locationColumn = "location", aggregateBufferSize = 0.5)
+aggregateRSUsByLCZ <- function(sf, aggregateBufferSize = 0, column, wfColumn, locationColumn = "location") {
+  groupCols <- as.list(environment())[c("wfColumn", "locationColumn", "column")]
+  presentColArgs <- !c(missing(wfColumn), missing(locationColumn), missing(column))
   groupCols <- unname(unlist(groupCols[presentColArgs]))
   print(groupCols)
   clustered <- sf %>%

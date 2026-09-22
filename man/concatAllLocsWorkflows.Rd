@@ -2,7 +2,7 @@
 % Please edit documentation in R/concatAllLocsWorkflows.R
 \name{concatAllLocsWorkflows}
 \alias{concatAllLocsWorkflows}
-\title{loadConcatAllLocsAllWfs is recommended instead as it loadsand concatenate input files
+\title{importConcatMultipleLocsLCZvect is recommended instead as it loadsand concatenate input files
 and can even fill missing geometries with "unclassified" type.
 But if maps are already loaded in a List, concatAllLocsWorkflows is
 the equivalent of concatenateAlocationWorkflows, but for several Locations
@@ -22,7 +22,7 @@ returns a single sf object containing all geometries for all locations and workf
 lcz types in the column lcz_primary
 }
 \description{
-loadConcatAllLocsAllWfs is recommended instead as it loadsand concatenate input files
+importConcatMultipleLocsLCZvect is recommended instead as it loadsand concatenate input files
 and can even fill missing geometries with "unclassified" type.
 But if maps are already loaded in a List, concatAllLocsWorkflows is
 the equivalent of concatenateAlocationWorkflows, but for several Locations
@@ -31,10 +31,10 @@ with an lcz_primary column, and concatenates them into a single sf object,
 adding a column for location and workflow names
 }
 \examples{
-sfListAll<-loadMultipleLocsSfs(dirPath = paste0(
+sfListAll<-importMultipleLocsLCZvect(dirPath = paste0(
  system.file("extdata", package = "lczexplore"),"/multipleWfs/"),
                               workflowNames = c("osm","bdt","wudapt"),
-                              inLocation = c("Arville", "Redon"))
+                              location = c("Arville", "Redon"))
 allLocsAllWfs <-  concatAllLocsWorkflows(
  sfList = sfListAll)
 }

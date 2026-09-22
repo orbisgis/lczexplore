@@ -1,5 +1,7 @@
 #' To make LCZ types appear in the proper order, it can be useful ton convert them into strings with added zeros
 #' @param LCZlevels a vector containing LCZlevels from 1 to 10 and 101 to 107
+#' @return the input with leading zeros for standard LCZ types, in order to respect alphabetical
+#' order in graphs
 #' @importFrom dplyr case_when
 #' @export
 LCZlevelToOrderedString <- function(LCZlevels) {

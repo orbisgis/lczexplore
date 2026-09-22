@@ -165,6 +165,7 @@ showAlterLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
   LCZlevels <- names(typeLevels)
 
   sf[[column]] <- factor(sf[[column]], levels = LCZlevels)
+  totArea<-st_area(sf) %>% sum
   areas <- LCZareas(sf, column, LCZlevels = LCZlevels)
 
   if (!noPercAlter) { etiquettes <- paste(LCZlevels, ": ", areas$area, "%") } else { etiquettes <- LCZlevels }
