@@ -78,20 +78,14 @@ compareMultipleLCZ <- function(sfInt, columns, workflowNames = NULL, trimPerc = 
   z <- data.frame(indRow, whichLCZagree)
 
   sfIntLong$LCZvalue <- apply(z, 1, function(x) unlist(st_drop_geometry(sfIntLong)[x[1], x[2]]))
-  sfIntClass<-class(sfInt)
   sfInt <- cbind(sfIntNoGeom, sfInt$geometry) %>% st_as_sf()
-  sfIntClass<-class(sfInt)
 
   agreements<-workflowAgreeAreas(sfIntLong)
 
   consensus <- computeConsensus(sfInt, wfNames = workflowNames)
 
-  sfIntClass<-class(sfInt)
-
   weightedFlux<-createWeightedFlux(intersectSfWide = sfInt, columns = columns, wfNamesIn = workflowNames,
                                    typeLevelsDefaultIn = NULL)
-
-  sfIntClass<-class(sfInt)
 
   chordDiagram<-drawChordDiagram(weightedFluxIn = weightedFlux, labelMatch = labelMatch,...)
 

@@ -10,7 +10,6 @@
 redonBDT2<-importLCZvect(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Redon"),
                          file = "bdt_lcz.fgb",
                          column="LCZ_PRIMARY",geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE",verbose=T)
-checkCompareLCZinputs(sf1 = redonBDT, sf2 = redonBDT2)
 
 
 autocompareBDT<-compareLCZ(sf1 = redonBDT, sf2 = redonBDT2)
@@ -58,7 +57,7 @@ expect_message(compareRedonBDTOSM<-
                             sf2=redonOSM, column2="LCZ_PRIMARY", geomID2 = "ID_RSU", confid2="LCZ_UNIQUENESS_VALUE", wf2="osm",
                             repr="standard", saveG="", exwrite=TRUE, location="Redon", plotNow = TRUE),
                "\\(redonBDT\\)")
-file.remove("bdtopo_2_2_osm.csv")
+if (file.exists("bdtopo_2_2_osm.csv")) {file.remove("bdtopo_2_2_osm.csv")}
 
 
 expect_message(compareRedonBDTOSM<-
@@ -66,7 +65,7 @@ expect_message(compareRedonBDTOSM<-
                             sf2=redonOSM, column2="LCZ_PRIMARY", geomID2 = "ID_RSU", confid2="LCZ_UNIQUENESS_VALUE", wf2="osm",
                             repr="standard", ref=2, saveG="", exwrite=TRUE, location="Redon", plotNow = T, confPlot = "sankey"),
                "\\(redonOSM\\)")
-file.remove("bdtopo_2_2_osm.csv")
+if (file.exists("bdtopo_2_2_osm.csv")) {file.remove("bdtopo_2_2_osm.csv")}
 
 # compareLCZ(sf1=redonBDT, column1="LCZ_PRIMARY", geomID1 = "ID_RSU", confid1="LCZ_UNIQUENESS_VALUE", wf1="bdtopo_2_2",
 #            sf2=redonOSM, column2="LCZ_PRIMARY", geomID2 = "ID_RSU", confid2="LCZ_UNIQUENESS_VALUE", wf2="osm",

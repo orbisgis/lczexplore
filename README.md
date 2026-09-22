@@ -50,7 +50,7 @@ function of the devtools package.
 This package relies on the `sf` and `s2` spatial libraries, which require 
 external system tools to compile on macOS. 
 Before installing `lczexplore`, please ensure you have the 
-following dependencies installed : cmake, openssl abseil. 
+following dependencies installed : cmake, openssl, abseil. 
 
 
 # Summary
