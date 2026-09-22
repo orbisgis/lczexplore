@@ -84,7 +84,7 @@ The areas of all the geometries where the classifications agree are summed and g
 A confusion matrix shows how a given level of LCZ for the first classification is broken down 
 into the levels of the other classification. 
 
-![Comparison result for twho workflows on Redon data](inst/extdata/RedonCompare.png)
+![Comparison result for twho workflows on Redon data](inst/extdata/redonCompare.png)
 
 # Sensibility analysis
 Some LCZ classifications come with a confidence level for each spatial unit. For instance, the GeoClimate toolbox
@@ -103,7 +103,7 @@ The following functions are the core of this package :
 `compareLCZ` : compares two LCZ classifications of the same areas, output plots and data if this comparison
 
 `confidSensib` : explores how the agreement between two LCZ varies according to a confidence indicator associated for the LCZ value of each geom (sensibility analysis)
-![Sensibiilty analysis : how the confidence we have in LCZ classifications impacts the agreement betweend classifications](inst/extdata/RedonSensib.png)
+![Sensibiilty analysis : how the confidence we have in LCZ classifications impacts the agreement betweend classifications](inst/extdata/GeneralUniquenessSensib.png)
 
 
 # Other functions
