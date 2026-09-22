@@ -14,3 +14,4 @@
 ^compareMultipleLCZ\.R$
 ^createIntersect\.R$
 ^cran-comments\.md$
+^revdep$
