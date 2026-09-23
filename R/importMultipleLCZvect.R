@@ -23,22 +23,29 @@ importMultipleLCZvect <- function(
   location = NA,
   fileExtension = ".fgb",
   columns = "lcz_primary",
-  typeLevels = c("1" = "1", "2" = "2", "3" = "3", "4" = "4", "5" = "5", "6" = "6", "7" = "7", "8" = "8",
-                  "9" = "9", "10" = "10",
-                  "101" = "101", "102" = "102", "103" = "103", "104" = "104", "105" = "105", "106" = "106", "107" = "107",
-                  "101" = "11", "102" = "12", "103" = "13", "104" = "14", "105" = "15", "106" = "16", "107" = "17",
-                  "101" = "A", "102" = "B", "103" = "C", "104" = "D", "105" = "E", "106" = "F", "107" = "G")) {
+  typeLevels = .lczenv$typeLevelsConvert2) {
 
   if (is.null(typeLevels)){
     message("Levels for LCZ types in LLCZ columns were unspecified, standard levels will be tried")
-    typeLevels <- c("1" = "1", "2" = "2", "3" = "3", "4" = "4", "5" = "5", "6" = "6", "7" = "7", "8" = "8",
-                    "9" = "9", "10" = "10",
-                    "101" = "101", "102" = "102", "103" = "103", "104" = "104", "105" = "105",
-                    "106" = "106", "107" = "107",
-                    "101" = "11", "102" = "12", "103" = "13", "104" = "14",
-                    "105" = "15", "106" = "16", "107" = "17",
-                    "101" = "A", "102" = "B", "103" = "C", "104" = "D", "105" = "E", "106" = "F",
-                    "107" = "G", "Unclassified" = "unclassified")
+    typeLevels <- c(
+      # Letter codes → numeric
+      "A" = "101", "B" = "102", "C" = "103", "D" = "104",
+      "E" = "105", "F" = "106", "G" = "107",
+
+      # Two-digit codes → three-digit
+      "11" = "101", "12" = "102", "13" = "103", "14" = "104",
+      "15" = "105", "16" = "106", "17" = "107",
+
+      # Identity mappings (already correct)
+      "101" = "101", "102" = "102", "103" = "103", "104" = "104",
+      "105" = "105", "106" = "106", "107" = "107",
+
+      # Single digits (identity)
+      "1" = "1", "2" = "2", "3" = "3", "4" = "4", "5" = "5",
+      "6" = "6", "7" = "7", "8" = "8", "9" = "9", "10" = "10",
+
+      "Unclassified" = "Unclassified"
+    )
 
   }
    if (is.null(location) | prod(!is.na(location)) == 0) {
@@ -55,7 +62,8 @@ importMultipleLCZvect <- function(
     inName <- paste0(dirPath, workflowNames[i], "_lcz", fileExtension)
     inSf <- read_sf(inName)
 
-    inSf[[columns[i]]] <- factor(inSf[[columns[i]]], levels = typeLevels)
+    inSf[[columns[i]]] <- typeLevels[inSf[[columns[i]]]]
+    inSf[[columns[i]]] <- factor(inSf[[columns[i]]], levels = unique(typeLevels))
 
     inSf$lcz_primary <- inSf[[columns[i]]]
 
