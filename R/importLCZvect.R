@@ -132,7 +132,7 @@ importLCZvectFromSf <- function(sfIn, column, geomID = "", confid = "") {
 #' showLCZ(redonBDTex)
 importLCZvect <- function(dirPath, file = "bdt_lcz.fgb", output = "sfFile", column = "LCZ_PRIMARY",
                           geomID = "", confid = "",
-                          typeLevels = .lczenv$typeLevelsDefault,
+                          typeLevels = .lczenv$typeLevelsConvert2,
                           drop = T, verbose = FALSE, sfIn = NULL, naAsUnclassified = TRUE) {
 
   if (is.null(sfIn)) {
@@ -176,10 +176,11 @@ importLCZvect <- function(dirPath, file = "bdt_lcz.fgb", output = "sfFile", colu
                " must contain LCZ types in a standard format"))
     }
 
-    sfFile <-
-      sfFile %>%
-        dplyr::mutate(!!column :=
-                        factor(sfFile[[column]], levels = typeLevels))  #%>%
+    # Recode the values using the named vector
+    sfFile[[column]] <- typeLevels[sfFile[[column]]]
+
+    # Convert to factor with the correct levels
+    sfFile[[column]] <- factor(sfFile[[column]], levels = unique(typeLevels))
     #
     if (naAsUnclassified) { sfFile[[column]] <- forcats::fct_na_value_to_level(sfFile[[column]], "Unclassified") }
     else { sfFile <- drop_na(sfFile, column) }
