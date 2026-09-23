@@ -31,7 +31,7 @@
 #'  sfInt = ArvilleIntersect,
 #'  columns = c("osm","bdt","wudapt"),
 #'  trimPerc = 0.5)
-compareMultipleLCZ <- function(sfInt, columns, workflowNames = NULL, trimPerc = 0.05, labelMatch = NULL, ...) {
+compareMultipleLCZ <- function(sfInt, columns, workflowNames = NULL, trimPerc = 0.0, labelMatch = NULL, ...) {
   if (is.null(columns)) {
     columns <- names(sfInt)[!names(sfInt) %in% c("area", "geometry")]
   }
