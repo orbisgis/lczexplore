@@ -8,7 +8,7 @@ compareMultipleLCZ(
   sfInt,
   columns,
   workflowNames = NULL,
-  trimPerc = 0.05,
+  trimPerc = 0,
   labelMatch = NULL,
   ...
 )

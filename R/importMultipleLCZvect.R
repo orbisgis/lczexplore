@@ -61,6 +61,16 @@ importMultipleLCZvect <- function(
   for (i in seq_along(workflowNames)) {
     inName <- paste0(dirPath, workflowNames[i], "_lcz", fileExtension)
     inSf <- read_sf(inName)
+    if(is.null(inSf[[columns[i]]] )){
+      message(paste0(columns[i], " not found, trying with lower cases"))
+      lowerCaseColumn<-tolower(columns[i])
+      inSf[[columns[i]]] <- tryCatch(
+        inSf[[lowerCaseColumn]],
+        error = function(e){
+          message("column doesn't exist even in lower case")
+          stop()
+        })
+    }
 
     inSf[[columns[i]]] <- typeLevels[inSf[[columns[i]]]]
     inSf[[columns[i]]] <- factor(inSf[[columns[i]]], levels = unique(typeLevels))
