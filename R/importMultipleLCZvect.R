@@ -78,6 +78,10 @@ importMultipleLCZvect <- function(
 
 
     inSf[[columns[i]]] <- typeLevels[inSf[[columns[i]]]]
+    # weird problem occurs when coercing to factor
+    names(typeLevels)<-typeLevels
+    typeLevels<-unique(typeLevels)
+
     inSf[[columns[i]]] <- factor(inSf[[columns[i]]], levels = unique(typeLevels))
 
     inSf$lcz_primary <- inSf[[columns[i]]]
