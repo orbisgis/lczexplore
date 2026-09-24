@@ -4,7 +4,8 @@
 
  sfList<-importMultipleLCZvect(dirPath = paste0(
  system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
- workflowNames = c("osm","bdt","wudapt"), location = "Arville")
+                               columns = "LCZ_PRIMARY",
+                               workflowNames = c("osm","bdt","wudapt"), location = "Arville")
 
 expect_silent(
   sfList<-importMultipleLCZvect(dirPath = paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Arville"),
