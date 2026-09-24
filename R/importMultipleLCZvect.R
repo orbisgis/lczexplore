@@ -63,15 +63,19 @@ importMultipleLCZvect <- function(
     inSf <- read_sf(inName)
     condition <- is.null(inSf[[columns[i]]])
     if(condition){
-      message(paste0(columns[i], " not found, trying with upper cases"))
-      lowerCaseColumn<-tolower(columns[i])
-      inSf[[columns[i]]] <- tryCatch(
-        inSf[[lowerCaseColumn]],
-        error = function(e){
-          message("column doesn't exist even in upper case")
-          stop()
-        })
+      upperCond <- !is.null(toupper(inSf[[columns[i]]]))
+      lowercond <-!is.null(tolower(inSf[[columns[i]]]))
+      if(upperCond){
+        message("Column ", paste0(columns[i], " not found,but ",
+                                  toupper(columns[i]), " was, trying with it"))
+        inSf[[columns[i]]]<-  typeLevels[inSf[[toupper(columns[i])]]]
+      } else if (lowercond){
+        message("Column ", paste0(columns[i], " not found,but ",
+                                  tolower(columns[i]), " was, trying with it"))
+        inSf[[columns[i]]]<-  typeLevels[inSf[[tolower(columns[i])]]]
+      } else {stop("One or several column names you entered are not found.")}
     }
+
 
     inSf[[columns[i]]] <- typeLevels[inSf[[columns[i]]]]
     inSf[[columns[i]]] <- factor(inSf[[columns[i]]], levels = unique(typeLevels))
