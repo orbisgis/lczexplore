@@ -143,11 +143,11 @@ compareMultipleLCZwithGrouping<-function(sfInt, columns, workflowNames, labelMat
 
   if (is.null(workflowNames) | length(workflowNames) != length(columns)) { workflowNames <- columns }
 
-  allLevels <- sfIntNoGeom[, columns] %>%
-    lapply(levels) %>%
-    unlist %>%
-    unique()
-  sfIntNoGeom[, columns] <- sfIntNoGeom[, columns] %>% lapply(function(x) factor(x, levels = allLevels))
+  # allLevels <- sfIntNoGeom[, columns] %>%
+  #   lapply(levels) %>%
+  #   unlist %>%
+  #   unique()
+  # sfIntNoGeom[, columns] <- sfIntNoGeom[, columns] %>% lapply(function(x) factor(x, levels = allLevels))
 
   # Compute and sums pairwise agreeing surfaces
 
@@ -184,10 +184,10 @@ compareMultipleLCZwithGrouping<-function(sfInt, columns, workflowNames, labelMat
   consensus <- computeConsensus(sfInt, wfNames = workflowNames)
 
   weightedFlux<-createWeightedFlux(intersectSfWide = sfInt, columns = columns, wfNamesIn = workflowNames,
-                                   typeLevelsDefaultIn = NULL)
+                                   typeLevelsDefaultIn = NULL )
 
 
-  drawChordDiagram(weightedFluxIn = weightedFlux, labelMatch = labelMatch,...)
+  drawChordDiagram(weightedFluxIn = weightedFlux, labelMatch = labelMatch, colorMapIn = colorMapIn)
 
   output <- list(sfInt = sfInt, sfIntLong = sfIntLong,
                  agreements = agreements, consensus = consensus, weightedFlux = weightedFlux
