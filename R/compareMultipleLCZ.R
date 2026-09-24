@@ -32,9 +32,108 @@
 #'  columns = c("osm","bdt","wudapt"),
 #'  trimPerc = 0.5)
 compareMultipleLCZ <- function(sfInt, columns, workflowNames = NULL, trimPerc = 0.0, labelMatch = NULL, ...) {
+ if (!missing(...)){
+   compareMultipleLCZwithGrouping(sfInt = sfInt, columns = columns, workflowNames = workflowNames,
+                                             trimPerc = trimPerc, labelMatch = labelMatch, ...)
+ } else {
+    if (is.null(columns)) {
+      columns <- names(sfInt)[!names(sfInt) %in% c("area", "geometry")]
+    }
+    sfInt <- sfInt[sfInt$area > quantile(sfInt$area, probs = trimPerc) & !is.na(sfInt$area),]
+
+    # if input intersected file comes from a concatenation, it will have a location column that is not needed
+    if ("location" %in% names(sfInt)) { sfInt <- sfInt[, !names(sfInt) == "location"] }
+
+    sfIntNoGeom <- st_drop_geometry(sfInt)
+
+    if (is.null(workflowNames) | length(workflowNames) != length(columns)) { workflowNames <- columns }
+
+    allLevels <- sfIntNoGeom[, columns] %>%
+      lapply(levels) %>%
+      unlist %>%
+      unique()
+    sfIntNoGeom[, columns] <- sfIntNoGeom[, columns] %>% lapply(function(x) factor(x, levels = allLevels))
+
+    # Compute and sums pairwise agreeing surfaces
+
+    for (i in 1:(length(columns) - 1)) {
+      for (j in (i + 1):length(columns)) {
+        compName <- paste0(workflowNames[i], "_", workflowNames[j])
+        print(compName)
+        sfIntNoGeom[, compName] <- sfIntNoGeom[, columns[i]] == sfIntNoGeom[, columns[j]]
+      }
+    }
+    rangeCol <- (length(columns) + 2):ncol(sfIntNoGeom)
+    print(rangeCol)
+    # print(names(sfIntnogeom[,rangeCol]))
+    sfIntNoGeom$nbAgree <- apply(
+      X = sfIntNoGeom[, rangeCol], MARGIN = 1, sum)
+    sfIntNoGeom$maxAgree <- apply(
+      X = sfIntNoGeom[, seq_along(columns)], MARGIN = 1, function(x) max(table(x), na.rm = TRUE))
+    print(head(sfIntNoGeom))
+
+    # long format
+    sfIntLong <- tidyr::pivot_longer(sfIntNoGeom, cols = names(sfIntNoGeom)[rangeCol], names_to = "whichWfs", values_to = "agree")
+
+    # Get the reference LCZ column on which 2 wf agree
+
+    whichLCZagree <- gsub(x = sfIntLong$whichWfs, pattern = "(.*)(_)(.*)", replacement = "\\1")
+    indRow <- seq_len(nrow(sfIntLong))
+    z <- data.frame(indRow, whichLCZagree)
+
+    sfIntLong$LCZvalue <- apply(z, 1, function(x) unlist(st_drop_geometry(sfIntLong)[x[1], x[2]]))
+    sfInt <- cbind(sfIntNoGeom, sfInt$geometry) %>% st_as_sf()
+
+    agreements<-workflowAgreeAreas(sfIntLong)
+
+    consensus <- computeConsensus(sfInt, wfNames = workflowNames)
+
+    weightedFlux<-createWeightedFlux(intersectSfWide = sfInt, columns = columns, wfNamesIn = workflowNames,
+                                     typeLevelsDefaultIn = NULL)
+
+
+    drawChordDiagram(weightedFluxIn = weightedFlux, labelMatch = labelMatch,...)
+
+    output <- list(sfInt = sfInt, sfIntLong = sfIntLong,
+                   agreements = agreements, consensus = consensus, weightedFlux = weightedFlux
+    )
+  }
+}
+
+#####################################
+### cas with grouping
+#####################################
+
+createConvertVect<-function(...){
+  args <- list(...)
+  args<-args[names(args)!="groupColors"]
+  argNames<-names(args)
+  argLength<-sapply(args, length)
+  convertVectNames<-unlist(args)
+  names(convertVectNames)<-NULL
+  convertVect<-rep(argNames, argLength)
+  names(convertVect)<-convertVectNames
+  return(convertVect)
+}
+
+
+compareMultipleLCZwithGrouping<-function(sfInt, columns, workflowNames, labelMatch, trimPerc, ...){
+  args <- list(...)
+  convertVect<-createConvertVect(...)
+  # Case when grouping is specified
+  colorMapIn <- unlist(args[names(args) == "groupColors"]$groupColors)
   if (is.null(columns)) {
     columns <- names(sfInt)[!names(sfInt) %in% c("area", "geometry")]
   }
+  if (is.null(workflowNames) | length(workflowNames) != length(columns)) { workflowNames <- columns }
+
+  for (i in seq_along(workflowNames)){
+    recoded<-convertVect[as.character(sfInt[[workflowNames[i]]])]
+    names(recoded) <- recoded
+    sfInt[[workflowNames[i]]]<-recoded
+  }
+
+
   sfInt <- sfInt[sfInt$area > quantile(sfInt$area, probs = trimPerc) & !is.na(sfInt$area),]
 
   # if input intersected file comes from a concatenation, it will have a location column that is not needed
@@ -87,11 +186,12 @@ compareMultipleLCZ <- function(sfInt, columns, workflowNames = NULL, trimPerc = 
   weightedFlux<-createWeightedFlux(intersectSfWide = sfInt, columns = columns, wfNamesIn = workflowNames,
                                    typeLevelsDefaultIn = NULL)
 
+
   drawChordDiagram(weightedFluxIn = weightedFlux, labelMatch = labelMatch,...)
 
   output <- list(sfInt = sfInt, sfIntLong = sfIntLong,
                  agreements = agreements, consensus = consensus, weightedFlux = weightedFlux
   )
+  return(output)
+
 }
-
-
