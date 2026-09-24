@@ -8,6 +8,7 @@
 #' @param fileExtension is the extensions of the files to load (.fgb is the recommended format)
 #' @param columns the name (string) of the column containing LCZ types.
 #' If the different workflows do no use the same column names, a vector of names is passed
+#' @param typeLevels allows to pass the expected levels of the lcz columns
 #' @importFrom forcats fct_recode
 #' @importFrom dplyr mutate
 #' @import sf units
@@ -21,13 +22,33 @@ importMultipleLCZvect <- function(
   dirPath, workflowNames = c("osm", "bdt", "wudapt"),
   location = NA,
   fileExtension = ".fgb",
-  columns = "lcz_primary") {
-  typeLevels <- c("1" = "1", "2" = "2", "3" = "3", "4" = "4", "5" = "5", "6" = "6", "7" = "7", "8" = "8",
-                  "9" = "9", "10" = "10",
-                  "101" = "101", "102" = "102", "103" = "103", "104" = "104", "105" = "105", "106" = "106", "107" = "107",
-                  "101" = "11", "102" = "12", "103" = "13", "104" = "14", "105" = "15", "106" = "16", "107" = "17",
-                  "101" = "A", "102" = "B", "103" = "C", "104" = "D", "105" = "E", "106" = "F", "107" = "G")
-  if (is.null(location) | prod(!is.na(location)) == 0) {
+  columns = "lcz_primary",
+  typeLevels = .lczenv$typeLevelsConvert2) {
+
+  if (is.null(typeLevels)){
+    message("Levels for LCZ types in LLCZ columns were unspecified, standard levels will be tried")
+    typeLevels <- c(
+      # Letter codes → numeric
+      "A" = "101", "B" = "102", "C" = "103", "D" = "104",
+      "E" = "105", "F" = "106", "G" = "107",
+
+      # Two-digit codes → three-digit
+      "11" = "101", "12" = "102", "13" = "103", "14" = "104",
+      "15" = "105", "16" = "106", "17" = "107",
+
+      # Identity mappings (already correct)
+      "101" = "101", "102" = "102", "103" = "103", "104" = "104",
+      "105" = "105", "106" = "106", "107" = "107",
+
+      # Single digits (identity)
+      "1" = "1", "2" = "2", "3" = "3", "4" = "4", "5" = "5",
+      "6" = "6", "7" = "7", "8" = "8", "9" = "9", "10" = "10",
+
+      "Unclassified" = "Unclassified"
+    )
+
+  }
+   if (is.null(location) | prod(!is.na(location)) == 0) {
     print("location")
     print(location)
     location <- gsub(pattern = "(.*)(/)(.+)(/$)", replacement = "\\3", x = dirPath)
@@ -40,14 +61,39 @@ importMultipleLCZvect <- function(
   for (i in seq_along(workflowNames)) {
     inName <- paste0(dirPath, workflowNames[i], "_lcz", fileExtension)
     inSf <- read_sf(inName)
-    inSf$lcz_primary <- inSf[[columns[i]]]
-    names(inSf) <- tolower(names(inSf))
+    condition <- is.null(inSf[[columns[i]]])
+    if(condition){
+      upperCond <- !is.null(toupper(inSf[[columns[i]]]))
+      lowercond <-!is.null(tolower(inSf[[columns[i]]]))
+      if(upperCond){
+        message("Column ", paste0(columns[i], " not found,but ",
+                                  toupper(columns[i]), " was, trying with it"))
+        inSf[[columns[i]]]<-  typeLevels[inSf[[toupper(columns[i])]]]
+      } else if (lowercond){
+        message("Column ", paste0(columns[i], " not found,but ",
+                                  tolower(columns[i]), " was, trying with it"))
+        inSf[[columns[i]]]<-  typeLevels[inSf[[tolower(columns[i])]]]
+      } else {stop("One or several column names you entered are not found.")}
+    }
 
-    inSf <- select(inSf, lcz_primary) %>% mutate(
-      lcz_primary = factor(lcz_primary, levels = typeLevels))
+    inSf[[columns[i]]] <- as.character(inSf[[columns[i]]])
+    inSf[[columns[i]]] <- typeLevels[inSf[[columns[i]]]]
+    # weird problem occurs when coercing to factor the following would be unnecessary
+    names(inSf[[columns[i]]]) <- NULL
+    #names(typeLevels)<-typeLevels
+    #typeLevels<-unique(typeLevels)
+    ####
+
+
+    inSf[[columns[i]]] <- as.factor(inSf[[columns[i]]]) #, levels = typeLevels)
+
+    inSf$lcz_primary <- inSf[[columns[i]]]
+
+    inSf <- select(inSf, lcz_primary) #%>% mutate(
+     # lcz_primary = factor(lcz_primary, levels = typeLevels))
     inSf <- dplyr::mutate(inSf, wf = workflowNames[i], location = location, .before = geometry)
-    inSf[[columns[i]]] <- forcats::fct_recode(inSf[[columns[i]]], !!!typeLevels)
     sfList[[workflowNames[i]]] <- inSf
+
   }
   return(sfList)
 }

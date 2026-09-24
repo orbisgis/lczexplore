@@ -7,7 +7,8 @@
 # library(forcats)
 
 sfList<-importMultipleLCZvect(dirPath = paste0(system.file("extdata/multipleWfs/Redon", package = "lczexplore")),
-                        workflowNames = c("osm","bdt","wudapt"), location = "Redon"  )
+                        workflowNames = c("osm","bdt","wudapt"), columns = c("LCZ_PRIMARY", "LCZ_PRIMARY", "EU_LCZ_map"),
+                              location = "Redon"  )
 
 intersected<-createIntersect(sfList = sfList, columns = rep("lcz_primary", 3),
                              workflowNames = c("osm", "bdt", "wudapt"), refCrs = 1)

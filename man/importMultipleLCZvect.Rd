@@ -12,7 +12,8 @@ importMultipleLCZvect(
   workflowNames = c("osm", "bdt", "wudapt"),
   location = NA,
   fileExtension = ".fgb",
-  columns = "lcz_primary"
+  columns = "lcz_primary",
+  typeLevels = .lczenv$typeLevelsConvert2
 )
 }
 \arguments{
@@ -26,6 +27,8 @@ importMultipleLCZvect(
 
 \item{columns}{the name (string) of the column containing LCZ types.
 If the different workflows do no use the same column names, a vector of names is passed}
+
+\item{typeLevels}{allows to pass the expected levels of the lcz columns}
 }
 \value{
 returns a list containing one sf by workflow for a given locations

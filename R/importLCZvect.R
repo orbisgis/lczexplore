@@ -132,7 +132,7 @@ importLCZvectFromSf <- function(sfIn, column, geomID = "", confid = "") {
 #' showLCZ(redonBDTex)
 importLCZvect <- function(dirPath, file = "bdt_lcz.fgb", output = "sfFile", column = "LCZ_PRIMARY",
                           geomID = "", confid = "",
-                          typeLevels = .lczenv$typeLevelsDefault,
+                          typeLevels = .lczenv$typeLevelsConvert2,
                           drop = T, verbose = FALSE, sfIn = NULL, naAsUnclassified = TRUE) {
 
   if (is.null(sfIn)) {
@@ -151,12 +151,13 @@ importLCZvect <- function(dirPath, file = "bdt_lcz.fgb", output = "sfFile", colu
   }
 
   if (column != "") {
+    sfFile[[column]]<-as.character(sfFile[[column]])
     prov <- as.character(unique((st_drop_geometry(subset(sfFile, select = column, drop = T))))) %>% as.character
     names(prov) <- prov
-    if (prod(prov %in% typeLevels) == 0) {
+    if (prod(prov %in% names(typeLevels)) == 0) {
       if (verbose == TRUE) {
         print("levels in typeLevels are : ")
-        print(typeLevels)
+        print(names(typeLevels))
         print("levels in original data set are ")
         print(unique(subset(sfFile, select = column, drop = T)))
       }
@@ -167,7 +168,7 @@ importLCZvect <- function(dirPath, file = "bdt_lcz.fgb", output = "sfFile", colu
       )
 
     }
-    if (sum(prov %in% typeLevels) == 0) {
+    if (sum(prov %in% names(typeLevels)) == 0) {
       stop(
         paste0("none of the levels present in ", column,
                " is covered by the levels you specified.",
@@ -176,10 +177,12 @@ importLCZvect <- function(dirPath, file = "bdt_lcz.fgb", output = "sfFile", colu
                " must contain LCZ types in a standard format"))
     }
 
-    sfFile <-
-      sfFile %>%
-        dplyr::mutate(!!column :=
-                        factor(sfFile[[column]], levels = typeLevels))  #%>%
+    # Recode the values using the named vector
+    sfFile[[column]] <- typeLevels[sfFile[[column]]]
+    names(sfFile[[column]]) <- sfFile[[column]]
+
+    # Convert to factor with the correct levels
+    sfFile[[column]] <- factor(sfFile[[column]], levels = unique(typeLevels))
     #
     if (naAsUnclassified) { sfFile[[column]] <- forcats::fct_na_value_to_level(sfFile[[column]], "Unclassified") }
     else { sfFile <- drop_na(sfFile, column) }
