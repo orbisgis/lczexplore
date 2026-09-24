@@ -76,13 +76,16 @@ importMultipleLCZvect <- function(
       } else {stop("One or several column names you entered are not found.")}
     }
 
-
+    inSf[[columns[i]]] <- as.character(inSf[[columns[i]]])
     inSf[[columns[i]]] <- typeLevels[inSf[[columns[i]]]]
-    # weird problem occurs when coercing to factor
-    names(typeLevels)<-typeLevels
-    typeLevels<-unique(typeLevels)
+    # weird problem occurs when coercing to factor the following would be unnecessary
+    names(inSf[[columns[i]]]) <- NULL
+    #names(typeLevels)<-typeLevels
+    #typeLevels<-unique(typeLevels)
+    ####
 
-    inSf[[columns[i]]] <- factor(inSf[[columns[i]]], levels = unique(typeLevels))
+
+    inSf[[columns[i]]] <- as.factor(inSf[[columns[i]]]) #, levels = typeLevels)
 
     inSf$lcz_primary <- inSf[[columns[i]]]
 
