@@ -13,7 +13,6 @@
 #' @param plotNow If TRUE, the boxplot of the repartition will be printed
 #' @param plotSave If TRUE, the plot will be saved in the directory pointed by dirPath 
 #' @importFrom ggplot2 geom_sf guides ggtitle aes
-#' @importFrom caret dummyVars
 #' @importFrom dplyr mutate group_by summarise
 #' @importFrom tidyr  replace_na
 #' @import sf forcats units RColorBrewer units utils grDevices

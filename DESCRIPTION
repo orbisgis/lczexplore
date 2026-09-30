@@ -11,8 +11,7 @@ Description: Easily import and visualize local climate zone maps with standard e
 License: LGPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-Imports: caret,
-          circlize,
+Imports:  circlize,
           collapse,
           data.table,
           dplyr,
