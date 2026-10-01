@@ -125,7 +125,7 @@ drawChordDiagramWithGrouping<-function(weightedFluxIn,
     direction.type = c("arrows", "diffHeight"),
     link.arr.type = "big.arrow",
     link.largest.ontop = TRUE)
-  par(font = 2, cex = 1.2)
+  par(font = 2, cex = 1)
 
   circos.track(track.index = 2,
                panel.fun = function(x, y) {
@@ -145,7 +145,7 @@ drawChordDiagramWithGrouping<-function(weightedFluxIn,
                  # }
                },
                bg.border = NA) # here set bg.border to NA is important
-  par(cex = 1.5)
+  par(cex = 1)
   sectorsIn<-unique(c(diagramme$rn, diagramme$cn))
 
   lapply(sectorIDs, drawSectors, sectorsIn = sectorsIn,
