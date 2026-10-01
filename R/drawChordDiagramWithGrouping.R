@@ -112,7 +112,7 @@ drawChordDiagramWithGrouping<-function(weightedFluxIn,
   diagramme <- chordDiagram(
     weightedFluxIn, grid.col = colorsCircle,
     # col =col.mat,
-    big.gap = 5, small.gap = 2,
+    big.gap = 4, small.gap = 2,
     order = sectors, group = df.groups,
     annotationTrack = NULL,
     preAllocateTracks = list(
