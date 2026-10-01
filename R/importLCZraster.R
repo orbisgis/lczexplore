@@ -94,11 +94,11 @@ importLCZraster <- function(dirPath, bBox, fileName = "EU_LCZ_map.tif", LCZband 
       names(sfFile)[names(sfFile) == confidenceBand] <- confidenceColumn
       print(str(sfFile))
       sfFile <- sfFile %>%
-        mutate(!!LCZcolumn := fct_recode(factor(subset(sfFile, select = all_of(LCZcolumn), drop = T), levels = typeLevels),
+        mutate(!!LCZcolumn := fct_recode(factor(subset(sfFile, select = all_of(LCZcolumn), drop = TRUE), levels = typeLevels),
                                          !!!typeLevels)) %>%
         drop_na(LCZcolumn)
 
-      cat(levels(subset(sfFile, select = LCZcolumn, drop = T)))
+      cat(levels(subset(sfFile, select = LCZcolumn, drop = TRUE)))
       #plot(sfFile)
       sfFile
     }

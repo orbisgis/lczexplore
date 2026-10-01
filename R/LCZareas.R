@@ -38,9 +38,9 @@ LCZareas <- function(sf, column, LCZlevels) {
   areaLCZ
 
   areas <- data.frame(LCZlevels = LCZlevels, area = 0)
-  for (i in subset(areaLCZ, select = column, drop = T)) {
+  for (i in subset(areaLCZ, select = column, drop = TRUE)) {
     if (!is.na(i)) {
-      areas[areas$LCZlevels == i, 'area'] <- areaLCZ[subset(areaLCZ, select = column, drop = T) == i, 'area']
+      areas[areas$LCZlevels == i, 'area'] <- areaLCZ[subset(areaLCZ, select = column, drop = TRUE) == i, 'area']
     }
   }
 

@@ -478,8 +478,8 @@ prepareAlterInputs <- function(sf1, column1, geomID1, confid1, sf2, column2, geo
   # this illustrates how silly it was to store levels and colors in the same vector as names and values.
   # Classification must be encoded as factors
 
-  sf1 <- sf1 %>% dplyr::mutate(!!column1 := factor(subset(sf1, select = column1, drop = T), levels = LCZlevels))
-  sf2 <- sf2 %>% dplyr::mutate(!!column2 := factor(subset(sf2, select = column2, drop = T), levels = LCZlevels))
+  sf1 <- sf1 %>% dplyr::mutate(!!column1 := factor(subset(sf1, select = column1, drop = TRUE), levels = LCZlevels))
+  sf2 <- sf2 %>% dplyr::mutate(!!column2 := factor(subset(sf2, select = column2, drop = TRUE), levels = LCZlevels))
 
   return(list(
     sf1 = sf1, column1 = column1, sf2 = sf2, column2 = column2, etiquettes = etiquettes,

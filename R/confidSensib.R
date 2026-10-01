@@ -183,7 +183,7 @@ confidSensib <- function(inputDf = "", filePath = "", nPoints = 5,
   byLCZ <- data.frame(Confidence = numeric(), Agreement = numeric(),
                       Kept = character(), nbGeoms = numeric(), LCZ = character())
 
-  echIntConfSplit <- split(x = echIntConf, f = echIntConf[[column1]], drop = T)
+  echIntConfSplit <- split(x = echIntConf, f = echIntConf[[column1]], drop = TRUE)
 
   internFunction2 <- function(echIntConf, nPoints) { internFunction(echIntConf, nPoints)$ctData }
   # sortieParLCZ<-aggregate(echIntConf,by=echIntConf[[column1]],internFunction2,nPoints=nPoints)
