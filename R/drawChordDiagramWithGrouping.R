@@ -56,6 +56,10 @@ drawChordDiagramWithGrouping<-function(weightedFluxIn,
                                        colorMapIn = NULL,
                                        labelMatch = NULL,
                                         ...){
+  # reset on exit
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
+
   args <- list(...)
 
   # Case when grouping is specified
@@ -108,7 +112,7 @@ drawChordDiagramWithGrouping<-function(weightedFluxIn,
   diagramme <- chordDiagram(
     weightedFluxIn, grid.col = colorsCircle,
     # col =col.mat,
-    big.gap = 5, small.gap = 2,
+    big.gap = 4, small.gap = 2,
     order = sectors, group = df.groups,
     annotationTrack = NULL,
     preAllocateTracks = list(
@@ -121,7 +125,7 @@ drawChordDiagramWithGrouping<-function(weightedFluxIn,
     direction.type = c("arrows", "diffHeight"),
     link.arr.type = "big.arrow",
     link.largest.ontop = TRUE)
-  par(font = 2, cex = 1.2)
+  par(font = 2, cex = 1)
 
   circos.track(track.index = 2,
                panel.fun = function(x, y) {
@@ -141,7 +145,7 @@ drawChordDiagramWithGrouping<-function(weightedFluxIn,
                  # }
                },
                bg.border = NA) # here set bg.border to NA is important
-  par(cex = 1.5)
+  par(cex = 1)
   sectorsIn<-unique(c(diagramme$rn, diagramme$cn))
 
   lapply(sectorIDs, drawSectors, sectorsIn = sectorsIn,

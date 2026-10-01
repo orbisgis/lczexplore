@@ -60,6 +60,12 @@
 #'        "cfewToNoBuild" = "#bbdb7a","dunclass" = "grey"))
 drawChordDiagram <- function(weightedFluxIn, colorMapIn = NULL,
                              labelMatch = NULL, ...) {
+
+  # for lisibility, drawChrodDiagram needs to change par font and cex, the user values are saved here and
+  # reset on exit
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
+
   if(!is.null(weightedFluxIn$percArea1)){weightedFluxIn$percArea1<-NULL}
   args <- list(...)
 
@@ -151,7 +157,7 @@ drawChordDiagram <- function(weightedFluxIn, colorMapIn = NULL,
   diagramme <- chordDiagram(
     weightedFluxIn, grid.col = colorsCircle,
     # col =col.mat,
-    big.gap = 5, small.gap = 2,
+    big.gap = 4, small.gap = 2,
     order = sectors, group = df.groups,
     annotationTrack = NULL,
     preAllocateTracks = list(
@@ -164,7 +170,7 @@ drawChordDiagram <- function(weightedFluxIn, colorMapIn = NULL,
     direction.type = c("arrows", "diffHeight"),
     link.arr.type = "big.arrow",
     link.largest.ontop = TRUE)
-  par(font = 2, cex = 1.2)
+  par(font = 2, cex = 1)
 
      # Prepare workflow inner circle
   circos.track(track.index = 2,
@@ -200,10 +206,9 @@ drawChordDiagram <- function(weightedFluxIn, colorMapIn = NULL,
 
 
      # here set bg.border to NA is important
-  par(cex = 1.5)
+  par(cex = 1)
   sectorsIn<-unique(c(diagramme$rn, diagramme$cn))
   lapply(sectorIDs, drawSectors, sectorsIn = sectorsIn,
          colorMapIn = colorMapIn, textMatch = labelMatch)
   }
-
 }

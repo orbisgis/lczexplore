@@ -7,7 +7,7 @@
     unable to verify current time
 
 
-* This is a new release.
+* This is a new release. Takes into account CRAN reviewer's demands (hopefully)
 
 ## Build environment
 * local R installation, R.4.5.2

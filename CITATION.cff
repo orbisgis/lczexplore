@@ -8,7 +8,7 @@ message: 'To cite package "lczexplore" in publications use:'
 type: software
 license: LGPL-3.0-only
 title: 'lczexplore: lczexplore'
-version: 0.0.1.0000
+version: 0.1.1
 abstract: 'This lczexplore package automatize the comparison of sets of local climate
   zones.It was developped thanks to the project PAENDORA2 (Pour la gestion du confort
   estival : Données, Outils et Recherche-Action) (2022 -2025), funded by ADEME'

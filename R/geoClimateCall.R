@@ -33,6 +33,6 @@
 geoClimateCall<-function(jarFilePath, configFilePath, wf="OSM") {
   command<-paste0(
     "java -jar ", jarFilePath, " -f '", configFilePath, "' -w ", toupper(wf))
-  print(command)
+  message(command)
   system(command)
 }

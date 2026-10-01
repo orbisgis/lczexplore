@@ -10,7 +10,6 @@
 #' @param plotNow If TRUE, the boxplot of the repartition will be printed
 #' @importFrom ggplot2 geom_sf guides ggtitle aes
 #' @importFrom collapse fmutate fselect frename fgroup_by fsummarise fsum
-#' @importFrom caret dummyVars
 #' @importFrom dplyr mutate group_by summarise
 #' @importFrom tidyr  replace_na
 #' @import sf forcats units RColorBrewer units utils grDevices

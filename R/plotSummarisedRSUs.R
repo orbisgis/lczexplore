@@ -46,7 +46,6 @@ plotSummarisedRSUs <- function(summarisedSfIn, workflowNames = c("wudapt", "osm"
 
   wfNamedVector <- workflowNames
   wfNamedVector[nchar(names(workflowNames)) > 1] <- names(workflowNames)[nchar(names(workflowNames)) > 1]
-  print(wfNamedVector)
   for (wf in workflowNames) {
     wfAlphas <- initalAlphas
     wfAlphas[wf] <- 1

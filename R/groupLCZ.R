@@ -22,7 +22,7 @@
 #' colors=c("red","black","green","grey","burlywood","blue"),wf="BD TOPO")
 groupLCZ <- function(sf, column, outCol = 'grouped', ...)
 {
- print("Grouping")
+ message("Grouping")
   # ensure all the LCZ levels are present in the imported column
   uniqueData <- sf[[column]] %>% unique() %>% as.character # Attention unique outputs a list of length 1
 

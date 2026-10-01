@@ -13,7 +13,7 @@ importLCZvect(
   geomID = "",
   confid = "",
   typeLevels = .lczenv$typeLevelsConvert2,
-  drop = T,
+  drop = TRUE,
   verbose = FALSE,
   sfIn = NULL,
   naAsUnclassified = TRUE

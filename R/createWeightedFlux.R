@@ -33,8 +33,7 @@ createWeightedFlux <- function(intersectSfWide, columns = NULL, wfNamesIn = NULL
  data.table::setDF(intersectSfWide)
   intersectSfWide <- st_as_sf(intersectSfWide)
   # allowing wfNamesIn or columns to be NULL
-  print(columns)
-  print(wfNamesIn)
+
       if (
         (is.null(wfNamesIn) | prod(!is.na(wfNamesIn))) &
           (!is.null(columns) & prod(!is.na(columns)))
@@ -44,8 +43,6 @@ createWeightedFlux <- function(intersectSfWide, columns = NULL, wfNamesIn = NULL
         (is.null(columns) | prod(!is.na(columns))) &
           (!is.null(wfNamesIn) & !prod(is.na(wfNamesIn)))
       ) {columns <- wfNamesIn}
-
-  print(columns)
 
   if (is.null(typeLevelsDefaultIn)){
     typeLevelsDefaultIn <- unique(

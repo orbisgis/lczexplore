@@ -11,6 +11,10 @@ expect_silent(importLCZvect(dirPath=paste0(system.file("extdata", package = "lcz
                            ,file="bdt_lcz.fgb",
                            column="LCZ_PRIMARY",geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE"))
 
+# Test with letter convention for land use covers
+expect_silent(importLCZvect(dirPath=system.file("extdata/", package = "lczexplore")
+  ,file="redonLetterConvention.fgb",
+              column="lcz_primary",geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE"))
 
 # Tests if the imported version of Redon test data matches the Redon test data in the package
 redonBDT2<-importLCZvect(dirPath=paste0(

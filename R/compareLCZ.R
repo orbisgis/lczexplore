@@ -117,14 +117,10 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
     wf1 <- paste0(wf1, ".1")
     wf2 <- paste0(wf2, ".bis") }
   workflowNames <- c(wf1, wf2)
-  print(workflowNames)
-  print(columnVect)
-
   intersec_sf <- createIntersect(sfList = sfList, columns = columnVect, refCrs = ref, workflowNames = workflowNames,
                                  minZeroArea = minZeroArea)
 
   # checks if the two LCZ classifications agree
-  print(names(intersec_sf))
   intersec_sf$agree <- intersec_sf[[wf1]] == intersec_sf[[wf2]]
 
 
@@ -151,8 +147,7 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
   filePath <- paste0(outDir, "/", nom)
 
   if (exwrite == TRUE) {
-    # print(paste0("Comparison data will be appended to the following file : ",nom))
-    print(paste0("The data will be exported in the ",
+    message(paste0("The data will be exported in the ",
                  nom,
                  " file, in your working directory:",
                  getwd())
@@ -218,8 +213,6 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
     etiquettes2 <- paste(etiquettes2, areas$percArea2, " %")
 
     etiquettes1.2 <- paste(etiquettes2, areas$percArea1)
-    # print("LCZlevels") ;print(LCZlevels)
-    # datatemp <- data.frame(a = factor(LCZlevels), percArea1 = areas$percArea1, percArea2 = areas$percArea2)
 
     # center all plots
     boundary1 <- sf1 %>% st_union %>% st_boundary()
@@ -264,7 +257,7 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
 
 
     if (confPlot == "sankey") {
-      print("Sankey")
+      message("You chose Sankey Plot visualization but matrix like is available in $matConfPlot")
       preparedSankey <- prepareSankeyLCZ(
         intersectedDf = intersec_sf, wf1 = workflowNames[1], wf2 = workflowNames[2], colorMap = typeLevels)
       matConfPlot <- plotSankeyfiedLCZ(sankeyfied = preparedSankey, plotNow = TRUE, colorMap = typeLevels,
@@ -368,8 +361,6 @@ checkCompareLCZinputs <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", co
   sf1 <- select(sf1, all_of(nom1)) %>% drop_na(column1)
   sf2 <- select(sf2, all_of(nom2)) %>% drop_na(column2)
   # Prepare the levels of the expected LCZ
-  print("nom1"); print(nom1)
-  print("names(sf1)"); print(names(sf1))
 
   return(list(sf1 = sf1, column1 = column1, confid1 = confid1, wf1 = wf1, geomID1 = geomID1,
               namesf1 = namesf1,
@@ -388,7 +379,6 @@ prepareStandardCompare <- function(sf1, column1,
   uniqueData2 <- sf2[[column2]] %>% unique
 
   LCZlevels <- .lczenv$typeLevelsDefault
-  # print("LCZlevels") ; print(LCZlevels)
   if (prod(uniqueData1 %in% LCZlevels) == 0) {
     line1 <- "The column chosen for the first data set doesn't seem to be a standard LCZ encoding. \n"
     line2 <- "Did you import the data with importLCZvect ? \n"
@@ -406,8 +396,6 @@ prepareStandardCompare <- function(sf1, column1,
 
   etiquettes <- .lczenv$etiquettesDefault
 
-  # print(typeLevels)
-  # names(typeLevels) <- names(.lczenv$typeLevelsDefault)
   # Classification must be encoded as factors
   sf1[[column1]] <- factor(sf1[[column1]], levels = .lczenv$typeLevelsDefault)
   sf2[[column2]] <- factor(sf2[[column2]], levels = .lczenv$typeLevelsDefault)
@@ -441,7 +429,6 @@ prepareAlterInputs <- function(sf1, column1, geomID1, confid1, sf2, column2, geo
     sfNew1 <- groupLCZ(sf1, column = column1, ...)
     #sf1[column1]<-sfNew1["grouped"]
     sf1 <- sfNew1 %>% dplyr::mutate(!!column1 := subset(sfNew1, select = "grouped", drop = TRUE))
-    # print(summary(sf1))
     levCol1 <- levCol(sf1, column1, ...)
 
     rm(sfNew1)
@@ -451,15 +438,13 @@ prepareAlterInputs <- function(sf1, column1, geomID1, confid1, sf2, column2, geo
     message("As tryGroup=TRUE, the function groupLCZ will try to create a \"grouped\" column with level names and levels specified in (...).
       If this doesn't work, compareLCZ function may fail.")
     sfNew2 <- groupLCZ(sf2, column = column2, ...)
-    #sf2[column2]<-sfNew2["grouped"]
+
     sf2 <- sfNew2 %>% dplyr::mutate(!!column2 := subset(sfNew2, select = "grouped", drop = TRUE))
-    # print(summary(sf2))
+
     levCol2 <- levCol(sf2, column2, ...)
     rm(sfNew2)
   }
 
-  # print(summary(sf1))
-  # print(summary(sf2))
   temporaire3 <- c(levCol1$levelsColors, levCol2$levelsColors)
   typeLevels <- temporaire3[unique(names(temporaire3))]
   LCZlevels <- names(typeLevels)
@@ -478,8 +463,8 @@ prepareAlterInputs <- function(sf1, column1, geomID1, confid1, sf2, column2, geo
   # this illustrates how silly it was to store levels and colors in the same vector as names and values.
   # Classification must be encoded as factors
 
-  sf1 <- sf1 %>% dplyr::mutate(!!column1 := factor(subset(sf1, select = column1, drop = T), levels = LCZlevels))
-  sf2 <- sf2 %>% dplyr::mutate(!!column2 := factor(subset(sf2, select = column2, drop = T), levels = LCZlevels))
+  sf1 <- sf1 %>% dplyr::mutate(!!column1 := factor(subset(sf1, select = column1, drop = TRUE), levels = LCZlevels))
+  sf2 <- sf2 %>% dplyr::mutate(!!column2 := factor(subset(sf2, select = column2, drop = TRUE), levels = LCZlevels))
 
   return(list(
     sf1 = sf1, column1 = column1, sf2 = sf2, column2 = column2, etiquettes = etiquettes,

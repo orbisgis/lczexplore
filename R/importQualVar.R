@@ -42,7 +42,7 @@ importQualVar <- function(dirPath = paste0(system.file("extdata", package = "lcz
                           file = "bdt_utrf_area.fgb", output = "sfFile", column = "TYPO_MAJ",
                           geomID = "ID_RSU", confid = "UNIQUENESS_VALUE",
                           typeLevels = "",
-                          drop = T, verbose = TRUE) {
+                          drop = TRUE, verbose = TRUE) {
   if (!file.exists(dirPath)) { stop(message = "The directory set in dirPath doesn't seem to exist") }
 
 
@@ -93,10 +93,10 @@ importQualVar <- function(dirPath = paste0(system.file("extdata", package = "lcz
 
       if (prod(prov %in% typeLevels) == 0) {
         if (verbose == T) {
-          print("levels in typeLevels are : ")
-          print(typeLevels)
-          print("levels in the original dataset are ")
-          print(unique(subset(sfFile, select = column, drop = T)))
+          message("levels in typeLevels are : ")
+           message(typeLevels)
+           message("levels in the original dataset are ")
+           message(unique(subset(sfFile, select = column, drop = TRUE)))
         }
         warning("The levels you specified with the typeLevels argument don't cover the values in the column of your source file.
               Some geoms have been dropped,this could seriously alter your analysis, please check the levels or enter an empty string as typeLevels")
