@@ -1,6 +1,6 @@
 ## R CMD check --as-cran results
 
-0 errors | 0 warnings | 2 note
+0 errors | 0 warnings | O note
 * checking CRAN incoming feasibility ... NOTE
   Maintainer: ‘Matthieu Gousseff <matthieu.gousseff@cnrs.fr>’ 
 * checking for future file timestamps ... NOTE
