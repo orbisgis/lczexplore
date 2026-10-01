@@ -144,7 +144,7 @@ if(grid_x_size!=0 & grid_y_size!=0){
 
   output<-toJSON(x=listJSON,
     pretty=TRUE)
-  print(output)
+  message(output)
 
 
 

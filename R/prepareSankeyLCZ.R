@@ -61,8 +61,6 @@ prepareSankeyLCZ <- function(intersectedDf, wf1, wf2, colorMap) {
   # restore column names after aggregate renames them
   names(intersectedDf)[1:2] <- c(wf1, wf2)
 
-  print(names(intersectedDf))
-
   sankeyfied <- ggsankeyfier::pivot_stages_longer(
     data = st_drop_geometry(intersectedDf),
     stages_from = c(wf1, wf2),

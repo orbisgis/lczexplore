@@ -56,7 +56,6 @@ concatAlocationWorkflows <- function(sfList, location = NA, refCrs = 1, columns 
     names(sfObj)[names(sfObj)==columns[i]]<-"lcz_primary"
     return(sfObj)
   })
-  #lapply(sfList, function(x){print(st_crs(x))})
   concatSf <- do.call(rbind, sfList)
   concatSf$location <- location
   return(concatSf)

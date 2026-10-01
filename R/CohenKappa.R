@@ -119,10 +119,3 @@ CohenKappa <- function(x, y = NULL,
 
 }
 
-
-# KappaTest <- function(x, weights = c("Equal-Spacing", "Fleiss-Cohen"), conf.level = NA) {
-# to do, idea is to implement a Kappa test for H0: kappa = 0 as in
-# http://support.sas.com/documentation/cdl/en/statugfreq/63124/PDF/default/statugfreq.pdf, pp. 1687
-#   print( "still to do...." )
-
-# }

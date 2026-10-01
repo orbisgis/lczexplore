@@ -35,7 +35,7 @@ matConfPlot <- function(matConfLong,
       *
       prod(unique(matConfLong[[column2]]) %in% .lczenv$typeLevelsDefault)
   ) == 1
-  print(condition)
+
   if (condition) {
     matConfLong[[column1]] <- forcats::fct_recode(matConfLong[[column1]],
                                                   "Compact high" = "1",
@@ -116,7 +116,6 @@ matConfPlot <- function(matConfLong,
 
   levels(marginAreas$marginLevels) <- c(levels(marginAreas$marginLevels), "(Margins->)")
   marginAreas <- rbind(marginAreas, list("(Margins->)", 0, 0))
-  print(marginAreas)
 
 
   coordRef <- length(unique(marginAreas$marginLevels))

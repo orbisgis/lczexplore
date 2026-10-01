@@ -30,7 +30,6 @@ aggregateRSUsByLCZ <- function(sf, aggregateBufferSize = 0, column, wfColumn, lo
   groupCols <- as.list(environment())[c("wfColumn", "locationColumn", "column")]
   presentColArgs <- !c(missing(wfColumn), missing(locationColumn), missing(column))
   groupCols <- unname(unlist(groupCols[presentColArgs]))
-  print(groupCols)
   clustered <- sf %>%
     st_buffer(dist = aggregateBufferSize) %>%
     dplyr::group_by(across(all_of(groupCols))) %>%

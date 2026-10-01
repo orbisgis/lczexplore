@@ -47,7 +47,6 @@ confidSensib <- function(inputDf = "", filePath = "", nPoints = 5,
 
   colonnes <- c(geomID1, column1, confid1, geomID2, column2, confid2)
   colonnes <- colonnes[sapply(colonnes, nchar) != 0] %>% c("agree", "area", "location")
-  print("colonnes") ;   print(colonnes)
 
   # Import the data if they are in a csv file or in a R object
   if (filePath != "") {
@@ -56,7 +55,6 @@ confidSensib <- function(inputDf = "", filePath = "", nPoints = 5,
   } else {
 
     if (!is.null(inputDf)) {
-      print("names inputDf") ; print(names(inputDf))
       echInt <- dplyr::distinct(inputDf[, colonnes]) }
     else { stop("You must specifiy a file path or the name of the object storing confidence and agreement") }
   }
@@ -68,8 +66,6 @@ confidSensib <- function(inputDf = "", filePath = "", nPoints = 5,
   # What is the agreement between LCZ classifications when no confidence value is available on any of them ?
   echIntNoconf <- subset(echInt, is.na(echInt$confidMin))
   nbOutCasted <- nrow(echIntNoconf)
-  # print("Number of geoms without any confidence value : ")
-  # print(nbOutCasted)
 
   NAPercAgr <- matConfLCZGlob(inputDf = echIntNoconf, wf1 = wf1, wf2 = wf2,
                               geomID1 = geomID1, column1 = column1, confid1 = confid1,
@@ -87,7 +83,6 @@ confidSensib <- function(inputDf = "", filePath = "", nPoints = 5,
   #############################################################################################
   internFunction <- function(echIntConf, nPoints) {
     confSeq <- quantile(echIntConf$confidMin, probs = seq(0, 1, length.out = nPoints), na.rm = T)
-    print("confSeq in internFunction "); print(confSeq)
 
     percAgrKeep <- NULL
     nbKeep <- NULL
@@ -97,7 +92,7 @@ confidSensib <- function(inputDf = "", filePath = "", nPoints = 5,
     for (i in confSeq) {
 
       echIntKeep <- subset(echIntConf, confidMin >= i)
-      if (nrow(echIntKeep) > 0) { #print(nrow(echIntKeep))
+      if (nrow(echIntKeep) > 0) {
         percAgrKeep <- c(percAgrKeep,
                          matConfLCZGlob(inputDf = echIntKeep, wf1 = wf1, wf2 = wf2,
                                         geomID1 = geomID1, column1 = column1, confid1 = confid1,
@@ -111,7 +106,7 @@ confidSensib <- function(inputDf = "", filePath = "", nPoints = 5,
       }
 
       echIntDrop <- subset(echIntConf, confidMin < i)
-      if (nrow(echIntDrop) > 0) { #print(nrow(echIntDrop))
+      if (nrow(echIntDrop) > 0) {
         percAgrDrop <- c(percAgrDrop,
                          matConfLCZGlob(inputDf = echIntDrop, wf1 = wf1, wf2 = wf2,
                                         geomID1 = geomID1, column1 = column1, confid1 = confid1,
@@ -123,14 +118,12 @@ confidSensib <- function(inputDf = "", filePath = "", nPoints = 5,
         nbDrop <- c(nbDrop, 0) }
 
     }
-    #   summary(echInt)
 
     data <- data.frame(Confidence = c(confSeq, confSeq),
                        Agreement = c(percAgrKeep, percAgrDrop),
                        Kept = rep(c("confidence >= threshold", "confidence < threshold"), each = nPoints),
                        nbGeoms = c(nbKeep, nbDrop))
     data$Kept <- factor(data$Kept, levels = c("confidence >= threshold", "confidence < threshold"))
-    # graphics
 
     etiquette <- paste0("average agreement percentage for \n LCZ with no confidence value : ",
                         NAPercAgr,
@@ -177,9 +170,7 @@ confidSensib <- function(inputDf = "", filePath = "", nPoints = 5,
   # Per LCZ levels of the first classification
   #############################################################################################
   typeLevels <- unique(echIntConf[, column1]) %>% as.vector
-  #  print("typeLevels")
-  #  print(typeLevels)
-  # print("echinConf avant boucle LCZ") ; print(head(echIntConf))
+
   byLCZ <- data.frame(Confidence = numeric(), Agreement = numeric(),
                       Kept = character(), nbGeoms = numeric(), LCZ = character())
 
@@ -214,7 +205,6 @@ confidSensib <- function(inputDf = "", filePath = "", nPoints = 5,
           legend.title = element_text(size = rel(1.8)),
           legend.text = element_text(size = rel(1.5)))
 
-
   if (plot == TRUE) {
     plot(byLCZPLot)
   }
@@ -225,7 +215,6 @@ confidSensib <- function(inputDf = "", filePath = "", nPoints = 5,
     print(byLCZPLot)
     dev.off()
   }
-
 
   return(output)
 

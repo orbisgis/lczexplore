@@ -45,7 +45,7 @@ If "standard" then an optimal set of colors is used to produce the plotted map. 
 
 \item{noPercAlter}{allows to not show the percentage area in the alter representation}
 
-\item{plotNow}{if FALSE the plot is generated but not hown (needs to be stored in an object)}
+\item{plotNow}{if FALSE the plot is generated but not shown (needs to be stored in an object)}
 
 \item{addBorders}{if TRUE the borders of the geometries are visible}
 

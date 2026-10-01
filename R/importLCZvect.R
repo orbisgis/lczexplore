@@ -156,10 +156,12 @@ importLCZvect <- function(dirPath, file = "bdt_lcz.fgb", output = "sfFile", colu
     names(prov) <- prov
     if (prod(prov %in% names(typeLevels)) == 0) {
       if (verbose == TRUE) {
-        print("levels in typeLevels are : ")
-        print(names(typeLevels))
-        print("levels in original data set are ")
-        print(unique(subset(sfFile, select = column, drop = TRUE)))
+         message(
+          paste0("levels in typeLevels are : ",
+                 names(typeLevels),
+                 "levels in original data set are ",
+                 unique(sfFile[[column]])
+          ))
       }
       warning(
         paste0("The levels you specified with the typeLevels argument don't cover the LCZ values in your source file. \n",

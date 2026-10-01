@@ -11,7 +11,7 @@ importLCZvectFromFile(
   geomID = "",
   confid = "",
   verbose = TRUE,
-  drop = TRUERUE
+  drop = TRUE
 )
 }
 \arguments{

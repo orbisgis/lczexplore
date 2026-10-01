@@ -59,18 +59,15 @@ compareMultipleLCZ <- function(sfInt, columns, workflowNames = NULL, trimPerc = 
     for (i in 1:(length(columns) - 1)) {
       for (j in (i + 1):length(columns)) {
         compName <- paste0(workflowNames[i], "_", workflowNames[j])
-        print(compName)
         sfIntNoGeom[, compName] <- sfIntNoGeom[, columns[i]] == sfIntNoGeom[, columns[j]]
       }
     }
     rangeCol <- (length(columns) + 2):ncol(sfIntNoGeom)
-    print(rangeCol)
-    # print(names(sfIntnogeom[,rangeCol]))
+
     sfIntNoGeom$nbAgree <- apply(
       X = sfIntNoGeom[, rangeCol], MARGIN = 1, sum)
     sfIntNoGeom$maxAgree <- apply(
       X = sfIntNoGeom[, seq_along(columns)], MARGIN = 1, function(x) max(table(x), na.rm = TRUE))
-    print(head(sfIntNoGeom))
 
     # long format
     sfIntLong <- tidyr::pivot_longer(sfIntNoGeom, cols = names(sfIntNoGeom)[rangeCol], names_to = "whichWfs", values_to = "agree")
@@ -154,18 +151,14 @@ compareMultipleLCZwithGrouping<-function(sfInt, columns, workflowNames, labelMat
   for (i in 1:(length(columns) - 1)) {
     for (j in (i + 1):length(columns)) {
       compName <- paste0(workflowNames[i], "_", workflowNames[j])
-      print(compName)
       sfIntNoGeom[, compName] <- sfIntNoGeom[, columns[i]] == sfIntNoGeom[, columns[j]]
     }
   }
   rangeCol <- (length(columns) + 2):ncol(sfIntNoGeom)
-  print(rangeCol)
-  # print(names(sfIntnogeom[,rangeCol]))
   sfIntNoGeom$nbAgree <- apply(
     X = sfIntNoGeom[, rangeCol], MARGIN = 1, sum)
   sfIntNoGeom$maxAgree <- apply(
     X = sfIntNoGeom[, seq_along(columns)], MARGIN = 1, function(x) max(table(x), na.rm = TRUE))
-  print(head(sfIntNoGeom))
 
   # long format
   sfIntLong <- tidyr::pivot_longer(sfIntNoGeom, cols = names(sfIntNoGeom)[rangeCol], names_to = "whichWfs", values_to = "agree")

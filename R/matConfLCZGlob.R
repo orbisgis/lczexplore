@@ -5,7 +5,6 @@
 #' @param wf1 : a string indicating the origin of the LCZ classification 1
 #' @param wf2 : a string indicating the origin of the LCZ classification 1
 #' @param sep : the seperator used in the csv file
-#' @param repr : standard or alter
 #' @param typeLevels : by default levels of the LCZ classification are built
 #' reading the data, but one can input a character string vector of levels,
 #' for instance to produce several graphs with the same levels or levels in a specific order
@@ -33,7 +32,7 @@
 #' file="bdtopo_2_2_osm.csv", wf1="bdt", wf2="osm",
 #' geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
 #' geomID2="ID_RSU.1", column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1",
-#' sep=";", repr="standard",
+#' sep=";",
 #' typeLevels="", plot=TRUE)
 #' testSource<-read.csv(paste0(
 #' system.file("extdata", package = "lczexplore"),
@@ -42,10 +41,10 @@
 #' inputDf = testSource, wf1="bdt", wf2="osm",
 #' geomID1="ID_RSU", column1="LCZ_PRIMARY", confid1="LCZ_UNIQUENESS_VALUE",
 #' geomID2="ID_RSU.1", column2="LCZ_PRIMARY.1", confid2="LCZ_UNIQUENESS_VALUE.1",
-#' sep=";", repr="standard",
+#' sep=";",
 #' typeLevels="", plot=TRUE)
 matConfLCZGlob <- function(filePath = "", inputDf, wf1, wf2, geomID1 = "", column1, confid1 = "",
-                           geomID2 = "", column2, confid2 = "", sep = ";", repr = "standard",
+                           geomID2 = "", column2, confid2 = "", sep = ";",
                            typeLevels = "", plot = TRUE, ...) {
 
   if (column1 == column2) {
@@ -75,8 +74,6 @@ matConfLCZGlob <- function(filePath = "", inputDf, wf1, wf2, geomID1 = "", colum
   intersec_sf[, column1] <- factor(intersec_sf[, column1], levels = typeLevels)
   intersec_sf[, column2] <- factor(intersec_sf[, column2], levels = typeLevels)
 
-  # print("intersec_sf")
-  # print(head(intersec_sf))
 
   # Marginal areas for first LCZ
 
@@ -102,20 +99,13 @@ matConfLCZGlob <- function(filePath = "", inputDf, wf1, wf2, geomID1 = "", colum
   # Here is an ugly solution to overcome this (and see later to include the potentially missing combination of levels)
 
   areas <- data.frame(typeLevels = typeLevels, area1 = 0, area2 = 0)
-  #print("areas")
-  #print(areas)
-  #print("head of areaLCZ1 column1")
-  #print(head(areaLCZ1[,column1]))
+
 
   for (i in areaLCZ1[, column1]) {
-    #print(" i as a level of areaLCZ1 equals")
-    #print(i)
     areas[areas$typeLevels == i, 'area1'] <- areaLCZ1[areaLCZ1[, column1] == i, 'area']
   }
 
   for (i in areaLCZ2[, column2]) {
-    # print(" i as a level of areaLCZ2 equals")
-    # print(i)
     areas[areas$typeLevels == i, 'area2'] <- areaLCZ2[areaLCZ2[, column2] == i, 'area']
   }
 
@@ -137,15 +127,9 @@ matConfLCZGlob <- function(filePath = "", inputDf, wf1, wf2, geomID1 = "", colum
     ungroup %>%
     ungroup
 
-  # print("matConf")
-  # print(head(matConf))
-
   matConfLarge <- tidyr::pivot_wider(data = matConf, names_from = column2, values_from = area)
   readable <- matConfLarge[, -1] / rowSums(matConfLarge[, -1], na.rm = T) * 100
   matConfLarge <- cbind(matConfLarge[, 1], round(x = readable, digits = 2))
-
-  # print("matConfLarge")
-  # print(head(matConfLarge))
 
 
   ###############################################################
@@ -155,10 +139,7 @@ matConfLCZGlob <- function(filePath = "", inputDf, wf1, wf2, geomID1 = "", colum
   # Longer format to feet the geom_tile aes in ggplot2
 
   matConfLong <- tidyr::pivot_longer(matConfLarge, cols = -1, names_to = column2)
-  # print("matConfLong avant reorder factor")
   names(matConfLong) <- c(column1, column2, "agree")
-
-  # Reordering of factors (as they were sorted in the order of showing in the file)
 
   matConfLong <- matConfLong %>% dplyr::mutate(across(where(is.character), as_factor))
   matConfLong <- matConfLong %>%
@@ -180,8 +161,6 @@ matConfLCZGlob <- function(filePath = "", inputDf, wf1, wf2, geomID1 = "", colum
   )
 
   names(complement) <- c("LCZ1", "LCZ2", "uselessIndex", "tempArea")
-  # print("complement")
-  # complement %>% head %>% print
 
   completed <- merge(x = matConfLong, y = complement, by.x = c(column1, column2), by.y = c("LCZ1", "LCZ2"), all = T)
   completed$agree[is.na(completed$agree)] <- completed$tempArea[is.na(completed$agree)]
@@ -196,15 +175,12 @@ matConfLCZGlob <- function(filePath = "", inputDf, wf1, wf2, geomID1 = "", colum
 
 
   matConfLong <- matConfLong %>% arrange(column1, column2)
-  #Include all the lcz levels, even if they are not present in the datasets
 
-  # print("matConfLongaprès reorder factor")
-  # print(matConfLong)
   datatemp <- data.frame(a = factor(typeLevels), percArea1 = areas$area1, percArea2 = areas$area2)
   ############
   # Plot
   coordRef <- length(typeLevels) + 1
-  # if (repr=='standard'){titrou<-"LCZ"} else {titrou<-"Grouped LCZs"}
+
 
   if (wf1 == "bdtopo_2_2") { adtitre1 <- " BDTOPO V2.2" } else
     if (wf1 == "osm") { adtitre1 <- " OSM " } else

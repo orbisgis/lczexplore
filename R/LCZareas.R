@@ -44,6 +44,5 @@ LCZareas <- function(sf, column, LCZlevels) {
     }
   }
 
-  #print(areas)
   areas
 }

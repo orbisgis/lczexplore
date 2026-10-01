@@ -12,7 +12,7 @@
 #' @param useStandCol is set to TRUE implies that any levels detected as a standard LCZ level will receive the standard associated color
 #' @param tryGroup is set to TRUE when one wants to group and plot on the fly 
 #' @param naAsUnclassified if TRUE, affects Unclassified value to NAs in the LCZ column
-#' @param plotNow if FALSE the plot is generated but not hown (needs to be stored in an object)
+#' @param plotNow if FALSE the plot is generated but not shown (needs to be stored in an object)
 #' @param addBorders if TRUE the borders of the geometries are visible
 #' @param labelType in the standard representation, this value can take the values "long" (number, name and percentage area for each LCZ types), 
 #' "short" (value and percentage), "very short" (only number and percentage), "no perc" (no area percentage).
@@ -126,7 +126,6 @@ showAlterLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
                          ...) {
 
   datasetName <- deparse(substitute(sf))
-  print(datasetName)
   try(class(sf)[1] == "sf", stop("Input data must be sf object"))
   if (wf != "") { nomLegende <- paste0("Levels from ", wf, " workflow") } else { nomLegende <- "Levels" }
 
@@ -136,7 +135,7 @@ showAlterLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
   levColShow <- levCol(sf = sf, column = column, drop = drop, ...)
   typeLevels <- levColShow$levelsColors
   levColCase <- levColShow$case
-  print("typeLevels before try Group"); print(typeLevels)
+  message(paste0("typeLevels before trying to group are ", typeLevels))
 
   ########## Multiple vectors of levels and tryGroup=TRUE, let's try to group on the fly
 
@@ -147,10 +146,8 @@ showAlterLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
       If this doesn't work, compareLCZ function may fail.")
     sfNew <- groupLCZ(sf, column = column, ...)
     sf[[column]] <- sfNew[["grouped"]]
-    # print(summary(sf1))
     levColShow <- levCol(sf, "grouped", ...)
     typeLevels <- levColShow$levelsColors
-    print("typeLevels try Group"); print(typeLevels)
     rm(sfNew)
   }
 
@@ -160,7 +157,7 @@ showAlterLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
 
   if (useStandCol == TRUE) {
     typeLevels <- standLevCol(levels = names(typeLevels), colors = typeLevels, useStandCol = TRUE)
-    print("typeLevels useStandCol"); print(typeLevels) }
+    message(paste0("standard LCZ types detected, the standard colors will be associated to them: ", typeLevels)) }
 
   LCZlevels <- names(typeLevels)
 
@@ -170,9 +167,6 @@ showAlterLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
 
   if (!noPercAlter) { etiquettes <- paste(LCZlevels, ": ", areas$area, "%") } else { etiquettes <- LCZlevels }
 
-  print("etiquettes"); print(etiquettes)
-
-  # print(summary(sf[[column]]))
 
   if (title == "") {
     if (wf != "") { wtitre <- paste("Grouped LCZ for ", wf, "workflow, applied to ", datasetName, "dataset") } else {
@@ -181,8 +175,6 @@ showAlterLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
   } else {
     wtitre <- title
   }
-
-  print(summary(sf[[column]]))
 
   palter <-
     ggplot() + # les données
@@ -287,7 +279,6 @@ showStandardLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
       presentLevels <- levels(droplevels(sf[[column]]))
       sf [[column]] <- factor(sf [[column]], levels = presentLevels)
       presentIndices <- match(presentLevels, .lczenv$typeLevelsDefault)
-      print(presentLevels); print(unique(names(typeLevels))); print(presentIndices)
       colorMap <- colorMap[presentIndices]
       etiquettes <- etiquettes[presentIndices]
     }

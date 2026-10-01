@@ -25,8 +25,10 @@ importMultipleLocsLCZvect <- function(
   fileExtension = ".fgb", columns = NULL) {
 
   dirList <- list.dirs(dirPath, recursive = FALSE)
-  print(dirList)
-  print(locations)
+  message1 <- paste0("The data will be imported from the following folders :", dirList)
+  message(message1)
+  message2 <- paste0("The locations are :", locations)
+  message(message2)
 
   if (length(locations) < length(dirList) | prod(!is.na(locations)) == 0) {
     locations <- gsub(pattern = "(.*)(/)(.+)", replacement = "\\3", x = dirList)
