@@ -115,13 +115,18 @@ See example and vignettes to allow on-the-fly LCZ types grouping.
 Since version 0.1.0, `lczexplore` includes functions to compare more than 2 maps. 
 It allows to produce pairwise agreements, consensus among workflows for each LCZ type
 and a chord diagram to visualize how types of a workflow break up in types of the others.
+
 `importMultipleLCZvect`import LCZ layers from multiple maps. Its use require a given folder tree. 
+
 `createIntersect` intersects the geometries (spatial units) of all maps, and allows
-more control before comparison. 
+more control before comparison. As more than 2 workflows and multiple locations can be compared, 
+intersection is a step on its own.
+
 `compareMultipleLCZ` compare the multiple maps and produce pairwise agreements, 
 a consensus indicator among workflows for each LCZ type and a chord diagram to
 visualize the correspondences between workflows. 
 
+![Repartition of some grouped LCZ types from a workflow to another](inst/extdata/mutipleCompareGrouped.png)
 
 
 
