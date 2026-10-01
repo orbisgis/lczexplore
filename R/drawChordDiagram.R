@@ -171,6 +171,7 @@ drawChordDiagram <- function(weightedFluxIn, colorMapIn = NULL,
     link.arr.type = "big.arrow",
     link.largest.ontop = TRUE)
   par(font = 2, cex = 1)
+  on.exit(par(oldpar))
 
      # Prepare workflow inner circle
   circos.track(track.index = 2,
@@ -207,6 +208,7 @@ drawChordDiagram <- function(weightedFluxIn, colorMapIn = NULL,
 
      # here set bg.border to NA is important
   par(cex = 1)
+  on.exit(par(oldpar))
   sectorsIn<-unique(c(diagramme$rn, diagramme$cn))
   lapply(sectorIDs, drawSectors, sectorsIn = sectorsIn,
          colorMapIn = colorMapIn, textMatch = labelMatch)
