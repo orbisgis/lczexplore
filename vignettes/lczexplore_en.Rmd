@@ -16,8 +16,6 @@ knitr::opts_chunk$set(
         collapse = TRUE,
         comment = "#>"
 )
-
-
 ```
 
 
@@ -278,16 +276,16 @@ When using the `importLCZvect` function one needs to specify the confidence valu
 to the LCZ (`confid` argument). On can also set the name of the geometry identifier (`geomID` argument ).
 
 ```{r, compare-for-sensitivity}
-dirPath<-system.file("extdata/multipleWfs/Redon",package="lczexplore")
+dirPath <- system.file("extdata/multipleWfs/Redon", package = "lczexplore")
 
-redonOSM<-importLCZvect(dirPath=dirPath,file="osm_lcz.fgb",column = "LCZ_PRIMARY",geomID = "ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
+redonOSM <- importLCZvect(dirPath = dirPath, file = "osm_lcz.fgb", column = "LCZ_PRIMARY", geomID = "ID_RSU", confid = "LCZ_UNIQUENESS_VALUE")
 
-redonBDT<-importLCZvect(dirPath=dirPath,file="bdt_lcz.fgb",column = "LCZ_PRIMARY",geomID = "ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
+redonBDT <- importLCZvect(dirPath = dirPath, file = "bdt_lcz.fgb", column = "LCZ_PRIMARY", geomID = "ID_RSU", confid = "LCZ_UNIQUENESS_VALUE")
 
-redonCompare<-compareLCZ(sf1=redonBDT, wf1="bdt", geomID1 = "ID_RSU",column1 ="LCZ_PRIMARY",
-                         confid1 = "LCZ_UNIQUENESS_VALUE",
-                         sf2=redonOSM, wf2="osm", geomID2 = "ID_RSU",column2="LCZ_PRIMARY", confid2 ="LCZ_UNIQUENESS_VALUE",
-                         exwrite=FALSE, plot=FALSE)
+redonCompare <- compareLCZ(sf1 = redonBDT, wf1 = "bdt", geomID1 = "ID_RSU", column1 = "LCZ_PRIMARY",
+                           confid1 = "LCZ_UNIQUENESS_VALUE",
+                           sf2 = redonOSM, wf2 = "osm", geomID2 = "ID_RSU", column2 = "LCZ_PRIMARY", confid2 = "LCZ_UNIQUENESS_VALUE",
+                           exwrite = FALSE, plot = FALSE)
 ```
 
 
@@ -316,6 +314,10 @@ confidRedon <- confidSensib(inputDf = redonCompare$data, filePath = "", nPoints 
 ```{r, show-sensitivity-prettier, out.width = "680px"}
 path <- paste0(system.file("extdata/GeneralUniquenessSensib",package="lczexplore"), ".png")
 knitr::include_graphics(path, error=FALSE)
+```
+
+```{R, cleaningpng}
+file.remove(path)
 ```
 
 One can see that the agreement between classifications using BDTOPO and OpenStreetMap tends to increase when the confidence of the LCZ we keep increases (except for the open low LCZ !).

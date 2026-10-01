@@ -3,9 +3,10 @@
 #
 library(sf)
 
-expect_silent(redonBDT2<-importLCZvect(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Redon"),
-                            file = "bdt_lcz.fgb",
-                          column="LCZ_PRIMARY",geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE",verbose=T))
+expect_silent(redonBDT2 <- importLCZvect(
+  dirPath = paste0(system.file("extdata", package = "lczexplore"), "/multipleWfs/Redon"),
+  file = "bdt_lcz.fgb",
+  column = "LCZ_PRIMARY", geomID = "ID_RSU", confid = "LCZ_UNIQUENESS_VALUE", verbose = T))
 
 expect_silent(importLCZvect(dirPath=paste0(system.file("extdata", package = "lczexplore"),"/multipleWfs/Redon")
                            ,file="bdt_lcz.fgb",
