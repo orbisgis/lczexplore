@@ -16,10 +16,7 @@ knitr::opts_chunk$set(
   comment = "#>",
   out.width="100%"
 )
-if (!require("png")) {
-  install.packages("png",repos = "http://cran.us.r-project.org")
-  library("png")
-}
+
 ```
 
 This vignette focuses on loading, intersecting and comparing multiple (3 to 5) LCZ maps on the same area
