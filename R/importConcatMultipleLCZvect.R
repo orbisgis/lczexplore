@@ -53,7 +53,7 @@ importConcatMultipleLocsLCZvect <- function(dirPath, locations = NA, workflowNam
     dirPath <- dirList[i]
     if (substring(text = dirPath, first = nchar(dirPath)) != "/") { dirPath <- paste0(dirPath, "/") }
     aLocation <- locations[i]
-    print(aLocation)
+    message(paste0("Processing the fgololwing location: ", aLocation))
     sfList <- importMultipleLCZvect(dirPath = dirPath,
                               workflowNames = workflowNames, location = aLocation)
     if (substr(dirPath, nchar(dirPath), nchar(dirPath)) != "/") { dirPath <- paste0(dirPath, "/") }

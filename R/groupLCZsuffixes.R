@@ -19,9 +19,7 @@ groupLCZsuffix <- function(weightedFluxIn, ...) {
 
   # get the grouping levels as passed by ..., but without keeping arguments about colours
   args <- list(...) #[names(list(...)) != "groupColors"]
-  print(args)
-  indSep <- names(args)
-  # print(names(args))
+  # indSep <- names(args)
 
   args <- append(list(origSuff), args)
   # temp<-do.call(fct_collapse,args)

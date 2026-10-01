@@ -31,7 +31,7 @@ standLevCol <- function(levels, colors = "", useStandCol = FALSE) {
     levelsColors <- colors
     names(levelsColors) <- levels
   } else {
-    print("Please, check your vectors of levels and colors")
+    message("Please, check your vectors of levels and colors")
     levelsColors <- alienColors
     names(levelsColors) <- levels
     levelsColors

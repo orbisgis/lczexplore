@@ -49,14 +49,10 @@ importMultipleLCZvect <- function(
 
   }
    if (is.null(location) | prod(!is.na(location)) == 0) {
-    print("location")
-    print(location)
     location <- gsub(pattern = "(.*)(/)(.+)(/$)", replacement = "\\3", x = dirPath)
-    print(location)
   }
   if (length(columns) == 1) { columns <- rep(columns, length(workflowNames)) }
   dirPath <- checkDirSlash(dirPath)
-  print(dirPath)
   sfList <- list()
   for (i in seq_along(workflowNames)) {
     inName <- paste0(dirPath, workflowNames[i], "_lcz", fileExtension)
@@ -166,7 +162,6 @@ importMultipleLCZvectFromSession <- function(sfList, workflowNames, columns, loc
     sfIn$location <- location
     sfIn$lcz_primary <- sfIn[[column]]
     sfIn <- sfIn[, c("lcz_primary", "wf", "location", "geometry")]
-    print(names(sfIn))
     return(sfIn)
   }
 

@@ -98,8 +98,7 @@ createIntersect <- function(sfList, columns, refCrs = NULL,
     # Intersecting
 
     sfInt <- Reduce(st_intersection, sfListCRSed)
-    # sfInt$location<-locationRef
-    print(summary(sfInt))
+
  }
 
   # Areas management

@@ -59,8 +59,6 @@ matConfLCZ <- function(sf1, column1, sf2, column2, typeLevels = .lczenv$typeLeve
       sf2[[column1]] <- NULL
     }
 
-    print(typeLevels)
-    print(summary(sf1[[column1]]))
     sf1[[column1]] <- ordered(sf1[[column1]], levels = typeLevels)
     sf1[[column1]][is.na(sf1[[column1]])] <- "Unclassified"
     sf2[[column2]] <- ordered(sf2[[column2]], levels = typeLevels)
@@ -121,7 +119,6 @@ matConfLCZ <- function(sf1, column1, sf2, column2, typeLevels = .lczenv$typeLeve
     , .(col2, percArea2 = 100 * sumArea / sum(sumArea)), env = list(col2 = substitute(col2))]
 
   marginAreas <- merge(areaLCZ1, areaLCZ2, by.x = column1, by.y = column2, all.x = TRUE, all.y = TRUE)
-  # print(marginAreas)
   allLevelsDT <- data.table(lcz = typeLevels)
   marginAreas <- merge(marginAreas, allLevelsDT, by.x = column1, by.y = "lcz", all.y = TRUE)
   marginAreas[["percArea1"]][is.na(marginAreas[["percArea1"]])] <- 0
@@ -129,11 +126,7 @@ matConfLCZ <- function(sf1, column1, sf2, column2, typeLevels = .lczenv$typeLeve
 
   names(marginAreas)[1] <- "marginLevels"
 
-
-  # print(marginAreas)
-
   percAgg <- sfInt[, .(agree, percArea = area / sum(area)),][agree == TRUE, .(percAgg = round(sum(percArea) * 100, 2)),]
-  # print(percAgg)
 
   col1 <- eval(substitute(column1), envir = parent.frame())
   col2 <- eval(substitute(column2), envir = parent.frame())
