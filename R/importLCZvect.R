@@ -133,7 +133,7 @@ importLCZvectFromSf <- function(sfIn, column, geomID = "", confid = "") {
 importLCZvect <- function(dirPath, file = "bdt_lcz.fgb", output = "sfFile", column = "LCZ_PRIMARY",
                           geomID = "", confid = "",
                           typeLevels = .lczenv$typeLevelsConvert2,
-                          drop = T, verbose = FALSE, sfIn = NULL, naAsUnclassified = TRUE) {
+                          drop = TRUE, verbose = FALSE, sfIn = NULL, naAsUnclassified = TRUE) {
 
   if (is.null(sfIn)) {
     sfFile <- importLCZvectFromFile(

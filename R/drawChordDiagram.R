@@ -60,6 +60,12 @@
 #'        "cfewToNoBuild" = "#bbdb7a","dunclass" = "grey"))
 drawChordDiagram <- function(weightedFluxIn, colorMapIn = NULL,
                              labelMatch = NULL, ...) {
+
+  # for lisibility, drawChrodDiagram needs to change par font and cex, the user values are saved here and
+  # reset on exit
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
+
   if(!is.null(weightedFluxIn$percArea1)){weightedFluxIn$percArea1<-NULL}
   args <- list(...)
 
@@ -205,5 +211,4 @@ drawChordDiagram <- function(weightedFluxIn, colorMapIn = NULL,
   lapply(sectorIDs, drawSectors, sectorsIn = sectorsIn,
          colorMapIn = colorMapIn, textMatch = labelMatch)
   }
-
 }

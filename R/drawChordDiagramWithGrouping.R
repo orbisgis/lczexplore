@@ -56,6 +56,10 @@ drawChordDiagramWithGrouping<-function(weightedFluxIn,
                                        colorMapIn = NULL,
                                        labelMatch = NULL,
                                         ...){
+  # reset on exit
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar))
+
   args <- list(...)
 
   # Case when grouping is specified

@@ -42,7 +42,7 @@ importQualVar <- function(dirPath = paste0(system.file("extdata", package = "lcz
                           file = "bdt_utrf_area.fgb", output = "sfFile", column = "TYPO_MAJ",
                           geomID = "ID_RSU", confid = "UNIQUENESS_VALUE",
                           typeLevels = "",
-                          drop = T, verbose = TRUE) {
+                          drop = TRUE, verbose = TRUE) {
   if (!file.exists(dirPath)) { stop(message = "The directory set in dirPath doesn't seem to exist") }
 
 

@@ -13,7 +13,7 @@ importQualVar(
   geomID = "ID_RSU",
   confid = "UNIQUENESS_VALUE",
   typeLevels = "",
-  drop = T,
+  drop = TRUE,
   verbose = TRUE
 )
 }
