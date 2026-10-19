@@ -36,8 +36,6 @@ fetchLCZ <- function(location, outDir, wf = "bdtopo_2_2", refYear = "2022",
 
   destFile <- paste0(folder, "/", location, ".zip")
   destLCZfile <- paste0(folder, "/", "rsu_lcz.geojson")
-  cat("folder= ", folder, "\n")
-  cat("url= ", url, "\n")
 
   if (file.exists(folder)) {
     message('The folder already exists. \n')

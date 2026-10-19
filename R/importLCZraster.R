@@ -97,8 +97,6 @@ importLCZraster <- function(dirPath, bBox, fileName = "EU_LCZ_map.tif", LCZband 
                                          !!!typeLevels)) %>%
         drop_na(LCZcolumn)
 
-      cat(levels(subset(sfFile, select = LCZcolumn, drop = TRUE)))
-      #plot(sfFile)
       sfFile
     }
   }
