@@ -48,6 +48,7 @@ showLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
   datasetName <- deparse(substitute(sf))
   if (is.null(wf) | wf == ""){wf<-datasetName}
 
+  column <- checkColnameCase(column, names(sf))
 
   if (wf != "") { nomLegende <- paste0("Levels from ", wf, " workflow") } else { nomLegende <- "Levels" }
 
