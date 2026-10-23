@@ -16,10 +16,6 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-if (!require("png")) {
-  install.packages("png", repos = "http://cran.us.r-project.org")
-  library("png")
-}
 
 ```
 The lczexplore package was developped thanks to the PAENDORA2 (Pour la gestion du confort estival : Données, Outils et Recherche-Action, 2022 -2025, funded by ADEME, a French agency for ecological transition).

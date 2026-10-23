@@ -53,6 +53,7 @@ importLCZvectFromFile <- function(
     if (extension == ".fgb") {
       sfFile <- sf::st_read(dsn = fileName, quiet = !verbose)[,]
       sourceCol <- names(sfFile)
+      colonnes <- checkColnameCase(colonnes, sourceCol)
       inCol <- colonnes %in% sourceCol
       badCol <- colonnes[!inCol]
       colErr <- c("It seems that some of the columns you try to import do not exist in the source file,
@@ -142,6 +143,9 @@ importLCZvect <- function(dirPath, file = "bdt_lcz.fgb", output = "sfFile", colu
   } else {
     sfFile <- importLCZvectFromSf(sfIn, column, geomID = "", confid = "")
   }
+
+  # ugly trick to check for error in column case
+  column <- checkColnameCase(column, names(sfFile))
 
 
   # if typeLevels is empty

@@ -18,7 +18,7 @@ checkColnameCase <- function(userColNames, dataColNames) {
               are you sure you meant ",
               paste(badCol), "?")
   if (prod(inCol) == 0) {
-    if (prod(tolower(badCol) %in% dataColNames) == 0) {
+    if (sum(tolower(badCol) %in% dataColNames) != 0) {
       message(paste0(badCol,
                      " do-es-n't seem to be a column-s of your dataset, but ",
                      tolower(badCol),
