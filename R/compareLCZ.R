@@ -88,7 +88,8 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
 
 
   if (repr == "standard") {
-    preparedStandard <- prepareStandardCompare(sf1 = sf1, column1 = column1, sf2 = sf2, column2 = column2, ...)
+    preparedStandard <- prepareStandardCompare(
+      sf1 = sf1, column1 = column1, sf2 = sf2, column2 = column2, ...)
     sf1 <- preparedStandard$sf1
     sf2 <- preparedStandard$sf2
     etiquettes <- preparedStandard$etiquettes
@@ -97,9 +98,12 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
   }
 
   if (repr == "alter") {
-    preparedAlter <- prepareAlterInputs(sf1 = sf1, column1 = column1, geomID1 = geomID1, confid1 = confid1,
-                                        sf2 = sf2, column2 = column2, geomID2 = geomID2, confid2 = confid2,
-                                        tryGroup = tryGroup, ...)
+    preparedAlter <-
+      prepareAlterInputs(
+        sf1 = sf1, column1 = column1, geomID1 = geomID1, confid1 = confid1,
+        sf2 = sf2, column2 = column2, geomID2 = geomID2, confid2 = confid2,
+        tryGroup = tryGroup,
+        ...)
     sf1 <- preparedAlter$sf1; column1 <- preparedAlter$column1
     sf2 <- preparedAlter$sf2; column2 <- preparedAlter$column2
     etiquettes <- preparedAlter$etiquettes
@@ -408,7 +412,9 @@ prepareStandardCompare <- function(sf1, column1,
   ))
 }
 
-prepareAlterInputs <- function(sf1, column1, geomID1, confid1, sf2, column2, geomID2, confid2, tryGroup = tryGroup, ...) {
+prepareAlterInputs <- function(sf1, column1, geomID1, confid1,
+                               sf2, column2, geomID2, confid2,
+                               tryGroup = tryGroup, ...) {
   # Call levCol to deal with levels and colors
   levCol1 <- levCol(sf1, column1, ...)
   levCol2 <- levCol(sf2, column2, ...)

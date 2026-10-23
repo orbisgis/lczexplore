@@ -3,11 +3,11 @@
 #
 # library(sf)
 
-redonBDTgrouped<-groupLCZ(redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
-                          industry="10",
-                          vegetation=c("101","102","103","104"),
-                          impervious="105",pervious="106",water="107"
-                           )
+redonBDTgrouped <- groupLCZ(redonBDT, column = "LCZ_PRIMARY", urban = c("1", "2", "3", "4", "5", "6", "7", "8", "9"),
+                            industry = "10",
+                            vegetation = c("101", "102", "103", "104"),
+                            impervious = "105", pervious = "106", water = "107"
+)
 redonBDTgrouped<-groupLCZ(redonBDT,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
                           industry="10",
                           vegetation=c("101","102","103","104"),
@@ -39,6 +39,25 @@ expect_warning(
                                           impervious="105",pervious="106",water="107",
                                          colors=c("red","black","green","grey","burlywood","blue")), "Unknown levels"
 )
+
+testCase<-importLCZvect(dirPath=system.file("extdata/", package = "lczexplore")
+  ,file="redonLetterConvention.fgb",
+                            column="LCZ_PRIMARY",geomID="ID_RSU",confid="LCZ_UNIQUENESS_VALUE")
+testCasegrouped<-groupLCZ(testCase,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
+                          industry="10",
+                          vegetation=c("101","102","103","104"),
+                          impervious="105",pervious="106",water="107",
+                          colors=c("red","black","green","grey","burlywood","blue"))
+
+
+expect_warning(
+  testCasegrouped<-groupLCZ(testCase,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
+                            industry="10",
+                            vegetation=c("101","102","103","104"),
+                            impervious="105",pervious="106",water="107",
+                            colors=c("red","black","green","grey","burlywood","blue")), "Unknown levels"
+)
+
 
 
 expect_warning(redonOSMgrouped<-groupLCZ(redonOSM,column="LCZ_PRIMARY",urban=c("1","2","3","4","5","6","7","8","9"),
