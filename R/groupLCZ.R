@@ -24,6 +24,7 @@ groupLCZ <- function(sf, column, outCol = 'grouped', ...)
 {
  message("Grouping")
   # ensure all the LCZ levels are present in the imported column
+  column <- checkColnameCase(column, names(sf))
   uniqueData <- sf[[column]] %>% unique() %>% as.character # Attention unique outputs a list of length 1
 
   # typeLevels<-c(1:10,101:107)
