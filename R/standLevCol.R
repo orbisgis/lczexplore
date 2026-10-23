@@ -38,9 +38,10 @@ standLevCol <- function(levels, colors = "", useStandCol = FALSE) {
   }
 
   if (useStandCol == TRUE) {
-    message("As useStandCol is set to TRUE, some of the specified colors may have been over-ridden to use standard colors if standard LCZ values have been detected")
     originalLevels <- levels
     isStandardIndex <- levels %in% standardLevelsConvert
+    if (any(isStandardIndex)) {message("As useStandCol is set to TRUE, some of the specified colors may have been over-ridden to use standard colors if standard LCZ values have been detected")
+    }
     standardLevels <- names(standardLevelsConvert)[
       match(
         originalLevels[isStandardIndex], standardLevelsConvert

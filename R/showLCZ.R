@@ -120,7 +120,7 @@ showLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
 #' LCZlevels=c("urban","industry","vegetation","impervious","pervious","water"),
 #' colors=c("red","black","green","grey","burlywood","blue"),wf="BD TOPO")
 #'
-showAlterLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
+showAlterLCZ <- function(sf, title = "", wf = "", column,
                          drop = FALSE, useStandCol = FALSE, tryGroup = TRUE, plotNow = TRUE,
                          labelType = "long", repr = "alter",
                          naAsUnclassified = TRUE, noPercAlter = FALSE, addBorders = FALSE,
@@ -158,7 +158,7 @@ showAlterLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
 
   if (useStandCol == TRUE) {
     typeLevels <- standLevCol(levels = names(typeLevels), colors = typeLevels, useStandCol = TRUE)
-    message(paste0("standard LCZ types detected, the standard colors will be associated to them: ", typeLevels)) }
+     }
 
   LCZlevels <- names(typeLevels)
 

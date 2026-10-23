@@ -36,6 +36,14 @@ expect_message(
   "9:"
 )
 
+expect_message(
+  showLCZ(redonBDTgrouped, column = "grouped", repr = "alter",
+          wf = "BD TOPO", useStandCol = FALSE, addBorders = FALSE, noPercAlter = TRUE, tryGroup = FALSE,
+          colors = c(urban = "red", impervious = "black", vegetation =  "green",
+                     industry = "grey", pervious =  "burlywood", water = "blue", Unclassified = "white")),
+  "2.0:"
+)
+
 # levCol(redonBDTgrouped,column="grouped",
 #        levels=c("urban","industry","vegetation","impervious","pervious","water"),
 #        colors=c("red","black","green","grey","burlywood","blue"))
