@@ -200,7 +200,7 @@ knitr::include_graphics(path, error=FALSE)
 ```
 
 The comparison also works on grouped data. 
-```{r, compare-grouped, echo = TRUE, fig.show="hide" }
+```{r, compare-grouped, echo = TRUE, fig.height = 15, fig.width = 15 }
 redonOSMgrouped <- groupLCZ(redonOSM, column = "LCZ_PRIMARY",
                             urban = c("1", "2", "3", "4", "5", "6", "7", "8", "9"),
                             industry = "10",
@@ -219,15 +219,10 @@ comparisonGrouped <- compareLCZ(sf1 = redonOSMgrouped, column1 = "grouped",
                                 colors = c("red", "black", "green", "grey", "burlywood", "blue"), saveG = path)
 ```
 
-```{r, compare-grouped-plot-prettier, out.width = "680px"}
-path <- paste0(system.file("extdata/", package = "lczexplore"), "/groupedComparison.png")
-knitr::include_graphics(path, error=FALSE)
-
-```
 
 A little cheat is possible ! You can try to group and compare on-the-fly with `tryGroup=TRUE`. The syntax is then as shown in the nex code chunk. 
 
-```{r, compare-on-the-fly, out.width="70%", echo = TRUE, fig.show="hide"}
+```{r, compare-on-the-fly, out.width="70%", echo = TRUE, fig.height = 16, fig.width = 16}
 comparisonGrouped <- compareLCZ(sf1 = redonBDT, column1 = "LCZ_PRIMARY", wf1 = "groupedBDT",
                                 sf2 = redonOSM, column2 = "LCZ_PRIMARY", wf2 = "groupedOSM",
                                 repr = "alter", ref = 2, saveG = "", exwrite = FALSE, location = "Redon", plot = TRUE,
@@ -275,7 +270,7 @@ LCZ type was a good candidate. So this uniqueness can be seen as a confidence va
 When using the `importLCZvect` function one needs to specify the confidence value associated 
 to the LCZ (`confid` argument). On can also set the name of the geometry identifier (`geomID` argument ).
 
-```{r, compare-for-sensitivity}
+```{r, compare-for-sensitivity, message = FALSE}
 dirPath <- system.file("extdata/multipleWfs/Redon", package = "lczexplore")
 
 redonOSM <- importLCZvect(dirPath = dirPath, file = "osm_lcz.fgb", column = "LCZ_PRIMARY", geomID = "ID_RSU", confid = "LCZ_UNIQUENESS_VALUE")
@@ -301,38 +296,20 @@ The span of the confidence values is divided on as many points as the user choos
 
 For each of these thresholds, the function only keeps the reference spatial units (RSU, i.e. the geometries) for which the confidence value is higher than the threshold. Then it computes the agreement between the classifications based on these geoms.
 
-```{r, perform-sensitivity, fig.show="hide"}
+```{r, perform-sensitivity, fig.height = 15, fig.width = 15}
 names(redonCompare$data)
 confidRedon <- confidSensib(inputDf = redonCompare$data, filePath = "", nPoints = 10,
                             wf1 = "bdtopo_2_2", wf2 = "osm",
                             geomID1 = "ID_RSU", column1 = "bdt", confid1 = "LCZ_UNIQUENESS_VALUE",
                             geomID2 = "ID_RSU.1", column2 = "osm", confid2 = "LCZ_UNIQUENESS_VALUE.1",
                             sep = ";", repr = "standard",
-                            plot = TRUE, saveG = system.file("extdata/", package = "lczexplore"))
+                            plot = TRUE)
 
 ```
-```{r, show-sensitivity-prettier, out.width = "680px"}
-path <- paste0(system.file("extdata/GeneralUniquenessSensib",package="lczexplore"), ".png")
-knitr::include_graphics(path, error=FALSE)
-```
 
-```{R, cleaningpng}
-file.remove(path)
-```
 
 One can see that the agreement between classifications using BDTOPO and OpenStreetMap tends to increase when the confidence of the LCZ we keep increases (except for the open low LCZ !).
 
-```{r, sensitivity-by-LCZ-type, out.width = "680px"}
-
-knitr::include_graphics("byLCZUniquenessSensib.png", error=FALSE)
-
-```
 
 These are the main functions of the package, for further use, refer to the man page of each function.
 
-```{r cleanup}
-if (file.exists("byLCZUniquenessSensib.png")){file.remove("byLCZUniquenessSensib.png")}
-if (file.exists("GeneralUniquenessSensib.png")){file.remove("GeneralUniquenessSensib.png")}
-if (file.exists("comparison.png")){file.remove("comparison.png")}
-
-```

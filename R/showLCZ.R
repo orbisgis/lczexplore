@@ -125,7 +125,7 @@ showAlterLCZ <- function(sf, title = "", wf = "", column,
                          labelType = "long", repr = "alter",
                          naAsUnclassified = TRUE, noPercAlter = FALSE, addBorders = FALSE,
                          ...) {
-
+# unused parameters are still defined to avoid interference when passing ... from showLCZ
   datasetName <- deparse(substitute(sf))
   try(class(sf)[1] == "sf", stop("Input data must be sf object"))
   if (wf != "") { nomLegende <- paste0("Levels from ", wf, " workflow") } else { nomLegende <- "Levels" }
@@ -136,7 +136,8 @@ showAlterLCZ <- function(sf, title = "", wf = "", column,
   levColShow <- levCol(sf = sf, column = column, drop = drop, ...)
   typeLevels <- levColShow$levelsColors
   levColCase <- levColShow$case
-  message(paste0("typeLevels before trying to group are ", typeLevels))
+  message("typeLevels before trying to group are ")
+  message(typeLevels)
 
   ########## Multiple vectors of levels and tryGroup=TRUE, let's try to group on the fly
 

@@ -31,8 +31,8 @@ redonBDTgrouped <- groupLCZ(redonBDT, column = "LCZ_PRIMARY", urban = c("1", "2"
 expect_message(
   showLCZ(redonBDTgrouped, column = "grouped", repr = "alter",
           wf = "BD TOPO", useStandCol = FALSE, addBorders = FALSE, noPercAlter = TRUE,
-          levels = c("urban", "industry", "vegetation", "impervious", "pervious", "water"),
-          colors = c("red", "black", "green", "grey", "burlywood", "blue")),
+          levels = c("urban", "industry", "vegetation", "impervious", "pervious", "water", "Unclassified"),
+          colors = c("red", "black", "green", "grey", "burlywood", "blue", "white")),
   "9:"
 )
 
