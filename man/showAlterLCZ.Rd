@@ -8,7 +8,7 @@ showAlterLCZ(
   sf,
   title = "",
   wf = "",
-  column = "LCZ_PRIMARY",
+  column,
   drop = FALSE,
   useStandCol = FALSE,
   tryGroup = TRUE,

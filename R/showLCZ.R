@@ -48,6 +48,7 @@ showLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
   datasetName <- deparse(substitute(sf))
   if (is.null(wf) | wf == ""){wf<-datasetName}
 
+  column <- checkColnameCase(column, names(sf))
 
   if (wf != "") { nomLegende <- paste0("Levels from ", wf, " workflow") } else { nomLegende <- "Levels" }
 
@@ -119,12 +120,12 @@ showLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
 #' LCZlevels=c("urban","industry","vegetation","impervious","pervious","water"),
 #' colors=c("red","black","green","grey","burlywood","blue"),wf="BD TOPO")
 #'
-showAlterLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
+showAlterLCZ <- function(sf, title = "", wf = "", column,
                          drop = FALSE, useStandCol = FALSE, tryGroup = TRUE, plotNow = TRUE,
                          labelType = "long", repr = "alter",
                          naAsUnclassified = TRUE, noPercAlter = FALSE, addBorders = FALSE,
                          ...) {
-
+# unused parameters are still defined to avoid interference when passing ... from showLCZ
   datasetName <- deparse(substitute(sf))
   try(class(sf)[1] == "sf", stop("Input data must be sf object"))
   if (wf != "") { nomLegende <- paste0("Levels from ", wf, " workflow") } else { nomLegende <- "Levels" }
@@ -135,7 +136,8 @@ showAlterLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
   levColShow <- levCol(sf = sf, column = column, drop = drop, ...)
   typeLevels <- levColShow$levelsColors
   levColCase <- levColShow$case
-  message(paste0("typeLevels before trying to group are ", typeLevels))
+  message("typeLevels before trying to group are ")
+  message(typeLevels)
 
   ########## Multiple vectors of levels and tryGroup=TRUE, let's try to group on the fly
 
@@ -157,7 +159,7 @@ showAlterLCZ <- function(sf, title = "", wf = "", column = "LCZ_PRIMARY",
 
   if (useStandCol == TRUE) {
     typeLevels <- standLevCol(levels = names(typeLevels), colors = typeLevels, useStandCol = TRUE)
-    message(paste0("standard LCZ types detected, the standard colors will be associated to them: ", typeLevels)) }
+     }
 
   LCZlevels <- names(typeLevels)
 

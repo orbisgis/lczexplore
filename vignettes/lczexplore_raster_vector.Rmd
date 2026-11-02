@@ -16,11 +16,6 @@ knitr::opts_chunk$set(
         collapse = TRUE,
         comment = "#>"
 )
-if (!require("png")) {
-  install.packages("png",repos = "http://cran.us.r-project.org")
-  library("png")
-}
-
 ```
 
 To install and discover the package, please read the lczexplore_english vignette. To load it simply type:

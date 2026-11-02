@@ -21,7 +21,7 @@ levCol <- function(sf, column, drop = FALSE, useStandCol = FALSE, ...) {
   # Getting ALL the arguments in (...) and computing the values needed for conditions statements
   args <- list(...)
 
-  # Stop if there are more than 37 arguments.   
+  # Stop if there are more than 37 arguments.
   if (length(args) >= 37) { stop("This function can not deal with more than 36 arguments.
   You can use the function groupLCZ to group some levels.") }
 
@@ -45,7 +45,7 @@ levCol <- function(sf, column, drop = FALSE, useStandCol = FALSE, ...) {
     "This package is not suited for qualitative variables/classifications with more than 36 levels/types.
   You can use the function groupLCZ to group some levels.") }
 
-  # Getting the levels and separating level vector(s) and colors vector if present.   
+  # Getting the levels and separating level vector(s) and colors vector if present.
 
   argNames <- names(args)
   indCol <- grep(x = argNames, pattern = "colors")
@@ -95,7 +95,12 @@ levCol <- function(sf, column, drop = FALSE, useStandCol = FALSE, ...) {
     length(indCol) == 1 &&
     prod(argCol != "") == 1)
   {
-    if (length(argCol) == length(uniqueData)) {
+    if (all(uniqueData %in% names(argCol))) {
+      case <- "2.0: No level vector, but a color vector which names cover the levels of the data."
+      typeLevels <- argCol[uniqueData]
+    } else
+
+      if (length(argCol) == length(uniqueData)) {
 
       case <- "2: No level vector, but a color vector which size covers the number of levels in the data."
       typeLevels <- argCol
@@ -117,7 +122,7 @@ levCol <- function(sf, column, drop = FALSE, useStandCol = FALSE, ...) {
 
   #############################################################################################
   ## Case when only levels are passed in a single vector (elements of the vector are not named)
-  ############################################################################################# 
+  #############################################################################################
   if (is.null(argCol) &&
     length(args) == 1 &&
     is.null(names(argLev[[1]]))) {
@@ -140,9 +145,9 @@ levCol <- function(sf, column, drop = FALSE, useStandCol = FALSE, ...) {
   }
 
   #############################################################################################
-  ## Case when only one vector is passed, but the elements of the vector are named. 
+  ## Case when only one vector is passed, but the elements of the vector are named.
   ## Name is expected to be a level, value is expected to be a color.
-  #############################################################################################   
+  #############################################################################################
   if (is.null(argCol) &&
     length(args) == 1 &&
     !is.null(names(argLev[[1]]))) {
@@ -151,7 +156,7 @@ levCol <- function(sf, column, drop = FALSE, useStandCol = FALSE, ...) {
       case <- "4: & 5: A single vector was provided, whose names cover the levels in the data (values are expected to be colors)."
       typeLevels <- argLev[[1]]
     } else if (prod(uniqueData %in% names(argLev[[1]])) == 0) {
-      case <- "6: A single vector was provided, whose names don't cover the levels in the data, 
+      case <- "6: A single vector was provided, whose names don't cover the levels in the data,
       missing levels were assigned random colors."
 
       indMiss <- !uniqueData %in% names(argLev[[1]])
@@ -166,9 +171,9 @@ levCol <- function(sf, column, drop = FALSE, useStandCol = FALSE, ...) {
 
   #############################################################################################
   ## Case when two vectors are passed. One is expected to be levels, the other to be colors
-  #############################################################################################   
+  #############################################################################################
 
-  ########### Case where no vector of color is passed, two vectors of levels 
+  ########### Case where no vector of color is passed, two vectors of levels
 
   if (length(args) == 2 &&
     prod(unlist(args) == "") == 0 &&
@@ -181,13 +186,13 @@ levCol <- function(sf, column, drop = FALSE, useStandCol = FALSE, ...) {
     case <- c(case, recall$case)
   }
 
-  ########### Case where one vector of color is passed, one vector of levels 
+  ########### Case where one vector of color is passed, one vector of levels
 
   if (length(args) == 2 &&
     !(prod(unlist(args) == "") == 1) &&
     length(indCol == 1)) {
 
-    ########### Case where the vectors are of the same size or if the levels vector 
+    ########### Case where the vectors are of the same size or if the levels vector
     # is shorter than the color vector
     if (length(argLev[[1]]) <= length(argCol)) {
 
@@ -217,7 +222,7 @@ levCol <- function(sf, column, drop = FALSE, useStandCol = FALSE, ...) {
   }
 
   #############################################################################################
-  ## Case when more than two vectors are passed. 
+  ## Case when more than two vectors are passed.
   ## Hopefully an argument for each level and zero or one vector of colors
   #############################################################################################
 
