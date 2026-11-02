@@ -233,9 +233,9 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
     l1Plot <-
       # ggplot2::ggplot(boundary) + 
       showLCZ(sf = sf1, column = column1, wf = wf1, plotNow = FALSE, repr = repr,
-              useStandCol = TRUE, , noPercAlter = FALSE,
+              useStandCol = TRUE, noPercAlter = FALSE,
               tryGroup = tryGroup, labelType = "long",
-              ...) +
+              colors = typeLevels) +
         ggtitle(titre1, subtitle = paste0("Number of RSU : ", nbgeom1))
     #
 
@@ -245,8 +245,7 @@ compareLCZ <- function(sf1, geomID1 = "", column1 = "LCZ_PRIMARY", confid1 = "",
       showLCZ(sf = sf2, column = column2, wf = wf2, labelType = "very short",
               plotNow = FALSE, repr = repr,
               useStandCol = TRUE,
-              tryGroup = tryGroup,
-              ...) +
+              tryGroup = tryGroup, colors = typeLevels) +
         ggtitle(titre2, subtitle = paste0("Number of RSU : ", nbgeom2))
 
     # Plot areas where classifications agree
@@ -428,7 +427,9 @@ prepareAlterInputs <- function(sf1, column1, geomID1, confid1,
   # and their names don't cover the values in column, and if tryGroup is TRUE
   # then we try to call groupLCZ And procede to grouping accordingly
 
-  if (tryGroup && (length(grep("14: ", levColCase1)) != 0 || length(grep("15: ", levColCase1)) != 0)) {
+  if (
+    (tryGroup && (length(grep("14: ", levColCase1)) != 0 || length(grep("15: ", levColCase1)) != 0)) &
+      length(grep(pattern = "5: A single vector", x = levColCase1))==0) {
     message("Level names in your 1st dataset didn't match original data.
       As tryGroup=TRUE, the function groupLCZ will try to create a \"grouped\" column with level names and levels specified in (...).
       If this doesn't work, compareLCZ function may fail.")
@@ -440,7 +441,8 @@ prepareAlterInputs <- function(sf1, column1, geomID1, confid1,
     rm(sfNew1)
   }
 
-  if (tryGroup == TRUE && (length(grep("14: ", levColCase2)) != 0 || length(grep("15: ", levColCase2)) != 0)) {
+  if ((tryGroup == TRUE && (length(grep("14: ", levColCase2)) != 0 || length(grep("15: ", levColCase2)) != 0)) &
+    length(grep(pattern = "5: A single vector", x = levColCase2))==0){
     message("As tryGroup=TRUE, the function groupLCZ will try to create a \"grouped\" column with level names and levels specified in (...).
       If this doesn't work, compareLCZ function may fail.")
     sfNew2 <- groupLCZ(sf2, column = column2, ...)

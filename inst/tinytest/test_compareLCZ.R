@@ -221,7 +221,8 @@ expect_message(compareLCZ(sf1=redonBDTgrouped2, column1="groupedLCZ", wf1="BDT",
                           sf2=redonWudaptGrouped, column2="otherName", wf2="osm",
                           exwrite=FALSE, repr="alter", plotNow = TRUE,
                           colors=c(urban = "red", impervious = "black", vegetation = "green",
-                                   industry = "grey", pervious = "burlywood", water = "blue"), saveG=""),
+                                   industry = "grey", pervious = "burlywood", water = "blue",
+                                   Unclassified = "ghostwhite"), saveG=""),
                "they will be coerced to the specified reference \\(redonBDTgrouped2\\)"
 )
 
