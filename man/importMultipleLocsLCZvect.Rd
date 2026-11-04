@@ -13,7 +13,11 @@ importMultipleLocsLCZvect(
   workflowNames = c("osm", "bdt", "wudapt"),
   locations = c("Arville", "Redon"),
   fileExtension = ".fgb",
-  columns = NULL
+  columns = NULL,
+  missingGeomsWf = NULL,
+  refWf = NULL,
+  refLCZ = "Unclassified",
+  residualLCZvalue = "Unclassified"
 )
 }
 \arguments{

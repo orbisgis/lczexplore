@@ -22,7 +22,12 @@ importMultipleLocsLCZvect <- function(
   dirPath = paste0(
     system.file("extdata", package = "lczexplore"), "/multipleWfs/"),
   workflowNames = c("osm", "bdt", "wudapt"), locations = c("Arville", "Redon"),
-  fileExtension = ".fgb", columns = NULL) {
+  fileExtension = ".fgb", columns = NULL,
+  missingGeomsWf = NULL,
+  refWf = NULL,
+  refLCZ = "Unclassified",
+  residualLCZvalue = "Unclassified"
+  ) {
 
   dirList <- list.dirs(dirPath, recursive = FALSE)
   message1 <- paste0("The data will be imported from the following folders :", dirList)
@@ -51,6 +56,16 @@ importMultipleLocsLCZvect <- function(
         location = locations[loc_i],
         workflowNames = workflowNames, fileExtension = fileExtension, columns = columns[loc_i]
       )
+
+    if (!is.null(missingGeomsWf)){
+      zoneSfPath <- paste0(dirList[loc_i], "zone.fgb")
+      zoneSf <- read_sf(zoneSfPath)
+      allLocAllWfs[[locations[loc_i]]]<-addMissingRSUs(sfList = allLocAllWfs[[locations[loc_i]]],
+                                                       missingGeomsWf = missingGeomsWf, zoneSf = zoneSf, refWf = refWf, refLCZ = refLCZ,
+                                                       residualLCZvalue = residualLCZvalue,
+                                                       column = "lcz_primary")
+    }
+
   }
   return(allLocAllWfs)
 }

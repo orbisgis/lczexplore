@@ -27,7 +27,7 @@ concatIntersectedLocations <- function(dirList, workflowNames = c("osm", "bdt", 
   for (i in seq_along(dirList)) {
     intersectedList[[i]] <- importMultipleLCZvect(
       dirPath = dirList[i],
-      workflowNames = c("osm", "bdt", "wudapt"),
+      workflowNames = workflowNames,
       location = locations[i], columns = columns[i]) %>%
       createIntersect(columns = columns, refCrs = NULL, workflowNames = workflowNames,
                       minZeroArea = 0.0001
