@@ -58,7 +58,9 @@ importMultipleLocsLCZvect <- function(
       )
 
     if (!is.null(missingGeomsWf)){
-      zoneSfPath <- paste0(dirList[loc_i], "zone.fgb")
+      zoneSfPath <- paste0(
+        checkDirSlash(dirList[loc_i]),
+        "zone.fgb")
       zoneSf <- read_sf(zoneSfPath)
       allLocAllWfs[[locations[loc_i]]]<-addMissingRSUs(sfList = allLocAllWfs[[locations[loc_i]]],
                                                        missingGeomsWf = missingGeomsWf, zoneSf = zoneSf, refWf = refWf, refLCZ = refLCZ,
