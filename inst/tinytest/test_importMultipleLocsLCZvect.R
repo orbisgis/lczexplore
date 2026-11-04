@@ -33,3 +33,13 @@ showLCZ(sfList2$Redon$osm)
 allLocAllWfs<-concatAllLocsWorkflows(sfList2)
 test<-dplyr::filter(allLocAllWfs, location == "Redon" & wf == "osm")
 showLCZ(test)
+
+sfList3<-importMultipleLocsLCZvect(dirPath = "/home/gousseff/Documents/3_data/data_article_LCZ_diff_algos/newDataTreeBDT2012",
+                                   workflowNames = c("osm","bdt","wudapt"),
+                                   missingGeomsWf = "osm",
+                                   refWf = NULL,
+                                   refLCZ = "Unclassified",
+                                   residualLCZvalue = "Unclassified",
+                                   columns = "LCZ_PRIMARY")
+
+showLCZ(sfList3$Arville$osm)

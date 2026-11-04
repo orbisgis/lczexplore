@@ -60,7 +60,8 @@ importMultipleLocsLCZvect <- function(
       importMultipleLCZvect(
         dirPath = dirList[loc_i],
         location = locations[loc_i],
-        workflowNames = workflowNames, fileExtension = fileExtension, columns = columns[loc_i]
+        workflowNames = workflowNames, fileExtension = fileExtension,
+        columns = columns[loc_i]
       )
 
     if (!is.null(missingGeomsWf)){
@@ -69,7 +70,8 @@ importMultipleLocsLCZvect <- function(
         "zone.fgb")
       zoneSf <- read_sf(zoneSfPath)
       allLocAllWfs[[locations[loc_i]]]<-addMissingRSUs(sfList = allLocAllWfs[[locations[loc_i]]],
-                                                       missingGeomsWf = missingGeomsWf, zoneSf = zoneSf, refWf = refWf, refLCZ = refLCZ,
+                                                       missingGeomsWf = missingGeomsWf, zoneSf = zoneSf,
+                                                       refWf = refWf, refLCZ = refLCZ,
                                                        residualLCZvalue = residualLCZvalue,
                                                        column = "lcz_primary")
     }
