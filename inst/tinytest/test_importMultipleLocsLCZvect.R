@@ -30,6 +30,6 @@ sfList2<-importMultipleLocsLCZvect(dirPath = paste0(
 showLCZ(sfList2$Arville$osm)
 showLCZ(sfList2$Redon$osm)
 
-AllLocWfs<-concatAllLocsWorkflows(sfList2)
-test<-dplyr::filter(allLocAllWfs, location == "Arville" & wf == "osm")
+allLocAllWfs<-concatAllLocsWorkflows(sfList2)
+test<-dplyr::filter(allLocAllWfs, location == "Redon" & wf == "osm")
 showLCZ(test)
