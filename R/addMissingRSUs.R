@@ -42,7 +42,7 @@ addMissingRSUs <- function(sfList, missingGeomsWf = "osm", zoneSf, refWf = "bdt"
                                                levels = unique(c(
                                                  levels(sfList[[missingGeomsWf]][[column]]), refLCZ, residualLCZvalue)))
   missingDiff <- st_difference(
-    st_union(zoneSf),
+    zoneSf,
     st_union(sfList[[missingGeomsWf]])) %>% st_as_sf
   st_set_geometry(missingDiff, missingDiff$x)
   names(missingDiff)[names(missingDiff) == "x"] <- "geometry"
