@@ -2,7 +2,7 @@
 % Please edit documentation in R/concatAllLocsWorkflows.R
 \name{concatAllLocsWorkflows}
 \alias{concatAllLocsWorkflows}
-\title{importConcatMultipleLocsLCZvect is recommended instead as it loadsand concatenate input files
+\title{importConcatMultipleLocsLCZvect is recommended instead as it loads and concatenate input files
 and can even fill missing geometries with "unclassified" type.
 But if maps are already loaded in a List, concatAllLocsWorkflows is
 the equivalent of concatenateAlocationWorkflows, but for several Locations
@@ -10,19 +10,21 @@ Take a list of locations, each list contains a list of sf files
 with an lcz_primary column, and concatenates them into a single sf object,
 adding a column for location and workflow names}
 \usage{
-concatAllLocsWorkflows(sfList, refCrs = 1)
+concatAllLocsWorkflows(sfList, refCrs = 1, locations = NULL)
 }
 \arguments{
 \item{sfList}{contains a list of locations containing list of sf for each workflow}
 
 \item{refCrs}{a number telling which sf of the sfList will be the reference in termes of Coordinate Reference System}
+
+\item{locations}{a list of the locations  contained in sfList. If NULL, the names of the elements of sfList are used}
 }
 \value{
 returns a single sf object containing all geometries for all locations and workflows, and the the
 lcz types in the column lcz_primary
 }
 \description{
-importConcatMultipleLocsLCZvect is recommended instead as it loadsand concatenate input files
+importConcatMultipleLocsLCZvect is recommended instead as it loads and concatenate input files
 and can even fill missing geometries with "unclassified" type.
 But if maps are already loaded in a List, concatAllLocsWorkflows is
 the equivalent of concatenateAlocationWorkflows, but for several Locations

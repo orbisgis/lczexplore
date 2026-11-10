@@ -13,7 +13,11 @@ importMultipleLocsLCZvect(
   workflowNames = c("osm", "bdt", "wudapt"),
   locations = c("Arville", "Redon"),
   fileExtension = ".fgb",
-  columns = NULL
+  columns = NULL,
+  missingGeomsWf = NULL,
+  refWf = NULL,
+  refLCZ = "Unclassified",
+  residualLCZvalue = "Unclassified"
 )
 }
 \arguments{
@@ -26,6 +30,15 @@ importMultipleLocsLCZvect(
 \item{fileExtension}{is the extensions of the files to load (.fgb is the recommended format)}
 
 \item{columns}{contains the names of the columns containing the LCZ types}
+
+\item{missingGeomsWf}{allows to check for missing areas in a given worflow (see addMissingRSUs help)}
+
+\item{refWf}{is the reference workflow used to add missing RSU (see addMissingRSUs help)}
+
+\item{refLCZ}{is an LCZ type chosen to match in the refWf workflow sf object (see addMissingRSUs help)}
+
+\item{residualLCZvalue}{is an LCZ type to assign to the added missing RSU that do not match the refLCZ value
+of the refWf workflow (see addMissingRSUs help)}
 }
 \value{
 a list of sf, containing one element per location,

@@ -34,12 +34,8 @@ refLCZ for the added geometries}
 \item{column}{is the name of the LCZ column (to be explained)}
 }
 \value{
-returns graphics of comparison and an object called matConfOut which contains :
-matConfLong, a confusion matrix in a longer form,
-matConfPlot is a ggplot2 object showing the confusion matrix.
-percAgg is the general agreement between the two sets of LCZ, expressed as a percentage of the total area of the study zone
-pseudoK is a heuristic estimate of a Cohen's kappa coefficient of agreement between classifications
-If saveG is not an empty string, graphics are saved under "saveG.png"
+returns a list of the input sf objects except for the missingGeomsWf workflow, where missing areas
+have been completed.
 }
 \description{
 adds missing Reference Spatial Units (geometries) from the difference with a reference zone file,

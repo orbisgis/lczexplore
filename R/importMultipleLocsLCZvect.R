@@ -8,6 +8,11 @@
 #' @param locations is the name of the location at which all LCZ are created
 #' @param fileExtension is the extensions of the files to load (.fgb is the recommended format)
 #' @param columns contains the names of the columns containing the LCZ types
+#' @param missingGeomsWf allows to check for missing areas in a given worflow (see addMissingRSUs help)
+#' @param refWf is the reference workflow used to add missing RSU (see addMissingRSUs help)
+#' @param refLCZ is an LCZ type chosen to match in the refWf workflow sf object (see addMissingRSUs help)
+#' @param residualLCZvalue is an LCZ type to assign to the added missing RSU that do not match the refLCZ value
+#' of the refWf workflow (see addMissingRSUs help)
 #' @importFrom forcats fct_recode
 #' @importFrom dplyr mutate
 #' @import sf units
@@ -22,10 +27,15 @@ importMultipleLocsLCZvect <- function(
   dirPath = paste0(
     system.file("extdata", package = "lczexplore"), "/multipleWfs/"),
   workflowNames = c("osm", "bdt", "wudapt"), locations = c("Arville", "Redon"),
-  fileExtension = ".fgb", columns = NULL) {
+  fileExtension = ".fgb", columns = NULL,
+  missingGeomsWf = NULL,
+  refWf = NULL,
+  refLCZ = "Unclassified",
+  residualLCZvalue = "Unclassified"
+  ) {
 
   dirList <- list.dirs(dirPath, recursive = FALSE)
-  message1 <- paste0("The data will be imported from the following folders :", dirList)
+  message1 <- paste0("The data will be imported from the following folders :", dirList, collapse = "")
   message(message1)
   message2 <- paste0("The locations are :", locations)
   message(message2)
@@ -42,15 +52,30 @@ importMultipleLocsLCZvect <- function(
     columns <- rep("lcz_primary", length(dirList))
   }
 
-  allLocAllWfs <- vector("list", length = length(locations))
-  names(allLocAllWfs) <- locations
+  allLocAllWfs <- vector("list")
+
+  # names(allLocAllWfs) <- locations
   for (loc_i in seq_along(dirList)) {
     allLocAllWfs[[locations[loc_i]]] <-
       importMultipleLCZvect(
         dirPath = dirList[loc_i],
         location = locations[loc_i],
-        workflowNames = workflowNames, fileExtension = fileExtension, columns = columns[loc_i]
+        workflowNames = workflowNames, fileExtension = fileExtension,
+        columns = columns[loc_i]
       )
+
+    if (!is.null(missingGeomsWf)){
+      zoneSfPath <- paste0(
+        checkDirSlash(dirList[loc_i]),
+        "zone.fgb")
+      zoneSf <- read_sf(zoneSfPath)
+      allLocAllWfs[[locations[loc_i]]]<-addMissingRSUs(sfList = allLocAllWfs[[locations[loc_i]]],
+                                                       missingGeomsWf = missingGeomsWf, zoneSf = zoneSf,
+                                                       refWf = refWf, refLCZ = refLCZ,
+                                                       residualLCZvalue = residualLCZvalue,
+                                                       column = "lcz_primary")
+    }
+
   }
   return(allLocAllWfs)
 }

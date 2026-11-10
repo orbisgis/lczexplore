@@ -40,35 +40,37 @@ importConcatMultipleLocsLCZvect <- function(dirPath, locations = NA, workflowNam
     locations <- ifelse(is.na(locations), extracted_names, locations)
   }
 
-
-  tmp <- st_sfc()
-  class(tmp)[1] <- "sfc_POLYGON"
-  allLocAllWfSf <- data.frame(
-    lcz_primary = character(0), location = character(0),
-    wf = character(0), area = numeric(0)) %>%
-    st_as_sf(geometry = st_sfc(),  # Initialize with an empty geometry column
-             crs = 4326)
+  allLocAllWfSf <- NULL
+  # tmp <- st_sfc()
+  # class(tmp)[1] <- "sfc_POLYGON"
+  # allLocAllWfSf <- data.frame(
+  #   lcz_primary = character(0), location = character(0),
+  #   wf = character(0), area = numeric(0)) %>%
+  #   st_as_sf(geometry = st_sfc(),  # Initialize with an empty geometry column
+  #            crs = 4326)
 
   for (i in seq_along(dirList)) {
     dirPath <- dirList[i]
     if (substring(text = dirPath, first = nchar(dirPath)) != "/") { dirPath <- paste0(dirPath, "/") }
     aLocation <- locations[i]
-    message(paste0("Processing the fgololwing location: ", aLocation))
+    message(paste0("Processing the following location: ", aLocation))
     sfList <- importMultipleLCZvect(dirPath = dirPath,
                               workflowNames = workflowNames, location = aLocation)
     if (substr(dirPath, nchar(dirPath), nchar(dirPath)) != "/") { dirPath <- paste0(dirPath, "/") }
     zoneSfPath <- paste0(dirPath, "zone.fgb")
     zoneSf <- read_sf(zoneSfPath)
     sfList <- addMissingRSUs(sfList = sfList,
-                             missingGeomsWf = missingGeomsWf, zoneSf, refWf = refWf, refLCZ = refLCZ,
+                             missingGeomsWf = missingGeomsWf, zoneSf = zoneSf, refWf = refWf, refLCZ = refLCZ,
                              residualLCZvalue = residualLCZvalue,
                              column = "lcz_primary")
     concatSf <- concatAlocationWorkflows(sfList = sfList,
                                          location = aLocation, refCrs = 1)
-    if (st_crs(allLocAllWfSf) != st_crs(concatSf)) {
-      allLocAllWfSf <- st_transform(allLocAllWfSf, crs = st_crs(concatSf))
+    if(is.null(allLocAllWfSf)){allLocAllWfSf<-concatSf} else {
+      if (st_crs(allLocAllWfSf) != st_crs(concatSf)) {
+        concatSf <- st_transform(concatSf, crs = st_crs(allLocAllWfSf))
+      }
+        allLocAllWfSf <- rbind(allLocAllWfSf, concatSf)
     }
-    allLocAllWfSf <- rbind(allLocAllWfSf, concatSf)
   }
   return(allLocAllWfSf)
 }

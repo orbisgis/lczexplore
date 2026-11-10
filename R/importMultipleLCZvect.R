@@ -64,11 +64,11 @@ importMultipleLCZvect <- function(
       if(upperCond){
         message("Column ", paste0(columns[i], " not found,but ",
                                   toupper(columns[i]), " was, trying with it"))
-        inSf[[columns[i]]]<-  typeLevels[inSf[[toupper(columns[i])]]]
+        inSf[[columns[i]]]<- inSf[[toupper(columns[i])]]
       } else if (lowercond){
         message("Column ", paste0(columns[i], " not found,but ",
                                   tolower(columns[i]), " was, trying with it"))
-        inSf[[columns[i]]]<-  typeLevels[inSf[[tolower(columns[i])]]]
+        inSf[[columns[i]]]<-  inSf[[tolower(columns[i])]]
       } else {stop("One or several column names you entered are not found.")}
     }
 
@@ -89,6 +89,7 @@ importMultipleLCZvect <- function(
      # lcz_primary = factor(lcz_primary, levels = typeLevels))
     inSf <- dplyr::mutate(inSf, wf = workflowNames[i], location = location, .before = geometry)
     sfList[[workflowNames[i]]] <- inSf
+    rm(inSf)
 
   }
   return(sfList)
